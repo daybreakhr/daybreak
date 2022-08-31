@@ -1,0 +1,14 @@
+{
+  "name": "day-break",
+  "private": true,
+  "version": "1.0.0",
+  "author": "Himanshu Nagrath <him.nagrath@gmail.com>",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "client": "yarn workspace client dev",
+    "server": "yarn workspace server start:dev"
+  }
+}
