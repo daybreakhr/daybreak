@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import {
   onAuthStateChanged,
   signInWithPopup,
-  signOut,
+  signOut as logOut,
   User,
 } from 'firebase/auth'
 import { auth, googleAuthProvider } from 'utils/firebase'
@@ -38,7 +38,7 @@ export default function Auth({ children }: AuthProps) {
 
   async function signOut() {
     try {
-      await signOut()
+      await logOut(auth)
     } catch (error: any) {
       message.error(error?.message)
     }
