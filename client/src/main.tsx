@@ -1,10 +1,11 @@
 import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from 'App'
 import './styles/index.css'
 import 'antd/dist/antd.less'
-import MainRouter from './route'
-import ReactDOM from 'react-dom/client'
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <MainRouter />
+    <App />
   </React.StrictMode>,
 )

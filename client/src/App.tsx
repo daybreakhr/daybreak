@@ -1,18 +1,18 @@
-import { Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Auth from 'components/auth'
 import Login from 'pages/login'
+import Home from 'pages/home'
 
 export default function App() {
-  const newLocal = 'solid 1px';
   return (
-    <nav
-      style={{
-        borderBottom: newLocal,
-        paddingBottom: '1rem',
-      }}
-    >
-      <Link to="/login">Login</Link> |{' '}
-      <Link to="/home">Home</Link>
-    </nav>
+    <Auth>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="login" element={<Login />} />
+          <Route path="home" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
+    </Auth>
   )
 }
