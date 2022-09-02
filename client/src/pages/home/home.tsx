@@ -3,6 +3,10 @@ import useAuth from 'hooks/use-auth'
 export default function Home() {
   const { user } = useAuth()
 
-  return `Welcome ${user?.displayName ?? user?.email}!!! 
-  You are now authenticated with your gmail`
+  return (
+    <div className="w-screen h-screen flex items-center justify-center">
+      <p>Welcome ${user?.displayName ?? user?.email}!!!</p>
+      <p>You are now authenticated with your gmail</p>
+    </div>
+  )
 }
