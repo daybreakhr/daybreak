@@ -3,14 +3,15 @@ import Auth from 'components/auth'
 import Login from 'pages/login'
 
 export default function App() {
+  const newLocal = 'solid 1px';
   return (
     <nav
       style={{
-        borderBottom: "solid 1px",
-        paddingBottom: "1rem",
+        borderBottom: newLocal,
+        paddingBottom: '1rem',
       }}
     >
-      <Link to="/login">Login</Link> |{" "}
+      <Link to="/login">Login</Link> |{' '}
       <Link to="/home">Home</Link>
     </nav>
   )
