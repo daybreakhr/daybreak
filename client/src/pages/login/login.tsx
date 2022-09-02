@@ -5,7 +5,7 @@ import useAuth from 'hooks/use-auth'
 export default function Login() {
   const { signInWithGoogle, user } = useAuth()
   const { state }: any = useLocation()
-  const from = state?.from?.pathname ?? '/applications'
+  const from = state?.from?.pathname ?? '/home'
 
   if (user) {
     return <Navigate to={from} replace />
