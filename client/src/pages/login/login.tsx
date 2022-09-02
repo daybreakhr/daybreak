@@ -1,8 +1,15 @@
+import { Navigate, useLocation } from 'react-router-dom'
 import { AiOutlineGoogle } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
 
 export default function Login() {
-  const { signInWithGoogle } = useAuth()
+  const { signInWithGoogle, user } = useAuth()
+  const { state }: any = useLocation()
+  const from = state?.from?.pathname ?? '/home'
+
+  if (user) {
+    return <Navigate to={from} replace />
+  }
 
   return (
     <div className="flex items-center justify-center w-screen h-screen text-xl">
