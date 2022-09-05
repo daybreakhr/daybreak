@@ -14,8 +14,8 @@ const tabs = [
   },
   { key: 'job-management', label: 'Job Management', icon: <AiOutlineWallet /> },
   {
-    key: 'team-management',
-    label: 'Team Management',
+    key: 'member-management',
+    label: 'Member Management',
     icon: <AiOutlineSetting />,
   },
 ]
