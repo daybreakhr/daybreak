@@ -1,66 +1,47 @@
-// import { Key } from 'react'
-import { Avatar } from 'antd'
+import { Button, Input, Select, Table } from 'antd'
+import { AiOutlineFilter, AiOutlineSearch } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
-import memberTabs from './members-list'
+import { sampleData, columns, Member } from './members-list'
 
 export default function Members() {
   const { user } = useAuth()
 
-  return (
-    <div className="relative mt-5 overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Role
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="bg-white border-b hover:bg-gray-100">
-            <td
-              scope="row"
-              className="flex items-center px-6 py-3 font-medium text-gray-900 whitespace-nowrap"
-            >
-              <Avatar src={user?.photoURL}>
-                {user?.displayName?.charAt(0)}
-              </Avatar>
-              <div className="px-3">{user?.displayName}</div>
-            </td>
-            <td className="px-6 py-3">{memberTabs[0].role}</td>
-            <td className="px-6 py-3 text-blue-700">
-              {<a> {memberTabs[0].actions} </a>}
-            </td>
-          </tr>
+  const data: Member[] = [
+    {
+      email: user?.email ?? '',
+      name: user?.displayName ?? '',
+      role: 'Admin',
+      photoURL: user?.photoURL,
+      key: user?.uid ?? '',
+    },
+    ...sampleData,
+  ]
 
-          {memberTabs.map((props) => (
-            // eslint-disable-next-line react/jsx-key
-            <tr className='bg-white border-b hover:bg-gray-100"'>
-              <td
-                scope="row"
-                className="flex items-center px-6 py-3 font-medium text-gray-900 whitespace-nowrap"
-              >
-                <Avatar
-                  style={{ color: '#3f3fff', backgroundColor: '#DEFFE0' }}
-                >
-                  {[props.name[0]]}
-                </Avatar>
-                <div className="px-3">{[props.name]}</div>
-              </td>
-              <td className="px-6 py-3">{[...props.role]}</td>
-              <td className="px-6 py-3 text-blue-700">
-                {<a>{[...props.actions]}</a>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  return (
+    <div className="m-8 p-4 bg-white rounded-md shadow-md">
+      <div className="flex items-center mb-4 space-x-4">
+        <Input
+          style={{ width: '16rem' }}
+          prefix={<AiOutlineSearch />}
+          placeholder="Search by name or email..."
+        />
+
+        <Select
+          className="w-28"
+          defaultValue="all"
+          suffixIcon={<AiOutlineFilter />}
+        >
+          <Select.Option value="all">All Users</Select.Option>
+          <Select.Option value="Admin">Admin</Select.Option>
+          <Select.Option value="Member">Member</Select.Option>
+        </Select>
+
+        <div className="flex-1" />
+
+        <Button type="primary">Add Users</Button>
+      </div>
+
+      <Table dataSource={data} columns={columns} />
     </div>
   )
 }

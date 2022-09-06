@@ -8,6 +8,7 @@ import {
 } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
 import tabs from './tabs-list'
+import clsx from 'clsx'
 
 export default function AppShell() {
   const navigate = useNavigate()
@@ -43,6 +44,25 @@ export default function AppShell() {
         collapsible
         collapsed={collapsed}
       >
+        <div
+          className={clsx(
+            'flex items-center space-x-2',
+            collapsed ? 'px-6 py-4' : 'p-4',
+          )}
+        >
+          <div className="flex items-center justify-center bg-gray-600 text-white w-8 h-8 rounded-lg flex-shrink-0">
+            <span>D</span>
+          </div>
+
+          <span
+            className={clsx('mb-0 font-sans font-medium text-gray-700', {
+              hidden: collapsed,
+            })}
+          >
+            Daybreak
+          </span>
+        </div>
+
         <Menu
           items={tabs}
           mode="inline"

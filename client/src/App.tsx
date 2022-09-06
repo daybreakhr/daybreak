@@ -15,9 +15,9 @@ export default function App() {
           <Route path="/" element={<Login />} />
           <Route path="/" element={<AuthLayout component={AppShell} />}>
             <Route path="home" element={<Home />} />
-            <Route path="candidate" element={<Candidate />} />
-            <Route path="job-management" element={<Home />} />
-            <Route path="member-management" element={<Members />} />
+            <Route path="candidates" element={<Candidate />} />
+            <Route path="jobs" element={<Home />} />
+            <Route path="members" element={<Members />} />
           </Route>
         </Routes>
       </BrowserRouter>
