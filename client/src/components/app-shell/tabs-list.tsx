@@ -8,14 +8,14 @@ import {
 const tabs = [
   { key: 'home', label: 'Home', icon: <AiOutlineHome /> },
   {
-    key: 'candidate',
-    label: 'Candidate',
+    key: 'candidates',
+    label: 'Candidates',
     icon: <AiOutlineTeam />,
   },
-  { key: 'job-management', label: 'Job Management', icon: <AiOutlineWallet /> },
+  { key: 'jobs', label: 'Jobs', icon: <AiOutlineWallet /> },
   {
-    key: 'team-management',
-    label: 'Team Management',
+    key: 'members',
+    label: 'Members',
     icon: <AiOutlineSetting />,
   },
 ]
