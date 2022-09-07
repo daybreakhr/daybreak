@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import { Button, Input, Select, Table } from 'antd'
+import { matchSorter } from 'match-sorter'
 import { AiOutlineFilter, AiOutlineSearch } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
 import { sampleData, columns, Member } from './members-list'
 
 export default function Members() {
   const { user } = useAuth()
+  const [input, setInput] = useState('')
+  const [filter, setFilter] = useState('')
 
   const data: Member[] = [
     {
@@ -17,21 +21,31 @@ export default function Members() {
     ...sampleData,
   ]
 
+  const filteredData = matchSorter(data, input, {
+    keys: ['name', 'email'],
+  })
+
+  const filterRoleData = matchSorter(filteredData, filter, { keys: ['role'] })
+
   return (
     <div className="m-8 p-4 bg-white rounded-md shadow-md">
       <div className="flex items-center mb-4 space-x-4">
         <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           style={{ width: '16rem' }}
           prefix={<AiOutlineSearch />}
           placeholder="Search by name or email..."
         />
 
         <Select
+          value={filter}
           className="w-28"
           defaultValue="all"
           suffixIcon={<AiOutlineFilter />}
+          onChange={(e) => setFilter(e)}
         >
-          <Select.Option value="all">All Users</Select.Option>
+          <Select.Option value="">All Users</Select.Option>
           <Select.Option value="Admin">Admin</Select.Option>
           <Select.Option value="Member">Member</Select.Option>
         </Select>
@@ -41,7 +55,7 @@ export default function Members() {
         <Button type="primary">Add Users</Button>
       </div>
 
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={filterRoleData} columns={columns} />
     </div>
   )
 }
