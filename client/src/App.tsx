@@ -6,6 +6,7 @@ import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
 import Candidate from 'pages/candidate'
 import Members from 'pages/members'
+import Jobs from 'pages/jobs'
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
           <Route path="/" element={<AuthLayout component={AppShell} />}>
             <Route path="home" element={<Home />} />
             <Route path="candidates" element={<Candidate />} />
-            <Route path="jobs" element={<Home />} />
+            <Route path="jobs" element={<Jobs />} />
             <Route path="members" element={<Members />} />
           </Route>
         </Routes>
