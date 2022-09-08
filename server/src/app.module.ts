@@ -6,6 +6,7 @@ import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/auth.middleware'
 import { PrismaService } from './prisma.service'
+import { MembersModule } from './members/members.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PrismaService } from './prisma.service'
       isGlobal: true,
     }),
     AuthModule,
+    MembersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
