@@ -16,6 +16,19 @@ export class AuthService {
     }
   }
 
+  async getUsers(
+    identifiers: Array<{ uid: string }>,
+  ): Promise<UserRecord[] | undefined> {
+    try {
+      const getUserResults = await this.firebaseService.auth.getUsers(
+        identifiers,
+      )
+      return getUserResults.users
+    } catch (error) {
+      return undefined
+    }
+  }
+
   async getUser(uid: string): Promise<UserRecord | undefined> {
     try {
       const user = await this.firebaseService.auth.getUser(uid)
