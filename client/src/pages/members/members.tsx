@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import { Button, Input, Select, Table } from 'antd'
 import { matchSorter } from 'match-sorter'
+import { Button, Input, Select, Table } from 'antd'
 import { AiOutlineFilter, AiOutlineSearch } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
 import { sampleData, columns, Member } from './members-list'
+import AddUser from './components/add-user'
 
 export default function Members() {
   const { user } = useAuth()
+
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('')
+  const [isVisible, setIsVisible] = useState(false)
 
   const data: Member[] = [
     {
@@ -32,10 +35,10 @@ export default function Members() {
       <div className="flex items-center mb-4 space-x-4">
         <Input
           value={input}
-          onChange={(e) => setInput(e.target.value)}
           style={{ width: '16rem' }}
           prefix={<AiOutlineSearch />}
           placeholder="Search by name or email..."
+          onChange={(e) => setInput(e.target.value)}
         />
 
         <Select
@@ -52,10 +55,14 @@ export default function Members() {
 
         <div className="flex-1" />
 
-        <Button type="primary">Add Users</Button>
+        <Button type="primary" onClick={() => setIsVisible((prev) => !prev)}>
+          Add User
+        </Button>
       </div>
 
       <Table dataSource={filterRoleData} columns={columns} />
+
+      <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />
     </div>
   )
 }
