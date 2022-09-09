@@ -61,7 +61,15 @@ export const jobColumns: ColumnsType<Job> = [
       </div>
     ),
   },
-  { title: 'Department', dataIndex: 'department', key: 'department' },
+  {
+    title: 'Department',
+    dataIndex: 'department',
+    key: 'department',
+    filters: [
+      { text: 'IT', value: 'it' },
+      { text: 'Network', value: 'network' },
+    ],
+  },
   {
     title: 'Priority',
     dataIndex: 'priority',
@@ -71,6 +79,11 @@ export const jobColumns: ColumnsType<Job> = [
         {priority}
       </Tag>
     ),
+    filters: [
+      { text: 'Low', value: 'low' },
+      { text: 'Medium', value: 'medium' },
+      { text: 'High', value: 'high' },
+    ],
   },
   { title: 'Listed On', dataIndex: 'listedon', key: 'listedon' },
   {
@@ -82,5 +95,11 @@ export const jobColumns: ColumnsType<Job> = [
         {status}
       </Tag>
     ),
+    filters: [
+      { text: 'Open', value: 'open' },
+      { text: 'Closed', value: 'closed' },
+      { text: 'Offer Rolled Out', value: 'offerRolledOut' },
+      { text: 'On Hold', value: 'onHold' },
+    ],
   },
 ]
