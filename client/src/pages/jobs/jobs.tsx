@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Button, Input, Table } from 'antd'
-import { sampleData, jobColumns } from './job-list'
-import { AiOutlineSearch } from 'react-icons/ai'
 import { matchSorter } from 'match-sorter'
-import JobCards from './components/job-cards'
+import { Button, Input, Table } from 'antd'
+import { AiOutlineSearch } from 'react-icons/ai'
+
+import JobCard from './components/job-cards'
+import { cardDetails } from './constants/card-details'
+import { sampleData, jobColumns } from './constants/job-list'
 
 export default function Jobs() {
   const [input, setInput] = useState('')
@@ -12,23 +14,23 @@ export default function Jobs() {
   })
 
   return (
-    <div>
-      <JobCards />
-      <div className="m-8 p-4 bg-white rounded-md shadow-md">
-        <div className="font-medium font-sans text-xl pb-4">Search Filters</div>
-        <div className="flex items-center mb-4 space-x-4">
+    <div className="p-8">
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        {cardDetails.map((card) => (
+          <JobCard key={card.title} {...card} />
+        ))}
+      </div>
+
+      <div className="p-4 bg-white rounded-md shadow-md">
+        <p className="font-medium font-sans text-xl">Listed Jobs</p>
+        <div className="flex items-center mb-4 justify-between">
           <Input
             value={input}
-            style={{
-              fontSize: '1.1rem',
-              marginTop: '1rem',
-              width: '30rem',
-            }}
+            style={{ width: '16rem' }}
             prefix={<AiOutlineSearch />}
-            placeholder="Search Job Role to search"
+            placeholder="Search by Job Role..."
             onChange={(e) => setInput(e.target.value)}
           />
-          <div className="flex-1" />
           <Button type="primary">Create Job</Button>
         </div>
 
