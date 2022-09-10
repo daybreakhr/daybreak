@@ -7,16 +7,20 @@ import {
 
 const tabs = [
   { key: 'home', label: 'Home', icon: <AiOutlineHome /> },
+  { key: 'jobs', label: 'Jobs', icon: <AiOutlineWallet /> },
   {
     key: 'candidates',
     label: 'Candidates',
     icon: <AiOutlineTeam />,
   },
-  { key: 'jobs', label: 'Jobs', icon: <AiOutlineWallet /> },
   {
-    key: 'members',
-    label: 'Members',
+    key: 'settings',
+    label: 'Settings',
     icon: <AiOutlineSetting />,
+    children: [
+      { key: 'settings/organisation', label: 'Organisation' },
+      { key: 'settings/members', label: 'Members' },
+    ],
   },
 ]
 
