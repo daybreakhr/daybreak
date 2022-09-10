@@ -11,7 +11,7 @@ export type Job = {
   status: 'Open' | 'Closed'
 }
 
-const priorityColors = {
+const priorityColors: Record<string, string> = {
   High: 'red',
   Medium: 'gold',
   Low: 'green',
