@@ -11,13 +11,13 @@ export type Job = {
   status: 'Open' | 'Closed'
 }
 
-const priorityColors = [
-  { priority: 'High', color: 'red' },
-  { priority: 'Medium', color: 'gold' },
-  { priority: 'Low', color: 'green' },
-  { status: 'Open', color: 'green' },
-  { status: 'Closed', color: 'red' },
-]
+const priorityColors = {
+  High: 'red',
+  Medium: 'gold',
+  Low: 'green',
+  Open: 'green',
+  Closed: 'red',
+}
 
 export const sampleData: Job[] = [
   {
@@ -75,9 +75,7 @@ export const jobColumns: ColumnsType<Job> = [
     dataIndex: 'priority',
     key: 'priority',
     render: (priority: string) => (
-      <Tag color={priorityColors.find((p) => p.priority === priority)?.color}>
-        {priority}
-      </Tag>
+      <Tag color={priorityColors[priority]}>{priority}</Tag>
     ),
     filters: [
       { text: 'Low', value: 'low' },
@@ -91,9 +89,7 @@ export const jobColumns: ColumnsType<Job> = [
     dataIndex: 'status',
     key: 'status',
     render: (status: string) => (
-      <Tag color={priorityColors.find((p) => p.status === status)?.color}>
-        {status}
-      </Tag>
+      <Tag color={priorityColors[status]}>{status}</Tag>
     ),
     filters: [
       { text: 'Open', value: 'open' },
