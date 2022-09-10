@@ -9,6 +9,7 @@ import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
 import Candidate from 'pages/candidate'
 import Members from 'pages/members'
+import Jobs from 'pages/jobs'
 
 const queryClient = new QueryClient()
 
@@ -21,9 +22,10 @@ export default function App() {
             <Route path="/" element={<Login />} />
             <Route path="/" element={<AuthLayout component={AppShell} />}>
               <Route path="home" element={<Home />} />
+              <Route path="jobs" element={<Jobs />} />
               <Route path="candidates" element={<Candidate />} />
-              <Route path="jobs" element={<Home />} />
-              <Route path="members" element={<Members />} />
+              <Route path="settings/organisation" element={<Home />} />
+              <Route path="settings/members" element={<Members />} />
             </Route>
           </Routes>
         </BrowserRouter>
