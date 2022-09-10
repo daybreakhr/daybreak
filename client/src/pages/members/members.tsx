@@ -1,30 +1,21 @@
 import { useState } from 'react'
 import { matchSorter } from 'match-sorter'
+import { useQuery } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
 import { AiOutlineFilter, AiOutlineSearch } from 'react-icons/ai'
-import useAuth from 'hooks/use-auth'
-import { sampleData, columns, Member } from './members-list'
+import { Member } from 'types/member'
+import { columns } from './members-list'
 import AddUser from './components/add-user'
+import { fetchMembers } from './queries'
 
 export default function Members() {
-  const { user } = useAuth()
+  const { data, isLoading } = useQuery(['members'], fetchMembers)
 
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('')
   const [isVisible, setIsVisible] = useState(false)
 
-  const data: Member[] = [
-    {
-      email: user?.email ?? '',
-      name: user?.displayName ?? '',
-      role: 'Admin',
-      photoURL: user?.photoURL,
-      key: user?.uid ?? '',
-    },
-    ...sampleData,
-  ]
-
-  const filteredData = matchSorter(data, input, {
+  const filteredData = matchSorter((data ?? []) as Member[], input, {
     keys: ['name', 'email'],
   })
 
@@ -32,6 +23,7 @@ export default function Members() {
 
   return (
     <div className="m-8 p-4 bg-white rounded-md shadow-md">
+      <p className="font-medium font-sans text-xl">Members</p>
       <div className="flex items-center mb-4 space-x-4">
         <Input
           value={input}
@@ -60,7 +52,11 @@ export default function Members() {
         </Button>
       </div>
 
-      <Table dataSource={filterRoleData} columns={columns} />
+      <Table
+        columns={columns}
+        loading={isLoading}
+        dataSource={filterRoleData}
+      />
 
       <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />
     </div>
