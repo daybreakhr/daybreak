@@ -1,13 +1,15 @@
 import { ReactElement, useEffect, useState } from 'react'
+import { message, Spin } from 'antd'
 import {
   onAuthStateChanged,
   signInWithPopup,
   signOut as logOut,
-  User,
 } from 'firebase/auth'
-import { auth, googleAuthProvider } from 'utils/firebase'
+
+import { Role } from 'types/member'
+import { UserWithClaims } from 'types/user'
 import AuthContext from 'contexts/auth-context'
-import { message, Spin } from 'antd'
+import { auth, googleAuthProvider } from 'utils/firebase'
 
 type AuthProps = {
   children: ReactElement
@@ -15,12 +17,14 @@ type AuthProps = {
 
 export default function Auth({ children }: AuthProps) {
   const [authVerified, setAuthVerified] = useState(false)
-  const [user, setUser] = useState<User | null>(auth.currentUser)
+  const [user, setUser] = useState<UserWithClaims | null>(auth.currentUser)
 
   useEffect(() => {
-    onAuthStateChanged(auth, (authUser) => {
+    onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
-        setUser(authUser)
+        const idTokenResult = await authUser.getIdTokenResult()
+        const role = idTokenResult.claims?.role as Role
+        setUser({ ...authUser, role })
       } else {
         setUser(null)
       }

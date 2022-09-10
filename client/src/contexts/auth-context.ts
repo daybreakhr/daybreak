@@ -1,8 +1,8 @@
 import { createContext } from 'react'
-import { User } from 'firebase/auth'
+import { UserWithClaims } from 'types/user'
 
 const AuthContext = createContext<{
-  user: User | null
+  user: UserWithClaims | null
   signOut: () => void
   signInWithGoogle: () => void
 }>({
