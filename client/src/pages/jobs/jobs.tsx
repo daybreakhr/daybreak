@@ -3,11 +3,7 @@ import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { AiOutlineSearch } from 'react-icons/ai'
 
-<<<<<<< HEAD
-import JobCard from './components/job-cards'
-=======
 import JobCard from './components/job-card'
->>>>>>> 9510b71359fc5c5a5bb76e006a9667ac6c6ccc66
 import { cardDetails } from './constants/card-details'
 import { sampleData, jobColumns } from './constants/job-list'
 
