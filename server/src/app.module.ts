@@ -1,3 +1,4 @@
+import { APP_GUARD } from '@nestjs/core'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import * as Joi from 'joi'
 import { ConfigModule } from '@nestjs/config'
@@ -7,6 +8,7 @@ import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/auth.middleware'
 import { PrismaService } from './prisma.service'
 import { MembersModule } from './members/members.module'
+import { RolesGuard } from './auth/roles.guard'
 
 @Module({
   imports: [
@@ -24,7 +26,11 @@ import { MembersModule } from './members/members.module'
     MembersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
