@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
@@ -28,16 +28,11 @@ export class MembersService {
   async updateRole(
     memberId: string,
     updateRoleDto: { role: Role },
-    user: UserRecord,
   ): Promise<UserRecord> {
-    if (user.customClaims.role === 'admin') {
-      await this.firebaseService.auth.setCustomUserClaims(memberId, {
-        role: updateRoleDto.role,
-      })
-      const updatedMember = await this.authService.getUser(memberId)
-      return updatedMember
-    } else {
-      throw UnauthorizedException
-    }
+    await this.firebaseService.auth.setCustomUserClaims(memberId, {
+      role: updateRoleDto.role,
+    })
+    const updatedMember = await this.authService.getUser(memberId)
+    return updatedMember
   }
 }
