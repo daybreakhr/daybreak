@@ -10,11 +10,11 @@ export default function JobActions(status: any) {
   const overlay =
     status.status === 'Published' ? (
       <Menu>
-        <Menu.Item key="remove_user" icon={<AiOutlineSetting />}>
+        <Menu.Item key="edit_job" icon={<AiOutlineSetting />}>
           Edit
         </Menu.Item>
         <Menu.Item
-          key="change_role"
+          key="change_status"
           icon={<AiOutlineClose className="text-red-500" />}
         >
           <span className="text-red-500">Mark as Unpublished</span>
@@ -22,11 +22,11 @@ export default function JobActions(status: any) {
       </Menu>
     ) : (
       <Menu>
-        <Menu.Item key="remove_user" icon={<AiOutlineSetting />}>
+        <Menu.Item key="edit_job" icon={<AiOutlineSetting />}>
           Edit
         </Menu.Item>
         <Menu.Item
-          key="change_role"
+          key="change_status"
           icon={<AiOutlineCheck className="text-green-600" />}
         >
           <span className="text-green-600">Mark as Published</span>
