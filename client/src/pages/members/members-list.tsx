@@ -1,7 +1,8 @@
-import { Avatar, Typography } from 'antd'
+import { Avatar } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
 import { Member } from 'types/member'
+import UserActions from './components/user-actions'
 
 export const columns: ColumnsType<Member> = [
   {
@@ -24,5 +25,10 @@ export const columns: ColumnsType<Member> = [
     key: 'role',
     render: (role: string) => capitalize(role),
   },
-  { title: '', render: () => <Typography.Link>Edit</Typography.Link> },
+  {
+    title: '',
+    dataIndex: 'actions',
+    key: 'actions',
+    render: (_, { uid }) => <UserActions uid={uid} />,
+  },
 ]

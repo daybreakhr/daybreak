@@ -5,7 +5,6 @@ import {
   signInWithPopup,
   signOut as logOut,
 } from 'firebase/auth'
-
 import { Role } from 'types/member'
 import { UserWithClaims } from 'types/user'
 import AuthContext from 'contexts/auth-context'
@@ -24,7 +23,13 @@ export default function Auth({ children }: AuthProps) {
       if (authUser) {
         const idTokenResult = await authUser.getIdTokenResult()
         const role = idTokenResult.claims?.role as Role
-        setUser({ ...authUser, role })
+        setUser(authUser)
+        setUser((prev) => {
+          if (prev) {
+            prev.role = role
+          }
+          return prev
+        })
       } else {
         setUser(null)
       }
@@ -57,13 +62,7 @@ export default function Auth({ children }: AuthProps) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        signOut,
-        signInWithGoogle,
-      }}
-    >
+    <AuthContext.Provider value={{ user, signOut, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   )
