@@ -1,5 +1,6 @@
 import { Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import JobActions from '../components/job-action'
 
 export type Job = {
   key: string
@@ -8,15 +9,15 @@ export type Job = {
   location: string
   priority: 'High' | 'Medium' | 'Low'
   listedon: string
-  status: 'Open' | 'Closed'
+  status: 'Published' | 'Unpublished'
 }
 
 const priorityColors: Record<string, string> = {
   High: 'red',
   Medium: 'gold',
   Low: 'green',
-  Open: 'green',
-  Closed: 'red',
+  Published: 'green',
+  Unpublished: 'red',
 }
 
 export const sampleData: Job[] = [
@@ -27,7 +28,7 @@ export const sampleData: Job[] = [
     location: 'Bangalore',
     priority: 'High',
     listedon: '14 Apr 2021, 8:43 PM',
-    status: 'Closed',
+    status: 'Published',
   },
   {
     key: '2',
@@ -36,7 +37,7 @@ export const sampleData: Job[] = [
     location: 'Gurgaon',
     priority: 'Medium',
     listedon: '16 Sep 2021, 5:20 PM',
-    status: 'Open',
+    status: 'Unpublished',
   },
   {
     key: '3',
@@ -45,7 +46,7 @@ export const sampleData: Job[] = [
     location: 'Chennai',
     priority: 'Low',
     listedon: '14 Oct 2021, 10:20 AM',
-    status: 'Open',
+    status: 'Published',
   },
 ]
 
@@ -97,5 +98,11 @@ export const jobColumns: ColumnsType<Job> = [
       { text: 'Offer Rolled Out', value: 'offerRolledOut' },
       { text: 'On Hold', value: 'onHold' },
     ],
+  },
+  {
+    title: '',
+    dataIndex: 'status',
+    key: 'action',
+    render: (status) => <JobActions status={status} />,
   },
 ]
