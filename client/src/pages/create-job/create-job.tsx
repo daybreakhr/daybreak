@@ -1,8 +1,15 @@
 import { useState } from 'react'
-import { Checkbox, Form, Input } from 'antd'
+import { Checkbox, Form, Input, Select } from 'antd'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import {
+  jobTypeOptions,
+  departmentOptions,
+  locationOptions,
+  experienceOptions,
+  currency_list,
+} from './constants/create-job-values'
 
 export default function CreateJobs() {
   const [editorState, setEditorState] = useState(() =>
@@ -14,23 +21,48 @@ export default function CreateJobs() {
       <div className="p-6 bg-white rounded-md shadow-md">
         <p className="font-medium font-sans text-xl">Create New Job</p>
         <Form layout="vertical">
-          <Form.Item label="Job Title" name="title">
+          <Form.Item
+            label="Job Title"
+            name="title"
+            rules={[{ required: true, message: 'Job-Title is required!' }]}
+          >
             <Input placeholder="Job Title..." />
           </Form.Item>
 
           <div className="flex items-center w-full space-x-4">
-            <Form.Item label="Department" name="department" className="flex-1">
-              <Input placeholder="Select Department..." />
+            <Form.Item
+              label="Department"
+              name="department"
+              className="flex-1"
+              rules={[{ required: true, message: 'Please select department' }]}
+            >
+              <Select
+                placeholder="Select Department..."
+                options={departmentOptions}
+              />
             </Form.Item>
 
-            <Form.Item label="Job Type" name="type" className="flex-1">
-              <Input placeholder="Job Type..." />
+            <Form.Item
+              label="Job Type"
+              name="type"
+              className="flex-1"
+              rules={[{ required: true, message: 'Please select Job Type' }]}
+            >
+              <Select placeholder="Job Type..." options={jobTypeOptions} />
             </Form.Item>
           </div>
 
           <div className="flex items-center w-full space-x-4">
-            <Form.Item label="Location" name="location" className="flex-1">
-              <Input placeholder="Select Office Location..." />
+            <Form.Item
+              label="Location"
+              name="location"
+              className="flex-1"
+              rules={[{ required: true, message: 'Please select location' }]}
+            >
+              <Select
+                placeholder="Select Office Location..."
+                options={locationOptions}
+              />
             </Form.Item>
 
             <Form.Item
@@ -50,12 +82,32 @@ export default function CreateJobs() {
           />
 
           <div className="flex items-center w-full space-x-4">
-            <Form.Item label="Skills" name="skills" className="flex-1">
+            <Form.Item
+              label="Skills"
+              name="skills"
+              className="flex-1"
+              rules={[
+                { required: true, message: 'Please choose required skills' },
+              ]}
+            >
               <Input placeholder="Select Skills Required..." />
             </Form.Item>
 
-            <Form.Item label="Experience" name="experience" className="flex-1">
-              <Input placeholder="Select Experience Required..." />
+            <Form.Item
+              label="Experience"
+              name="experience"
+              className="flex-1"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please choose required experience',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select Experience Required..."
+                options={experienceOptions}
+              />
             </Form.Item>
           </div>
 
@@ -69,7 +121,11 @@ export default function CreateJobs() {
             </Form.Item>
 
             <Form.Item label="Currency" name="currency" className="flex-1">
-              <Input placeholder="Select Currency..." />
+              <Select
+                showSearch
+                placeholder="Select Currency..."
+                options={currency_list}
+              />
             </Form.Item>
           </div>
         </Form>
