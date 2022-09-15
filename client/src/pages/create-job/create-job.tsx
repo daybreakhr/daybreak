@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Checkbox, Form, Input, Select } from 'antd'
+import { Button, Checkbox, Form, Input, Select } from 'antd'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -126,6 +126,17 @@ export default function CreateJobs() {
                 placeholder="Select Currency..."
                 options={currency_list}
               />
+            </Form.Item>
+          </div>
+          <div className="flex justify-end">
+            <Form.Item>
+              <Button type="default" className="mr-4">
+                Save as Draft
+              </Button>
+
+              <Button type="primary" htmlType="submit">
+                Create and Publish
+              </Button>
             </Form.Item>
           </div>
         </Form>
