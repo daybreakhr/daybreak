@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -8,6 +9,7 @@ import { cardDetails } from './constants/card-details'
 import { sampleData, jobColumns } from './constants/job-list'
 
 export default function Jobs() {
+  const navigate = useNavigate()
   const [input, setInput] = useState('')
   const filteredData = matchSorter(sampleData, input, {
     keys: ['jobrole'],
@@ -31,7 +33,9 @@ export default function Jobs() {
             placeholder="Search by Job Role..."
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button type="primary">Create Job</Button>
+          <Button type="primary" onClick={() => navigate('/jobs/create')}>
+            Create Job
+          </Button>
         </div>
 
         <Table dataSource={filteredData} columns={jobColumns} />

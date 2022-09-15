@@ -13,6 +13,9 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  define: {
+    global: {},
+  },
   css: {
     preprocessorOptions: {
       less: {
