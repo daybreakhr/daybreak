@@ -18,7 +18,7 @@ export default function CreateJobs() {
 
   return (
     <div className="p-8">
-      <div className="p-6 bg-white rounded-md shadow-md">
+      <div className="px-6 pt-6 bg-white rounded-md shadow-md">
         <p className="font-medium font-sans text-xl">Create New Job</p>
         <Form layout="vertical">
           <Form.Item
@@ -128,7 +128,7 @@ export default function CreateJobs() {
               />
             </Form.Item>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-4">
             <Form.Item>
               <Button type="default" className="mr-4">
                 Save as Draft
