@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -31,7 +32,9 @@ export default function Jobs() {
             placeholder="Search by Job Role..."
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button type="primary">Create Job</Button>
+          <Link to="/jobs/create">
+            <Button type="primary">Create Job</Button>
+          </Link>
         </div>
 
         <Table dataSource={filteredData} columns={jobColumns} />

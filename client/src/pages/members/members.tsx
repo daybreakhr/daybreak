@@ -16,7 +16,7 @@ export default function Members() {
   const [isVisible, setIsVisible] = useState(false)
 
   const filteredData = matchSorter((data ?? []) as Member[], input, {
-    keys: ['name', 'email'],
+    keys: ['displayName', 'email'],
   })
 
   const filterRoleData = matchSorter(filteredData, filter, { keys: ['role'] })
