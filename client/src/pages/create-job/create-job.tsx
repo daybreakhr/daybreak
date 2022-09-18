@@ -1,8 +1,5 @@
-import { useState } from 'react'
 import { Button, Checkbox, Form, Input, Select, Tag } from 'antd'
-import { EditorState } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import Editor from 'components/editor'
 import {
   jobTypeOptions,
   departmentOptions,
@@ -13,10 +10,6 @@ import {
 } from './constants/create-job-values'
 
 export default function CreateJobs() {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(),
-  )
-
   return (
     <div className="p-8">
       <div className="px-6 pt-6 bg-white rounded-md shadow-md">
@@ -91,11 +84,7 @@ export default function CreateJobs() {
             </Form.Item>
           </div>
 
-          <Editor
-            editorState={editorState}
-            editorClassName="border mb-4 px-4 min-h-[20rem]"
-            onEditorStateChange={setEditorState}
-          />
+          <Editor />
 
           <div className="flex items-center w-full space-x-4">
             <Form.Item
