@@ -22,18 +22,11 @@ export const locationOptions = [
 ]
 
 export const experienceOptions = [
-  { key: 1, value: '0 Years' },
-  { key: 2, value: '1 Years' },
-  { key: 3, value: '2 Years' },
-  { key: 4, value: '3 Years' },
-  { key: 5, value: '4 Years' },
-  { key: 6, value: '5 Years' },
-  { key: 7, value: '6 Years' },
-  { key: 8, value: '7 Years' },
-  { key: 9, value: '8 Years' },
-  { key: 10, value: '9 Years' },
-  { key: 11, value: '10 Years' },
-  { key: 12, value: '> 10 Years' },
+  { label: '< 3 years', value: '< 3 years' },
+  { label: '3-5 years', value: '3-5 years' },
+  { label: '5-7 years', value: '5-7 years' },
+  { label: '7-10 years', value: '7-10 years' },
+  { label: '> 10 years', value: '> 10 years' },
 ]
 
 export const skillList = [

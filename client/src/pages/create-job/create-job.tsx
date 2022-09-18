@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Select, Tag } from 'antd'
+import { Button, Checkbox, Form, Input, InputNumber, Select, Tag } from 'antd'
 import Editor from 'components/editor'
 import {
   jobTypeOptions,
@@ -14,7 +14,14 @@ export default function CreateJobs() {
     <div className="p-8">
       <div className="px-6 pt-6 bg-white rounded-md shadow-md">
         <p className="font-medium font-sans text-xl">Create New Job</p>
-        <Form layout="vertical">
+        <Form
+          layout="vertical"
+          initialValues={{
+            skills: ['HTML', 'CSS', 'JavaScript', 'React'],
+            experience: '< 3 years',
+            currency: 'Indian Rupee (₹)',
+          }}
+        >
           <Form.Item
             label="Job Title"
             name="title"
@@ -122,22 +129,25 @@ export default function CreateJobs() {
           </div>
 
           <div className="flex items-center w-full space-x-4">
-            <Form.Item label="Min Salary" name="minSalary" className="flex-1">
-              <Input placeholder="Select Skills Required..." />
-            </Form.Item>
-
-            <Form.Item label="Max Salary" name="maxSalart" className="flex-1">
-              <Input placeholder="Select Skills Required..." />
-            </Form.Item>
-
             <Form.Item label="Currency" name="currency" className="flex-1">
               <Select
                 showSearch
                 options={currency_list}
                 placeholder="Select Currency..."
-                defaultValue={currency_list.find((element) => {
-                  return element.value === 'Indian Rupee (₹)'
-                })}
+              />
+            </Form.Item>
+
+            <Form.Item label="Min Salary" name="minSalary" className="flex-1">
+              <InputNumber
+                placeholder="Enter Min Salary..."
+                className="!w-full"
+              />
+            </Form.Item>
+
+            <Form.Item label="Max Salary" name="maxSalart" className="flex-1">
+              <InputNumber
+                placeholder="Enter Max Salary..."
+                className="!w-full"
               />
             </Form.Item>
           </div>
