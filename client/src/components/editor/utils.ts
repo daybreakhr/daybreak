@@ -1,6 +1,6 @@
 import { BaseEditor, Editor, Element as SlateElement, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { CustomElement, CustomText, ElementType, TextAlign } from './editor'
+import { CustomElement, CustomText, ElementType, TextAlign } from 'types/editor'
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list']
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
