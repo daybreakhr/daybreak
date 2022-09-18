@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Checkbox, Form, Input, Select } from 'antd'
+import { Button, Checkbox, Form, Input, Select, Tag } from 'antd'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -8,6 +8,7 @@ import {
   departmentOptions,
   locationOptions,
   experienceOptions,
+  skillList,
   currency_list,
 } from './constants/create-job-values'
 
@@ -28,7 +29,6 @@ export default function CreateJobs() {
           >
             <Input placeholder="Job Title..." />
           </Form.Item>
-
           <div className="flex items-center w-full space-x-4">
             <Form.Item
               label="Department"
@@ -49,6 +49,22 @@ export default function CreateJobs() {
               rules={[{ required: true, message: 'Please select Job Type' }]}
             >
               <Select placeholder="Job Type..." options={jobTypeOptions} />
+            </Form.Item>
+            <Form.Item
+              label="Tag"
+              name="tag"
+              className="flex-1"
+              rules={[{ required: true, message: 'Please select Job Type' }]}
+            >
+              <Tag closable color="blue">
+                Tag 1
+              </Tag>
+              <Tag closable color="blue">
+                Tag 2
+              </Tag>
+              <Tag closable color="blue">
+                Tag 3
+              </Tag>
             </Form.Item>
           </div>
 
@@ -90,7 +106,12 @@ export default function CreateJobs() {
                 { required: true, message: 'Please choose required skills' },
               ]}
             >
-              <Input placeholder="Select Skills Required..." />
+              <Select
+                mode="multiple"
+                allowClear
+                placeholder="Please select required skills"
+                options={skillList}
+              />
             </Form.Item>
 
             <Form.Item
@@ -123,8 +144,11 @@ export default function CreateJobs() {
             <Form.Item label="Currency" name="currency" className="flex-1">
               <Select
                 showSearch
-                placeholder="Select Currency..."
                 options={currency_list}
+                placeholder="Select Currency..."
+                defaultValue={currency_list.find((element) => {
+                  return element.value === 'Indian Rupee (₹)'
+                })}
               />
             </Form.Item>
           </div>
