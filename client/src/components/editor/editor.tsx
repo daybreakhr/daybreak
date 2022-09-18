@@ -29,7 +29,7 @@ export type TextAlign = 'left' | 'center' | 'right' | 'justify'
 export type CustomElement = {
   type: ElementType
   align?: TextAlign
-  children: CustomText[]
+  children: CustomText[] | CustomElement[]
 }
 export type CustomText = {
   text: string
