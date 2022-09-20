@@ -11,22 +11,26 @@ datasource db {
 }
 
 model Workspace {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  slug      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  members   Member[]
-  invitees  Invitees[]
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  slug       String       @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  members    Member[]
+  invitees   Invitees[]
+  Department Department[]
+  Location   Location[]
 }
 
 model Member {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  uid         String
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  uid         String       @unique
   role        Role
   invites     Invitees[]
-  Workspace   Workspace  @relation(fields: [workspaceId], references: [id])
-  workspaceId String     @db.ObjectId
+  Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
+  workspaceId String       @db.ObjectId
+  Department  Department[]
+  Location    Location[]
 }
 
 model Invitees {
@@ -45,4 +49,26 @@ model Invitees {
 enum Role {
   admin
   member
+}
+
+model Department {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @db.ObjectId
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+}
+
+model Location {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @db.ObjectId
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
 }

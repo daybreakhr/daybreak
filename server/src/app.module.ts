@@ -9,6 +9,8 @@ import { AuthMiddleware } from './auth/auth.middleware'
 import { PrismaService } from './prisma.service'
 import { MembersModule } from './members/members.module'
 import { RolesGuard } from './auth/roles.guard'
+import { DepartmentModule } from './department/department.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { RolesGuard } from './auth/roles.guard'
     }),
     AuthModule,
     MembersModule,
+    DepartmentModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [
