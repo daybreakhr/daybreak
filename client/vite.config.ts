@@ -17,6 +17,10 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
+        modifyVars: {
+          '@padding-md': '18px',
+          '@border-radius-base': '5px',
+        },
       },
     },
   },

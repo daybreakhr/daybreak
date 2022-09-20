@@ -1,72 +1,72 @@
 import { Descendant } from 'slate'
 
 export const initialValue: Descendant[] = [
-  {
-    type: 'heading-one',
-    children: [
-      {
-        text: 'Software Engineer - Backend',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'at Nirvana (View all jobs)',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'San Francisco Bay Area, Remote',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'WHO WE ARE',
-        bold: true,
-        underline: true,
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'Nirvana’s mission is to make businesses safer & smarter. Our technology platform delivers modern insurance & risk management to not only help our customers protect their businesses, but actually improve safety for everyone.',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'We’re transforming the legacy, $300B+ commercial insurance industry through cutting-edge predictive models using real-time IoT data (~50B connected devices by 2030), automation to deliver instantaneous quotes, faster underwriting & proactive, data-driven insights to help customers prevent accidents. ',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'Backed by top-tier VCs including General Catalyst & Lightspeed Ventures, Nirvana became the fastest insurtech EVER to launch in Jan 2022 and has crossed >$10M run rate in under 6 months, 2x faster than best-in-class competitors. Our leadership team comes from Samsara, Rubrik, Flexport, Acko Insurance, including 30+yr insurance veterans from Hiscox, AIG & Progressive. ',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: '',
-      },
-    ],
-  },
+  // {
+  //   type: 'heading-one',
+  //   children: [
+  //     {
+  //       text: 'Software Engineer - Backend',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'at Nirvana (View all jobs)',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'San Francisco Bay Area, Remote',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'WHO WE ARE',
+  //       bold: true,
+  //       underline: true,
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'Nirvana’s mission is to make businesses safer & smarter. Our technology platform delivers modern insurance & risk management to not only help our customers protect their businesses, but actually improve safety for everyone.',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'We’re transforming the legacy, $300B+ commercial insurance industry through cutting-edge predictive models using real-time IoT data (~50B connected devices by 2030), automation to deliver instantaneous quotes, faster underwriting & proactive, data-driven insights to help customers prevent accidents. ',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: 'Backed by top-tier VCs including General Catalyst & Lightspeed Ventures, Nirvana became the fastest insurtech EVER to launch in Jan 2022 and has crossed >$10M run rate in under 6 months, 2x faster than best-in-class competitors. Our leadership team comes from Samsara, Rubrik, Flexport, Acko Insurance, including 30+yr insurance veterans from Hiscox, AIG & Progressive. ',
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: 'paragraph',
+  //   children: [
+  //     {
+  //       text: '',
+  //     },
+  //   ],
+  // },
   {
     type: 'paragraph',
     children: [
