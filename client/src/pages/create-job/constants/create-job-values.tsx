@@ -5,22 +5,6 @@ export const jobTypeOptions = [
   { key: 4, value: 'Internship' },
 ]
 
-export const departmentOptions = [
-  { key: 1, value: 'Human Resources' },
-  { key: 2, value: 'IT' },
-  { key: 3, value: 'Accounting and Finance' },
-  { key: 4, value: 'Marketing' },
-  { key: 5, value: 'Research and Development (R&D)' },
-  { key: 6, value: 'Production' },
-]
-
-export const locationOptions = [
-  { key: 1, value: 'Gurgaon' },
-  { key: 2, value: 'Bengaluru' },
-  { key: 3, value: 'Chennai' },
-  { key: 4, value: 'Mumbai' },
-]
-
 export const experienceOptions = [
   { label: '< 3 years', value: '< 3 years' },
   { label: '3-5 years', value: '3-5 years' },

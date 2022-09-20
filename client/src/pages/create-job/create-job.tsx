@@ -1,16 +1,19 @@
+import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, InputNumber, Select, Steps } from 'antd'
 import Editor from 'components/editor'
 import { AiOutlineRight } from 'react-icons/ai'
 import {
   jobTypeOptions,
-  departmentOptions,
-  locationOptions,
   experienceOptions,
   skillList,
   currency_list,
 } from './constants/create-job-values'
+import { fetchDepartments, fetchLocations } from './queries'
 
 export default function CreateJobs() {
+  const { data: departments } = useQuery(['departments'], fetchDepartments)
+  const { data: locations } = useQuery(['locations'], fetchLocations)
+
   return (
     <div className="p-8">
       <div className="p-6 bg-white rounded-md shadow-md mb-6">
@@ -52,7 +55,10 @@ export default function CreateJobs() {
             >
               <Select
                 placeholder="Select Department..."
-                options={departmentOptions}
+                options={departments?.map(({ id, name }) => ({
+                  label: name,
+                  value: id,
+                }))}
               />
             </Form.Item>
 
@@ -73,7 +79,10 @@ export default function CreateJobs() {
             >
               <Select
                 placeholder="Select Office Location..."
-                options={locationOptions}
+                options={locations?.map(({ id, name }) => ({
+                  label: name,
+                  value: id,
+                }))}
               />
             </Form.Item>
 
