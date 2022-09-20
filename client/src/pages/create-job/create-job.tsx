@@ -1,5 +1,6 @@
-import { Button, Checkbox, Form, Input, InputNumber, Select, Tag } from 'antd'
+import { Button, Checkbox, Form, Input, InputNumber, Select, Steps } from 'antd'
 import Editor from 'components/editor'
+import { AiOutlineRight } from 'react-icons/ai'
 import {
   jobTypeOptions,
   departmentOptions,
@@ -12,6 +13,19 @@ import {
 export default function CreateJobs() {
   return (
     <div className="p-8">
+      <div className="p-6 bg-white rounded-md shadow-md mb-6">
+        <Steps current={0}>
+          <Steps.Step
+            title="Create Job"
+            description="Enter detailed job description"
+          />
+          <Steps.Step
+            title="Publish Job"
+            description="Post job on various platforms"
+          />
+        </Steps>
+      </div>
+
       <div className="px-6 pt-6 bg-white rounded-md shadow-md">
         <p className="font-medium font-sans text-xl">Create New Job</p>
         <Form
@@ -50,25 +64,7 @@ export default function CreateJobs() {
             >
               <Select placeholder="Job Type..." options={jobTypeOptions} />
             </Form.Item>
-            <Form.Item
-              label="Tag"
-              name="tag"
-              className="flex-1"
-              rules={[{ required: true, message: 'Please select Job Type' }]}
-            >
-              <Tag closable color="blue">
-                Tag 1
-              </Tag>
-              <Tag closable color="blue">
-                Tag 2
-              </Tag>
-              <Tag closable color="blue">
-                Tag 3
-              </Tag>
-            </Form.Item>
-          </div>
 
-          <div className="flex items-center w-full space-x-4">
             <Form.Item
               label="Location"
               name="location"
@@ -153,12 +149,9 @@ export default function CreateJobs() {
           </div>
           <div className="flex justify-end pt-4">
             <Form.Item>
-              <Button type="default" className="mr-4">
-                Save as Draft
-              </Button>
-
               <Button type="primary" htmlType="submit">
-                Create and Publish
+                <span>Continue</span>
+                <AiOutlineRight />
               </Button>
             </Form.Item>
           </div>
