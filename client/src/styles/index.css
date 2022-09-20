@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 svg {
+  vertical-align: initial;
+}
+
+button svg {
   vertical-align: middle;
   display: inline-block;
 }

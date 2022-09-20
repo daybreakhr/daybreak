@@ -1,170 +1,59 @@
-import { useQuery } from '@tanstack/react-query'
-import { Button, Checkbox, Form, Input, InputNumber, Select, Steps } from 'antd'
-import Editor from 'components/editor'
-import { AiOutlineRight } from 'react-icons/ai'
-import {
-  jobTypeOptions,
-  experienceOptions,
-  skillList,
-  currency_list,
-} from './constants/create-job-values'
-import { fetchDepartments, fetchLocations } from './queries'
+import { useState } from 'react'
+import { Button, Checkbox, Steps } from 'antd'
+import { AiOutlineLeft, AiOutlineRocket } from 'react-icons/ai'
+import Show from 'components/show'
+import JobForm from './components/job-form'
 
 export default function CreateJobs() {
-  const { data: departments } = useQuery(['departments'], fetchDepartments)
-  const { data: locations } = useQuery(['locations'], fetchLocations)
+  const [step, setStep] = useState(0)
 
   return (
     <div className="p-8">
-      <div className="p-6 bg-white rounded-md shadow-md mb-6">
-        <Steps current={0}>
-          <Steps.Step
-            title="Create Job"
-            description="Enter detailed job description"
-          />
-          <Steps.Step
-            title="Publish Job"
-            description="Post job on various platforms"
-          />
-        </Steps>
-      </div>
+      <div className="p-6 bg-white rounded-md shadow-md">
+        <div className="max-w-xl mx-auto">
+          <Steps current={step}>
+            <Steps.Step title="Create Job" />
+            <Steps.Step title="Publish Job" />
+          </Steps>
+        </div>
+        <hr className="my-8" />
 
-      <div className="px-6 pt-6 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl">Create New Job</p>
-        <Form
-          layout="vertical"
-          initialValues={{
-            skills: ['HTML', 'CSS', 'JavaScript', 'React'],
-            experience: '< 3 years',
-            currency: 'Indian Rupee (₹)',
-          }}
-        >
-          <Form.Item
-            label="Job Title"
-            name="title"
-            rules={[{ required: true, message: 'Job-Title is required!' }]}
-          >
-            <Input placeholder="Job Title..." />
-          </Form.Item>
-          <div className="flex items-center w-full space-x-4">
-            <Form.Item
-              label="Department"
-              name="department"
-              className="flex-1"
-              rules={[{ required: true, message: 'Please select department' }]}
-            >
-              <Select
-                placeholder="Select Department..."
-                options={departments?.map(({ id, name }) => ({
-                  label: name,
-                  value: id,
-                }))}
-              />
-            </Form.Item>
+        <Show when={step === 0}>
+          <JobForm onSubmit={() => setStep(1)} />
+        </Show>
 
-            <Form.Item
-              label="Job Type"
-              name="type"
-              className="flex-1"
-              rules={[{ required: true, message: 'Please select Job Type' }]}
-            >
-              <Select placeholder="Job Type..." options={jobTypeOptions} />
-            </Form.Item>
-
-            <Form.Item
-              label="Location"
-              name="location"
-              className="flex-1"
-              rules={[{ required: true, message: 'Please select location' }]}
-            >
-              <Select
-                placeholder="Select Office Location..."
-                options={locations?.map(({ id, name }) => ({
-                  label: name,
-                  value: id,
-                }))}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label=" "
-              name="isRemote"
-              className="flex-1"
-              valuePropName="checked"
-            >
-              <Checkbox>Mark as Remote Job</Checkbox>
-            </Form.Item>
+        <Show when={step === 1}>
+          <div className="grid grid-cols-3 gap-5 mb-6">
+            <div className="border border-gray-400 rounded p-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-20 h-20 bg-gray-200 rounded-md flex-none" />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="mb-0">Careers Portal</p>
+                    <Checkbox defaultChecked={true} />
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    Publish on your company career portal managed by Daybreak
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="border border-gray-400 rounded p-4" />
+            <div className="border border-gray-400 rounded p-4" />
           </div>
 
-          <Editor />
+          <div className="flex items-center justify-end space-x-3">
+            <Button onClick={() => setStep(0)}>
+              <AiOutlineLeft className="mr-1 text-lg" />
+              <span>Back</span>
+            </Button>
 
-          <div className="flex items-center w-full space-x-4">
-            <Form.Item
-              label="Skills"
-              name="skills"
-              className="flex-1"
-              rules={[
-                { required: true, message: 'Please choose required skills' },
-              ]}
-            >
-              <Select
-                mode="multiple"
-                allowClear
-                placeholder="Please select required skills"
-                options={skillList}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Experience"
-              name="experience"
-              className="flex-1"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please choose required experience',
-                },
-              ]}
-            >
-              <Select
-                placeholder="Select Experience Required..."
-                options={experienceOptions}
-              />
-            </Form.Item>
+            <Button type="primary">
+              <AiOutlineRocket className="mr-1 text-lg" />
+              <span>Publish</span>
+            </Button>
           </div>
-
-          <div className="flex items-center w-full space-x-4">
-            <Form.Item label="Currency" name="currency" className="flex-1">
-              <Select
-                showSearch
-                options={currency_list}
-                placeholder="Select Currency..."
-              />
-            </Form.Item>
-
-            <Form.Item label="Min Salary" name="minSalary" className="flex-1">
-              <InputNumber
-                placeholder="Enter Min Salary..."
-                className="!w-full"
-              />
-            </Form.Item>
-
-            <Form.Item label="Max Salary" name="maxSalart" className="flex-1">
-              <InputNumber
-                placeholder="Enter Max Salary..."
-                className="!w-full"
-              />
-            </Form.Item>
-          </div>
-          <div className="flex justify-end pt-4">
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                <span>Continue</span>
-                <AiOutlineRight />
-              </Button>
-            </Form.Item>
-          </div>
-        </Form>
+        </Show>
       </div>
     </div>
   )
