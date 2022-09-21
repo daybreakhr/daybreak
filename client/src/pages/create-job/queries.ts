@@ -8,6 +8,13 @@ export async function fetchDepartments() {
   return data
 }
 
+export async function createDepartment({ name }: { name: string }) {
+  const { data } = await client.post<Department>(`${WORKSPACE_ID}/department`, {
+    name,
+  })
+  return data
+}
+
 export async function fetchLocations() {
   const { data } = await client.get<Location[]>(`${WORKSPACE_ID}/location`)
   return data

@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { AiOutlineRight } from 'react-icons/ai'
 import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Editor from 'components/editor'
-import { fetchDepartments, fetchLocations } from '../queries'
+import { createDepartment, fetchDepartments, fetchLocations } from '../queries'
 import {
   jobTypeOptions,
   experienceOptions,
@@ -15,8 +16,14 @@ type JobFormProps = {
 }
 
 export default function JobForm({ onSubmit }: JobFormProps) {
+  const queryClient = useQueryClient()
+  const [searchDepartment, setSearchDepartment] = useState('')
   const { data: departments } = useQuery(['departments'], fetchDepartments)
   const { data: locations } = useQuery(['locations'], fetchLocations)
+
+  const { mutate: addDepartment } = useMutation(createDepartment, {
+    onSuccess: () => queryClient.invalidateQueries(['departments']),
+  })
 
   return (
     <Form
@@ -47,11 +54,24 @@ export default function JobForm({ onSubmit }: JobFormProps) {
           rules={[{ required: true, message: 'Please select department' }]}
         >
           <Select
+            showSearch
+            onSearch={setSearchDepartment}
             placeholder="Select Department..."
-            options={departments?.map(({ id, name }) => ({
-              label: name,
-              value: id,
-            }))}
+            notFoundContent={
+              <button
+                className="w-full text-gray-800 text-left"
+                onClick={() => addDepartment({ name: searchDepartment })}
+              >
+                <span className="text-gray-400">Create:</span>{' '}
+                {searchDepartment}
+              </button>
+            }
+            filterOption={(input, option) =>
+              option!.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={departments?.map(({ name, id }) => {
+              return { label: name, value: id }
+            })}
           />
         </Form.Item>
 
@@ -72,10 +92,9 @@ export default function JobForm({ onSubmit }: JobFormProps) {
         >
           <Select
             placeholder="Select Office Location..."
-            options={locations?.map(({ id, name }) => ({
-              label: name,
-              value: id,
-            }))}
+            options={locations?.map(({ id, name }) => {
+              return { label: name, value: id }
+            })}
           />
         </Form.Item>
 
