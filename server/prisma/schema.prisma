@@ -20,7 +20,7 @@ model Workspace {
   invitees   Invitees[]
   Department Department[]
   Location   Location[]
-  Jobs       Jobs[]
+  Job        Job[]
 }
 
 model Member {
@@ -32,7 +32,7 @@ model Member {
   workspaceId String       @db.ObjectId
   Department  Department[]
   Location    Location[]
-  Jobs        Jobs[]
+  Job         Job[]
 }
 
 model Invitees {
@@ -53,7 +53,7 @@ enum Role {
   member
 }
 
-model Jobs {
+model Job {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   title        String?
   Department   Department? @relation(fields: [departmentId], references: [id])
@@ -98,7 +98,7 @@ model Department {
   workspaceId String    @db.ObjectId
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
-  Jobs        Jobs[]
+  Job         Job[]
 }
 
 model Location {
@@ -110,5 +110,5 @@ model Location {
   workspaceId String    @db.ObjectId
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
-  Jobs        Jobs[]
+  Job         Job[]
 }
