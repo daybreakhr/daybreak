@@ -20,6 +20,7 @@ model Workspace {
   invitees   Invitees[]
   Department Department[]
   Location   Location[]
+  Jobs       Jobs[]
 }
 
 model Member {
@@ -31,6 +32,7 @@ model Member {
   workspaceId String       @db.ObjectId
   Department  Department[]
   Location    Location[]
+  Jobs        Jobs[]
 }
 
 model Invitees {
@@ -51,6 +53,42 @@ enum Role {
   member
 }
 
+model Jobs {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  title        String?
+  Department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId String?     @db.ObjectId
+  jobType      JobType?
+  Location     Location?   @relation(fields: [locationId], references: [id])
+  locationId   String?     @db.ObjectId
+  isRemote     Boolean     @default(false)
+  description  Json?
+  skills       String[]
+  experience   String?
+  currency     Currency?
+  minSalary    Int?
+  maxSalary    Int?
+  isPublished  Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  Workspace    Workspace   @relation(fields: [workspaceId], references: [id])
+  workspaceId  String      @db.ObjectId
+  Member       Member      @relation(fields: [createdBy], references: [uid])
+  createdBy    String
+}
+
+enum JobType {
+  fullTime
+  partTime
+  contract
+  internship
+}
+
+enum Currency {
+  inr
+  usd
+}
+
 model Department {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -60,6 +98,7 @@ model Department {
   workspaceId String    @db.ObjectId
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
+  Jobs        Jobs[]
 }
 
 model Location {
@@ -71,4 +110,5 @@ model Location {
   workspaceId String    @db.ObjectId
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
+  Jobs        Jobs[]
 }
