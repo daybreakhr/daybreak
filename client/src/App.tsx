@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/" element={<AuthLayout component={AppShell} />}>
               <Route path="home" element={<Home />} />
               <Route path="jobs" element={<Jobs />} />
-              <Route path="jobs/create" element={<CreateJob />} />
+              <Route path="jobs/:jobId/create" element={<CreateJob />} />
               <Route path="candidates" element={<Candidate />} />
               <Route path="settings/organisation" element={<Home />} />
               <Route path="settings/members" element={<Members />} />

@@ -1,17 +1,29 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
+import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import JobCard from './components/job-card'
 import { cardDetails } from './constants/card-details'
-import { sampleData, jobColumns } from './constants/job-list'
+import { jobColumns } from './constants/job-list'
+import { createJob, fetchJobs } from './queries'
 
 export default function Jobs() {
+  const navigate = useNavigate()
   const [input, setInput] = useState('')
-  const filteredData = matchSorter(sampleData, input, {
-    keys: ['jobrole'],
+
+  const { data, isLoading } = useQuery(['jobs'], fetchJobs)
+
+  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
+    onSuccess: ({ id }) => {
+      navigate(`/jobs/${id}/create`)
+    },
+  })
+
+  const filteredData = matchSorter(data ?? [], input, {
+    keys: ['title'],
   })
 
   return (
@@ -32,12 +44,22 @@ export default function Jobs() {
             placeholder="Search by Job Role..."
             onChange={(e) => setInput(e.target.value)}
           />
-          <Link to="/jobs/create">
-            <Button type="primary">Create Job</Button>
-          </Link>
+
+          <Button
+            type="primary"
+            loading={isCreatingJob}
+            icon={<AiOutlinePlus />}
+            onClick={() => mutate()}
+          >
+            Create Job
+          </Button>
         </div>
 
-        <Table dataSource={filteredData} columns={jobColumns} />
+        <Table
+          loading={isLoading}
+          columns={jobColumns}
+          dataSource={filteredData}
+        />
       </div>
     </div>
   )

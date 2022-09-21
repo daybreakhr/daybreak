@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 svg {
-  vertical-align: initial;
+  vertical-align: inherit;
+}
+
+.ant-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 button svg {
-  vertical-align: middle;
-  display: inline-block;
+  margin-right: 4px;
 }

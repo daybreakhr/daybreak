@@ -1,25 +1,46 @@
 import { useState } from 'react'
 import { AiOutlineRight } from 'react-icons/ai'
 import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import Editor from 'components/editor'
-import { createDepartment, fetchDepartments, fetchLocations } from '../queries'
+import {
+  createDepartment,
+  fetchDepartments,
+  fetchJobById,
+  fetchLocations,
+} from '../queries'
 import {
   jobTypeOptions,
   experienceOptions,
   skillList,
   currency_list,
 } from '../constants/create-job-values'
+import { useParams } from 'react-router-dom'
+import { Job } from 'types/job'
 
 type JobFormProps = {
   onSubmit: () => void
 }
 
 export default function JobForm({ onSubmit }: JobFormProps) {
+  const [form] = Form.useForm()
+  const { jobId = '' } = useParams()
   const queryClient = useQueryClient()
   const [searchDepartment, setSearchDepartment] = useState('')
-  const { data: departments } = useQuery(['departments'], fetchDepartments)
-  const { data: locations } = useQuery(['locations'], fetchLocations)
+
+  const [{ data: locations }, { data: departments }] = useQueries({
+    queries: [
+      { queryKey: ['locations'], queryFn: fetchLocations },
+      { queryKey: ['departments'], queryFn: fetchDepartments },
+      {
+        queryKey: ['job', jobId],
+        queryFn: () => fetchJobById(jobId),
+        onSuccess(data: Job) {
+          form.setFieldsValue(data)
+        },
+      },
+    ],
+  })
 
   const { mutate: addDepartment } = useMutation(createDepartment, {
     onSuccess: () => queryClient.invalidateQueries(['departments']),
@@ -27,16 +48,12 @@ export default function JobForm({ onSubmit }: JobFormProps) {
 
   return (
     <Form
+      form={form}
       layout="vertical"
       onFinish={(values) => {
         // eslint-disable-next-line no-console
         console.log(values)
         onSubmit()
-      }}
-      initialValues={{
-        skills: ['HTML', 'CSS', 'JavaScript', 'React'],
-        experience: '< 3 years',
-        currency: 'Indian Rupee (₹)',
       }}
     >
       <Form.Item
@@ -49,7 +66,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
       <div className="flex items-center w-full space-x-4">
         <Form.Item
           label="Department"
-          name="department"
+          name="departmentId"
           className="flex-1"
           rules={[{ required: true, message: 'Please select department' }]}
         >
@@ -77,7 +94,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
 
         <Form.Item
           label="Job Type"
-          name="type"
+          name="jobType"
           className="flex-1"
           rules={[{ required: true, message: 'Please select Job Type' }]}
         >
@@ -86,7 +103,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
 
         <Form.Item
           label="Location"
-          name="location"
+          name="locationId"
           className="flex-1"
           rules={[{ required: true, message: 'Please select location' }]}
         >

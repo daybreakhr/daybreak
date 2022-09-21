@@ -13,6 +13,7 @@
     "@tanstack/react-query-devtools": "^4.2.3",
     "antd": "^4.22.8",
     "clsx": "^1.2.1",
+    "dayjs": "^1.11.5",
     "firebase": "^9.9.3",
     "is-hotkey": "^0.2.0",
     "match-sorter": "^6.3.1",
