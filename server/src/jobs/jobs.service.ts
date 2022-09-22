@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import type { Job } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
@@ -26,5 +27,23 @@ export class JobsService {
       },
     })
     return job
+  }
+
+  async update(jobId: string, updateJobDto: Partial<Job>) {
+    if (updateJobDto) {
+      const job = await this.prismaService.job.update({
+        where: { id: jobId },
+        data: updateJobDto,
+      })
+      return job
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Request body is not available',
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 }

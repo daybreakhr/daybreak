@@ -8,6 +8,7 @@ import {
   fetchDepartments,
   fetchJobById,
   fetchLocations,
+  updateJobById,
 } from '../queries'
 import {
   jobTypeOptions,
@@ -46,15 +47,23 @@ export default function JobForm({ onSubmit }: JobFormProps) {
     onSuccess: () => queryClient.invalidateQueries(['departments']),
   })
 
+  const { mutate: updateJob } = useMutation(updateJobById, {
+    onSuccess: () => queryClient.invalidateQueries(['job', jobId]),
+  })
+
   return (
     <Form
       form={form}
       layout="vertical"
-      onFinish={(values) => {
-        // eslint-disable-next-line no-console
-        console.log(values)
-        onSubmit()
+      onFieldsChange={(a) => {
+        const data: Partial<Job> = a.reduce(
+          // @ts-ignore
+          (acc, val) => ({ ...acc, [val.name[0]]: val.value }),
+          {},
+        )
+        updateJob({ jobId, updateJobDto: data })
       }}
+      onFinish={() => onSubmit()}
     >
       <Form.Item
         label="Job Title"

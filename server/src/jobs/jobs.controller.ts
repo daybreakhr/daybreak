@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import { Job } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
@@ -29,6 +38,13 @@ export class JobsController {
     @GetUser() user: UserRecord,
   ) {
     const data = await this.jobsService.create(workspaceId, user.uid)
+    return data
+  }
+
+  @Patch(':id')
+  @Roles('admin')
+  async update(@Param('id') id: string, @Body() updateJobDto: Partial<Job>) {
+    const data = await this.jobsService.update(id, updateJobDto)
     return data
   }
 }
