@@ -26,6 +26,7 @@
     "slate-react": "^0.82.2"
   },
   "devDependencies": {
+    "@prisma/client": "^4.3.1",
     "@tailwindcss/typography": "^0.5.7",
     "@types/lodash": "^4.14.184",
     "@types/react": "^18.0.17",

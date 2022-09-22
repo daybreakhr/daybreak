@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
-import JobCard from './components/job-card'
-import { cardDetails } from './constants/card-details'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
 
@@ -28,12 +26,6 @@ export default function Jobs() {
 
   return (
     <div className="p-8">
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        {cardDetails.map((card) => (
-          <JobCard key={card.title} {...card} />
-        ))}
-      </div>
-
       <div className="p-4 bg-white rounded-md shadow-md">
         <p className="font-medium font-sans text-xl">Listed Jobs</p>
         <div className="flex items-center mb-4 justify-between">

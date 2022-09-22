@@ -43,6 +43,7 @@ export const jobColumns: ColumnsType<Job> = [
     title: '',
     render: (_, { id }) => (
       <Dropdown
+        trigger={['click']}
         overlay={
           <Menu>
             <Link to={`/jobs/${id}/create`}>
@@ -51,7 +52,7 @@ export const jobColumns: ColumnsType<Job> = [
           </Menu>
         }
       >
-        <button className="rounded-full flex items-center justify-center p-2 hover:bg-gray-100">
+        <button className="flex items-center justify-center w-6 h-6 hover:bg-gray-200 rounded-full">
           <AiOutlineMore />
         </button>
       </Dropdown>

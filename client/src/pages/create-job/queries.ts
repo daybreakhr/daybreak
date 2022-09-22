@@ -25,3 +25,17 @@ export async function fetchLocations() {
   const { data } = await client.get<Location[]>(`${WORKSPACE_ID}/location`)
   return data
 }
+
+export async function updateJobById({
+  jobId,
+  updateJobDto,
+}: {
+  jobId: string
+  updateJobDto: Partial<Job>
+}) {
+  const { data } = await client.patch<Location>(
+    `${WORKSPACE_ID}/jobs/${jobId}`,
+    updateJobDto,
+  )
+  return data
+}
