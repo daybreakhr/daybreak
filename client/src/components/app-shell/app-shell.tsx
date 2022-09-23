@@ -42,7 +42,7 @@ export default function AppShell() {
           </Dropdown>
         </header>
 
-        <div className="bg-gray-100 flex-1 overflow-y-auto">
+        <div className="bg-gray-100 flex-1 overflow-y-auto flex flex-col">
           <Outlet />
         </div>
       </div>
