@@ -1,3 +1,9 @@
+export const jobPriority = [
+  { label: 'High', value: 'high' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Low', value: 'low' },
+]
+
 export const jobTypeOptions = [
   { value: 'fullTime', label: 'Full Time' },
   { value: 'partTime', label: 'Part Time' },

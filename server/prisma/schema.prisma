@@ -56,6 +56,7 @@ enum Role {
 model Job {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   title        String?
+  priority     Priority    @default(medium)
   Department   Department? @relation(fields: [departmentId], references: [id])
   departmentId String?     @db.ObjectId
   jobType      JobType?
@@ -75,6 +76,12 @@ model Job {
   workspaceId  String      @db.ObjectId
   Member       Member      @relation(fields: [createdBy], references: [uid])
   createdBy    String
+}
+
+enum Priority {
+  high
+  medium
+  low
 }
 
 enum JobType {

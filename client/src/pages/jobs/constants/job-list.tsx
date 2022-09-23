@@ -1,9 +1,17 @@
 import dayjs from 'dayjs'
+import { capitalize } from 'lodash'
 import { Link } from 'react-router-dom'
 import { Dropdown, Menu, Tag } from 'antd'
+import type { Priority } from '@prisma/client'
 import type { ColumnsType } from 'antd/es/table'
 import { AiOutlineEdit, AiOutlineMore } from 'react-icons/ai'
 import { Job } from 'types/job'
+
+const priorityColor: Record<Priority, string> = {
+  high: 'red',
+  medium: 'default',
+  low: 'green',
+}
 
 export const jobColumns: ColumnsType<Job> = [
   {
@@ -22,6 +30,14 @@ export const jobColumns: ColumnsType<Job> = [
     dataIndex: 'Department',
     key: 'Department',
     render: ({ name }) => name,
+  },
+  {
+    title: 'Priority',
+    dataIndex: 'priority',
+    key: 'priority',
+    render: (priority: Priority) => (
+      <Tag color={priorityColor[priority]}>{capitalize(priority)}</Tag>
+    ),
   },
   {
     title: 'Created On',

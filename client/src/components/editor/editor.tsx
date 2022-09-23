@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { withHistory } from 'slate-history'
-import { createEditor } from 'slate'
+import { createEditor, Descendant } from 'slate'
 import { Editable, Slate, withReact } from 'slate-react'
 import type { RenderElementProps, RenderLeafProps } from 'slate-react'
 import {
@@ -15,7 +15,7 @@ import {
 import { MdOutlineLooksOne, MdOutlineLooksTwo } from 'react-icons/md'
 import { CustomText } from 'types/editor'
 import { toggleMark } from './utils'
-import { initialValue } from './initial-values'
+import { initialValues } from './initial-values'
 import { BlockButton, Element, Leaf, MarkButton } from './components'
 
 const HOTKEYS: Record<string, keyof Omit<CustomText, 'text'>> = {
@@ -25,7 +25,12 @@ const HOTKEYS: Record<string, keyof Omit<CustomText, 'text'>> = {
   //   'mod+k': 'link',
 }
 
-export default function Editor() {
+type EditorProps = {
+  initialValue?: Descendant[] | null
+  onChange: (value: Descendant[]) => void
+}
+
+export default function Editor({ initialValue, onChange }: EditorProps) {
   const [editor] = useState(() => withHistory(withReact(createEditor())))
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
@@ -37,7 +42,18 @@ export default function Editor() {
   )
 
   return (
-    <Slate editor={editor} value={initialValue}>
+    <Slate
+      editor={editor}
+      value={initialValue ?? initialValues}
+      onChange={(value) => {
+        const isAstChange = editor.operations.some(
+          (op) => op.type !== 'set_selection',
+        )
+        if (isAstChange) {
+          onChange(value)
+        }
+      }}
+    >
       <div className="p-4 border-x border-t rounded-t bg-gray-50 space-x-3">
         <MarkButton format="bold" icon={<AiOutlineBold />} />
         <MarkButton format="italic" icon={<AiOutlineItalic />} />

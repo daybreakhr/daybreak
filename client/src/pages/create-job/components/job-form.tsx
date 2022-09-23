@@ -1,10 +1,18 @@
-import { useState } from 'react'
-import { AiOutlineRight } from 'react-icons/ai'
-import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd'
+import { debounce } from 'lodash'
+import { useParams } from 'react-router-dom'
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Spin,
+} from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import Editor from 'components/editor'
 import {
-  createDepartment,
   fetchDepartments,
   fetchJobById,
   fetchLocations,
@@ -15,9 +23,10 @@ import {
   experienceOptions,
   skillList,
   currency_list,
+  jobPriority,
 } from '../constants/create-job-values'
-import { useParams } from 'react-router-dom'
 import { Job } from 'types/job'
+import { Descendant } from 'slate'
 
 type JobFormProps = {
   onSubmit: () => void
@@ -27,9 +36,12 @@ export default function JobForm({ onSubmit }: JobFormProps) {
   const [form] = Form.useForm()
   const { jobId = '' } = useParams()
   const queryClient = useQueryClient()
-  const [searchDepartment, setSearchDepartment] = useState('')
 
-  const [{ data: locations }, { data: departments }] = useQueries({
+  const [
+    { data: locations, isLoading: isLocationsLoading },
+    { data: departments, isLoading: isDepartmentsLoading },
+    { data: job, isLoading: isJobLoading },
+  ] = useQueries({
     queries: [
       { queryKey: ['locations'], queryFn: fetchLocations },
       { queryKey: ['departments'], queryFn: fetchDepartments },
@@ -43,35 +55,42 @@ export default function JobForm({ onSubmit }: JobFormProps) {
     ],
   })
 
-  const { mutate: addDepartment } = useMutation(createDepartment, {
-    onSuccess: () => queryClient.invalidateQueries(['departments']),
+  const { mutate: updateJob } = useMutation(updateJobById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['job', jobId])
+      message.success('Successfully saved form data!')
+    },
   })
 
-  const { mutate: updateJob } = useMutation(updateJobById, {
-    onSuccess: () => queryClient.invalidateQueries(['job', jobId]),
-  })
+  const handleSubmit = (values: any) => {
+    updateJob({ jobId, updateJobDto: values })
+  }
+
+  if (isDepartmentsLoading || isJobLoading || isLocationsLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Spin tip="Loading..." />
+      </div>
+    )
+  }
 
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFieldsChange={(a) => {
-        const data: Partial<Job> = a.reduce(
-          // @ts-ignore
-          (acc, val) => ({ ...acc, [val.name[0]]: val.value }),
-          {},
-        )
-        updateJob({ jobId, updateJobDto: data })
-      }}
-      onFinish={() => onSubmit()}
-    >
-      <Form.Item
-        label="Job Title"
-        name="title"
-        rules={[{ required: true, message: 'Job-Title is required!' }]}
-      >
-        <Input placeholder="Job Title..." />
-      </Form.Item>
+    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+      <div className="flex items-center space-x-4">
+        <Form.Item
+          name="title"
+          label="Job Title"
+          className="flex-1"
+          rules={[{ required: true, message: 'Job-Title is required!' }]}
+        >
+          <Input placeholder="Job Title..." />
+        </Form.Item>
+
+        <Form.Item name="priority" label="Priority" className="w-48">
+          <Select placeholder="Select Job Priority" options={jobPriority} />
+        </Form.Item>
+      </div>
+
       <div className="flex items-center w-full space-x-4">
         <Form.Item
           label="Department"
@@ -80,21 +99,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
           rules={[{ required: true, message: 'Please select department' }]}
         >
           <Select
-            showSearch
-            onSearch={setSearchDepartment}
             placeholder="Select Department..."
-            notFoundContent={
-              <button
-                className="w-full text-gray-800 text-left"
-                onClick={() => addDepartment({ name: searchDepartment })}
-              >
-                <span className="text-gray-400">Create:</span>{' '}
-                {searchDepartment}
-              </button>
-            }
-            filterOption={(input, option) =>
-              option!.label.toLowerCase().includes(input.toLowerCase())
-            }
             options={departments?.map(({ name, id }) => {
               return { label: name, value: id }
             })}
@@ -134,7 +139,13 @@ export default function JobForm({ onSubmit }: JobFormProps) {
         </Form.Item>
       </div>
 
-      <Editor />
+      <Editor
+        initialValue={job?.description as Descendant[]}
+        onChange={debounce(
+          (description) => updateJob({ jobId, updateJobDto: { description } }),
+          2000,
+        )}
+      />
 
       <div className="flex items-center w-full space-x-4">
         <Form.Item
@@ -179,18 +190,40 @@ export default function JobForm({ onSubmit }: JobFormProps) {
         </Form.Item>
 
         <Form.Item label="Min Salary" name="minSalary" className="flex-1">
-          <InputNumber placeholder="Enter Min Salary..." className="!w-full" />
+          <InputNumber
+            placeholder="Enter Min Salary..."
+            className="!w-full"
+            parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+          />
         </Form.Item>
 
         <Form.Item label="Max Salary" name="maxSalary" className="flex-1">
-          <InputNumber placeholder="Enter Max Salary..." className="!w-full" />
+          <InputNumber
+            placeholder="Enter Max Salary..."
+            className="!w-full"
+            parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+          />
         </Form.Item>
       </div>
 
-      <div className="flex items-center justify-end">
-        <Button type="primary" htmlType="submit">
-          <span>Continue</span>
-          <AiOutlineRight />
+      <div className="flex items-center justify-end space-x-3">
+        <Button htmlType="submit">Save Draft</Button>
+
+        <Button
+          type="primary"
+          htmlType="button"
+          onClick={() => {
+            form.submit()
+            onSubmit()
+          }}
+        >
+          Continue
         </Button>
       </div>
     </Form>

@@ -1,15 +1,25 @@
 import { useState } from 'react'
 import { Button, Checkbox } from 'antd'
-import { AiOutlineLeft, AiOutlineRocket } from 'react-icons/ai'
+import {
+  AiOutlineArrowLeft,
+  AiOutlineLeft,
+  AiOutlineRocket,
+} from 'react-icons/ai'
 import Show from 'components/show'
 import JobForm from './components/job-form'
+import { Link } from 'react-router-dom'
 
 export default function CreateJobs() {
   const [step, setStep] = useState(0)
 
   return (
-    <div className="p-8">
-      <div className="p-6 bg-white rounded-md shadow-md">
+    <div className="px-8 pt-4 pb-8 flex-1 flex flex-col">
+      <Link to="/jobs" className="mb-4 flex items-center space-x-2">
+        <AiOutlineArrowLeft />
+        <span>Jobs List</span>
+      </Link>
+
+      <div className="p-6 bg-white rounded-md shadow-md flex-1">
         <Show when={step === 0}>
           <p className="font-medium font-sans text-xl">Create Job</p>
           <JobForm onSubmit={() => setStep(1)} />

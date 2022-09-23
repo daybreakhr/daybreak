@@ -12,7 +12,9 @@ import Members from 'pages/members'
 import Jobs from 'pages/jobs'
 import CreateJob from 'pages/create-job'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+})
 
 export default function App() {
   return (
