@@ -26,17 +26,18 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
 
   return (
     <Modal
-      width={560}
-      closable={false}
+      width={640}
       visible={isVisible}
       onOk={handleSubmit}
       onCancel={handleCancel}
       title="Invite new user"
     >
-      <Form form={form} layout="inline">
-        <div className="flex-1">
+      <Form form={form} layout="vertical">
+        <div className="flex items-center space-x-4">
           <Form.Item
             name="email"
+            label="Email"
+            className="flex-1"
             rules={[
               {
                 required: true,
@@ -47,16 +48,30 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
           >
             <Input prefix={<AiOutlineUser />} placeholder="Email Address..." />
           </Form.Item>
+
+          <Form.Item
+            name="role"
+            label="Role"
+            className="w-40"
+            rules={[{ required: true, message: 'Please select role!!' }]}
+          >
+            <Select placeholder="Select Role" allowClear>
+              <Select.Option value="admin">Admin</Select.Option>
+              <Select.Option value="member">Member</Select.Option>
+            </Select>
+          </Form.Item>
         </div>
 
-        <Form.Item
-          name="role"
-          rules={[{ required: true, message: 'Please select role!!' }]}
-        >
-          <Select placeholder="Select Role" allowClear>
-            <Select.Option value="admin">Admin</Select.Option>
-            <Select.Option value="member">Member</Select.Option>
-          </Select>
+        <Form.Item name="linkedIn" label="LinkedIn URL">
+          <Input placeholder="Enter LinkedIn URL of the user..." />
+        </Form.Item>
+
+        <Form.Item name="bio" label="Bio">
+          <Input.TextArea
+            rows={4}
+            maxLength={6}
+            placeholder="User's bio will be used when setting interviews with candidates..."
+          />
         </Form.Item>
       </Form>
     </Modal>
