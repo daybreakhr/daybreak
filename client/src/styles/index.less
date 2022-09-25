@@ -10,11 +10,17 @@ svg {
 }
 
 .ant-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  @apply inline-flex items-center justify-center;
 }
 
 .ant-btn svg {
   margin-right: 4px;
+}
+
+.ant-tabs-top > .ant-tabs-nav {
+  @apply mb-0;
+}
+
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
+  @apply px-4 pt-2;
 }

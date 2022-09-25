@@ -1,30 +1,30 @@
-import { useState } from 'react'
-import { matchSorter } from 'match-sorter'
-import { Button, Input, Table } from 'antd'
-import { AiOutlineSearch } from 'react-icons/ai'
-import { sampleData, candidateColumns } from './constants/candidate-list'
+import { Tabs } from 'antd'
+import { Link } from 'react-router-dom'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+import Profile from './components/profile'
 
 export default function Candidate() {
-  const [input, setInput] = useState('')
-  const filteredData = matchSorter(sampleData, input, {
-    keys: ['candidatename'],
-  })
-
   return (
-    <div className="p-8">
-      <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl">Candidate Listing</p>
-        <div className="flex items-center mb-4 justify-between">
-          <Input
-            value={input}
-            style={{ width: '26rem' }}
-            prefix={<AiOutlineSearch />}
-            placeholder="Search by Candidate Name..."
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <Button type="primary">Add Candidate</Button>
+    <div className="px-8 pt-4 pb-8 flex-1 flex flex-col">
+      <Link to="/jobs" className="mb-4 flex items-center space-x-2">
+        <AiOutlineArrowLeft />
+        <span>All Candidates</span>
+      </Link>
+
+      <div className="flex space-x-4 flex-1">
+        <div className="rounded-md shadow-md w-2/3 bg-white overflow-hidden">
+          <Tabs>
+            <Tabs.TabPane tab="Candidate Profile" key="profile">
+              <Profile />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Experience" key="experience" />
+            <Tabs.TabPane tab="Engagement" key="engagement" />
+            <Tabs.TabPane tab="Comments" key="comments" />
+            <Tabs.TabPane tab="Transcript" key="transcript" />
+          </Tabs>
         </div>
-        <Table dataSource={filteredData} columns={candidateColumns} />
+
+        <div className="p-6 bg-white rounded-md shadow-md w-1/3" />
       </div>
     </div>
   )

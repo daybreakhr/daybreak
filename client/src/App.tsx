@@ -7,10 +7,11 @@ import Login from 'pages/login'
 import Home from 'pages/home'
 import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
-import Candidate from 'pages/candidate'
+import Candidates from 'pages/candidates'
 import Members from 'pages/members'
 import Jobs from 'pages/jobs'
 import CreateJob from 'pages/create-job'
+import Candidate from 'pages/candidate'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -27,7 +28,8 @@ export default function App() {
               <Route path="home" element={<Home />} />
               <Route path="jobs" element={<Jobs />} />
               <Route path="jobs/:jobId/create" element={<CreateJob />} />
-              <Route path="candidates" element={<Candidate />} />
+              <Route path="candidates" element={<Candidates />} />
+              <Route path="candidates/:candidateId" element={<Candidate />} />
               <Route path="settings/organisation" element={<Home />} />
               <Route path="settings/members" element={<Members />} />
             </Route>
