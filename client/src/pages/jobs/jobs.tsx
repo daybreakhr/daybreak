@@ -27,7 +27,7 @@ export default function Jobs() {
   return (
     <div className="p-8">
       <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl">Listed Jobs</p>
+        <p className="font-medium font-sans text-xl mb-4">Listed Jobs</p>
         <div className="flex items-center mb-4 justify-between">
           <Input
             value={input}

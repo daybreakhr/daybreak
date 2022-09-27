@@ -2,11 +2,12 @@ import { Tabs } from 'antd'
 import { Link } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import Profile from './components/profile'
+import Details from './components/details'
 
 export default function Candidate() {
   return (
     <div className="px-8 pt-4 pb-8 flex-1 flex flex-col">
-      <Link to="/jobs" className="mb-4 flex items-center space-x-2">
+      <Link to="/candidates" className="mb-4 flex items-center space-x-2">
         <AiOutlineArrowLeft />
         <span>All Candidates</span>
       </Link>
@@ -24,7 +25,7 @@ export default function Candidate() {
           </Tabs>
         </div>
 
-        <div className="p-6 bg-white rounded-md shadow-md w-1/3" />
+        <Details />
       </div>
     </div>
   )

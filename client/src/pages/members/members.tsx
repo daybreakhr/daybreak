@@ -23,7 +23,7 @@ export default function Members() {
 
   return (
     <div className="m-8 p-4 bg-white rounded-md shadow-md">
-      <p className="font-medium font-sans text-xl">Members</p>
+      <p className="font-medium font-sans text-xl mb-4">Members</p>
       <div className="flex items-center mb-4 space-x-4">
         <Input
           value={input}

@@ -1,43 +1,36 @@
-import { Image, Typography } from 'antd'
+import { Typography } from 'antd'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
-import { sampleData } from './profile-list'
+import { sampleData } from '../constants/profile-list'
 
 export default function Profile() {
   return (
     <div className="p-4 text-gray-800">
-      <p className="text-lg font-semibold">Personal Details</p>
+      <p className="text-lg font-semibold mb-4">Personal Details</p>
       <div className="grid grid-cols-3 gap-5 mb-6">
-        <div className="col-span-2 ">
+        <div className="col-span-2">
           <div className="grid grid-cols-2 gap-5">
-            <div className="ml-4">
-              <div>First Name</div>
-              <div className="text-base font-medium">
-                {sampleData[0].firstname}
-              </div>
+            <div>
+              <p className="text-gray-400 text-xs uppercase">First Name</p>
+              <p className="font-medium">{sampleData.firstname}</p>
             </div>
             <div>
-              <div>Last Name</div>
-              <div className="text-base font-medium">
-                {sampleData[0].lastname}
-              </div>
+              <p className="text-gray-400 text-xs uppercase">Last Name</p>
+              <p className="font-medium">{sampleData.lastname}</p>
             </div>
 
-            <div className="ml-4">
-              <div>Gender</div>
-              <div className="text-base font-medium">
-                {sampleData[0].gender}
-              </div>
+            <div>
+              <p className="text-gray-400 text-xs uppercase">Gender</p>
+              <p className="font-medium">{sampleData.gender}</p>
             </div>
             <div>
-              <div>Date of Birth</div>
-              <div className="text-base font-medium">{sampleData[0].dob}</div>
+              <p className="text-gray-400 text-xs uppercase">Date of Birth</p>
+              <p className="font-medium">{sampleData.dob}</p>
             </div>
           </div>
         </div>
         <div className="flex justify-center place-items-center">
-          <div>
-            <Image src="/assets/pdf.png" width="3vw" preview={false} />
-          </div>
+          <img src="/assets/pdf.png" className="mr-4 w-12" />
+
           <a className="pl-2 text-base font-medium text-blue-600">
             <AiOutlineCloudDownload className="text-xl" />
             Resume.pdf
@@ -45,52 +38,41 @@ export default function Profile() {
         </div>
       </div>
 
-      <hr />
+      <hr className="my-4" />
 
-      <p className="text-lg font-semibold mt-4">Cover Letter</p>
+      <p className="text-lg font-semibold mb-4">Cover Letter</p>
       <Typography.Paragraph
         className="pb-2"
         editable
         ellipsis={{ rows: 3, expandable: true, symbol: 'Read More' }}
       >
-        {sampleData[0].coverletter}
+        {sampleData.coverletter}
       </Typography.Paragraph>
 
-      <hr />
+      <hr className="my-4" />
 
-      <p className="text-lg font-semibold mt-4">Experience</p>
-      <div className="ml-10">
+      <p className="text-lg font-semibold mb-4">Experience</p>
+      <div className="ml-8">
         <ul className="list-disc">
-          <li className="mb-5">
-            <div className="text-base font-normal">
-              {sampleData[0].experience}
-            </div>
-            <div className="text-sm text-gray-500">
-              {sampleData[0].experienceduration}
-            </div>
-          </li>
-          <li className="mb-5">
-            <div className="text-base font-normal">
-              {sampleData[0].experience}
-            </div>
-            <div className="text-sm text-gray-500">
-              {sampleData[0].experienceduration}
-            </div>
-          </li>
+          {sampleData.experiences.map(({ role, duration }) => (
+            <li key={role} className="mb-4">
+              <p className="font-normal">{role}</p>
+              <p className="text-sm text-gray-500">{duration}</p>
+            </li>
+          ))}
         </ul>
       </div>
 
-      <hr />
-      <p className="text-lg font-semibold mt-4">Education</p>
-      <div className="ml-10">
+      <hr className="my-4" />
+
+      <p className="text-lg font-semibold mb-4">Education</p>
+      <div className="ml-8">
         <ul className="list-disc">
           <li className="mb-5">
-            <div className="text-base font-normal">
-              {sampleData[0].education}
-            </div>
-            <div className="text-sm text-gray-500">
-              {sampleData[0].educationduration}{' '}
-            </div>
+            <p className="font-normal">{sampleData.education}</p>
+            <p className="text-sm text-gray-500">
+              {sampleData.educationduration}
+            </p>
           </li>
         </ul>
       </div>
