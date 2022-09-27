@@ -13,7 +13,7 @@ export default function Candidates() {
   return (
     <div className="p-8">
       <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl">Candidate Listing</p>
+        <p className="font-medium font-sans text-xl mb-4">Candidate Listing</p>
         <div className="flex items-center mb-4 justify-between">
           <Input
             value={input}
