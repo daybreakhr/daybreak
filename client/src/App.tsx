@@ -12,6 +12,7 @@ import Members from 'pages/members'
 import Jobs from 'pages/jobs'
 import CreateJob from 'pages/create-job'
 import Candidate from 'pages/candidate'
+import Organisation from 'pages/organisation'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -30,7 +31,7 @@ export default function App() {
               <Route path="jobs/:jobId/create" element={<CreateJob />} />
               <Route path="candidates" element={<Candidates />} />
               <Route path="candidates/:candidateId" element={<Candidate />} />
-              <Route path="settings/organisation" element={<Home />} />
+              <Route path="settings/organisation" element={<Organisation />} />
               <Route path="settings/members" element={<Members />} />
             </Route>
           </Routes>
