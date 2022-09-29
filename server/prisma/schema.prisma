@@ -11,16 +11,17 @@ datasource db {
 }
 
 model Workspace {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  slug       String       @unique
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  members    Member[]
-  invitees   Invitees[]
-  Department Department[]
-  Location   Location[]
-  Job        Job[]
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String       @unique
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  members     Member[]
+  invitees    Invitees[]
+  Department  Department[]
+  Location    Location[]
+  Job         Job[]
 }
 
 model Member {
