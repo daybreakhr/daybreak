@@ -1,4 +1,4 @@
-import { Workspace } from '@prisma/client'
+import type { Department, Workspace } from '@prisma/client'
 import client from 'utils/client'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
@@ -17,5 +17,12 @@ export async function updateOrganisation({
     `workspace/${WORKSPACE_ID}`,
     updateWorkspaceDto,
   )
+  return data
+}
+
+export async function addDepartment({ name }: { name: string }) {
+  const { data } = await client.post<Department>(`${WORKSPACE_ID}/department`, {
+    name,
+  })
   return data
 }
