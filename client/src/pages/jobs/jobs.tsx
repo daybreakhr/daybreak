@@ -27,8 +27,8 @@ export default function Jobs() {
   return (
     <div className="p-8">
       <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl mb-4">Listed Jobs</p>
-        <div className="flex items-center mb-4 justify-between">
+        <p className="mb-4 font-sans text-xl font-medium">Listed Jobs</p>
+        <div className="flex items-center justify-between mb-4">
           <Input
             value={input}
             style={{ width: '16rem' }}
@@ -51,6 +51,7 @@ export default function Jobs() {
           loading={isLoading}
           columns={jobColumns}
           dataSource={filteredData}
+          rowKey={(record) => record.id}
         />
       </div>
     </div>

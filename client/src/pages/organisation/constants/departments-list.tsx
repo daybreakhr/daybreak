@@ -1,6 +1,6 @@
 import type { Department } from '@prisma/client'
-import { Button } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import DepartmentActions from '../components/department-actions'
 
 export const departmentColumns: ColumnsType<Department> = [
   {
@@ -11,13 +11,6 @@ export const departmentColumns: ColumnsType<Department> = [
   {
     key: 'actions',
     align: 'right',
-    render: () => (
-      <div className="space-x-2">
-        <Button type="link">Edit</Button>
-        <Button type="link" danger>
-          Delete
-        </Button>
-      </div>
-    ),
+    render: (_, record) => <DepartmentActions record={record} />,
   },
 ]

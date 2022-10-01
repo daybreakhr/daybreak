@@ -60,6 +60,7 @@ export default function Members() {
         columns={columns}
         loading={isLoading}
         dataSource={filterRoleData}
+        rowKey={(record) => record.uid}
       />
 
       <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />

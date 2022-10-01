@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
@@ -28,6 +28,19 @@ export class DepartmentService {
   }
 
   async delete(departmentId: string) {
+    const jobs = await this.prismaService.job.findMany({
+      where: { departmentId },
+    })
+    if (jobs.length) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: `Delete ${jobs.length} Job applications under this department first.`,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      )
+    }
+
     const department = await this.prismaService.department.delete({
       where: { id: departmentId },
     })

@@ -29,6 +29,7 @@ export default function Departments() {
         loading={isLoading}
         dataSource={data ?? []}
         columns={departmentColumns}
+        rowKey={(record) => record.id}
         pagination={(data?.length ?? 0) < 10 ? false : undefined}
       />
 

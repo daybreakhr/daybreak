@@ -26,3 +26,10 @@ export async function addDepartment({ name }: { name: string }) {
   })
   return data
 }
+
+export async function deleteDepartment({ id }: { id: string }) {
+  const { data } = await client.delete<Department>(
+    `${WORKSPACE_ID}/department/${id}`,
+  )
+  return data
+}
