@@ -27,6 +27,19 @@ export async function addDepartment({ name }: { name: string }) {
   return data
 }
 
+export async function updateDepartment({
+  id,
+  name,
+}: {
+  id: string
+  name: string
+}) {
+  const { data } = await client.patch(`${WORKSPACE_ID}/department/${id}`, {
+    name,
+  })
+  return data
+}
+
 export async function deleteDepartment({ id }: { id: string }) {
   const { data } = await client.delete<Department>(
     `${WORKSPACE_ID}/department/${id}`,

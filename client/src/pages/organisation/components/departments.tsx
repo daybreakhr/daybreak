@@ -3,8 +3,9 @@ import { Button, Table } from 'antd'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
 import { fetchDepartments } from 'pages/create-job/queries'
+import DepartmentForm from './department-form'
+import { addDepartment } from '../queries'
 import { departmentColumns } from '../constants/departments-list'
-import AddDepartment from './add-department'
 
 export default function Departments() {
   const [addDepartmentForm, setAddDepartmentForm] = useState(false)
@@ -33,8 +34,9 @@ export default function Departments() {
         pagination={(data?.length ?? 0) < 10 ? false : undefined}
       />
 
-      <AddDepartment
+      <DepartmentForm
         visible={addDepartmentForm}
+        mutationFunc={addDepartment}
         onCancel={() => setAddDepartmentForm(false)}
       />
     </div>

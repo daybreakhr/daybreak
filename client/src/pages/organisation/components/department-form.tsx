@@ -1,26 +1,35 @@
+import { useEffect } from 'react'
 import { Form, Modal, Input } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addDepartment } from '../queries'
+import type { Department } from '@prisma/client'
 
 type AddDepartmentProps = {
   visible: boolean
   onCancel: () => void
+  initialValues?: { name: string; id: string }
+  mutationFunc: (args: any) => Promise<Department>
 }
 
-export default function AddDepartment({
+export default function DepartmentForm({
   visible,
   onCancel,
+  mutationFunc,
+  initialValues,
 }: AddDepartmentProps) {
   const [form] = Form.useForm()
 
   const queryClient = useQueryClient()
-  const { mutate, isLoading } = useMutation(addDepartment, {
+  const { mutate, isLoading } = useMutation(mutationFunc, {
     onSuccess: () => {
       queryClient.invalidateQueries(['departments'])
       onCancel()
       form.resetFields()
     },
   })
+
+  useEffect(() => {
+    form.setFieldsValue(initialValues)
+  }, [initialValues, form])
 
   function handleOk() {
     form.submit()
@@ -33,6 +42,7 @@ export default function AddDepartment({
 
   return (
     <Modal
+      destroyOnClose
       onOk={handleOk}
       visible={visible}
       onCancel={handleCancel}
@@ -42,8 +52,15 @@ export default function AddDepartment({
       <Form
         form={form}
         layout="vertical"
-        onFinish={({ name }) => mutate({ name })}
+        onFinish={({ id, name }) => {
+          if (id) {
+            mutate({ name, id })
+          } else {
+            mutate({ name })
+          }
+        }}
       >
+        <Form.Item name="id" noStyle />
         <Form.Item required name="name" label="Department Name">
           <Input placeholder="Enter Department Name..." />
         </Form.Item>
