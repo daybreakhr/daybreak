@@ -58,7 +58,7 @@ model Job {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   title        String?
   priority     Priority    @default(medium)
-  Department   Department? @relation(fields: [departmentId], references: [id])
+  Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   departmentId String?     @db.ObjectId
   jobType      JobType?
   Location     Location?   @relation(fields: [locationId], references: [id])
