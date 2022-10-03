@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { matchSorter } from 'match-sorter'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
-import { AiOutlineFilter, AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineFilter, AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 import { Member } from 'types/member'
 import { columns } from './members-list'
 import AddUser from './components/add-user'
@@ -22,8 +22,8 @@ export default function Members() {
   const filterRoleData = matchSorter(filteredData, filter, { keys: ['role'] })
 
   return (
-    <div className="m-8 p-4 bg-white rounded-md shadow-md">
-      <p className="font-medium font-sans text-xl mb-4">Members</p>
+    <div className="p-4 m-8 bg-white rounded-md shadow-md">
+      <p className="mb-4 font-sans text-xl font-medium">Members</p>
       <div className="flex items-center mb-4 space-x-4">
         <Input
           value={input}
@@ -47,7 +47,11 @@ export default function Members() {
 
         <div className="flex-1" />
 
-        <Button type="primary" onClick={() => setIsVisible((prev) => !prev)}>
+        <Button
+          type="primary"
+          icon={<AiOutlinePlus />}
+          onClick={() => setIsVisible((prev) => !prev)}
+        >
           Add User
         </Button>
       </div>
@@ -56,6 +60,7 @@ export default function Members() {
         columns={columns}
         loading={isLoading}
         dataSource={filterRoleData}
+        rowKey={(record) => record.uid}
       />
 
       <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />

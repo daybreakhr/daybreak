@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { Department, Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
@@ -25,7 +27,7 @@ export class DepartmentController {
   }
 
   @Post('')
-  @Roles('admin')
+  @Roles(Role.admin)
   async create(
     @Param('workspaceId') workspaceId: string,
     @Body() createDepartmentDto: { name: string },
@@ -35,6 +37,19 @@ export class DepartmentController {
       workspaceId,
       createDepartmentDto,
       user.uid,
+    )
+    return data
+  }
+
+  @Patch(':id')
+  @Roles(Role.admin)
+  async update(
+    @Param('id') departmentId: string,
+    @Body() updateDepartmentDto: Partial<Department>,
+  ) {
+    const data = await this.departmentService.update(
+      departmentId,
+      updateDepartmentDto,
     )
     return data
   }
