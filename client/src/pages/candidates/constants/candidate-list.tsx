@@ -1,112 +1,83 @@
 import type { ColumnsType } from 'antd/es/table'
 
-export type Candidates = {
+type Candidate = {
   key: string
-  candidatename: string
-  location: string
-  addedon: string
-  totalexperience: string
-  ctc: string
-  expectedctc: string
-  currentrole: string
-  currentcompany: string
-  noticeperiod: string
-  education: string
+  name: string
+  appliedFor: string
+  applicationDate: string
+  currentRole: string
+  currentCompany: string
+  totalExperience: string
+  applicationSource: string
 }
 
-export const sampleData: Candidates[] = [
+export const sampleData: Candidate[] = [
   {
     key: '1',
-    candidatename: 'Sumit Kumar',
-    location: 'Bangalore',
-    addedon: '14 Apr 2021, 8:43 PM',
-    totalexperience: '3 years',
-    ctc: '10 LPA',
-    expectedctc: '12 LPA',
-    currentrole: 'Software Engineer',
-    currentcompany: 'Deloitte',
-    noticeperiod: '30 days',
-    education: 'B.Tech',
+    name: 'Sumit Kumar',
+    appliedFor: 'Senior Software Engineer - Frontend',
+    applicationDate: '14 Apr, 2021',
+    totalExperience: '3 years',
+    currentRole: 'Software Engineer',
+    currentCompany: 'Deloitte',
+    applicationSource: 'Portal',
   },
   {
     key: '2',
-    candidatename: 'Jose Thomas',
-    location: 'Chennai',
-    addedon: '23 Dec 2021, 5:20 PM',
-    totalexperience: '5 years',
-    ctc: '28 LPA',
-    expectedctc: '32 LPA',
-    currentrole: 'Consultant',
-    currentcompany: 'JP Morgan',
-    noticeperiod: '90 days',
-    education: 'MBA',
+    name: 'Jose Thomas',
+    appliedFor: 'Software Engineer - Backend',
+    applicationDate: '23 Dec, 2021',
+    totalExperience: '5 years',
+    currentRole: 'Consultant',
+    currentCompany: 'JP Morgan',
+    applicationSource: 'Portal',
   },
   {
     key: '3',
-    candidatename: 'Roshan Jain',
-    location: 'Mumbai',
-    addedon: '29 Apr 2022, 10:12 AM',
-    totalexperience: '2 years',
-    ctc: '7 LPA',
-    expectedctc: '10 LPA',
-    currentrole: 'R&D Engineer',
-    currentcompany: 'SAP Labs',
-    noticeperiod: '45 days',
-    education: 'BCA',
+    name: 'Roshan Jain',
+    appliedFor: 'Product Manager',
+    applicationDate: '29 Apr, 2022',
+    totalExperience: '2 years',
+    currentRole: 'Product Manager',
+    currentCompany: 'SAP Labs',
+    applicationSource: 'Portal',
   },
 ]
 
-export const candidateColumns: ColumnsType<Candidates> = [
+export const candidateColumns: ColumnsType<Candidate> = [
   {
-    title: 'Candidate Name',
-    dataIndex: 'candidatename',
-    key: 'candidatename',
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
   },
   {
-    title: 'Location',
-    dataIndex: 'location',
-    key: 'location',
-    filters: [
-      { text: 'New Delhi', value: 'newdelhi' },
-      { text: 'Bangalore', value: 'bangalore' },
-      { text: 'Chennai', value: 'chennai' },
-      { text: 'Mumbai', value: 'mumbai' },
-    ],
+    title: 'Applied For',
+    dataIndex: 'appliedFor',
+    key: 'appliedFor',
   },
   {
-    title: 'Added On',
-    dataIndex: 'addedon',
-    key: 'addedon',
-  },
-  {
-    title: 'Total Experience',
-    dataIndex: 'totalexperience',
-    key: 'totalexperience',
-  },
-  { title: 'CTC', dataIndex: 'ctc', key: 'ctc' },
-  {
-    title: 'Expected CTC',
-    dataIndex: 'expectedctc',
-    key: 'expectedctc',
+    title: 'Application Date',
+    dataIndex: 'applicationDate',
+    key: 'applicationDate',
   },
   {
     title: 'Current Role',
-    dataIndex: 'currentrole',
-    key: 'currentrole',
+    dataIndex: 'currentRole',
+    key: 'currentRole',
   },
   {
     title: 'Current Company',
-    dataIndex: 'currentcompany',
-    key: 'currentcompany',
+    dataIndex: 'currentCompany',
+    key: 'currentCompany',
   },
   {
-    title: 'Notice Period',
-    dataIndex: 'noticeperiod',
-    key: 'noticeperiod',
+    title: 'Total Experience',
+    dataIndex: 'totalExperience',
+    key: 'totalExperience',
   },
   {
-    title: 'Highest Education',
-    dataIndex: 'education',
-    key: 'education',
+    title: 'Application Source',
+    dataIndex: 'applicationSource',
+    key: 'applicationSource',
   },
 ]

@@ -1,12 +1,11 @@
 import { Button } from 'antd'
-import IconButton from 'components/icon-button/icon-button'
+import IconButton from 'components/icon-button'
 import {
   AiFillLinkedin,
   AiOutlineMail,
   AiOutlinePhone,
   AiOutlineUser,
 } from 'react-icons/ai'
-import { FiThumbsUp, FiThumbsDown } from 'react-icons/fi'
 import { sampleData } from '../constants/profile-list'
 
 export default function Details() {
@@ -38,16 +37,8 @@ export default function Details() {
       <hr className="my-4 w-full border-gray-300" />
 
       <div className="flex items-center space-x-4">
-        <IconButton className="text-red-500">
-          <FiThumbsDown />
-        </IconButton>
-
-        <Button>Rating</Button>
+        <Button danger>Decline</Button>
         <Button type="primary">Advance</Button>
-
-        <IconButton className="text-green-700">
-          <FiThumbsUp />
-        </IconButton>
       </div>
 
       <hr className="my-4 w-full border-gray-300" />
