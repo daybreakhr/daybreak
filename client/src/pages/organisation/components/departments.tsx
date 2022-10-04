@@ -35,6 +35,7 @@ export default function Departments() {
       />
 
       <DepartmentForm
+        title="Add Department"
         visible={addDepartmentForm}
         mutationFunc={addDepartment}
         onCancel={() => setAddDepartmentForm(false)}
