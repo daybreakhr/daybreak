@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { Location, Role } from '@prisma/client'
 import type { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
@@ -25,7 +27,7 @@ export class LocationController {
   }
 
   @Post('')
-  @Roles('admin')
+  @Roles(Role.admin)
   async create(
     @Param('workspaceId') workspaceId: string,
     @Body() createLocationDto: { name: string },
@@ -35,6 +37,19 @@ export class LocationController {
       workspaceId,
       createLocationDto,
       user.uid,
+    )
+    return data
+  }
+
+  @Patch(':id')
+  @Roles(Role.admin)
+  async update(
+    @Param('id') locationId: string,
+    @Body() updateLocationDto: Partial<Location>,
+  ) {
+    const data = await this.locationService.update(
+      locationId,
+      updateLocationDto,
     )
     return data
   }
