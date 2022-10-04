@@ -1,4 +1,4 @@
-import type { Department, Workspace } from '@prisma/client'
+import type { Department, Location, Workspace } from '@prisma/client'
 import client from 'utils/client'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
@@ -34,15 +34,44 @@ export async function updateDepartment({
   id: string
   name: string
 }) {
-  const { data } = await client.patch(`${WORKSPACE_ID}/department/${id}`, {
-    name,
-  })
+  const { data } = await client.patch<Department>(
+    `${WORKSPACE_ID}/department/${id}`,
+    { name },
+  )
   return data
 }
 
 export async function deleteDepartment({ id }: { id: string }) {
   const { data } = await client.delete<Department>(
     `${WORKSPACE_ID}/department/${id}`,
+  )
+  return data
+}
+
+export async function addLocation({ name }: { name: string }) {
+  const { data } = await client.post<Location>(`${WORKSPACE_ID}/location`, {
+    name,
+  })
+  return data
+}
+
+export async function updateLocation({
+  id,
+  name,
+}: {
+  id: string
+  name: string
+}) {
+  const { data } = await client.patch<Location>(
+    `${WORKSPACE_ID}/location/${id}`,
+    { name },
+  )
+  return data
+}
+
+export async function deleteLocation({ id }: { id: string }) {
+  const { data } = await client.delete<Location>(
+    `${WORKSPACE_ID}/location/${id}`,
   )
   return data
 }

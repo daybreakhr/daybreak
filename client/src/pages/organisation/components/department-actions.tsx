@@ -44,6 +44,7 @@ export default function DepartmentActions({ record }: DepartmentActionsProps) {
       </Button>
 
       <DepartmentForm
+        title="Edit Department"
         visible={editDepartment}
         mutationFunc={updateDepartment}
         initialValues={{ name: record.name, id: record.id }}
