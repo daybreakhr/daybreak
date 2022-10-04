@@ -1,29 +1,29 @@
 import { useEffect } from 'react'
 import { Form, Modal, Input } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Department } from '@prisma/client'
+import type { Location } from '@prisma/client'
 
-type DepartmentFormProps = {
+type LocationFormProps = {
   title: string
   visible: boolean
   onCancel: () => void
   initialValues?: { name: string; id: string }
-  mutationFunc: (args: any) => Promise<Department>
+  mutationFunc: (args: any) => Promise<Location>
 }
 
-export default function DepartmentForm({
+export default function LocationForm({
   title,
   visible,
   onCancel,
   mutationFunc,
   initialValues,
-}: DepartmentFormProps) {
+}: LocationFormProps) {
   const [form] = Form.useForm()
 
   const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(mutationFunc, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['departments'])
+      queryClient.invalidateQueries(['locations'])
       onCancel()
       form.resetFields()
     },
