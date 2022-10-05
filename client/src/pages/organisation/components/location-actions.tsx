@@ -3,6 +3,7 @@ import { Button, message, Modal } from 'antd'
 import type { Location } from '@prisma/client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import useAuth from 'hooks/use-auth'
 import { deleteLocation, updateLocation } from '../queries'
 import LocationForm from './location-form'
 
@@ -11,6 +12,7 @@ type LocationActionsProps = {
 }
 
 export default function LocationActions({ record }: LocationActionsProps) {
+  const { user } = useAuth()
   const [editLocation, setEditLocation] = useState(false)
 
   const queryClient = useQueryClient()
@@ -36,10 +38,19 @@ export default function LocationActions({ record }: LocationActionsProps) {
 
   return (
     <div className="space-x-2">
-      <Button type="link" onClick={() => setEditLocation(true)}>
+      <Button
+        type="link"
+        disabled={user?.role === 'member'}
+        onClick={() => setEditLocation(true)}
+      >
         Edit
       </Button>
-      <Button type="link" danger onClick={handleDelete}>
+      <Button
+        danger
+        type="link"
+        onClick={handleDelete}
+        disabled={user?.role === 'member'}
+      >
         Delete
       </Button>
 

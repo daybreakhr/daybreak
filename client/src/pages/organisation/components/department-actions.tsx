@@ -3,6 +3,7 @@ import { Button, message, Modal } from 'antd'
 import type { Department } from '@prisma/client'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import useAuth from 'hooks/use-auth'
 import { deleteDepartment, updateDepartment } from '../queries'
 import DepartmentForm from './department-form'
 
@@ -11,6 +12,7 @@ type DepartmentActionsProps = {
 }
 
 export default function DepartmentActions({ record }: DepartmentActionsProps) {
+  const { user } = useAuth()
   const [editDepartment, setEditDepartment] = useState(false)
 
   const queryClient = useQueryClient()
@@ -36,10 +38,19 @@ export default function DepartmentActions({ record }: DepartmentActionsProps) {
 
   return (
     <div className="space-x-2">
-      <Button type="link" onClick={() => setEditDepartment(true)}>
+      <Button
+        type="link"
+        disabled={user?.role === 'member'}
+        onClick={() => setEditDepartment(true)}
+      >
         Edit
       </Button>
-      <Button type="link" danger onClick={handleDelete}>
+      <Button
+        danger
+        type="link"
+        onClick={handleDelete}
+        disabled={user?.role === 'member'}
+      >
         Delete
       </Button>
 

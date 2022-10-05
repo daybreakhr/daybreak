@@ -15,8 +15,8 @@ export default function Candidates() {
   return (
     <div className="p-8">
       <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl mb-4">Candidate Listing</p>
-        <div className="flex items-center mb-4 justify-between">
+        <p className="mb-4 font-sans text-xl font-medium">Candidates</p>
+        <div className="flex items-center justify-between mb-4">
           <Input
             value={input}
             style={{ width: '16rem' }}

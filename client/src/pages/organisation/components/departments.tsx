@@ -2,12 +2,15 @@ import { useState } from 'react'
 import { Button, Table } from 'antd'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
+import Show from 'components/show'
+import useAuth from 'hooks/use-auth'
 import { fetchDepartments } from 'pages/create-job/queries'
-import DepartmentForm from './department-form'
 import { addDepartment } from '../queries'
+import DepartmentForm from './department-form'
 import { departmentColumns } from '../constants/departments-list'
 
 export default function Departments() {
+  const { user } = useAuth()
   const [addDepartmentForm, setAddDepartmentForm] = useState(false)
   const { data, isLoading } = useQuery(['departments'], fetchDepartments)
 
@@ -16,13 +19,15 @@ export default function Departments() {
       <div className="flex items-center justify-between mb-4">
         <p className="font-sans text-xl font-medium">Departments</p>
 
-        <Button
-          type="primary"
-          icon={<AiOutlinePlus />}
-          onClick={() => setAddDepartmentForm(true)}
-        >
-          Add Department
-        </Button>
+        <Show when={user?.role === 'admin'}>
+          <Button
+            type="primary"
+            icon={<AiOutlinePlus />}
+            onClick={() => setAddDepartmentForm(true)}
+          >
+            Add Department
+          </Button>
+        </Show>
       </div>
 
       <Table

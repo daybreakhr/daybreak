@@ -68,7 +68,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
 
   if (isDepartmentsLoading || isJobLoading || isLocationsLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-96">
         <Spin tip="Loading..." />
       </div>
     )
