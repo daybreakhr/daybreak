@@ -5,10 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
+import Show from 'components/show'
+import useAuth from 'hooks/use-auth'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
 
 export default function Jobs() {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [input, setInput] = useState('')
 
@@ -37,19 +40,21 @@ export default function Jobs() {
             onChange={(e) => setInput(e.target.value)}
           />
 
-          <Button
-            type="primary"
-            loading={isCreatingJob}
-            icon={<AiOutlinePlus />}
-            onClick={() => mutate()}
-          >
-            Create Job
-          </Button>
+          <Show when={user?.role === 'admin'}>
+            <Button
+              type="primary"
+              loading={isCreatingJob}
+              icon={<AiOutlinePlus />}
+              onClick={() => mutate()}
+            >
+              Create Job
+            </Button>
+          </Show>
         </div>
 
         <Table
           loading={isLoading}
-          columns={jobColumns}
+          columns={jobColumns(navigate, user?.role)}
           dataSource={filteredData}
           rowKey={(record) => record.id}
         />
