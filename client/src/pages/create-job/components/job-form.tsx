@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   Button,
   Checkbox,
@@ -28,12 +28,9 @@ import {
 import { Job } from 'types/job'
 import { Descendant } from 'slate'
 
-type JobFormProps = {
-  onSubmit: () => void
-}
-
-export default function JobForm({ onSubmit }: JobFormProps) {
+export default function JobForm() {
   const [form] = Form.useForm()
+  const navigate = useNavigate()
   const { jobId = '' } = useParams()
   const queryClient = useQueryClient()
 
@@ -55,15 +52,18 @@ export default function JobForm({ onSubmit }: JobFormProps) {
     ],
   })
 
-  const { mutate: updateJob } = useMutation(updateJobById, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['job', jobId])
-      message.success('Successfully saved form data!')
-    },
-  })
+  const { mutate: updateJob } = useMutation(updateJobById)
 
   const handleSubmit = (values: any) => {
-    updateJob({ jobId, updateJobDto: values })
+    updateJob(
+      { jobId, updateJobDto: values },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['job', jobId])
+          message.success('Successfully saved form data!')
+        },
+      },
+    )
   }
 
   if (isDepartmentsLoading || isJobLoading || isLocationsLoading) {
@@ -220,7 +220,7 @@ export default function JobForm({ onSubmit }: JobFormProps) {
           htmlType="button"
           onClick={() => {
             form.submit()
-            onSubmit()
+            navigate(`/jobs/${jobId}/publish`)
           }}
         >
           Continue
