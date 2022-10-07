@@ -21,7 +21,7 @@ import { WorkspaceModule } from './workspace/workspace.module'
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
       }),
-      envFilePath: ['.env'],
+      envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
     }),
     AuthModule,
