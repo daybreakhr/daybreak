@@ -9,14 +9,14 @@ async function main() {
       members: {
         createMany: {
           data: [
-            { uid: 'SfVQfbDIPsYxpxJp7iNMRE2tdla2', role: 'admin' },
-            { uid: 'q1UpFEVAdTTu9veX2iVeO2r4KK83', role: 'admin' },
-            { uid: 'Lv5CXnqUVBg16pDHrb6jJwmZXi92', role: 'admin' },
-            { uid: 'H9XljsZk6BURxGJ4qloNNUHv6lm1', role: 'member' },
-            { uid: 'fFIckQBTQafx2uvpQTp4DEgaaCM2', role: 'member' },
-            { uid: 'gsEE1eUr1hcnkaVjmuiRqDDAghr2', role: 'member' },
-            { uid: 'GsXpySMPAfPgjJc1Vs3EbXpjaso1', role: 'member' },
-            { uid: 'MGA8O7J1yNaLqw0VomefVus6G7j2', role: 'member' },
+            { uid: 'SfVQfbDIPsYxpxJp7iNMRE2tdla2' },
+            { uid: 'q1UpFEVAdTTu9veX2iVeO2r4KK83' },
+            { uid: 'Lv5CXnqUVBg16pDHrb6jJwmZXi92' },
+            { uid: 'H9XljsZk6BURxGJ4qloNNUHv6lm1' },
+            { uid: 'fFIckQBTQafx2uvpQTp4DEgaaCM2' },
+            { uid: 'gsEE1eUr1hcnkaVjmuiRqDDAghr2' },
+            { uid: 'GsXpySMPAfPgjJc1Vs3EbXpjaso1' },
+            { uid: 'MGA8O7J1yNaLqw0VomefVus6G7j2' },
           ],
         },
       },
