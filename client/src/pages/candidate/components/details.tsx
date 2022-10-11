@@ -15,10 +15,8 @@ export default function Details() {
         <AiOutlineUser />
       </div>
 
-      <p className="text-base font-medium mb-1">
-        {sampleData.firstname} {sampleData.lastname}
-      </p>
-      <p className="text-xs text-gray-600 mb-4">Applied Today</p>
+      <p className="text-base font-medium mb-1">{sampleData.name}</p>
+      <p className="text-xs text-gray-600 mb-4">Applied on 28th Sept, 2022</p>
 
       <div className="flex items-center justify-center space-x-6">
         <IconButton>

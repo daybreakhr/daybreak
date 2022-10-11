@@ -1,8 +1,11 @@
 export type CandidateInfo = {
   key: string
+  name: string
   firstname: string
   lastname: string
+  location: string
   gender: string
+  totalExperience: number
   dob: string
   coverletter: string
   experiences: { role: string; duration: string }[]
@@ -12,9 +15,12 @@ export type CandidateInfo = {
 
 export const sampleData: CandidateInfo = {
   key: '1',
+  name: 'Rahul Kumar',
   firstname: 'Rahul',
   lastname: 'Kumar',
+  location: 'Pune',
   gender: 'Male',
+  totalExperience: 8,
   dob: 'July 07, 1995 (27 yrs old)',
   coverletter:
     'Having recently finished a 2-year contract in software development after completing my Bachelor of Science in Computer Science, I am ready to start the next chapter in my life. So, I was thrilled when I came across your job post in search of IT candidates in software engineering. With both my educational and professional background in the entire software dev life cycle, I believe I have what it takes to be the perfect choice for Cyber Science Tech. As an IT specialist focusing on delivering top results in systems and software development, I know I have also worked on xys dklsfjafj sample test text.',
