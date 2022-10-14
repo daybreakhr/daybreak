@@ -1,11 +1,11 @@
-import { Modal, Switch as Toggle } from 'antd'
 import dayjs from 'dayjs'
 import { Location } from '@prisma/client'
 import { capitalize, words } from 'lodash'
-import Switch from 'components/switch-match'
-import { Job } from 'types/job'
+import { Modal, Switch as Toggle } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import Switch from 'components/switch-match'
+import { Job } from 'types/job'
 import { updateJobById } from 'pages/create-job/queries'
 
 type JobSummaryProps = {
