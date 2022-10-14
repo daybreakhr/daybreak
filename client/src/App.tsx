@@ -14,6 +14,7 @@ import CreateJob from 'pages/create-job'
 import Candidate from 'pages/candidate'
 import Organisation from 'pages/organisation'
 import PublishJob from 'pages/publish-job'
+import Job from 'pages/job'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/" element={<AuthLayout component={AppShell} />}>
               <Route path="home" element={<Home />} />
               <Route path="jobs" element={<Jobs />} />
+              <Route path="jobs/:jobId" element={<Job />} />
               <Route path="jobs/:jobId/create" element={<CreateJob />} />
               <Route path="jobs/:jobId/publish" element={<PublishJob />} />
               <Route path="candidates" element={<Candidates />} />

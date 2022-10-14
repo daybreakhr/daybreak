@@ -5,7 +5,7 @@ import { Dropdown, Menu, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { Priority, Role } from '@prisma/client'
 import type { NavigateFunction } from 'react-router-dom'
-import { AiOutlineEdit, AiOutlineMore } from 'react-icons/ai'
+import { AiOutlineEdit, AiOutlineEye, AiOutlineMore } from 'react-icons/ai'
 import { Job } from 'types/job'
 
 const priorityColor: Record<Priority, string> = {
@@ -68,6 +68,12 @@ export const jobColumns = (
         className={clsx({ 'cursor-not-allowed': role === 'member' })}
         overlay={
           <Menu>
+            <Menu.Item
+              icon={<AiOutlineEye />}
+              onClick={() => navigate(`/jobs/${id}`)}
+            >
+              Preview
+            </Menu.Item>
             <Menu.Item
               icon={<AiOutlineEdit />}
               onClick={() => navigate(`/jobs/${id}/create`)}

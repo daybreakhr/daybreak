@@ -15,7 +15,10 @@ export class JobsService {
   }
 
   async getById(id: string) {
-    const job = await this.prismaService.job.findUnique({ where: { id } })
+    const job = await this.prismaService.job.findUnique({
+      where: { id },
+      include: { Location: true },
+    })
     return job
   }
 

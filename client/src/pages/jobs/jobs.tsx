@@ -54,9 +54,9 @@ export default function Jobs() {
 
         <Table
           loading={isLoading}
-          columns={jobColumns(navigate, user?.role)}
           dataSource={filteredData}
           rowKey={(record) => record.id}
+          columns={jobColumns(navigate, user?.role)}
         />
       </div>
     </div>
