@@ -13,11 +13,13 @@ import {
 } from 'slate-react'
 
 import Show from 'components/show'
+import useAuth from 'hooks/use-auth'
 import { Element, Leaf } from 'components/editor/components'
 import { fetchJob } from './queries'
 import JobSummary from './components/job-summary'
 
 export default function Job() {
+  const { user } = useAuth()
   const { jobId = '' } = useParams()
 
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
@@ -56,11 +58,14 @@ export default function Job() {
                 {data?.isPublished ? 'Published' : 'Draft'}
               </Tag>
               <div className="flex-1" />
-              <Link to={`/jobs/${jobId}/create`}>
-                <Button type="primary" icon={<AiOutlineEdit />}>
-                  Edit
-                </Button>
-              </Link>
+
+              <Show when={user?.role === 'admin'}>
+                <Link to={`/jobs/${jobId}/create`}>
+                  <Button type="primary" icon={<AiOutlineEdit />}>
+                    Edit
+                  </Button>
+                </Link>
+              </Show>
             </div>
 
             <Show when={data?.description}>

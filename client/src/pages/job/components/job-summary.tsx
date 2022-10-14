@@ -1,9 +1,12 @@
-import { Switch as Toggle } from 'antd'
+import { Modal, Switch as Toggle } from 'antd'
 import dayjs from 'dayjs'
 import { Location } from '@prisma/client'
 import { capitalize, words } from 'lodash'
 import Switch from 'components/switch-match'
 import { Job } from 'types/job'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateJobById } from 'pages/create-job/queries'
 
 type JobSummaryProps = {
   data: Job | undefined
@@ -11,6 +14,11 @@ type JobSummaryProps = {
 }
 
 export default function JobSummary({ data, isLoading }: JobSummaryProps) {
+  const queryClient = useQueryClient()
+  const { mutate, isLoading: isUpdatingJob } = useMutation(updateJobById, {
+    onSuccess: () => queryClient.invalidateQueries(['job', data?.id]),
+  })
+
   const fields = [
     {
       id: 'createdAt',
@@ -47,6 +55,24 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
     },
   ]
 
+  function handleChange(checked: boolean) {
+    Modal.confirm({
+      title: checked
+        ? 'Are you sure to publish this application?'
+        : 'Move this application to draft?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Confirm',
+      okType: checked ? 'primary' : 'danger',
+      cancelText: 'Cancel',
+      onOk() {
+        mutate({
+          jobId: data?.id ?? '',
+          updateJobDto: { isPublished: checked },
+        })
+      },
+    })
+  }
+
   return (
     <div className="flex-none p-4 bg-white rounded-md shadow-md w-72 h-fit">
       <p className="mb-4 font-sans text-xl font-medium">Job Details</p>
@@ -68,7 +94,11 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
       ))}
 
       <div className="flex items-center mb-4 space-x-2">
-        <Toggle checked={data?.isPublished} />
+        <Toggle
+          loading={isUpdatingJob}
+          onChange={handleChange}
+          checked={data?.isPublished}
+        />
         <p>{data?.isPublished ? 'Active' : 'Inactive'}</p>
       </div>
     </div>
