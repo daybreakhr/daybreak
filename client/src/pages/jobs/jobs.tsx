@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -9,6 +9,7 @@ import Show from 'components/show'
 import useAuth from 'hooks/use-auth'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
+import { Department } from '@prisma/client'
 
 export default function Jobs() {
   const { user } = useAuth()
@@ -26,6 +27,19 @@ export default function Jobs() {
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['title'],
   })
+
+  const uniqueDepartments = useMemo(() => {
+    if (data) {
+      return data
+        .map(({ Department }) => Department)
+        .filter(
+          (value, index, arr) =>
+            value !== null &&
+            arr.findIndex((val) => val?.id === value.id) === index,
+        ) as Department[]
+    }
+    return [] as Department[]
+  }, [data])
 
   return (
     <div className="p-8">
@@ -56,7 +70,7 @@ export default function Jobs() {
           loading={isLoading}
           dataSource={filteredData}
           rowKey={(record) => record.id}
-          columns={jobColumns(navigate, user?.role)}
+          columns={jobColumns(navigate, uniqueDepartments, user?.role)}
         />
       </div>
     </div>
