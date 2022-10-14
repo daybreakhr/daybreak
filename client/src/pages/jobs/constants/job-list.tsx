@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { capitalize } from 'lodash'
 import { Dropdown, Menu, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import type { Priority, Role } from '@prisma/client'
+import type { Department, Priority, Role } from '@prisma/client'
 import type { NavigateFunction } from 'react-router-dom'
 import { AiOutlineEdit, AiOutlineEye, AiOutlineMore } from 'react-icons/ai'
 import { Job } from 'types/job'
@@ -16,6 +16,7 @@ const priorityColor: Record<Priority, string> = {
 
 export const jobColumns = (
   navigate: NavigateFunction,
+  uniqueDepartments: Department[],
   role?: Role,
 ): ColumnsType<Job> => [
   {
@@ -34,6 +35,11 @@ export const jobColumns = (
     dataIndex: 'Department',
     key: 'Department',
     render: ({ name }) => name,
+    filters: uniqueDepartments.map(({ id, name }) => ({
+      value: id,
+      text: name,
+    })),
+    onFilter: (value, record) => record.Department?.id === value,
   },
   {
     title: 'Priority',
@@ -42,6 +48,12 @@ export const jobColumns = (
     render: (priority: Priority) => (
       <Tag color={priorityColor[priority]}>{capitalize(priority)}</Tag>
     ),
+    filters: [
+      { text: 'High', value: 'high' },
+      { text: 'Medium', value: 'medium' },
+      { text: 'Low', value: 'low' },
+    ],
+    onFilter: (value, record) => record.priority === value,
   },
   {
     title: 'Created On',
@@ -58,6 +70,11 @@ export const jobColumns = (
         {status ? 'Published' : 'Draft'}
       </Tag>
     ),
+    filters: [
+      { text: 'Published', value: true },
+      { text: 'Draft', value: false },
+    ],
+    onFilter: (value, record) => record.isPublished === value,
   },
   {
     title: '',
