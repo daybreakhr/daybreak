@@ -1,81 +1,74 @@
-import { Typography } from 'antd'
+import { Button } from 'antd'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { sampleData } from '../constants/profile-list'
+import Certifications from './certifications'
+import Education from './education'
+import Experiences from './experiences'
+import Score from './score'
+import Skills from './skills'
 
 export default function Profile() {
   return (
-    <div className="p-4 text-gray-800">
-      <p className="text-lg font-semibold mb-4">Personal Details</p>
-      <div className="grid grid-cols-3 gap-5 mb-6">
-        <div className="col-span-2">
-          <div className="grid grid-cols-2 gap-5">
-            <div>
-              <p className="text-gray-400 text-xs uppercase">First Name</p>
-              <p className="font-medium">{sampleData.firstname}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs uppercase">Last Name</p>
-              <p className="font-medium">{sampleData.lastname}</p>
-            </div>
+    <>
+      <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
+        <p className="mb-4 text-lg font-semibold">Personal Details</p>
+        <div className="grid grid-cols-3 gap-5 mb-6">
+          <div className="col-span-2">
+            <div className="grid grid-cols-2 gap-5">
+              <div>
+                <p className="text-xs text-gray-800 uppercase">Name</p>
+                <p className="font-medium">{sampleData.name}</p>
+              </div>
 
-            <div>
-              <p className="text-gray-400 text-xs uppercase">Gender</p>
-              <p className="font-medium">{sampleData.gender}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs uppercase">Date of Birth</p>
-              <p className="font-medium">{sampleData.dob}</p>
+              <div>
+                <p className="text-xs text-gray-800 uppercase">Location</p>
+                <p className="font-medium">{sampleData.location}</p>
+              </div>
+
+              <div>
+                <p className="text-xs text-gray-800 uppercase">Gender</p>
+                <p className="font-medium">{sampleData.gender}</p>
+              </div>
+
+              <div>
+                <p className="text-xs text-gray-800 uppercase">
+                  Total Experience
+                </p>
+                <p className="font-medium">
+                  {sampleData.totalExperience} Years
+                </p>
+              </div>
             </div>
           </div>
+
+          <div className="flex items-center justify-center">
+            <img src="/assets/pdf.png" className="w-12 mr-4" />
+
+            <a className="pl-2 text-base font-medium text-blue-600">
+              <AiOutlineCloudDownload className="text-xl" />
+              Resume.pdf
+            </a>
+          </div>
         </div>
-        <div className="flex justify-center place-items-center">
-          <img src="/assets/pdf.png" className="mr-4 w-12" />
+      </div>
 
-          <a className="pl-2 text-base font-medium text-blue-600">
-            <AiOutlineCloudDownload className="text-xl" />
-            Resume.pdf
-          </a>
+      <div className="flex items-start mb-4 space-x-4">
+        <div className="flex flex-col flex-1 space-y-4">
+          <Experiences />
+          <Education />
+
+          <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">
+            <p className="text-lg font-semibold">View Feedbacks</p>
+            <Button type="primary">Feedback</Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col flex-1 space-y-4">
+          <Score />
+          <Certifications />
+          <Skills />
         </div>
       </div>
-
-      <hr className="my-4" />
-
-      <p className="text-lg font-semibold mb-4">Cover Letter</p>
-      <Typography.Paragraph
-        className="pb-2"
-        editable
-        ellipsis={{ rows: 3, expandable: true, symbol: 'Read More' }}
-      >
-        {sampleData.coverletter}
-      </Typography.Paragraph>
-
-      <hr className="my-4" />
-
-      <p className="text-lg font-semibold mb-4">Experience</p>
-      <div className="ml-8">
-        <ul className="list-disc">
-          {sampleData.experiences.map(({ role, duration }) => (
-            <li key={role} className="mb-4">
-              <p className="font-normal">{role}</p>
-              <p className="text-sm text-gray-500">{duration}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <hr className="my-4" />
-
-      <p className="text-lg font-semibold mb-4">Education</p>
-      <div className="ml-8">
-        <ul className="list-disc">
-          <li className="mb-5">
-            <p className="font-normal">{sampleData.education}</p>
-            <p className="text-sm text-gray-500">
-              {sampleData.educationduration}
-            </p>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </>
   )
 }

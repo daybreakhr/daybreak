@@ -13,15 +13,13 @@ export default function Candidate() {
       </Link>
 
       <div className="flex space-x-4 flex-1">
-        <div className="rounded-md shadow-md w-2/3 bg-white overflow-hidden">
+        <div className="rounded-md w-2/3 overflow-hidden">
           <Tabs>
             <Tabs.TabPane tab="Candidate Profile" key="profile">
               <Profile />
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Experience" key="experience" />
             <Tabs.TabPane tab="Engagement" key="engagement" />
-            <Tabs.TabPane tab="Comments" key="comments" />
-            <Tabs.TabPane tab="Transcript" key="transcript" />
+            <Tabs.TabPane tab="Feedback" key="feedback" />
           </Tabs>
         </div>
 
