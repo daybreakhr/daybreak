@@ -8,10 +8,10 @@ export type CandidateInfo = {
   totalExperience: number
   dob: string
   coverletter: string
-  experiences: { company: string, role: string; duration: string }[]
-  education: {name: string, duration: string}[]
-  certification:{ name: string, issued: string, expiration: string }[]
-  skills: {name:string}[];
+  experiences: { company: string; role: string; duration: string }[]
+  education: { name: string; course: string; duration: string }[]
+  certification: { name: string; issued: string; expiration: string }[]
+  skills: { name: string }[]
 }
 
 export const sampleData: CandidateInfo = {
@@ -37,10 +37,36 @@ export const sampleData: CandidateInfo = {
       duration: 'Oct 2017 - Mar 2019',
     },
   ],
-  education: [{ name: 'Sample Institute of Technology, B.Tech CSc', duration: '2013 - 2017' }, { name: 'Sample  2 Institute of Technology, M.Tech CSc', duration: '2017 - 20179' }],
-  certification: [
-    { name: 'AWS Associate Certification', issued: 'Apr 2022', expiration: 'Apr 2024' },
-    { name: 'Xilinx Zynq Ultrascale', issued: 'Jun 2020', expiration: 'No Expiration Date' },
+  education: [
+    {
+      name: 'Sample Institute of Technology',
+      course: 'B.Tech CSc',
+      duration: '2013 - 2017',
+    },
+    {
+      name: 'Sample  2 Institute of Technology',
+      course: 'M.Tech CSc',
+      duration: '2017 - 20179',
+    },
   ],
-  skills: [{ name: 'Java Platform Enterprise Edition' }, { name: 'C++' }, { name: 'Python' }, { name: 'JavaScript' }, { name: 'React' }, { name: 'Angular' }],
+  certification: [
+    {
+      name: 'AWS Associate Certification',
+      issued: 'Apr 2022',
+      expiration: 'Apr 2024',
+    },
+    {
+      name: 'Xilinx Zynq Ultrascale',
+      issued: 'Jun 2020',
+      expiration: 'No Expiration Date',
+    },
+  ],
+  skills: [
+    { name: 'Java Platform Enterprise Edition' },
+    { name: 'C++' },
+    { name: 'Python' },
+    { name: 'JavaScript' },
+    { name: 'React' },
+    { name: 'Angular' },
+  ],
 }
