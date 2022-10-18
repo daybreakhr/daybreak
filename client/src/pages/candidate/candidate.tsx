@@ -3,23 +3,25 @@ import { Link } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import Profile from './components/profile'
 import Details from './components/details'
+import Feedback from './components/feedback'
 
 export default function Candidate() {
   return (
-    <div className="px-8 pt-4 pb-8 flex-1 flex flex-col">
-      <Link to="/candidates" className="mb-4 flex items-center space-x-2">
+    <div className="flex flex-col flex-1 px-8 pt-4 pb-8">
+      <Link to="/candidates" className="flex items-center mb-4 space-x-2">
         <AiOutlineArrowLeft />
         <span>All Candidates</span>
       </Link>
 
-      <div className="flex space-x-4 flex-1">
-        <div className="rounded-md w-2/3 overflow-hidden">
+      <div className="flex flex-1 space-x-4">
+        <div className="flex-1 overflow-hidden rounded-md">
           <Tabs>
             <Tabs.TabPane tab="Candidate Profile" key="profile">
               <Profile />
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Engagement" key="engagement" />
-            <Tabs.TabPane tab="Feedback" key="feedback" />
+            <Tabs.TabPane tab="Feedback" key="feedback">
+              <Feedback />
+            </Tabs.TabPane>
           </Tabs>
         </div>
 
