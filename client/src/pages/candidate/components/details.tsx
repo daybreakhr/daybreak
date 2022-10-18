@@ -10,13 +10,13 @@ import { sampleData } from '../constants/profile-list'
 
 export default function Details() {
   return (
-    <div className="py-6 bg-white rounded-md shadow-md w-1/3 h-fit flex flex-col items-center">
-      <div className="bg-gray-400 p-3 rounded-full text-gray-50 text-6xl mb-4">
+    <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
+      <div className="p-3 mb-4 text-6xl bg-gray-400 rounded-full text-gray-50">
         <AiOutlineUser />
       </div>
 
-      <p className="text-base font-medium mb-1">{sampleData.name}</p>
-      <p className="text-xs text-gray-600 mb-4">Applied on 28th Sept, 2022</p>
+      <p className="mb-1 text-base font-medium">{sampleData.name}</p>
+      <p className="mb-4 text-xs text-gray-600">Applied on 28th Sept, 2022</p>
 
       <div className="flex items-center justify-center space-x-6">
         <IconButton>
@@ -32,20 +32,20 @@ export default function Details() {
         </IconButton>
       </div>
 
-      <hr className="my-4 w-full border-gray-300" />
+      <hr className="w-full my-4 border-gray-300" />
 
       <div className="flex items-center space-x-4">
         <Button danger>Decline</Button>
         <Button type="primary">Advance</Button>
       </div>
 
-      <hr className="my-4 w-full border-gray-300" />
+      <hr className="w-full my-4 border-gray-300" />
 
       <div className="w-full px-4">
-        <p className="uppercase text-gray-500 text-xs mb-2">Applied Jobs</p>
+        <p className="mb-2 text-xs text-gray-500 uppercase">Applied Jobs</p>
         <div className="px-4 py-2 bg-gray-100 rounded-md">
           <p className="font-medium">Full Stack Engineer</p>
-          <p className="text-gray-500 text-xs space-x-4">
+          <p className="space-x-4 text-xs text-gray-500">
             <span>Full Time</span>
             <span>Bengaluru</span>
           </p>
