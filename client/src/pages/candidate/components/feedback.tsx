@@ -27,7 +27,7 @@ export default function Feedback() {
               <Avatar className="flex-none" size="large" src={photoURL}>
                 {name.charAt(0)}
               </Avatar>
-              <div>
+              <div className="flex-1">
                 <p className="mb-2 font-medium">{name}</p>
 
                 <div className="flex items-center justify-between mb-1">

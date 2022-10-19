@@ -22,6 +22,7 @@ model Workspace {
   Department  Department[]
   Location    Location[]
   Job         Job[]
+  Candidate   Candidate[]
 }
 
 model Member {
@@ -33,6 +34,7 @@ model Member {
   Department  Department[]
   Location    Location[]
   Job         Job[]
+  Feedback    Feedback[]
 }
 
 model Invitees {
@@ -76,6 +78,7 @@ model Job {
   workspaceId  String      @db.ObjectId
   Member       Member      @relation(fields: [createdBy], references: [uid])
   createdBy    String
+  Candidate    Candidate[]
 }
 
 enum Priority {
@@ -118,4 +121,33 @@ model Location {
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
   Job         Job[]
+}
+
+model Candidate {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  middleName  String?
+  lastName    String
+  email       String
+  phone       String
+  location    String
+  linkedInUrl String
+  createdAt   DateTime   @default(now())
+  Job         Job        @relation(fields: [jobId], references: [id])
+  jobId       String     @db.ObjectId
+  Workspace   Workspace  @relation(fields: [workspaceId], references: [id])
+  workspaceId String     @db.ObjectId
+  Feedback    Feedback[]
+}
+
+model Feedback {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  notes       String
+  score       Float
+  createdAt   DateTime  @default(now())
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String    @db.ObjectId
 }
