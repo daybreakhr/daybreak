@@ -11,6 +11,7 @@ import { DepartmentModule } from './department/department.module'
 import { LocationModule } from './location/location.module'
 import { JobsModule } from './jobs/jobs.module'
 import { WorkspaceModule } from './workspace/workspace.module'
+import { CandidateModule } from './candidate/candidate.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { WorkspaceModule } from './workspace/workspace.module'
     LocationModule,
     JobsModule,
     WorkspaceModule,
+    CandidateModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
