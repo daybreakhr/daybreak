@@ -11,22 +11,22 @@ datasource db {
 }
 
 model Workspace {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  slug       String       @unique
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  members    Member[]
-  invitees   Invitees[]
-  Department Department[]
-  Location   Location[]
-  Job        Job[]
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String       @unique
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  members     Member[]
+  invitees    Invitees[]
+  Department  Department[]
+  Location    Location[]
+  Job         Job[]
 }
 
 model Member {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   uid         String       @unique
-  role        Role
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
   workspaceId String       @db.ObjectId
@@ -57,7 +57,7 @@ model Job {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   title        String?
   priority     Priority    @default(medium)
-  Department   Department? @relation(fields: [departmentId], references: [id])
+  Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   departmentId String?     @db.ObjectId
   jobType      JobType?
   Location     Location?   @relation(fields: [locationId], references: [id])

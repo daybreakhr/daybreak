@@ -10,6 +10,7 @@ import { RolesGuard } from './auth/roles.guard'
 import { DepartmentModule } from './department/department.module'
 import { LocationModule } from './location/location.module'
 import { JobsModule } from './jobs/jobs.module'
+import { WorkspaceModule } from './workspace/workspace.module'
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { JobsModule } from './jobs/jobs.module'
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
       }),
-      envFilePath: ['.env'],
+      envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
     }),
     AuthModule,
@@ -28,6 +29,7 @@ import { JobsModule } from './jobs/jobs.module'
     DepartmentModule,
     LocationModule,
     JobsModule,
+    WorkspaceModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

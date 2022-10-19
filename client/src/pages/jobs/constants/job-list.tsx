@@ -1,10 +1,11 @@
+import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash'
-import { Link } from 'react-router-dom'
 import { Dropdown, Menu, Tag } from 'antd'
-import type { Priority } from '@prisma/client'
 import type { ColumnsType } from 'antd/es/table'
-import { AiOutlineEdit, AiOutlineMore } from 'react-icons/ai'
+import type { Department, Priority, Role } from '@prisma/client'
+import type { NavigateFunction } from 'react-router-dom'
+import { AiOutlineEdit, AiOutlineEye, AiOutlineMore } from 'react-icons/ai'
 import { Job } from 'types/job'
 
 const priorityColor: Record<Priority, string> = {
@@ -13,7 +14,11 @@ const priorityColor: Record<Priority, string> = {
   low: 'green',
 }
 
-export const jobColumns: ColumnsType<Job> = [
+export const jobColumns = (
+  navigate: NavigateFunction,
+  uniqueDepartments: Department[],
+  role?: Role,
+): ColumnsType<Job> => [
   {
     title: 'Job Title',
     dataIndex: 'title',
@@ -30,6 +35,11 @@ export const jobColumns: ColumnsType<Job> = [
     dataIndex: 'Department',
     key: 'Department',
     render: ({ name }) => name,
+    filters: uniqueDepartments.map(({ id, name }) => ({
+      value: id,
+      text: name,
+    })),
+    onFilter: (value, record) => record.Department?.id === value,
   },
   {
     title: 'Priority',
@@ -38,6 +48,12 @@ export const jobColumns: ColumnsType<Job> = [
     render: (priority: Priority) => (
       <Tag color={priorityColor[priority]}>{capitalize(priority)}</Tag>
     ),
+    filters: [
+      { text: 'High', value: 'high' },
+      { text: 'Medium', value: 'medium' },
+      { text: 'Low', value: 'low' },
+    ],
+    onFilter: (value, record) => record.priority === value,
   },
   {
     title: 'Created On',
@@ -54,21 +70,37 @@ export const jobColumns: ColumnsType<Job> = [
         {status ? 'Published' : 'Draft'}
       </Tag>
     ),
+    filters: [
+      { text: 'Published', value: true },
+      { text: 'Draft', value: false },
+    ],
+    onFilter: (value, record) => record.isPublished === value,
   },
   {
     title: '',
     render: (_, { id }) => (
       <Dropdown
         trigger={['click']}
+        disabled={role === 'member'}
+        className={clsx({ 'cursor-not-allowed': role === 'member' })}
         overlay={
           <Menu>
-            <Link to={`/jobs/${id}/create`}>
-              <Menu.Item icon={<AiOutlineEdit />}>Edit Job</Menu.Item>
-            </Link>
+            <Menu.Item
+              icon={<AiOutlineEye />}
+              onClick={() => navigate(`/jobs/${id}`)}
+            >
+              Preview
+            </Menu.Item>
+            <Menu.Item
+              icon={<AiOutlineEdit />}
+              onClick={() => navigate(`/jobs/${id}/create`)}
+            >
+              Edit Job
+            </Menu.Item>
           </Menu>
         }
       >
-        <button className="flex items-center justify-center w-6 h-6 hover:bg-gray-200 rounded-full">
+        <button className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200">
           <AiOutlineMore />
         </button>
       </Dropdown>

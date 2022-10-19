@@ -12,6 +12,9 @@ import Members from 'pages/members'
 import Jobs from 'pages/jobs'
 import CreateJob from 'pages/create-job'
 import Candidate from 'pages/candidate'
+import Organisation from 'pages/organisation'
+import PublishJob from 'pages/publish-job'
+import Job from 'pages/job'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -27,10 +30,12 @@ export default function App() {
             <Route path="/" element={<AuthLayout component={AppShell} />}>
               <Route path="home" element={<Home />} />
               <Route path="jobs" element={<Jobs />} />
+              <Route path="jobs/:jobId" element={<Job />} />
               <Route path="jobs/:jobId/create" element={<CreateJob />} />
+              <Route path="jobs/:jobId/publish" element={<PublishJob />} />
               <Route path="candidates" element={<Candidates />} />
               <Route path="candidates/:candidateId" element={<Candidate />} />
-              <Route path="settings/organisation" element={<Home />} />
+              <Route path="settings/organisation" element={<Organisation />} />
               <Route path="settings/members" element={<Members />} />
             </Route>
           </Routes>

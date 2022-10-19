@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import IconButton from 'components/icon-button/icon-button'
+import IconButton from 'components/icon-button'
 import {
   AiFillLinkedin,
   AiOutlineMail,
@@ -7,21 +7,18 @@ import {
   AiOutlinePushpin,
   AiOutlineUser,
 } from 'react-icons/ai'
-import { FiThumbsUp, FiThumbsDown } from 'react-icons/fi'
 import { sampleData } from '../constants/profile-list'
 import ProgressBar from './progressbar'
 
 export default function Details() {
   return (
-    <div className="flex flex-col items-center w-1/3 py-6 bg-white rounded-md shadow-md h-fit">
+    <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
       <div className="p-3 mb-4 text-6xl bg-gray-400 rounded-full text-gray-50">
         <AiOutlineUser />
       </div>
 
-      <p className="mb-1 text-base font-medium">
-        {sampleData.firstname} {sampleData.lastname}
-      </p>
-      <p className="mb-4 text-xs text-gray-600">Applied Today</p>
+      <p className="mb-1 text-base font-medium">{sampleData.name}</p>
+      <p className="mb-4 text-xs text-gray-600">Applied on 28th Sept, 2022</p>
 
       <div className="flex items-center justify-center space-x-6">
         <IconButton>
@@ -40,16 +37,8 @@ export default function Details() {
       <hr className="w-full my-4 border-gray-300" />
 
       <div className="flex items-center space-x-4">
-        <IconButton className="text-red-500">
-          <FiThumbsDown />
-        </IconButton>
-
-        <Button>Rating</Button>
+        <Button danger>Decline</Button>
         <Button type="primary">Advance</Button>
-
-        <IconButton className="text-green-700">
-          <FiThumbsUp />
-        </IconButton>
       </div>
 
       <hr className="w-full my-4 border-gray-300" />
@@ -58,7 +47,7 @@ export default function Details() {
         <p className="mb-2 text-xs text-gray-500 uppercase">Applied Jobs</p>
         <div className="px-4 py-2 bg-gray-100 rounded-md">
           <p className="font-medium">Full Stack Engineer</p>
-          <p className="space-x-4 text-xs text-gray-600">
+          <p className="space-x-4 text-xs text-gray-500">
             <span>Full Time</span>
             <span>Bengaluru</span>
           </p>

@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
+import Show from 'components/show'
+import useAuth from 'hooks/use-auth'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
+import { Department } from '@prisma/client'
 
 export default function Jobs() {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [input, setInput] = useState('')
 
@@ -24,11 +28,24 @@ export default function Jobs() {
     keys: ['title'],
   })
 
+  const uniqueDepartments = useMemo(() => {
+    if (data) {
+      return data
+        .map(({ Department }) => Department)
+        .filter(
+          (value, index, arr) =>
+            value !== null &&
+            arr.findIndex((val) => val?.id === value.id) === index,
+        ) as Department[]
+    }
+    return [] as Department[]
+  }, [data])
+
   return (
     <div className="p-8">
       <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="font-medium font-sans text-xl mb-4">Listed Jobs</p>
-        <div className="flex items-center mb-4 justify-between">
+        <p className="mb-4 font-sans text-xl font-medium">Listed Jobs</p>
+        <div className="flex items-center justify-between mb-4">
           <Input
             value={input}
             style={{ width: '16rem' }}
@@ -37,20 +54,23 @@ export default function Jobs() {
             onChange={(e) => setInput(e.target.value)}
           />
 
-          <Button
-            type="primary"
-            loading={isCreatingJob}
-            icon={<AiOutlinePlus />}
-            onClick={() => mutate()}
-          >
-            Create Job
-          </Button>
+          <Show when={user?.role === 'admin'}>
+            <Button
+              type="primary"
+              loading={isCreatingJob}
+              icon={<AiOutlinePlus />}
+              onClick={() => mutate()}
+            >
+              Create Job
+            </Button>
+          </Show>
         </div>
 
         <Table
           loading={isLoading}
-          columns={jobColumns}
           dataSource={filteredData}
+          rowKey={(record) => record.id}
+          columns={jobColumns(navigate, uniqueDepartments, user?.role)}
         />
       </div>
     </div>
