@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { Express } from 'express'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { Role, Workspace } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
@@ -17,13 +28,17 @@ export class WorkspaceController {
 
   @Patch(':workspaceId')
   @Roles(Role.admin)
+  @UseInterceptors(FileInterceptor('file'))
   async updateWorkspace(
     @Param('workspaceId') workspaceId: string,
     @Body() updateWorkspaceDto: Partial<Workspace>,
+    @UploadedFile()
+    file?: Express.Multer.File,
   ) {
     const data = await this.workspaceService.updateWorkspace(
       workspaceId,
       updateWorkspaceDto,
+      file,
     )
     return data
   }
