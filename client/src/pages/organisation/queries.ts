@@ -1,7 +1,7 @@
 import type { Department, Location, Workspace } from '@prisma/client'
 import client from 'utils/client'
 
-const WORKSPACE_ID = '6317158147089f094cd4598e'
+const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
 
 export async function fetchOrganisation() {
   const { data } = await client.get<Workspace>(`workspace/${WORKSPACE_ID}`)
