@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   Param,
+  ParseFilePipe,
   Patch,
+  Post,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -26,19 +29,31 @@ export class WorkspaceController {
     return data
   }
 
-  @Patch(':workspaceId')
+  @Post(':workspaceId/upload')
   @Roles(Role.admin)
   @UseInterceptors(FileInterceptor('file'))
+  async uploadLogo(
+    @Param('workspaceId') workspaceId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: 'image' })],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const data = await this.workspaceService.uploadLogo(workspaceId, file)
+    return data
+  }
+
+  @Patch(':workspaceId')
+  @Roles(Role.admin)
   async updateWorkspace(
     @Param('workspaceId') workspaceId: string,
     @Body() updateWorkspaceDto: Partial<Workspace>,
-    @UploadedFile()
-    file?: Express.Multer.File,
   ) {
     const data = await this.workspaceService.updateWorkspace(
       workspaceId,
       updateWorkspaceDto,
-      file,
     )
     return data
   }

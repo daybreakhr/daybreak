@@ -19,21 +19,23 @@ export class WorkspaceService {
     return workspace
   }
 
+  async uploadLogo(workspaceId: string, file: Express.Multer.File) {
+    const key = `organisation/${workspaceId}/${file.originalname}`
+    const uploadResult = await this.uploadS3(file.buffer, key)
+    const workspace = await this.prismaService.workspace.update({
+      where: { id: workspaceId },
+      data: { logo: uploadResult.Location },
+    })
+    return workspace
+  }
+
   async updateWorkspace(
     workspaceId: string,
     updateWorkspaceDto: Partial<Workspace>,
-    file?: Express.Multer.File,
   ) {
-    let uploadResult: S3.ManagedUpload.SendData | undefined
-    if (file) {
-      const ext = file.mimetype.split('/')[1]
-      const key = `organisation/${workspaceId}/logo.${ext}`
-      uploadResult = await this.uploadS3(file.buffer, key)
-    }
-
     const workspace = await this.prismaService.workspace.update({
       where: { id: workspaceId },
-      data: { ...updateWorkspaceDto, logo: uploadResult?.Location },
+      data: updateWorkspaceDto,
     })
 
     return workspace
@@ -50,6 +52,7 @@ export class WorkspaceService {
         Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
         Body: file,
         Key: key,
+        ContentDisposition: 'inline',
       })
       .promise()
 
