@@ -4,7 +4,7 @@ Welcome to the monorepo for daybreak product code. This project is a monorepo an
 
 We are using [NestJS](https://docs.nestjs.com/) for backend development and [React](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/) for frontend development.
 
-Frontend code is available inside `client` directory and backend code is available inside `server` directory.
+Frontend code is available inside `packages/client` directory and backend code is available inside `packages/server` directory.
 
 ## Developer's Guide
 
