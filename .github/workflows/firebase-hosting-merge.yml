@@ -20,4 +20,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DAYBREAKHR_C855D }}'
           channelId: live
           projectId: daybreakhr-c855d
-          entrypoint: 'client'
+          entrypoint: 'packages/client'

@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "author": "Himanshu Nagrath <him.nagrath@gmail.com>",
   "workspaces": [
-    "client",
-    "server"
+    "packages/*"
   ],
   "scripts": {
     "lint": "eslint --no-error-on-unmatched-pattern --fix \"**/*.{ts,tsx,js,jsx,json,css}\"",
     "format": "prettier \"**/*.{ts,tsx,js,jsx,json,css}\" --write",
     "client": "yarn workspace client dev",
+    "boards": "yarn workspace boards dev",
     "server": "yarn workspace server start:dev",
     "prepare": "husky install"
   },

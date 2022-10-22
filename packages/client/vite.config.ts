@@ -18,7 +18,7 @@ export default defineConfig({
     alias: [
       {
         find: /^~/,
-        replacement: path.join(__dirname, '../node_modules', '/'),
+        replacement: path.join(__dirname, '../../node_modules', '/'),
       },
     ],
   },
