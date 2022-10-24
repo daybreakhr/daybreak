@@ -1,8 +1,8 @@
 import { S3 } from 'aws-sdk'
+import type { Express } from 'express'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Workspace } from '@prisma/client'
-import type { Express } from 'express'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
@@ -12,9 +12,15 @@ export class WorkspaceService {
     private readonly configService: ConfigService,
   ) {}
 
-  async getById(workspaceId: string) {
+  async getAllWorkspaces() {
+    const workspaces = await this.prismaService.workspace.findMany({})
+    return workspaces
+  }
+
+  async getBySlug(slug: string) {
     const workspace = await this.prismaService.workspace.findUnique({
-      where: { id: workspaceId },
+      where: { slug },
+      include: { Job: true },
     })
     return workspace
   }
