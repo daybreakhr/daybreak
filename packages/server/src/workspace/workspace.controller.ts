@@ -19,17 +19,23 @@ import { Roles } from 'src/auth/roles.decorator'
 import { WorkspaceService } from './workspace.service'
 
 @Controller('workspace')
-@UseGuards(AuthGuard)
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
-  @Get(':workspaceId')
-  async getById(@Param('workspaceId') id: string) {
-    const data = await this.workspaceService.getById(id)
+  @Get('')
+  async getAllWorkspaces() {
+    const data = await this.workspaceService.getAllWorkspaces()
+    return data
+  }
+
+  @Get(':slug')
+  async getBySlug(@Param('slug') id: string) {
+    const data = await this.workspaceService.getBySlug(id)
     return data
   }
 
   @Post(':workspaceId/upload')
+  @UseGuards(AuthGuard)
   @Roles(Role.admin)
   @UseInterceptors(FileInterceptor('file'))
   async uploadLogo(
@@ -46,6 +52,7 @@ export class WorkspaceController {
   }
 
   @Patch(':workspaceId')
+  @UseGuards(AuthGuard)
   @Roles(Role.admin)
   async updateWorkspace(
     @Param('workspaceId') workspaceId: string,
