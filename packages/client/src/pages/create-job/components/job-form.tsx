@@ -139,6 +139,7 @@ export default function JobForm() {
         </Form.Item>
       </div>
 
+      <p className="mb-2">Job Description</p>
       <Editor
         initialValue={job?.description as Descendant[]}
         onChange={debounce(
