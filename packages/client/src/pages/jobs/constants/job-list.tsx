@@ -60,6 +60,9 @@ export const jobColumns = (
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: (date: Date) => dayjs(date).format('DD-MM-YYYY'),
+    sorter: (a, b) =>
+      new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf(),
+    defaultSortOrder: 'descend',
   },
   {
     title: 'Status',
@@ -81,6 +84,7 @@ export const jobColumns = (
     render: (_, { id }) => (
       <Dropdown
         trigger={['click']}
+        placement="bottomRight"
         disabled={role === 'member'}
         className={clsx({ 'cursor-not-allowed': role === 'member' })}
         overlay={
