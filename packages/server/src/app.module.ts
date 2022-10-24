@@ -12,6 +12,7 @@ import { LocationModule } from './location/location.module'
 import { JobsModule } from './jobs/jobs.module'
 import { WorkspaceModule } from './workspace/workspace.module'
 import { CandidateModule } from './candidate/candidate.module'
+import { AppLoggerMiddleware } from './logger.middleware'
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { CandidateModule } from './candidate/candidate.module'
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*')
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AuthMiddleware, AppLoggerMiddleware).forRoutes('*')
   }
 }
