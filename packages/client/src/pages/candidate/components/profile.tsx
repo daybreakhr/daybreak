@@ -7,7 +7,11 @@ import Experiences from './experiences'
 import Score from './score'
 import Skills from './skills'
 
-export default function Profile() {
+type ProfileProps = {
+  onChange: () => void
+}
+
+export default function Profile({ onChange }: ProfileProps) {
   return (
     <>
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
@@ -59,7 +63,9 @@ export default function Profile() {
 
           <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">
             <p className="text-lg font-semibold">View Feedbacks</p>
-            <Button type="primary">Feedback</Button>
+            <Button type="primary" onClick={onChange}>
+              Feedback
+            </Button>
           </div>
         </div>
 
