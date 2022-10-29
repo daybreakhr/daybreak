@@ -6,7 +6,15 @@ import { PrismaService } from 'src/prisma.service'
 export class JobsService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAll(workspaceId: string) {
+  async getAllJobs() {
+    const jobs = await this.prismaService.job.findMany({
+      where: { isPublished: true },
+      include: { Workspace: true },
+    })
+    return jobs
+  }
+
+  async getAllByWorkspaceId(workspaceId: string) {
     const jobs = await this.prismaService.job.findMany({
       where: { workspaceId },
       include: { Location: true, Department: true },
@@ -17,7 +25,7 @@ export class JobsService {
   async getById(id: string) {
     const job = await this.prismaService.job.findUnique({
       where: { id },
-      include: { Location: true },
+      include: { Location: true, Workspace: true },
     })
     return job
   }
