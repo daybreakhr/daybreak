@@ -1,39 +1,18 @@
-import { useCallback, useMemo } from 'react'
 import { Button, Spin, Tag } from 'antd'
 import { useQuery } from '@tanstack/react-query'
-import { createEditor, Descendant } from 'slate'
 import { Link, useParams } from 'react-router-dom'
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
-import {
-  Editable,
-  RenderElementProps,
-  RenderLeafProps,
-  Slate,
-  withReact,
-} from 'slate-react'
-
 import Show from 'components/show'
 import useAuth from 'hooks/use-auth'
-import { Element, Leaf } from 'components/editor/components'
 import { fetchJob } from './queries'
 import JobSummary from './components/job-summary'
+import { Reader } from '../../../../ui-kit/src/components/Reader'
 
 export default function Job() {
   const { user } = useAuth()
   const { jobId = '' } = useParams()
 
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
-
-  const editor = useMemo(() => withReact(createEditor()), [])
-
-  const renderElement = useCallback(
-    (props: RenderElementProps) => <Element {...props} />,
-    [],
-  )
-  const renderLeaf = useCallback(
-    (props: RenderLeafProps) => <Leaf {...props} />,
-    [],
-  )
 
   return (
     <div className="px-8 pt-4 pb-8">
@@ -71,13 +50,7 @@ export default function Job() {
             <Show when={data?.description}>
               {(description) => (
                 <div className="prose-sm prose max-w-none">
-                  <Slate editor={editor} value={description as Descendant[]}>
-                    <Editable
-                      readOnly
-                      renderLeaf={renderLeaf}
-                      renderElement={renderElement}
-                    />
-                  </Slate>
+                  <Reader description={description} />
                 </div>
               )}
             </Show>
