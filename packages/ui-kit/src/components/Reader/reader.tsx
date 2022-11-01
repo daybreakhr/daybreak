@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { createEditor, Descendant } from 'slate'
+import { createEditor } from 'slate'
 import { Element, Leaf } from './components'
 import {
   Editable,
@@ -8,6 +8,7 @@ import {
   Slate,
   withReact,
 } from 'slate-react'
+import { initialValues } from './initial-values'
 
 // type ReaderProps = {
 //   initialValue?: string | number | boolean | null | undefined
@@ -26,7 +27,7 @@ export default function JDeditor(initialValue: any) {
   )
   initialValue = initialValue.description
   return (
-    <Slate editor={editor} value={initialValue as Descendant[]}>
+    <Slate editor={editor} value={initialValue ?? initialValues}>
       <Editable
         readOnly
         renderLeaf={renderLeaf}
