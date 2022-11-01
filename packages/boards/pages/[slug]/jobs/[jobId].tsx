@@ -2,8 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { GetStaticPaths, GetStaticProps } from 'next'
+import { Show, Reader } from 'ui-kit'
+import { Descendant } from 'slate'
 import type { Job, Location, Workspace } from '@prisma/client'
-import { Show } from 'ui-kit'
 import client from 'utils/client'
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
@@ -60,6 +61,15 @@ export default function JobPage({ job }: JobPageProps) {
 
           <p className="mb-1 font-medium">Who We Are</p>
           <p className="my-0">{job.Workspace.description}</p>
+        </div>
+        <div className="flex-1 p-4 bg-white rounded-md shadow-md">
+          <Show when={job?.description}>
+            {(description) => (
+              <div className="prose-sm prose max-w-none">
+                <Reader initialValue={description as Descendant[]} />
+              </div>
+            )}
+          </Show>
         </div>
       </div>
     </>

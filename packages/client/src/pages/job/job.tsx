@@ -1,12 +1,13 @@
 import { Button, Spin, Tag } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
+import { Descendant } from 'slate'
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
+import { Reader } from 'ui-kit'
 import Show from 'components/show'
 import useAuth from 'hooks/use-auth'
 import { fetchJob } from './queries'
 import JobSummary from './components/job-summary'
-import { Reader } from '../../../../ui-kit/src/components/Reader'
 
 export default function Job() {
   const { user } = useAuth()
@@ -50,7 +51,7 @@ export default function Job() {
             <Show when={data?.description}>
               {(description) => (
                 <div className="prose-sm prose max-w-none">
-                  <Reader description={description} />
+                  <Reader initialValue={description as Descendant[]} />
                 </div>
               )}
             </Show>

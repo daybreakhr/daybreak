@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { createEditor } from 'slate'
+import { createEditor, Descendant } from 'slate'
 import { Element, Leaf } from './components'
 import {
   Editable,
@@ -8,13 +8,12 @@ import {
   Slate,
   withReact,
 } from 'slate-react'
-import { initialValues } from './initial-values'
 
-// type ReaderProps = {
-//   initialValue?: string | number | boolean | null | undefined
-// }
+type ReadOnlyEditorProps = {
+  initialValue: Descendant[]
+}
 
-export default function JDeditor(initialValue: any) {
+export default function Reader({ initialValue }: ReadOnlyEditorProps) {
   const editor = React.useMemo(() => withReact(createEditor()), [])
 
   const renderElement = React.useCallback(
@@ -25,9 +24,8 @@ export default function JDeditor(initialValue: any) {
     (initialValue: RenderLeafProps) => <Leaf {...initialValue} />,
     [],
   )
-  initialValue = initialValue.description
   return (
-    <Slate editor={editor} value={initialValue ?? initialValues}>
+    <Slate editor={editor} value={initialValue}>
       <Editable
         readOnly
         renderLeaf={renderLeaf}
