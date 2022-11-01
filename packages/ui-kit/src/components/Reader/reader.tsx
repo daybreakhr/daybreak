@@ -9,20 +9,24 @@ import {
   withReact,
 } from 'slate-react'
 
-export default function JDeditor(props: any) {
+// type ReaderProps = {
+//   initialValue?: string | number | boolean | null | undefined
+// }
+
+export default function JDeditor(initialValue: any) {
   const editor = React.useMemo(() => withReact(createEditor()), [])
 
   const renderElement = React.useCallback(
-    (props: RenderElementProps) => <Element {...props} />,
+    (initialValue: RenderElementProps) => <Element {...initialValue} />,
     [],
   )
   const renderLeaf = React.useCallback(
-    (props: RenderLeafProps) => <Leaf {...props} />,
+    (initialValue: RenderLeafProps) => <Leaf {...initialValue} />,
     [],
   )
-  props = props.description
+  initialValue = initialValue.description
   return (
-    <Slate editor={editor} value={props as Descendant[]}>
+    <Slate editor={editor} value={initialValue as Descendant[]}>
       <Editable
         readOnly
         renderLeaf={renderLeaf}
