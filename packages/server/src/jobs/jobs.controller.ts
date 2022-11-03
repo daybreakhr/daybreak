@@ -14,25 +14,32 @@ import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
 import { JobsService } from './jobs.service'
 
-@Controller(':workspaceId/jobs')
-@UseGuards(AuthGuard)
+@Controller('')
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
-  @Get('')
-  async getAll(@Param('workspaceId') workspaceId: string) {
-    const data = await this.jobsService.getAll(workspaceId)
+  @Get('jobs')
+  async getAllJobs() {
+    const data = await this.jobsService.getAllJobs()
     return data
   }
 
-  @Get(':id')
+  @Get(':workspaceId/jobs')
+  @UseGuards(AuthGuard)
+  async getAllByWorkspaceId(@Param('workspaceId') workspaceId: string) {
+    const data = await this.jobsService.getAllByWorkspaceId(workspaceId)
+    return data
+  }
+
+  @Get('jobs/:id')
   async getById(@Param('id') id: string) {
     const data = await this.jobsService.getById(id)
     return data
   }
 
-  @Post('')
+  @Post(':workspaceId/jobs')
   @Roles('admin')
+  @UseGuards(AuthGuard)
   async create(
     @Param('workspaceId') workspaceId: string,
     @GetUser() user: UserRecord,
@@ -41,8 +48,9 @@ export class JobsController {
     return data
   }
 
-  @Patch(':id')
+  @Patch(':workspaceId/jobs/:id')
   @Roles('admin')
+  @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateJobDto: Partial<Job>) {
     const data = await this.jobsService.update(id, updateJobDto)
     return data
