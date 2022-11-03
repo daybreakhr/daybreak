@@ -1,8 +1,9 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Image from 'next/image'
 import type { Job, Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
-import client from '../utils/client'
+import client from 'utils/client'
 
 type WorkspaceWithJob = Workspace & { Job: Job[] }
 
@@ -67,7 +68,9 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         {workspace.Job.map((job) =>
           job.isPublished ? (
             <div className="mb-4" key={job.id}>
-              <p className="text-indigo-600 hover:underline">{job.title}</p>
+              <Link href={`/${workspace.slug}/jobs/${job.id}`}>
+                {job.title}
+              </Link>
             </div>
           ) : null,
         )}
