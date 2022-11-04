@@ -8,34 +8,24 @@ export default function ApplicationForm() {
 
   return (
     <>
-      <div className="flex items-center mb-4">
-        <Button
-          className={clsx(
-            'mr-2 p-2 border rounded-sm text-purple-600 border-purple-600 hover:text-white hover:bg-purple-500',
-          )}
-        >
-          Apply with Resume
-        </Button>
-        <div className="inline-block align-middle">Or</div>
-        <Button
-          className={clsx(
-            'ml-2 p-2 border rounded-sm text-sky-600 border-sky-600 hover:text-white hover:bg-sky-600',
-          )}
-        >
-          Autofill with LinkedIn
-        </Button>
-      </div>
+      <Button
+        className={clsx(
+          'mb-4 p-2 border rounded-sm text-purple-600 border-purple-600 hover:text-white hover:bg-purple-500',
+        )}
+      >
+        Apply with Resume
+      </Button>
       <Form form={form}>
         <div className="leading-10 pb-10">
           <div className="flex place-content-between">
             <Form.Item name="fname" label="First Name" required>
-              <Input />
+              <Input placeholder="First Name" />
             </Form.Item>
             <Form.Item name="mname" label="Midle Name">
-              <Input />
+              <Input placeholder="Middle Name" />
             </Form.Item>
             <Form.Item name="lname" label="Last Name" required>
-              <Input />
+              <Input placeholder="Last Name" />
             </Form.Item>
           </div>
           <Form.Item
@@ -52,7 +42,7 @@ export default function ApplicationForm() {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Enter Your Email" />
           </Form.Item>
           <Form.Item
             name="phone"
@@ -62,13 +52,13 @@ export default function ApplicationForm() {
             ]}
             required
           >
-            <Input />
+            <Input placeholder="Enter Your Phone Number" />
           </Form.Item>
           <Form.Item name="linkedinurl" label="Linkedin Profile URL">
-            <Input />
+            <Input placeholder="https://linkedin.com/in/username" />
           </Form.Item>
           <Form.Item name="githuburl" label="GitHub Profile URL">
-            <Input />
+            <Input placeholder="https://github.com/username" />
           </Form.Item>
           <div className="flex justify-center">
             <Form.Item>
