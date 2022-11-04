@@ -132,6 +132,7 @@ model Candidate {
   email       String
   phone       String
   location    String
+  resume      String?
   linkedInUrl String
   createdAt   DateTime   @default(now())
   Job         Job        @relation(fields: [jobId], references: [id])

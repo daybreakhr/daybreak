@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { Express } from 'express'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { CreateCandidateDto } from './candidate.dto'
 import { CandidateService } from './candidate.service'
@@ -22,12 +33,15 @@ export class CandidateController {
   }
 
   @Post('')
+  @UseInterceptors(FileInterceptor('file'))
   async create(
     @Param('workspaceId') workspaceId: string,
+    @UploadedFile() file: Express.Multer.File,
     @Body() createCandidateDto: CreateCandidateDto,
   ) {
     const data = await this.candidateService.create(
       workspaceId,
+      file,
       createCandidateDto,
     )
     return data
