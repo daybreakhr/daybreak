@@ -1,5 +1,10 @@
+const withAntdLess = require('next-plugin-antd-less')
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withAntdLess({
+  modifyVars: {
+    '@primary-color': '#9155fd',
+  },
   experimental: {
     externalDir: true,
   },
@@ -8,6 +13,6 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
-}
+})
 
 module.exports = nextConfig
