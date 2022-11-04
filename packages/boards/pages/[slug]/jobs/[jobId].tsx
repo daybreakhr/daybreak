@@ -6,6 +6,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 import { Show, Reader } from 'ui-kit'
 import type { Job, Location, Workspace } from '@prisma/client'
 import client from 'utils/client'
+import ApplicationForm from 'components/application-form'
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
 
@@ -45,7 +46,7 @@ export default function JobPage({ job }: JobPageProps) {
         />
 
         <div className="mt-2 mb-4 prose-sm prose prose-stone max-w-none">
-          <h3 className="mb-0 text-lg font-semibold">{job.title}</h3>
+          <h3 className="mb-1 text-xl font-semibold">{job.title}</h3>
           <p className="mb-1 text-xs">
             <span>at </span>
             <span className="font-medium">{job.Workspace.name} </span>
@@ -59,7 +60,7 @@ export default function JobPage({ job }: JobPageProps) {
             </Show>
           </p>
 
-          <p className="mb-1 font-medium">Who We Are</p>
+          <p className="mb-1 text-base font-medium">Who We Are</p>
           <p className="my-0">{job.Workspace.description}</p>
 
           <Show when={job?.description}>
@@ -67,6 +68,13 @@ export default function JobPage({ job }: JobPageProps) {
               <Reader initialValue={description as Descendant[]} />
             )}
           </Show>
+        </div>
+        <hr />
+        <div className="py-4 max-w-none">
+          <div className="py-4 text-xl font-medium">
+            Submit your Application
+          </div>
+          <ApplicationForm />
         </div>
       </div>
     </>
