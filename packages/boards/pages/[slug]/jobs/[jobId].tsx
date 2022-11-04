@@ -6,6 +6,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 import { Show, Reader } from 'ui-kit'
 import type { Job, Location, Workspace } from '@prisma/client'
 import client from 'utils/client'
+import ApplicationForm from 'components/application-form'
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
 
@@ -67,6 +68,13 @@ export default function JobPage({ job }: JobPageProps) {
               <Reader initialValue={description as Descendant[]} />
             )}
           </Show>
+        </div>
+        <hr />
+        <div className="mt-2 mb-4 max-w-none">
+          <div className="pt-4 pb-4 text-xl font-medium">
+            Submit your Application
+          </div>
+          <ApplicationForm />
         </div>
       </div>
     </>
