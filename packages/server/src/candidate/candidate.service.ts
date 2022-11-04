@@ -1,10 +1,15 @@
+import { Express } from 'express'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateCandidateDto } from './candidate.dto'
+import { S3Service } from 'src/s3.service'
 
 @Injectable()
 export class CandidateService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private s3Service: S3Service,
+  ) {}
 
   async getAll(workspaceId: string) {
     const candidates = await this.prismaService.candidate.findMany({
@@ -21,16 +26,29 @@ export class CandidateService {
     return candidate
   }
 
-  async create(workspaceId: string, createCandidateDto: CreateCandidateDto) {
+  async create(
+    workspaceId: string,
+    file: Express.Multer.File,
+    createCandidateDto: CreateCandidateDto,
+  ) {
     const { jobId, ...restParams } = createCandidateDto
 
-    const data = await this.prismaService.candidate.create({
+    const { id } = await this.prismaService.candidate.create({
       data: {
         ...restParams,
         Workspace: { connect: { id: workspaceId } },
         Job: { connect: { id: jobId } },
       },
     })
-    return data
+
+    const key = `candidate/${id}/${file.originalname}`
+    const uploadResult = await this.s3Service.uploadS3(file.buffer, key)
+
+    const candidate = await this.prismaService.candidate.update({
+      where: { id },
+      data: { resume: uploadResult.Location },
+    })
+
+    return candidate
   }
 }

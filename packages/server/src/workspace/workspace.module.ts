@@ -4,11 +4,11 @@ import { WorkspaceController } from './workspace.controller'
 import { PrismaService } from 'src/prisma.service'
 import { AuthService } from 'src/auth/auth.service'
 import { FirebaseModule } from 'src/firebase/firebase.module'
-import { ConfigModule } from '@nestjs/config'
+import { S3Service } from 'src/s3.service'
 
 @Module({
-  imports: [ConfigModule, FirebaseModule],
+  imports: [FirebaseModule],
   controllers: [WorkspaceController],
-  providers: [AuthService, WorkspaceService, PrismaService],
+  providers: [AuthService, WorkspaceService, PrismaService, S3Service],
 })
 export class WorkspaceModule {}
