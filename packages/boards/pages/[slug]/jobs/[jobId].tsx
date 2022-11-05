@@ -3,8 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Descendant } from 'slate'
 import type { GetStaticPaths, GetStaticProps } from 'next'
-import { Show, Reader } from 'ui-kit'
 import type { Job, Location, Workspace } from '@prisma/client'
+import { Show, Reader } from 'ui-kit'
 import client from 'utils/client'
 import ApplicationForm from 'components/application-form'
 
@@ -35,6 +35,7 @@ export default function JobPage({ job }: JobPageProps) {
     <>
       <Head>
         <title>Job Application for {job.title}</title>
+        <link rel="icon" type="image/svg+xml" href={job.Workspace.logo ?? ''} />
       </Head>
 
       <div className="w-screen h-screen max-w-3xl py-8 mx-auto">
@@ -45,14 +46,14 @@ export default function JobPage({ job }: JobPageProps) {
           src={job.Workspace.logo ?? ''}
         />
 
-        <div className="mt-2 mb-4 prose-sm prose prose-stone max-w-none">
+        <div className="mt-2 mb-4 prose prose-stone max-w-none">
           <h3 className="mb-1 text-xl font-semibold">{job.title}</h3>
-          <p className="mb-1 text-xs">
+          <p className="mb-0">
             <span>at </span>
             <span className="font-medium">{job.Workspace.name} </span>
             <Link href={`/${job.Workspace.slug}`}>(View all jobs)</Link>
           </p>
-          <p className="my-0 text-xs text-gray-500">
+          <p className="my-0 text-gray-500">
             <span>{job.Location.name}</span>
 
             <Show when={job.isRemote}>
