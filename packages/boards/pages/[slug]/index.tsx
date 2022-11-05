@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Job, Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
+import { Show } from 'ui-kit'
 import client from 'utils/client'
 
 type WorkspaceWithJob = Workspace & { Job: Job[] }
@@ -52,28 +53,28 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         />
       </Head>
 
-      <div className="w-screen h-screen max-w-3xl py-8 mx-auto">
+      <div className="w-screen h-screen max-w-3xl py-8 mx-auto prose prose-stone">
         <Image
           width={48}
           height={48}
           alt="Company logo"
           src={workspace.logo ?? ''}
         />
-        <div className="mb-4 prose prose-stone">
+        <div className="mb-4">
           <h3 className="text-lg font-semibold">{workspace.name}</h3>
-          <p className="text-sm text-justify">{workspace.description}</p>
+          <p className="text-justify">{workspace.description}</p>
           <h4>Current Job Openings</h4>
         </div>
 
-        {workspace.Job.map((job) =>
-          job.isPublished ? (
-            <div className="mb-4" key={job.id}>
+        {workspace.Job.map((job) => (
+          <Show key={job.id} when={job.isPublished}>
+            <div className="mb-4">
               <Link href={`/${workspace.slug}/jobs/${job.id}`}>
                 {job.title}
               </Link>
             </div>
-          ) : null,
-        )}
+          </Show>
+        ))}
       </div>
     </>
   )

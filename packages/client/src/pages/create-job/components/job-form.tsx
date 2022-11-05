@@ -1,4 +1,5 @@
 import { debounce } from 'lodash'
+import type { Descendant } from 'slate'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   Spin,
 } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
+import { Job } from 'types/job'
 import Editor from 'components/editor'
 import { fetchJob } from 'pages/job/queries'
 import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
@@ -21,8 +23,6 @@ import {
   currency_list,
   jobPriority,
 } from '../constants/create-job-values'
-import { Job } from 'types/job'
-import { Descendant } from 'slate'
 
 export default function JobForm() {
   const [form] = Form.useForm()
