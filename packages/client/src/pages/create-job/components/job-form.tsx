@@ -12,12 +12,8 @@ import {
 } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import Editor from 'components/editor'
-import {
-  fetchDepartments,
-  fetchJobById,
-  fetchLocations,
-  updateJobById,
-} from '../queries'
+import { fetchJob } from 'pages/job/queries'
+import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
 import {
   jobTypeOptions,
   experienceOptions,
@@ -44,7 +40,7 @@ export default function JobForm() {
       { queryKey: ['departments'], queryFn: fetchDepartments },
       {
         queryKey: ['job', jobId],
-        queryFn: () => fetchJobById(jobId),
+        queryFn: () => fetchJob(jobId),
         onSuccess(data: Job) {
           form.setFieldsValue(data)
         },
