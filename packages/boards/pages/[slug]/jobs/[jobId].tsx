@@ -77,7 +77,7 @@ export default function JobPage({ job }: JobPageProps) {
           <div className="py-4 text-xl font-medium">
             Submit your Application
           </div>
-          <ApplicationForm />
+          <ApplicationForm workspaceId={job.Workspace.id} />
         </div>
       </div>
     </>
