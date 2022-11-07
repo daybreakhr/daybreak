@@ -19,8 +19,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }))
 
   // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false }
+  // { fallback: blocking } will server-render pages on-demand if the path doesn't exist.
+  return { paths, fallback: 'blocking' }
 }
 
 // This also gets called at build time
