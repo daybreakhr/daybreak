@@ -1,11 +1,29 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import type { UploadProps } from 'antd'
-import { Form, Input, Button, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
+import { useMutation } from '@tanstack/react-query'
+import type { RcFile, UploadFile } from 'antd/lib/upload'
+import { Button, Form, Input, message, Upload } from 'antd'
+import { createCandidate, CreateCandidateBody } from 'queries'
 
-export default function ApplicationForm() {
+type ApplicationFormProps = {
+  workspaceId: string
+}
+
+export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
+  const { query, push } = useRouter()
   const [form] = Form.useForm()
   const [disableUpload, setDisableUpload] = useState(false)
+
+  const { mutate, isLoading } = useMutation(createCandidate, {
+    onSuccess: () => {
+      form.resetFields()
+      setDisableUpload(false)
+      message.success('Successfully applied for the job!')
+      push(`/${query.slug}`)
+    },
+  })
 
   const uploadProps: UploadProps = {
     action: `${process.env.NEXT_PUBLIC_AFFINDA_BASE_URL}resumes/`,
@@ -28,14 +46,35 @@ export default function ApplicationForm() {
           form.setFieldValue('lastName', data.name.last)
           form.setFieldValue('email', data.emails[0])
           form.setFieldValue('phone', data.phoneNumbers[0])
+          form.setFieldValue('location', data.location?.city)
           form.setFieldValue('linkedinUrl', data.linkedin)
+          form.setFieldValue('affindaId', file.response.meta.identifier)
         }
       }
     },
   }
 
+  function handleSubmit(
+    values: Omit<CreateCandidateBody, 'jobId'> & { file: { file: UploadFile } },
+  ) {
+    const formData = new FormData()
+    const { file, ...restValues } = values
+    formData.append('file', file.file.originFileObj as RcFile)
+    formData.append('jobId', (query.jobId as string) ?? '')
+
+    Object.keys(restValues).forEach((key) => {
+      const value = restValues[key as keyof typeof restValues]
+      if (value) {
+        formData.append(key, value)
+      }
+    })
+
+    mutate({ workspaceId, body: formData })
+  }
+
   return (
-    <Form form={form} className="p-4" layout="vertical">
+    <Form form={form} className="p-4" layout="vertical" onFinish={handleSubmit}>
+      <Form.Item name="affindaId" hidden />
       <Form.Item
         name="file"
         valuePropName="file"
@@ -76,7 +115,7 @@ export default function ApplicationForm() {
           { required: true, message: 'Please input your E-mail!' },
         ]}
       >
-        <Input placeholder="Enter Your Email..." />
+        <Input placeholder="Enter your Email..." />
       </Form.Item>
 
       <Form.Item
@@ -85,19 +124,33 @@ export default function ApplicationForm() {
         rules={[{ required: true, message: 'Please input your phone number!' }]}
         required
       >
-        <Input placeholder="Enter Your Phone Number..." />
+        <Input placeholder="Enter your Phone Number..." />
       </Form.Item>
 
-      <Form.Item name="linkedinUrl" label="Linkedin Profile URL">
+      <Form.Item
+        name="location"
+        label="City / Country"
+        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        required
+      >
+        <Input placeholder="Enter your current location..." />
+      </Form.Item>
+
+      <Form.Item
+        name="linkedInUrl"
+        label="Linkedin Profile URL"
+        rules={[{ required: true, message: 'Please input your LinkedIn URL' }]}
+      >
         <Input placeholder="https://linkedin.com/in/username" />
       </Form.Item>
 
-      <Form.Item name="githubUrl" label="GitHub Profile URL">
-        <Input placeholder="https://github.com/username" />
-      </Form.Item>
-
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="w-40">
+        <Button
+          type="primary"
+          className="w-40"
+          htmlType="submit"
+          loading={isLoading}
+        >
           Submit
         </Button>
       </Form.Item>

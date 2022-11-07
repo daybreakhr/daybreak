@@ -15,6 +15,9 @@ export class CreateCandidateDto {
   phone: string
 
   @IsString()
+  affindaId: string
+
+  @IsString()
   linkedInUrl: string
 
   @IsString()
