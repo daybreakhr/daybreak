@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import type { Department } from '@prisma/client'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
@@ -9,7 +10,6 @@ import Show from 'components/show'
 import useAuth from 'hooks/use-auth'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
-import { Department } from '@prisma/client'
 
 export default function Jobs() {
   const { user } = useAuth()
