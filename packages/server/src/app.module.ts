@@ -27,7 +27,7 @@ import { AppLoggerMiddleware } from './logger.middleware'
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
       }),
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: ['.env'],
       isGlobal: true,
     }),
     AuthModule,
