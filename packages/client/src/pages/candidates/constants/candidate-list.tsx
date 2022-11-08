@@ -1,54 +1,30 @@
+import dayjs from 'dayjs'
+import type { Job } from '@prisma/client'
+import { Candidate } from 'types/candidate'
 import type { ColumnsType } from 'antd/es/table'
-
-type Candidate = {
-  id: string
-  firstName: string
-  middleName: string | null
-  lastName: string
-  email: string
-  phone: string
-  location: string
-  resume: string | null
-  linkedInUrl: string
-  createdAt: Date
-  jobId: string
-  workspaceId: string
-}
 
 export const candidateColumns: ColumnsType<Candidate> = [
   {
     title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'firstName',
+    key: 'firstName',
+    render: (_, record) =>
+      `${record.firstName} ${record.middleName ?? ''} ${record.lastName}`,
   },
+  { title: 'Email', dataIndex: 'email', key: 'email' },
   {
     title: 'Applied For',
-    dataIndex: 'appliedFor',
-    key: 'appliedFor',
+    dataIndex: 'Job',
+    key: 'Job',
+    render: (value: Job) => value.title,
   },
   {
     title: 'Application Date',
-    dataIndex: 'applicationDate',
-    key: 'applicationDate',
-  },
-  {
-    title: 'Current Role',
-    dataIndex: 'currentRole',
-    key: 'currentRole',
-  },
-  {
-    title: 'Current Company',
-    dataIndex: 'currentCompany',
-    key: 'currentCompany',
-  },
-  {
-    title: 'Total Experience',
-    dataIndex: 'totalExperience',
-    key: 'totalExperience',
-  },
-  {
-    title: 'Application Source',
-    dataIndex: 'applicationSource',
-    key: 'applicationSource',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (date: Date) => dayjs(date).format('DD-MM-YYYY'),
+    sorter: (a, b) =>
+      new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf(),
+    defaultSortOrder: 'descend',
   },
 ]
