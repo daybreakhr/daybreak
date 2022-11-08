@@ -23,6 +23,7 @@ export class CandidateService {
   async getById(id: string) {
     const candidate = await this.prismaService.candidate.findUnique({
       where: { id },
+      include: { Job: true },
     })
     return candidate
   }
@@ -43,7 +44,7 @@ export class CandidateService {
     })
 
     const key = `candidate/${id}/${file.originalname}`
-    const uploadResult = await this.s3Service.uploadS3(file.buffer, key)
+    const uploadResult = await this.s3Service.uploadS3(file, key)
 
     const candidate = await this.prismaService.candidate.update({
       where: { id },
