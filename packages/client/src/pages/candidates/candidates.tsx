@@ -1,16 +1,35 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Input, Table } from 'antd'
+import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { sampleData, candidateColumns } from './constants/candidate-list'
+
+import { fetchCandidate } from 'pages/candidates/queries'
+import { candidateColumns } from 'pages/candidates/constants/candidate-list'
 
 export default function Candidates() {
   const navigate = useNavigate()
   const [input, setInput] = useState('')
-  const filteredData = matchSorter(sampleData, input, {
-    keys: ['name'],
+  const { data, isLoading } = useQuery(['candidates'], fetchCandidate)
+
+  const filteredData = matchSorter(data ?? [], input, {
+    keys: ['firstName', 'middleName', 'lastName'],
   })
+
+  const appliedFor = useMemo(() => {
+    if (data) {
+      return data
+        .map(({ Job }) => Job)
+        .filter(
+          (value, index, arr) =>
+            value !== null &&
+            arr.findIndex((val) => val?.id === value.id) === index,
+        ) as Job[]
+    }
+    return [] as Job[]
+  }, [data])
 
   return (
     <div className="p-8">
@@ -27,11 +46,13 @@ export default function Candidates() {
         </div>
 
         <Table
+          loading={isLoading}
           dataSource={filteredData}
-          columns={candidateColumns}
+          rowKey={(record) => record.id}
+          columns={candidateColumns(appliedFor)}
           onRow={(record) => ({
             className: 'cursor-pointer',
-            onClick: () => navigate(`${record.key}`),
+            onClick: () => navigate(`${record.id}`),
           })}
         />
       </div>
