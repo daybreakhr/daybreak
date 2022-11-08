@@ -2,12 +2,8 @@ import dayjs from 'dayjs'
 import type { Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 import type { ColumnsType } from 'antd/es/table'
-import type { NavigateFunction } from 'react-router-dom'
 
-export const candidateColumns = (
-  navigate: NavigateFunction,
-  appliedFor: Job[],
-): ColumnsType<Candidate> => [
+export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
   {
     title: 'Name',
     dataIndex: 'firstName',
@@ -21,10 +17,7 @@ export const candidateColumns = (
     dataIndex: 'Job',
     key: 'Job',
     render: ({ title }) => title,
-    filters: appliedFor.map(({ id, title }) => ({
-      value: id,
-      text: title,
-    })),
+    filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
     onFilter: (value, record) => record.Job?.id === value,
   },
   {

@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Input, Table } from 'antd'
+import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
-import { Job } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
 import { AiOutlineSearch } from 'react-icons/ai'
 
@@ -49,7 +49,11 @@ export default function Candidates() {
           loading={isLoading}
           dataSource={filteredData}
           rowKey={(record) => record.id}
-          columns={candidateColumns(navigate, appliedFor)}
+          columns={candidateColumns(appliedFor)}
+          onRow={(record) => ({
+            className: 'cursor-pointer',
+            onClick: () => navigate(`${record.id}`),
+          })}
         />
       </div>
     </div>
