@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Input, Table } from 'antd'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
+import { Job } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
 import { AiOutlineSearch } from 'react-icons/ai'
 
@@ -16,6 +17,19 @@ export default function Candidates() {
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
   })
+
+  const appliedFor = useMemo(() => {
+    if (data) {
+      return data
+        .map(({ Job }) => Job)
+        .filter(
+          (value, index, arr) =>
+            value !== null &&
+            arr.findIndex((val) => val?.id === value.id) === index,
+        ) as Job[]
+    }
+    return [] as Job[]
+  }, [data])
 
   return (
     <div className="p-8">
@@ -35,11 +49,7 @@ export default function Candidates() {
           loading={isLoading}
           dataSource={filteredData}
           rowKey={(record) => record.id}
-          columns={candidateColumns}
-          onRow={(record) => ({
-            className: 'cursor-pointer',
-            onClick: () => navigate(`${record.id}`),
-          })}
+          columns={candidateColumns(navigate, appliedFor)}
         />
       </div>
     </div>
