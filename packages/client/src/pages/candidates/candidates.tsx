@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { Input, Table } from 'antd'
-import { matchSorter } from 'match-sorter'
-import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { sampleData, candidateColumns } from './constants/candidate-list'
+
+import { fetchCandidate } from 'pages/candidates/queries'
+import { candidateColumns } from 'pages/candidates/constants/candidate-list'
+import { useNavigate } from 'react-router-dom'
 
 export default function Candidates() {
-  const navigate = useNavigate()
   const [input, setInput] = useState('')
-  const filteredData = matchSorter(sampleData, input, {
-    keys: ['name'],
-  })
+  const navigate = useNavigate()
+  const { data, isLoading } = useQuery(['candidates'], fetchCandidate)
 
   return (
     <div className="p-8">
@@ -27,11 +27,13 @@ export default function Candidates() {
         </div>
 
         <Table
-          dataSource={filteredData}
+          loading={isLoading}
+          dataSource={data}
+          rowKey={(record) => record.id}
           columns={candidateColumns}
           onRow={(record) => ({
             className: 'cursor-pointer',
-            onClick: () => navigate(`${record.key}`),
+            onClick: () => navigate(`${record.id}`),
           })}
         />
       </div>
