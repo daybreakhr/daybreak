@@ -2,9 +2,9 @@ import * as nodemailer from 'nodemailer'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class SesService {
+export class AWSSESService {
   async sendMail(sendMailDto: { to: string; subject: string; body: string }) {
-    const mailerClient: nodemailer.Transporter = nodemailer.createTransport({
+    const mailerClient = nodemailer.createTransport({
       host: 'email-smtp.us-east-1.amazonaws.com',
       port: 587,
       auth: {

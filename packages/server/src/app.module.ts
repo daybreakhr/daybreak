@@ -13,6 +13,7 @@ import { JobsModule } from './jobs/jobs.module'
 import { WorkspaceModule } from './workspace/workspace.module'
 import { CandidateModule } from './candidate/candidate.module'
 import { AppLoggerMiddleware } from './logger.middleware'
+import { AWSModule } from './aws/aws.module'
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AppLoggerMiddleware } from './logger.middleware'
     JobsModule,
     WorkspaceModule,
     CandidateModule,
+    AWSModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

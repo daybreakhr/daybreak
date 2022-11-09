@@ -2,13 +2,13 @@ import type { Express } from 'express'
 import { Injectable } from '@nestjs/common'
 import type { Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
-import { S3Service } from 'src/s3.service'
+import { AWSS3Service } from 'src/aws/aws.s3.service'
 
 @Injectable()
 export class WorkspaceService {
   constructor(
     private prismaService: PrismaService,
-    private s3Service: S3Service,
+    private s3Service: AWSS3Service,
   ) {}
 
   async getAllWorkspaces() {

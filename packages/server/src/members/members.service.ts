@@ -4,7 +4,7 @@ import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 import { FirebaseService } from 'src/firebase/firebase.service'
-import { SesService } from 'src/ses.service'
+import { AWSSESService } from 'src/aws/aws.ses.service'
 
 @Injectable()
 export class MembersService {
@@ -12,7 +12,7 @@ export class MembersService {
     private firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private authService: AuthService,
-    private sesService: SesService,
+    private sesService: AWSSESService,
   ) {}
 
   async getAllMembers(workspaceId: string) {
