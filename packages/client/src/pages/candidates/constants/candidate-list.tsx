@@ -1,7 +1,17 @@
 import dayjs from 'dayjs'
-import type { Job } from '@prisma/client'
+import type { CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 import type { ColumnsType } from 'antd/es/table'
+import { capitalize } from 'lodash'
+import { Tag } from 'antd'
+
+const statusColor: Record<CandidateStatus, string> = {
+  applied: 'cyan',
+  interview: 'blue',
+  offered: 'gold',
+  accepted: 'green',
+  rejected: 'red',
+}
 
 export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
   {
@@ -28,5 +38,21 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
     sorter: (a, b) =>
       new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf(),
     defaultSortOrder: 'descend',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (status: CandidateStatus) => (
+      <Tag color={statusColor[status]}>{capitalize(status)}</Tag>
+    ),
+    filters: [
+      { text: 'Applied', value: 'applied' },
+      { text: 'interview', value: 'interview' },
+      { text: 'Offered', value: 'offered' },
+      { text: 'Accepted', value: 'accepted' },
+      { text: 'Rejected', value: 'rejected' },
+    ],
+    onFilter: (value, record) => record.status === value,
   },
 ]
