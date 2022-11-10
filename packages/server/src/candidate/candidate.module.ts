@@ -4,11 +4,11 @@ import { CandidateController } from './candidate.controller'
 import { PrismaService } from 'src/prisma.service'
 import { AuthService } from 'src/auth/auth.service'
 import { FirebaseModule } from 'src/firebase/firebase.module'
-import { AWSS3Service } from 'src/aws/aws.s3.service'
+import { AWSModule } from 'src/aws/aws.module'
 
 @Module({
-  imports: [FirebaseModule],
+  imports: [FirebaseModule, AWSModule],
   controllers: [CandidateController],
-  providers: [CandidateService, AuthService, PrismaService, AWSS3Service],
+  providers: [CandidateService, AuthService, PrismaService],
 })
 export class CandidateModule {}

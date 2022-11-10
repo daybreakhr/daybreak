@@ -10,6 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Iam {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  type        String // e.g. AWS, GCP, Azure
+  subType     String @unique // e.g. ses, s3
+  description String
+  credentials Json
+  params      Json
+}
+
 model Workspace {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String

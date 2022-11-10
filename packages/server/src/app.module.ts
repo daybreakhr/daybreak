@@ -20,10 +20,6 @@ import { AWSModule } from './aws/aws.module'
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         PORT: Joi.number(),
-        AWS_REGION: Joi.string(),
-        AWS_ACCESS_KEY: Joi.string(),
-        AWS_SECRET_ACCESS_KEY: Joi.string(),
-        AWS_BUCKET_NAME: Joi.string(),
         FIREBASE_PROJECT_ID: Joi.string(),
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
