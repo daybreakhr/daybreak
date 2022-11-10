@@ -1,21 +1,25 @@
 import { S3 } from 'aws-sdk'
 import { Express } from 'express'
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { IamService } from './aws.iam.service'
 
 @Injectable()
 export class AWSS3Service {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private iamService: IamService) {}
 
   async uploadS3(file: Express.Multer.File, key: string) {
+    const iam = await this.iamService.findOne('s3', {
+      credential: { decrypt: true, fields: ['accessKeyId', 'secretAccessKey'] },
+    })
+
     const s3 = new S3({
-      accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
+      accessKeyId: (iam.credentials as any).accessKeyId,
+      secretAccessKey: (iam.credentials as any).secretAccessKey,
     })
 
     const data = await s3
       .upload({
-        Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
+        Bucket: (iam.params as any).bucket,
         Body: file.buffer,
         Key: key,
         ContentDisposition: 'inline',
