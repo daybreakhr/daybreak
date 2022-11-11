@@ -101,7 +101,7 @@ export default function Profile({
             isLoading={isLoading}
             experiences={affinda?.workExperience}
           />
-          <Education />
+          <Education isLoading={isLoading} educations={affinda?.education} />
 
           <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">
             <p className="text-lg font-semibold">View Feedbacks</p>
