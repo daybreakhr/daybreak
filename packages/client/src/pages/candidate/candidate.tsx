@@ -14,7 +14,7 @@ export default function Candidate() {
   const [activeKey, setActiveKey] = useState('profile')
   const [affindaKey, setAffindaKey] = useState<string | undefined>()
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading: isCandidateLoading } = useQuery(
     ['candidate', candidateId],
     () => fetchCandidate(candidateId),
     { onSuccess: ({ affindaId }) => setAffindaKey(affindaId) },
@@ -26,6 +26,8 @@ export default function Candidate() {
     { enabled: !!affindaKey },
   )
 
+  const isLoading = isCandidateLoading || isAffindaLoading
+
   return (
     <div className="flex flex-col flex-1 px-8 pt-4 pb-8">
       <Link to="/candidates" className="flex items-center mb-4 space-x-2">
@@ -36,20 +38,24 @@ export default function Candidate() {
       <div className="flex flex-1 space-x-4">
         <div className="flex-1 overflow-hidden rounded-md">
           <Tabs
+            items={[
+              {
+                label: 'Candidate Profile',
+                key: 'profile',
+                children: (
+                  <Profile
+                    data={data}
+                    affinda={affindaData?.data}
+                    isLoading={isLoading}
+                    onChange={() => setActiveKey('feedback')}
+                  />
+                ),
+              },
+              { label: 'Feedback', key: 'feedback', children: <Feedback /> },
+            ]}
             activeKey={activeKey}
             onChange={(newKey) => setActiveKey(newKey)}
-          >
-            <Tabs.TabPane tab="Candidate Profile" key="profile">
-              <Profile
-                data={data}
-                isLoading={isLoading}
-                onChange={() => setActiveKey('feedback')}
-              />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Feedback" key="feedback">
-              <Feedback />
-            </Tabs.TabPane>
-          </Tabs>
+          />
         </div>
 
         <Details data={data} isLoading={isLoading} />

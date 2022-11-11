@@ -1,6 +1,8 @@
 import { Button } from 'antd'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
+import type { ResumeData } from '@affinda/affinda'
 import { Switch } from 'ui-kit'
+import { Candidate } from 'types/candidate'
 
 import Score from './score'
 import Skills from './skills'
@@ -8,15 +10,20 @@ import Education from './education'
 import Experiences from './experiences'
 import Certifications from './certifications'
 import { sampleData } from '../constants/profile-list'
-import { Candidate } from 'types/candidate'
 
 type ProfileProps = {
   data: Candidate | undefined
+  affinda: ResumeData | null | undefined
   isLoading: boolean
   onChange: () => void
 }
 
-export default function Profile({ data, isLoading, onChange }: ProfileProps) {
+export default function Profile({
+  data,
+  affinda,
+  isLoading,
+  onChange,
+}: ProfileProps) {
   return (
     <>
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
@@ -90,7 +97,10 @@ export default function Profile({ data, isLoading, onChange }: ProfileProps) {
 
       <div className="flex items-start mb-4 space-x-4">
         <div className="flex flex-col flex-1 space-y-4">
-          <Experiences />
+          <Experiences
+            isLoading={isLoading}
+            experiences={affinda?.workExperience}
+          />
           <Education />
 
           <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">

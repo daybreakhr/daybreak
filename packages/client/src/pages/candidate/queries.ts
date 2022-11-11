@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { Resume } from '@affinda/affinda'
 import { Candidate } from 'types/candidate'
 import client from 'utils/client'
 
@@ -12,7 +13,7 @@ export async function fetchCandidate(candidateId: string) {
 }
 
 export async function fetchParseResume(affindaId?: string) {
-  const { data } = await axios.get(
+  const { data } = await axios.get<Resume>(
     `${import.meta.env.VITE_AFFINDA_API_BASE_URL}resumes/${affindaId}`,
     {
       headers: {
