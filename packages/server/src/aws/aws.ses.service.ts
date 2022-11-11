@@ -1,22 +1,18 @@
 import * as nodemailer from 'nodemailer'
 import { Injectable } from '@nestjs/common'
-import { IamService } from './aws.iam.service'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AWSSESService {
-  constructor(private iamService: IamService) {}
+  constructor(private readonly configService: ConfigService) {}
 
   async sendMail(sendMailDto: { to: string; subject: string; body: string }) {
-    const iam = await this.iamService.findOne('ses', {
-      credential: { decrypt: true, fields: ['accessKeyId', 'secretAccessKey'] },
-    })
-
     const mailerClient = nodemailer.createTransport({
-      host: (iam.params as any).host,
-      port: (iam.params as any).port,
+      host: this.configService.get<string>('AWS_SES_HOST'),
+      port: this.configService.get<number>('AWS_SES_PORT'),
       auth: {
-        user: (iam.credentials as any).accessKeyId,
-        pass: (iam.credentials as any).secretAccessKey,
+        user: this.configService.get<string>('AWS_SES_ACCESS_KEY_ID'),
+        pass: this.configService.get<string>('AWS_SES_SECRET_ACCESS_KEY'),
       },
     })
 
