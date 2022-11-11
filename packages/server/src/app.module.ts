@@ -31,7 +31,7 @@ import { AWSModule } from './aws/aws.module'
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
       }),
-      envFilePath: ['.env.development.local', '.env.production.local'],
+      envFilePath: ['.env'],
       isGlobal: true,
     }),
     AuthModule,
