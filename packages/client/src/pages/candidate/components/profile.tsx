@@ -144,7 +144,10 @@ export default function Profile({
 
         <div className="flex flex-col flex-1 space-y-4">
           <Score />
-          <Certifications />
+          <Certifications
+            isLoading={isLoading}
+            certifications={affinda?.certifications}
+          />
           <Skills />
         </div>
       </div>
