@@ -148,7 +148,7 @@ export default function Profile({
             isLoading={isLoading}
             certifications={affinda?.certifications}
           />
-          <Skills />
+          <Skills isLoading={isLoading} skills={affinda?.skills} />
         </div>
       </div>
     </>
