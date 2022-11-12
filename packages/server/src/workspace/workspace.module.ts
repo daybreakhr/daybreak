@@ -4,11 +4,11 @@ import { WorkspaceController } from './workspace.controller'
 import { PrismaService } from 'src/prisma.service'
 import { AuthService } from 'src/auth/auth.service'
 import { FirebaseModule } from 'src/firebase/firebase.module'
-import { S3Service } from 'src/s3.service'
+import { AWSModule } from 'src/aws/aws.module'
 
 @Module({
-  imports: [FirebaseModule],
+  imports: [FirebaseModule, AWSModule],
   controllers: [WorkspaceController],
-  providers: [AuthService, WorkspaceService, PrismaService, S3Service],
+  providers: [AuthService, WorkspaceService, PrismaService],
 })
 export class WorkspaceModule {}
