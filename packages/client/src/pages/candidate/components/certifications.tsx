@@ -7,7 +7,7 @@ type CertificationProps = {
   isLoading: boolean
 }
 
-export default function Education({
+export default function Certification({
   certifications,
   isLoading,
 }: CertificationProps) {
