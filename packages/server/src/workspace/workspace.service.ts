@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import type { Express } from 'express'
 import { Injectable } from '@nestjs/common'
 import type { Workspace } from '@prisma/client'
@@ -22,6 +23,24 @@ export class WorkspaceService {
       include: { Job: true },
     })
     return workspace
+  }
+
+  async getBySlugOrId(slug: string, id: string) {
+    const query = {
+      ...(slug ? { slug } : {}),
+      ...(id ? { id } : {}),
+    }
+
+    if (isEmpty(query)) {
+      return await this.getAllWorkspaces()
+    }
+
+    const workspaces = await this.prismaService.workspace.findUnique({
+      where: query,
+      include: { Job: true },
+    })
+
+    return workspaces
   }
 
   async uploadLogo(workspaceId: string, file: Express.Multer.File) {

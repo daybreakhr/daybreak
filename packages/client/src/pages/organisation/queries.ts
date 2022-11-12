@@ -4,7 +4,7 @@ import client from 'utils/client'
 const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
 
 export async function fetchOrganisation() {
-  const { data } = await client.get<Workspace>(`workspace/${WORKSPACE_ID}`)
+  const { data } = await client.get<Workspace>(`workspace?id=${WORKSPACE_ID}`)
   return data
 }
 

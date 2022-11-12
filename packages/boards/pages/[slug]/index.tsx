@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // params contains the workspace `slug`
   // If the route iis like /daybreak_hr, then params.slug is daybreak_hr
   const { data } = await client.get<WorkspaceWithJob>(
-    `workspace/${params?.slug}`,
+    `workspace?slug=${params?.slug}`,
   )
 
   // Pass workspace data to the page via props
