@@ -1,21 +1,22 @@
-import { Avatar, Dropdown, Menu } from 'antd'
+import { Avatar, Dropdown, MenuProps } from 'antd'
 import { AiOutlineLogout } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
 
 export default function Header() {
   const { signOut, user } = useAuth()
 
-  const menu = (
-    <Menu>
-      <div className="p-2 border-b">
-        <p className="mb-0 text-xs text-gray-700">Signed-in as</p>
-        <p className="mb-0">{user?.displayName}</p>
-      </div>
-      <Menu.Item onClick={signOut} icon={<AiOutlineLogout />}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  )
+  const items: MenuProps['items'] = [
+    {
+      key: 1,
+      label: (
+        <div className="p-2 border-b">
+          <p className="mb-0 text-xs text-gray-700">Signed-in as</p>
+          <p className="mb-0">{user?.displayName}</p>
+        </div>
+      ),
+    },
+    { key: 2, label: 'Logout', icon: <AiOutlineLogout />, onClick: signOut },
+  ]
 
   return (
     <header className="flex items-center justify-between px-4 py-3 border-b">
@@ -29,7 +30,7 @@ export default function Header() {
         </span>
       </div>
 
-      <Dropdown overlay={menu}>
+      <Dropdown menu={{ items }}>
         <Avatar src={user?.photoURL}>{user?.displayName?.charAt(0)}</Avatar>
       </Dropdown>
     </header>
