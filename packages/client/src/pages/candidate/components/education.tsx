@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import { Avatar } from 'antd'
 import { range } from 'lodash'
+import { Avatar, Empty } from 'antd'
 import type { ResumeDataEducationItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
 
@@ -35,6 +35,17 @@ export default function Education({ educations, isLoading }: EducationProps) {
               ))}
             </Switch.Match>
 
+            <Switch.Match when={educations?.length === 0}>
+              <Empty
+                description={
+                  <div>
+                    <p>Unable to parse education from resume</p>
+                    <p>View Resume for more details</p>
+                  </div>
+                }
+              />
+            </Switch.Match>
+
             <Switch.Match when={educations}>
               {(data) =>
                 data.map(
@@ -50,7 +61,7 @@ export default function Education({ educations, isLoading }: EducationProps) {
                         </div>
                         <div className="flex-1" />
 
-                        <p className="text-gray-500">
+                        <p className="flex-none text-gray-500">
                           <Show when={dates?.startDate}>
                             {(date) => (
                               <span>{dayjs(date).format('MMM YY')} - </span>

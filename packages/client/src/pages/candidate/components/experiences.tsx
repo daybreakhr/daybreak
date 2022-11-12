@@ -5,7 +5,7 @@ import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
 
 type ExperiencesProps = {
-  experiences: ResumeDataWorkExperienceItem[] | undefined
+  experiences: ResumeDataWorkExperienceItem[]
   isLoading: boolean
 }
 

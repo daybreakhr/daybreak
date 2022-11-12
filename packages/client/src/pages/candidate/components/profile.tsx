@@ -1,6 +1,7 @@
+import { useMemo } from 'react'
 import { Button } from 'antd'
-import { AiOutlineCloudDownload } from 'react-icons/ai'
 import type { ResumeData } from '@affinda/affinda'
+import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { Switch } from 'ui-kit'
 import { Candidate } from 'types/candidate'
 
@@ -9,7 +10,6 @@ import Skills from './skills'
 import Education from './education'
 import Experiences from './experiences'
 import Certifications from './certifications'
-import { sampleData } from '../constants/profile-list'
 
 type ProfileProps = {
   data: Candidate | undefined
@@ -24,6 +24,16 @@ export default function Profile({
   isLoading,
   onChange,
 }: ProfileProps) {
+  const sortedExperiences = useMemo(
+    () =>
+      affinda?.workExperience?.sort(
+        (a, b) =>
+          new Date(b.dates?.endDate ?? '').valueOf() -
+          new Date(a.dates?.endDate ?? '').valueOf(),
+      ) ?? [],
+    [affinda?.workExperience],
+  )
+
   return (
     <>
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
@@ -64,17 +74,41 @@ export default function Profile({
               </div>
 
               <div>
-                <p className="text-xs text-gray-800 uppercase">Gender</p>
-                <p className="font-medium">{sampleData.gender}</p>
+                <p className="text-xs text-gray-800 uppercase">
+                  Current Company
+                </p>
+                <Switch>
+                  <Switch.Match when={isLoading}>
+                    <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
+                  </Switch.Match>
+
+                  <Switch.Match when={sortedExperiences}>
+                    {([current]) => (
+                      <p className="font-medium">{current.organization}</p>
+                    )}
+                  </Switch.Match>
+                </Switch>
               </div>
 
               <div>
                 <p className="text-xs text-gray-800 uppercase">
                   Total Experience
                 </p>
-                <p className="font-medium">
-                  {sampleData.totalExperience} Years
-                </p>
+                <Switch>
+                  <Switch.Match when={isLoading}>
+                    <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
+                  </Switch.Match>
+
+                  <Switch.Match when={affinda}>
+                    {({ totalYearsExperience }) => (
+                      <p className="font-medium">
+                        {totalYearsExperience === 0
+                          ? 'N/A'
+                          : totalYearsExperience + ' Years'}
+                      </p>
+                    )}
+                  </Switch.Match>
+                </Switch>
               </div>
             </div>
           </div>
@@ -97,10 +131,7 @@ export default function Profile({
 
       <div className="flex items-start mb-4 space-x-4">
         <div className="flex flex-col flex-1 space-y-4">
-          <Experiences
-            isLoading={isLoading}
-            experiences={affinda?.workExperience}
-          />
+          <Experiences isLoading={isLoading} experiences={sortedExperiences} />
           <Education isLoading={isLoading} educations={affinda?.education} />
 
           <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">

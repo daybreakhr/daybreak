@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Tabs } from 'antd'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 
@@ -8,23 +8,32 @@ import Profile from './components/profile'
 import Details from './components/details'
 import Feedback from './components/feedback'
 import { fetchCandidate, fetchParseResume } from './queries'
+import { Candidate as TCandidate } from 'types/candidate'
 
 export default function Candidate() {
   const { candidateId = '' } = useParams()
   const [activeKey, setActiveKey] = useState('profile')
   const [affindaKey, setAffindaKey] = useState<string | undefined>()
 
-  const { data, isLoading: isCandidateLoading } = useQuery(
-    ['candidate', candidateId],
-    () => fetchCandidate(candidateId),
-    { onSuccess: ({ affindaId }) => setAffindaKey(affindaId) },
-  )
-
-  const { data: affindaData, isLoading: isAffindaLoading } = useQuery(
-    ['affinda', candidateId],
-    () => fetchParseResume(affindaKey),
-    { enabled: !!affindaKey },
-  )
+  const [
+    { data, isLoading: isCandidateLoading },
+    { data: affindaData, isLoading: isAffindaLoading },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ['candidate', candidateId],
+        queryFn: () => fetchCandidate(candidateId),
+        onSuccess({ affindaId }: TCandidate) {
+          setAffindaKey(affindaId)
+        },
+      },
+      {
+        queryKey: ['affinda', candidateId],
+        queryFn: () => fetchParseResume(affindaKey),
+        enabled: !!affindaKey,
+      },
+    ],
+  })
 
   const isLoading = isCandidateLoading || isAffindaLoading
 
