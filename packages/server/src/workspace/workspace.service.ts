@@ -1,9 +1,9 @@
+import { isEmpty } from 'lodash'
 import type { Express } from 'express'
 import { Injectable } from '@nestjs/common'
 import type { Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { S3Service } from 'src/s3.service'
-import * as _ from 'lodash'
 
 @Injectable()
 export class WorkspaceService {
@@ -25,13 +25,13 @@ export class WorkspaceService {
     return workspace
   }
 
-  async getBySlugOrId(slug: string, id:string) {
+  async getBySlugOrId(slug: string, id: string) {
     const query = {
       ...(slug ? { slug } : {}),
-      ...(id ? { id } : {})
+      ...(id ? { id } : {}),
     }
 
-    if (_.isEmpty(query)) {
+    if (isEmpty(query)) {
       return await this.getAllWorkspaces()
     }
 
