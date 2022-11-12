@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import type { Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { S3Service } from 'src/s3.service'
+import * as _ from 'lodash'
 
 @Injectable()
 export class WorkspaceService {
@@ -22,6 +23,24 @@ export class WorkspaceService {
       include: { Job: true },
     })
     return workspace
+  }
+
+  async getBySlugOrId(slug: string, id:string) {
+    const query = {
+      ...(slug ? { slug } : {}),
+      ...(id ? { id } : {})
+    }
+
+    if (_.isEmpty(query)) {
+      return await this.getAllWorkspaces()
+    }
+
+    const workspaces = await this.prismaService.workspace.findUnique({
+      where: query,
+      include: { Job: true },
+    })
+
+    return workspaces
   }
 
   async uploadLogo(workspaceId: string, file: Express.Multer.File) {

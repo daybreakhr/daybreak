@@ -7,6 +7,7 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -23,14 +24,8 @@ export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get('')
-  async getAllWorkspaces() {
-    const data = await this.workspaceService.getAllWorkspaces()
-    return data
-  }
-
-  @Get(':slug')
-  async getBySlug(@Param('slug') id: string) {
-    const data = await this.workspaceService.getBySlug(id)
+  async getAllWorkspaces(@Query('slug') slug: string, @Query('id') id: string) {
+    const data = await this.workspaceService.getBySlugOrId(slug, id)
     return data
   }
 
