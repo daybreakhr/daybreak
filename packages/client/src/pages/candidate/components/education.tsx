@@ -13,7 +13,7 @@ export default function Education({ educations, isLoading }: EducationProps) {
   return (
     <div className="flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md">
       <p className="mb-4 text-lg font-semibold">Educations</p>
-      <div className="p-4 overflow-y-auto max-h-64">
+      <div className="p-4 overflow-y-auto max-h-56">
         <ul className="space-y-4">
           <Switch>
             <Switch.Match when={isLoading}>
