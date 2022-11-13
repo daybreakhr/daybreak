@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
-import { Button } from 'antd'
+// import { Button } from 'antd'
 import type { ResumeData } from '@affinda/affinda'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { Switch } from 'ui-kit'
 import { Candidate } from 'types/candidate'
 
-import Score from './score'
+// import Score from './score'
 import Skills from './skills'
 import Education from './education'
 import Experiences from './experiences'
-import Certifications from './certifications'
+// import Certifications from './certifications'
 
 type ProfileProps = {
   data: Candidate | undefined
@@ -22,8 +22,8 @@ export default function Profile({
   data,
   affinda,
   isLoading,
-  onChange,
-}: ProfileProps) {
+}: // onChange,
+ProfileProps) {
   const sortedExperiences = useMemo(
     () =>
       affinda?.workExperience?.sort(
@@ -129,10 +129,15 @@ export default function Profile({
         </div>
       </div>
 
-      <div className="flex items-start mb-4 space-x-4">
-        <div className="flex flex-col flex-1 space-y-4">
+      <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
+        <Experiences isLoading={isLoading} experiences={sortedExperiences} />
+        <Education isLoading={isLoading} educations={affinda?.education} />
+        <Skills isLoading={isLoading} skills={affinda?.skills} />
+      </div>
+
+      {/* <div className="flex flex-col items-start gap-4 mb-4 2xl:flex-row">
+        <div className="flex flex-col flex-1 w-full space-y-4">
           <Experiences isLoading={isLoading} experiences={sortedExperiences} />
-          <Education isLoading={isLoading} educations={affinda?.education} />
 
           <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">
             <p className="text-lg font-semibold">View Feedbacks</p>
@@ -143,14 +148,10 @@ export default function Profile({
         </div>
 
         <div className="flex flex-col flex-1 space-y-4">
-          <Score />
-          <Certifications
-            isLoading={isLoading}
-            certifications={affinda?.certifications}
-          />
+          <Education isLoading={isLoading} educations={affinda?.education} />
           <Skills isLoading={isLoading} skills={affinda?.skills} />
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
