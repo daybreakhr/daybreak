@@ -24,11 +24,6 @@ export default function Skills({ skills, isLoading }: SkillsProps) {
                     className="w-20 h-6 space-x-3 bg-gray-100 rounded animate-pulse"
                   />
                 ))}
-                {/* <div className="w-20 h-3 space-x-3 bg-gray-100 rounded animate-pulse" />
-                    <div className="w-20 h-3 space-x-3 bg-gray-100 rounded animate-pulse" />
-                    <div className="w-20 h-3 space-x-3 bg-gray-100 rounded animate-pulse" />
-                    <div className="w-20 h-3 space-x-3 bg-gray-100 rounded animate-pulse" />
-                    <div className="w-20 h-3 space-x-3 bg-gray-100 rounded animate-pulse" /> */}
               </li>
             </Switch.Match>
 

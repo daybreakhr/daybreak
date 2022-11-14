@@ -1,15 +1,12 @@
 import { useMemo } from 'react'
-// import { Button } from 'antd'
 import type { ResumeData } from '@affinda/affinda'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { Switch } from 'ui-kit'
 import { Candidate } from 'types/candidate'
 
-// import Score from './score'
 import Skills from './skills'
 import Education from './education'
 import Experiences from './experiences'
-// import Certifications from './certifications'
 
 type ProfileProps = {
   data: Candidate | undefined
@@ -134,24 +131,6 @@ ProfileProps) {
         <Education isLoading={isLoading} educations={affinda?.education} />
         <Skills isLoading={isLoading} skills={affinda?.skills} />
       </div>
-
-      {/* <div className="flex flex-col items-start gap-4 mb-4 2xl:flex-row">
-        <div className="flex flex-col flex-1 w-full space-y-4">
-          <Experiences isLoading={isLoading} experiences={sortedExperiences} />
-
-          <div className="flex justify-between p-4 text-gray-800 bg-white rounded-md shadow-md">
-            <p className="text-lg font-semibold">View Feedbacks</p>
-            <Button type="primary" onClick={onChange}>
-              Feedback
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 space-y-4">
-          <Education isLoading={isLoading} educations={affinda?.education} />
-          <Skills isLoading={isLoading} skills={affinda?.skills} />
-        </div>
-      </div> */}
     </>
   )
 }
