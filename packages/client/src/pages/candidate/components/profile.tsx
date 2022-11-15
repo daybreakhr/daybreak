@@ -12,15 +12,9 @@ type ProfileProps = {
   data: Candidate | undefined
   affinda: ResumeData | null | undefined
   isLoading: boolean
-  onChange: () => void
 }
 
-export default function Profile({
-  data,
-  affinda,
-  isLoading,
-}: // onChange,
-ProfileProps) {
+export default function Profile({ data, affinda, isLoading }: ProfileProps) {
   const sortedExperiences = useMemo(
     () =>
       affinda?.workExperience?.sort(
