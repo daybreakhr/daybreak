@@ -12,7 +12,6 @@ import { Candidate as TCandidate } from 'types/candidate'
 
 export default function Candidate() {
   const { candidateId = '' } = useParams()
-  const [activeKey, setActiveKey] = useState('profile')
   const [affindaKey, setAffindaKey] = useState<string | undefined>()
 
   const [
@@ -56,18 +55,15 @@ export default function Candidate() {
                     data={data}
                     affinda={affindaData?.data}
                     isLoading={isLoading}
-                    onChange={() => setActiveKey('feedback')}
                   />
                 ),
               },
               { label: 'Feedback', key: 'feedback', children: <Feedback /> },
             ]}
-            activeKey={activeKey}
-            onChange={(newKey) => setActiveKey(newKey)}
           />
         </div>
 
-        <Details data={data} isLoading={isLoading} />
+        <Details data={data} />
       </div>
     </div>
   )
