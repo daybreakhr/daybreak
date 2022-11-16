@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import type { Feedback } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
-import * as _ from 'lodash'
+import { isEmpty } from 'lodash'
 import { CreateFeedbackDto } from './feedback.dto'
 
 @Injectable()
@@ -52,7 +52,7 @@ export class FeedbackService {
   }
 
   async update(feedbackId: string, feedbackBody: Partial<Feedback>) {
-    if (!_.isEmpty(feedbackBody)) {
+    if (!isEmpty(feedbackBody)) {
       const feedback = await this.prismaService.feedback.update({
         where: { id: feedbackId },
         data: feedbackBody,
