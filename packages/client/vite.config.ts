@@ -20,6 +20,10 @@ export default defineConfig({
         find: /^~/,
         replacement: path.join(__dirname, '../../node_modules', '/'),
       },
+      {
+        find: '.prisma/client/index-browser',
+        replacement: '../../node_modules/.prisma/client/index-browser.js',
+      },
     ],
   },
   css: {
