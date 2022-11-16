@@ -1,5 +1,5 @@
-import { Avatar, Dropdown, MenuProps } from 'antd'
 import { AiOutlineLogout } from 'react-icons/ai'
+import { Avatar, Dropdown, MenuProps } from 'antd'
 import useAuth from 'hooks/use-auth'
 
 export default function Header() {
@@ -20,15 +20,10 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between px-4 py-3 border-b">
-      <div className="flex items-center space-x-2">
-        <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-gray-600 rounded-lg">
-          <span>D</span>
-        </div>
-
-        <span className="mb-0 font-sans font-medium text-gray-700">
-          Daybreak
-        </span>
-      </div>
+      <img
+        src="assets/logo_large.svg"
+        className="flex items-center object-cover object-center w-40 h-8 -translate-x-2 translate-y-2"
+      />
 
       <Dropdown menu={{ items }}>
         <Avatar src={user?.photoURL}>{user?.displayName?.charAt(0)}</Avatar>
