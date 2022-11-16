@@ -45,3 +45,17 @@ export async function fetchFeedbacks(candidateId: string) {
   )
   return data
 }
+
+export async function createFeedback({
+  candidateId,
+  body,
+}: {
+  candidateId: string
+  body: Partial<Candidate>
+}) {
+  const { data } = await client.post(
+    `candidates/${candidateId}/feedbacks`,
+    body,
+  )
+  return data
+}
