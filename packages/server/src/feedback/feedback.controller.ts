@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { Feedback } from '@prisma/client'
 import { FeedbackService } from './feedback.service'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
@@ -48,7 +49,7 @@ export class FeedbackController {
   @Patch(':id')
   async patchFeedback(
     @Param('id') id: string,
-    @Body() feedbackBody: CreateFeedbackDto,
+    @Body() feedbackBody: Partial<Feedback>,
   ) {
     const data = await this.feedbackService.update(id, feedbackBody)
     return data
