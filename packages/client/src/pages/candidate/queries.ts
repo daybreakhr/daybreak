@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { Resume } from '@affinda/affinda'
 import { Candidate } from 'types/candidate'
 import client from 'utils/client'
+import { Feedback } from '@prisma/client'
 
 const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
 
@@ -34,6 +35,13 @@ export async function updateCandidate({
   const { data } = await client.patch<Candidate>(
     `${WORKSPACE_ID}/candidates/${candidateId}`,
     body,
+  )
+  return data
+}
+
+export async function fetchFeedbacks(candidateId: string) {
+  const { data } = await client.get<Feedback[]>(
+    `candidates/${candidateId}/feedbacks`,
   )
   return data
 }
