@@ -9,7 +9,7 @@ export default function Header() {
     {
       key: 1,
       label: (
-        <div className="p-2 border-b">
+        <div className="border-b">
           <p className="mb-0 text-xs text-gray-700">Signed-in as</p>
           <p className="mb-0">{user?.displayName}</p>
         </div>

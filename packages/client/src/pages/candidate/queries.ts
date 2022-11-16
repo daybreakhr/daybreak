@@ -23,3 +23,17 @@ export async function fetchParseResume(affindaId?: string) {
   )
   return data
 }
+
+export async function updateCandidate({
+  candidateId,
+  body,
+}: {
+  candidateId: string
+  body: Partial<Candidate>
+}) {
+  const { data } = await client.patch<Candidate>(
+    `${WORKSPACE_ID}/candidates/${candidateId}`,
+    body,
+  )
+  return data
+}

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateCandidateDto } from './candidate.dto'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
+import { Candidate } from '@prisma/client'
 
 @Injectable()
 export class CandidateService {
@@ -49,6 +50,15 @@ export class CandidateService {
     const candidate = await this.prismaService.candidate.update({
       where: { id },
       data: { resume: uploadResult.Location },
+    })
+
+    return candidate
+  }
+
+  async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
+    const candidate = this.prismaService.candidate.update({
+      where: { id: candidateId },
+      data: { ...updateCandidateDto },
     })
 
     return candidate
