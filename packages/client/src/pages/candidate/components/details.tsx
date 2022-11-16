@@ -1,27 +1,53 @@
-import { Button, Tooltip } from 'antd'
 import dayjs from 'dayjs'
+import { useParams } from 'react-router-dom'
+import { CandidateStatus } from '@prisma/client'
+import { useClipboard } from 'use-clipboard-copy'
+import { Button, message, Modal, Tooltip } from 'antd'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AiFillLinkedin,
   AiOutlineMail,
   AiOutlinePhone,
   AiOutlineUser,
 } from 'react-icons/ai'
+
 import { Candidate } from 'types/candidate'
 import { Show } from 'ui-kit'
-import { useClipboard } from 'use-clipboard-copy'
 import { getJobType } from 'utils/utils'
+import { updateCandidate } from '../queries'
 
 type DetailsProps = {
   data: Candidate | undefined
 }
 
 export default function Details({ data }: DetailsProps) {
+  const queryClient = useQueryClient()
+  const { candidateId = '' } = useParams()
+
+  const { mutate } = useMutation(updateCandidate, {
+    onSuccess: () => {
+      message.info('This job application is rejected!')
+      queryClient.invalidateQueries(['candidate', candidateId])
+      queryClient.invalidateQueries(['candidates'])
+    },
+  })
+
   const { copy: copyEmail, copied: isEmailCopied } = useClipboard({
     copiedTimeout: 3000,
   })
   const { copy: copyPhone, copied: isPhoneCopied } = useClipboard({
     copiedTimeout: 3000,
   })
+
+  function handleReject() {
+    Modal.warning({
+      title: 'Reject Candidate?',
+      content: 'Are you sure reject this candidate for the applied job?',
+      okText: 'Confirm',
+      onOk: () =>
+        mutate({ candidateId, body: { status: CandidateStatus.rejected } }),
+    })
+  }
 
   return (
     <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
@@ -99,7 +125,9 @@ export default function Details({ data }: DetailsProps) {
       <hr className="w-full my-4 border-gray-300" />
 
       <div className="flex items-center space-x-4">
-        <Button danger>Reject</Button>
+        <Button danger onClick={handleReject}>
+          Reject
+        </Button>
         <Button type="primary">Advance</Button>
       </div>
 
