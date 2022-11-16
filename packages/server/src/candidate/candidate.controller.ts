@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -13,6 +14,8 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { CreateCandidateDto } from './candidate.dto'
 import { CandidateService } from './candidate.service'
+import { Candidate } from '@prisma/client'
+import { Roles } from 'src/auth/roles.decorator'
 
 @Controller(':workspaceId/candidates')
 export class CandidateController {
@@ -44,6 +47,17 @@ export class CandidateController {
       file,
       createCandidateDto,
     )
+    return data
+  }
+
+  @Patch(':id')
+  @UseGuards(AuthGuard)
+  @Roles('admin')
+  async update(
+    @Param('id') id: string,
+    @Body() updateCandidateDto: Partial<Candidate>,
+  ) {
+    const data = await this.candidateService.update(id, updateCandidateDto)
     return data
   }
 }
