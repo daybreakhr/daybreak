@@ -6,8 +6,8 @@ import { AuthService } from 'src/auth/auth.service'
 import { FirebaseModule } from 'src/firebase/firebase.module'
 
 @Module({
-    imports: [FirebaseModule],
-    controllers: [FeedbackController],
-    providers: [AuthService, FeedbackService, PrismaService],
+  imports: [FirebaseModule],
+  controllers: [FeedbackController],
+  providers: [AuthService, FeedbackService, PrismaService],
 })
-export class FeedbackModule { }
+export class FeedbackModule {}

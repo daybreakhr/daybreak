@@ -43,7 +43,7 @@ import { FeedbackModule } from './feedback/feedback.module'
     WorkspaceModule,
     CandidateModule,
     AWSModule,
-    FeedbackModule
+    FeedbackModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
