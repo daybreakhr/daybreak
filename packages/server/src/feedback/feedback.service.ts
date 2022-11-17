@@ -3,35 +3,39 @@ import type { Feedback } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
 import { CreateFeedbackDto } from './feedback.dto'
+import { AuthService } from 'src/auth/auth.service'
+import { UserRecord } from 'firebase-admin/auth'
 
 @Injectable()
 export class FeedbackService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private authService: AuthService,
+  ) {}
 
   async getAll(candidateId: string) {
     const feedbacks = await this.prismaService.feedback.findMany({
       where: { candidateId },
-      include: {
-        Member: {
-          select: {
-            Workspace: true,
-          },
-        },
-      },
     })
-    return feedbacks
+
+    // get user object using `createdBy` field
+    const identifiers = feedbacks.map(({ createdBy }) => ({ uid: createdBy }))
+    const users = await this.authService.getUsers(identifiers)
+    const usersById = users.reduce(
+      (acc, user) => ({ ...acc, [user.uid]: user }),
+      {},
+    )
+
+    return feedbacks.map((feedback) => ({
+      ...feedback,
+      User: usersById[feedback.createdBy] as UserRecord,
+    }))
   }
 
   async getFeedback(feedbackId: string) {
     const feedback = await this.prismaService.feedback.findUnique({
       where: { id: feedbackId },
-      include: {
-        Member: {
-          select: {
-            Workspace: true,
-          },
-        },
-      },
+      include: { Member: true },
     })
     return feedback
   }
