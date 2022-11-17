@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { Avatar, Button, Empty, Rate, Spin } from 'antd'
 
 import { Show, Switch } from 'ui-kit'
 import FeedbackForm from './feedback-form'
-import { notes } from '../constants/feedback'
 import { fetchFeedbacks } from '../queries'
+
+dayjs.extend(relativeTime)
 
 export default function Feedback() {
   const { candidateId = '' } = useParams()
@@ -54,15 +57,19 @@ export default function Feedback() {
         </Switch.Match>
 
         <Switch.Match when={data}>
-          <div className="space-y-6">
-            {notes.map(
-              ({ id, name, photoURL, comment, title, score, createdAt }) => (
+          {(data) => (
+            <div className="space-y-6">
+              {data.map(({ id, User, title, notes, score, createdAt }) => (
                 <div key={id} className="flex items-start space-x-4">
-                  <Avatar className="flex-none" size="large" src={photoURL}>
-                    {name.charAt(0)}
+                  <Avatar
+                    className="flex-none"
+                    size="large"
+                    src={User.photoURL}
+                  >
+                    {User.displayName?.charAt(0)}
                   </Avatar>
                   <div className="flex-1">
-                    <p className="mb-2 font-medium">{name}</p>
+                    <p className="mb-2 font-medium">{User.displayName}</p>
 
                     <div className="flex items-center justify-between mb-1">
                       <p className="font-semibold">{title}</p>
@@ -73,13 +80,15 @@ export default function Feedback() {
                       </p>
                     </div>
 
-                    <p className="mb-2 whitespace-pre-line">{comment}</p>
-                    <p className="text-xs text-gray-500">{createdAt}</p>
+                    <p className="mb-2 whitespace-pre-line">{notes}</p>
+                    <p className="text-xs text-gray-500">
+                      {dayjs(createdAt).fromNow()}
+                    </p>
                   </div>
                 </div>
-              ),
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </Switch.Match>
       </Switch>
 

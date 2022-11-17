@@ -16,6 +16,7 @@ import { GetUser } from 'src/auth/get-user.decorator'
 import { CreateFeedbackDto } from './feedback.dto'
 
 @Controller('candidates/:candidateId/feedbacks')
+@UseGuards(AuthGuard)
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
@@ -32,7 +33,6 @@ export class FeedbackController {
   }
 
   @Post('')
-  @UseGuards(AuthGuard)
   async createFeedback(
     @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,

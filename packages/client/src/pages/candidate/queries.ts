@@ -3,6 +3,7 @@ import type { Resume } from '@affinda/affinda'
 import { Candidate } from 'types/candidate'
 import client from 'utils/client'
 import { Feedback } from '@prisma/client'
+import { User } from 'firebase/auth'
 
 const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
 
@@ -40,7 +41,7 @@ export async function updateCandidate({
 }
 
 export async function fetchFeedbacks(candidateId: string) {
-  const { data } = await client.get<Feedback[]>(
+  const { data } = await client.get<Array<Feedback & { User: User }>>(
     `candidates/${candidateId}/feedbacks`,
   )
   return data
