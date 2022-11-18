@@ -139,7 +139,10 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       <Form.Item
         name="linkedInUrl"
         label="Linkedin Profile URL"
-        rules={[{ required: true, message: 'Please input your LinkedIn URL' }]}
+        rules={[
+          { type: 'url', message: 'The input is not a valid URL!' },
+          { required: true, message: 'Please input your LinkedIn URL' },
+        ]}
       >
         <Input placeholder="https://linkedin.com/in/username" />
       </Form.Item>
