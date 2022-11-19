@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
+import { InvitesService } from 'src/invites/invites.service'
 import { PrismaService } from 'src/prisma.service'
 import { FirebaseService } from 'src/firebase/firebase.service'
 import { AWSSESService } from 'src/aws/aws.ses.service'
@@ -12,6 +13,7 @@ export class MembersService {
     private firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private authService: AuthService,
+    private invitesService: InvitesService,
     private sesService: AWSSESService,
   ) {}
 
@@ -27,13 +29,23 @@ export class MembersService {
     })
   }
 
-  async inviteMember() {
+  async inviteMember({ email, workspaceId, memberId, userName }: { email: string, workspaceId: string, memberId: string, userName: string }) {
+    email = 'no-reply@daybreakhire.com' // Remove once sandbox mode is done
+
+    // update the Invite db
+
+    const inviteData = await this.invitesService.createInvite(email, workspaceId, memberId)
+
+    const FRONTEND_URL = 'https://daybreakhr.com'
+
     const data = await this.sesService.sendMail({
-      to: 'him.nagrath@gmail.com',
-      subject: 'USER invited you to join WORKSPACE on Daybreak HR',
-      body: `USER has invited you to join WORKSPACE on Daybreak HR 
-      Accept the invitation by clicking on this link: some_url_from_daybreak`,
+      to: email,
+      subject: `${userName} invited you to join ${inviteData.Workspace.name} on Daybreak HR`,
+      body: `${userName} has invited you to join ${inviteData.Workspace.name} on Daybreak HR.
+Accept this invitation by clicking on this link:
+${FRONTEND_URL}/invite/${inviteData.id}`,
     })
+
     return data
   }
 
