@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import type { Feedback } from '@prisma/client'
+import { CandidateStatus, Feedback } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
 import { CreateFeedbackDto } from './feedback.dto'
@@ -51,6 +51,15 @@ export class FeedbackService {
         Member: { connect: { uid: createdBy } },
         Candidate: { connect: { id: candidateId } },
       },
+    })
+
+    await this.prismaService.candidate.update({
+      where: {
+        id: candidateId
+      },
+      data: {
+        status: CandidateStatus.interview
+      }
     })
     return feedback
   }
