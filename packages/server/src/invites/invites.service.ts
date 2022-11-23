@@ -13,6 +13,16 @@ export class InvitesService {
     return invites
   }
 
+  async getInviteById(inviteId: string) {
+    const invitee = await this.prismaService.invitees.findUnique({
+      where: {
+        id: inviteId
+      }
+    })
+
+    return invitee
+  }
+
   async createInvite(email: string, workspaceId: string, memberId: string) {
     const invite = await this.prismaService.invitees.create({
       data: {

@@ -40,4 +40,10 @@ export class MembersController {
     const data = await this.membersService.inviteMember({ email, workspaceId, memberId: user.uid, userName: user.displayName })
     return data
   }
+
+  @Post('/validate')
+  async validateInvitees(@GetUser() user: UserRecord, @Body() { inviteId }) {
+    const data = await this.membersService.validateInvitees(inviteId, user.uid)
+    return data
+  }
 }

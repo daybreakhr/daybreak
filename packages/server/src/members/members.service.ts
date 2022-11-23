@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
@@ -6,6 +6,7 @@ import { InvitesService } from 'src/invites/invites.service'
 import { PrismaService } from 'src/prisma.service'
 import { FirebaseService } from 'src/firebase/firebase.service'
 import { AWSSESService } from 'src/aws/aws.ses.service'
+import { isNil } from 'lodash'
 
 @Injectable()
 export class MembersService {
@@ -58,5 +59,32 @@ ${FRONTEND_URL}/invite/${inviteData.id}`,
     })
     const updatedMember = await this.authService.getUser(memberId)
     return updatedMember
+  }
+
+  async validateInvitees(inviteId: string, uid: string) {
+    const invitee = await this.invitesService.getInviteById(inviteId)
+
+    if (isNil(invitee)) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Invalid Invite ID',
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    await this.prismaService.member.create({
+      data: {
+        uid,
+        Workspace: { connect: { id: invitee.workspaceId } },
+      }
+    })
+
+    await this.prismaService.invitees.delete({
+      where: {
+       id: invitee.id
+     }
+    })
   }
 }
