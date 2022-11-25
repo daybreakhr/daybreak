@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 svg {
-  vertical-align: inherit;
+  vertical-align: initial;
 }
 
 html {
