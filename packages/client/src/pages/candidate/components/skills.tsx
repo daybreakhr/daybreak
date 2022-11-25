@@ -2,6 +2,7 @@ import { range } from 'lodash'
 import type { ResumeDataSkillsItem } from '@affinda/affinda'
 import { Switch } from 'ui-kit'
 import { Tag } from 'antd'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 type SkillsProps = {
   skills: ResumeDataSkillsItem[] | undefined
@@ -12,7 +13,7 @@ export default function Skills({ skills, isLoading }: SkillsProps) {
   return (
     <div className="flex-1 text-gray-800 bg-white rounded-md shadow-md 2xl:col-span-2">
       <p className="m-4 text-lg font-semibold">Skills</p>
-
+      <Scrollbars autoHeight autoHeightMax={224}>
       <div className="p-4 overflow-y-auto max-h-56">
         <ul className="flex flex-wrap">
           <Switch>
@@ -39,6 +40,7 @@ export default function Skills({ skills, isLoading }: SkillsProps) {
           </Switch>
         </ul>
       </div>
+      </Scrollbars>
     </div>
   )
 }

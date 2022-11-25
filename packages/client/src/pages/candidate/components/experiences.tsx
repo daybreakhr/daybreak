@@ -3,6 +3,7 @@ import { Avatar } from 'antd'
 import { range } from 'lodash'
 import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 type ExperiencesProps = {
   experiences: ResumeDataWorkExperienceItem[]
@@ -16,8 +17,8 @@ export default function Experiences({
   return (
     <div className="text-gray-800 bg-white rounded-md shadow-md">
       <p className="m-4 text-lg font-semibold">Experiences</p>
-
-      <div className="p-4 overflow-y-auto max-h-64">
+      <Scrollbars autoHeight autoHeightMax={240}>
+       <div className="p-4 overflow-y-auto">
         <ul className="space-y-4">
           <Switch>
             <Switch.Match when={isLoading}>
@@ -76,6 +77,7 @@ export default function Experiences({
           </Switch>
         </ul>
       </div>
+      </Scrollbars>
     </div>
   )
 }
