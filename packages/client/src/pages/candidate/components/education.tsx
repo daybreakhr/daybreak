@@ -14,9 +14,8 @@ export default function Education({ educations, isLoading }: EducationProps) {
   return (
     <div className="p-4 text-gray-800 bg-white rounded-md shadow-md ">
       <p className="mb-4 text-lg font-semibold">Educations</p>
-      <Scrollbars autoHeight autoHeightMax={224}>
-      <div className="p-4 overflow-y-auto">
-        <ul className="space-y-4">
+      <Scrollbars autoHeight autoHide autoHeightMax={224}>
+        <ul className="p-4 space-y-4">
           <Switch>
             <Switch.Match when={isLoading}>
               {range(2).map((val) => (
@@ -88,7 +87,6 @@ export default function Education({ educations, isLoading }: EducationProps) {
             </Switch.Match>
           </Switch>
         </ul>
-      </div>
       </Scrollbars>
     </div>
   )
