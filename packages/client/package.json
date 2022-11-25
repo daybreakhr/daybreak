@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
+    "recharts": "^2.1.16",
     "slate": "^0.82.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.82.2",
