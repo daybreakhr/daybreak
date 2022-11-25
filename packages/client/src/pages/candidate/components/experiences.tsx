@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import { Avatar } from 'antd'
 import { range } from 'lodash'
+import { Scrollbars } from 'react-custom-scrollbars'
 import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
-import { Scrollbars } from 'react-custom-scrollbars'
 
 type ExperiencesProps = {
   experiences: ResumeDataWorkExperienceItem[]
