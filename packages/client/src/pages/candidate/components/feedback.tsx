@@ -4,11 +4,12 @@ import { useParams } from 'react-router-dom'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Avatar, Button, Empty, Rate, Spin } from 'antd'
+import { Avatar, Button, Empty, Rate, Skeleton } from 'antd'
 
 import { Show, Switch } from 'ui-kit'
 import FeedbackForm from './feedback-form'
 import { fetchFeedbacks } from '../queries'
+import { range } from 'lodash'
 
 dayjs.extend(relativeTime)
 
@@ -37,8 +38,10 @@ export default function Feedback() {
 
       <Switch>
         <Switch.Match when={isLoading}>
-          <div className="flex items-center justify-center h-80">
-            <Spin tip="Loading..." />
+          <div className="space-y-2">
+            {range(2).map((val) => (
+              <Skeleton avatar paragraph={{ rows: 3 }} key={val} />
+            ))}
           </div>
         </Switch.Match>
 
