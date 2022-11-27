@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom'
 import { AiOutlineLogout } from 'react-icons/ai'
 import { Avatar, Dropdown, MenuProps } from 'antd'
 import useAuth from 'hooks/use-auth'
 
 export default function Header() {
+  const navigate = useNavigate()
   const { signOut, user } = useAuth()
 
   const items: MenuProps['items'] = [
@@ -15,7 +17,12 @@ export default function Header() {
         </div>
       ),
     },
-    { key: 2, label: 'Logout', icon: <AiOutlineLogout />, onClick: signOut },
+    {
+      key: 2,
+      label: 'Logout',
+      icon: <AiOutlineLogout />,
+      onClick: () => signOut().then(() => navigate('/')),
+    },
   ]
 
   return (
