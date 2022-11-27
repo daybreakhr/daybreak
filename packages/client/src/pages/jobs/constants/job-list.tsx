@@ -3,12 +3,12 @@ import dayjs from 'dayjs'
 import { capitalize } from 'lodash'
 import { Dropdown, Menu, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import type { Department, Priority, Role } from '@prisma/client'
 import type { NavigateFunction } from 'react-router-dom'
+import type { Department, Priority, Role } from '@prisma/client'
 import { AiOutlineEdit, AiOutlineEye, AiOutlineMore } from 'react-icons/ai'
 import { Job } from 'types/job'
 
-const priorityColor: Record<Priority, string> = {
+export const priorityColor: Record<Priority, string> = {
   high: 'red',
   medium: 'default',
   low: 'green',
