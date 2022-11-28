@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
+import { Tag } from 'antd'
+import { capitalize } from 'lodash'
+import type { ColumnsType } from 'antd/es/table'
 import type { CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
-import type { ColumnsType } from 'antd/es/table'
-import { capitalize } from 'lodash'
-import { Tag } from 'antd'
 
-const statusColor: Record<CandidateStatus, string> = {
+export const statusColor: Record<CandidateStatus, string> = {
   applied: 'cyan',
   interview: 'blue',
   offered: 'gold',
