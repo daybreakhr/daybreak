@@ -16,6 +16,7 @@ import Candidate from 'pages/candidate'
 import Organisation from 'pages/organisation'
 import PublishJob from 'pages/publish-job'
 import Job from 'pages/job'
+import Onboarding from 'pages/onboarding'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -29,6 +30,7 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/" element={<AuthLayout component={AppShell} />}>
                 <Route path="home" element={<Home />} />
                 <Route path="jobs" element={<Jobs />} />
