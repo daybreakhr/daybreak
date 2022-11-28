@@ -7,11 +7,15 @@ type AuthLayoutProps = {
 }
 
 export default function AuthLayout({ component: Component }: AuthLayoutProps) {
-  const { user } = useAuthContext()
+  const { user, member } = useAuthContext()
   const location = useLocation()
 
   if (!user) {
     return <Navigate to="/" state={{ from: location }} />
+  }
+
+  if (user && !member) {
+    return <Navigate to="/onboarding" />
   }
 
   return <Component />

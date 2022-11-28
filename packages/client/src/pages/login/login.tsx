@@ -1,13 +1,17 @@
-import { Navigate, useLocation } from 'react-router-dom'
 import { AiOutlineGoogle } from 'react-icons/ai'
+import { Navigate, useLocation } from 'react-router-dom'
 import useAuth from 'hooks/use-auth'
 
 export default function Login() {
-  const { signInWithGoogle, user } = useAuth()
+  const { signInWithGoogle, user, member } = useAuth()
   const { state }: any = useLocation()
   const from = state?.from?.pathname ?? '/home'
 
-  if (user) {
+  if (user && !member) {
+    return <Navigate to="/onboarding" />
+  }
+
+  if (user && member) {
     return <Navigate to={from} replace />
   }
 
