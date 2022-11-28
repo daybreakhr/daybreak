@@ -1,17 +1,18 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { message, Spin } from 'antd'
-import { useQuery } from '@tanstack/react-query'
 import {
   onAuthStateChanged,
   signInWithPopup,
   signOut as logOut,
 } from 'firebase/auth'
+import type { Member } from '@prisma/client'
+import { storage } from 'ui-kit'
+
 import { Role } from 'types/member'
 import { UserWithClaims } from 'types/user'
 import AuthContext from 'contexts/auth-context'
 import { auth, googleAuthProvider } from 'utils/firebase'
 import { fetchMe } from './queries'
-import { storage } from 'ui-kit'
 
 type AuthProps = {
   children: ReactElement
@@ -20,23 +21,17 @@ type AuthProps = {
 export default function Auth({ children }: AuthProps) {
   const [authVerified, setAuthVerified] = useState(false)
   const [user, setUser] = useState<UserWithClaims | null>(auth.currentUser)
-
-  const { data: member, isLoading } = useQuery(['me'], fetchMe, {
-    onSuccess: (data) => {
-      if (data) {
-        storage.set('workspaceId', data.workspaceId)
-      }
-      setAuthVerified(true)
-    },
-    onSettled: () => {
-      setAuthVerified(true)
-    },
-    enabled: !!user,
-  })
+  const [member, setMember] = useState<Member | null | undefined>()
 
   useEffect(() => {
     onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
+        const member = await fetchMe()
+        if (member) {
+          setMember(member)
+          storage.set('workspaceId', member.workspaceId)
+        }
+
         const idTokenResult = await authUser.getIdTokenResult()
         const role = idTokenResult.claims?.role as Role
         setUser(authUser)
@@ -48,10 +43,10 @@ export default function Auth({ children }: AuthProps) {
         })
       } else {
         setUser(null)
-        setAuthVerified(true)
       }
+      setAuthVerified(true)
     })
-  }, [])
+  }, [user])
 
   async function signInWithGoogle() {
     try {
@@ -70,7 +65,7 @@ export default function Auth({ children }: AuthProps) {
     }
   }
 
-  if (!authVerified || isLoading) {
+  if (!authVerified) {
     return (
       <div className="flex items-center justify-center w-screen h-screen">
         <Spin tip="Verifying User..." />
