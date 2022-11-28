@@ -47,7 +47,7 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
           form.setFieldValue('email', data.emails[0])
           form.setFieldValue('phone', data.phoneNumbers[0])
           form.setFieldValue('location', data.location?.city)
-          form.setFieldValue('linkedinUrl', data.linkedin)
+          form.setFieldValue('linkedInUrl', data.linkedin)
           form.setFieldValue('affindaId', file.response.meta.identifier)
         }
       }
