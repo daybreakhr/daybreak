@@ -7,6 +7,12 @@ import { fetchJobs } from 'pages/jobs/queries'
 import CandidatesChart from './components/candidates-chart'
 import CandidatesTable from './components/candidates-table'
 import JobsTable from './components/jobs-table'
+import {
+  AiOutlineBarChart,
+  AiOutlineCheckCircle,
+  AiOutlineFileText,
+  AiOutlineUserAdd,
+} from 'react-icons/ai'
 
 const now = dayjs()
 
@@ -47,6 +53,7 @@ export default function Home() {
         <Statistic
           title="Talent Pipeline"
           value={count.talentPipeline}
+          prefix={<AiOutlineBarChart />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -55,6 +62,7 @@ export default function Home() {
         <Statistic
           title="Open Jobs"
           value={count.openJobs}
+          prefix={<AiOutlineFileText />}
           loading={isJobsLoading}
         />
       </Card>
@@ -63,6 +71,7 @@ export default function Home() {
         <Statistic
           title="New Candidates"
           value={count.newCandidates}
+          prefix={<AiOutlineUserAdd />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -71,6 +80,8 @@ export default function Home() {
         <Statistic
           title="Offer Accepted"
           value={count.accepted}
+          prefix={<AiOutlineCheckCircle />}
+          valueStyle={{ color: '#3f8600' }}
           loading={isCandidatesLoading}
         />
       </Card>
