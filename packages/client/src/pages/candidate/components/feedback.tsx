@@ -37,12 +37,6 @@ export default function Feedback() {
     return user?.role === 'admin' || createdBy === user?.uid
   }
 
-  function onConfirm(candidateId: string, id: string) {
-    return new Promise((resolve) => {
-      confirmDelete({ candidateId, id }).then(() => resolve(null))
-    })
-  }
-
   return (
     <div className="p-4 text-gray-800 bg-white shadow-md rounded-b-md">
       <div className="flex items-center justify-between mb-6">
@@ -102,7 +96,7 @@ export default function Feedback() {
                         <Show when={canDelete(createdBy)}>
                           <Popconfirm
                             title="Are you sure to delete this feedback?"
-                            onConfirm={() => onConfirm(candidateId, id)}
+                            onConfirm={() => confirmDelete({ candidateId, id })}
                             okText="Delete"
                             cancelText="Cancel"
                             disabled={isDeletingFeedback}
