@@ -47,6 +47,10 @@ p {
   margin-right: 4px;
 }
 
+.ant-btn.ant-btn-icon-only svg {
+  margin-right: 0px;
+}
+
 .ant-btn-circle svg {
   margin-right: 0px;
 }

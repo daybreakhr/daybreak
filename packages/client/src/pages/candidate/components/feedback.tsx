@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
+import { range } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { DeleteOutlined } from '@ant-design/icons'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Avatar, Button, Empty, Popconfirm, Rate, Skeleton } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Show, Switch } from 'ui-kit'
 import FeedbackForm from './feedback-form'
 import { fetchFeedbacks, deleteFeedback } from '../queries'
-import { range } from 'lodash'
-import { DeleteOutlined } from '@ant-design/icons'
 import useAuth from 'hooks/use-auth'
 
 dayjs.extend(relativeTime)
@@ -104,7 +104,8 @@ export default function Feedback() {
                             <Button
                               danger
                               type="text"
-                              icon={<DeleteOutlined className="text-xl" />}
+                              size="small"
+                              icon={<DeleteOutlined />}
                             />
                           </Popconfirm>
                         </Show>

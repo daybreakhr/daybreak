@@ -111,6 +111,7 @@ export default function Profile({ data, affinda, isLoading }: ProfileProps) {
             <Button
               type="link"
               size="large"
+              target="_blank"
               href={data?.resume ?? ''}
               icon={<AiOutlineCloudDownload />}
             >
