@@ -2,17 +2,17 @@ import { useMemo } from 'react'
 import dayjs from 'dayjs'
 import { Card, Statistic } from 'antd'
 import { useQueries } from '@tanstack/react-query'
+import {
+  BarChartOutlined,
+  CheckCircleOutlined,
+  FileTextOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { fetchJobs } from 'pages/jobs/queries'
 import CandidatesChart from './components/candidates-chart'
 import CandidatesTable from './components/candidates-table'
 import JobsTable from './components/jobs-table'
-import {
-  AiOutlineBarChart,
-  AiOutlineCheckCircle,
-  AiOutlineFileText,
-  AiOutlineUserAdd,
-} from 'react-icons/ai'
 
 const now = dayjs()
 
@@ -53,7 +53,7 @@ export default function Home() {
         <Statistic
           title="Talent Pipeline"
           value={count.talentPipeline}
-          prefix={<AiOutlineBarChart />}
+          prefix={<BarChartOutlined />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -62,7 +62,7 @@ export default function Home() {
         <Statistic
           title="Open Jobs"
           value={count.openJobs}
-          prefix={<AiOutlineFileText />}
+          prefix={<FileTextOutlined />}
           loading={isJobsLoading}
         />
       </Card>
@@ -71,7 +71,7 @@ export default function Home() {
         <Statistic
           title="New Candidates"
           value={count.newCandidates}
-          prefix={<AiOutlineUserAdd />}
+          prefix={<UserAddOutlined />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -80,7 +80,7 @@ export default function Home() {
         <Statistic
           title="Offer Accepted"
           value={count.accepted}
-          prefix={<AiOutlineCheckCircle />}
+          prefix={<CheckCircleOutlined />}
           valueStyle={{ color: '#3f8600' }}
           loading={isCandidatesLoading}
         />
