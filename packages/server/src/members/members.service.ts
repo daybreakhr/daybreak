@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
-import { InvitesService } from 'src/invites/invites.service'
 import { PrismaService } from 'src/prisma.service'
 import { FirebaseService } from 'src/firebase/firebase.service'
-import { AWSSESService } from 'src/aws/aws.ses.service'
 
 @Injectable()
 export class MembersService {
@@ -13,8 +11,6 @@ export class MembersService {
     private firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private authService: AuthService,
-    private invitesService: InvitesService,
-    private sesService: AWSSESService,
   ) {}
 
   async getAllMembers(workspaceId: string) {

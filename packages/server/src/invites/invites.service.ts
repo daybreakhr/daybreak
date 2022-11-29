@@ -7,35 +7,44 @@ import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class InvitesService {
-  constructor(private prismaService: PrismaService, private sesService: AWSSESService, private authService: AuthService, private configService: ConfigService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private sesService: AWSSESService,
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   async getAllInvites(workspaceId: string) {
     const invites = await this.prismaService.invitees.findMany({
       where: {
-        workspaceId
+        workspaceId,
       },
-      include: { Workspace: true, Member: true },
     })
     return invites
   }
 
   async getInvite(inviteId: string) {
-    const invites = await this.prismaService.invitees.findMany({
+    const invites = await this.prismaService.invitees.findUnique({
       where: {
-        id: inviteId
+        id: inviteId,
       },
-      include: { Workspace: true, Member: true },
     })
     return invites
   }
 
-  async createInvite(email: string, workspaceId: string, memberId: string, userName: string) {
+  async createInvite(
+    email: string,
+    workspaceId: string,
+    memberId: string,
+    userName: string,
+    role: Role,
+  ) {
     const userRecord = await this.authService.getUserByEmail(email)
     if (userRecord) {
-      const isAMember = await this.prismaService.member.findFirst({
+      const isAMember = await this.prismaService.member.findUnique({
         where: {
-          uid: userRecord.uid
-        }
+          uid: userRecord.uid,
+        },
       })
 
       if (isAMember) {
@@ -52,11 +61,11 @@ export class InvitesService {
     const invite = await this.prismaService.invitees.create({
       data: {
         email,
-        role: Role.member,
+        role,
         Workspace: { connect: { id: workspaceId } },
         Member: { connect: { uid: memberId } },
-        },
-        include: { Workspace: true, Member: true },
+      },
+      include: { Workspace: true, Member: true },
     })
 
     email = 'no-reply@daybreakhire.com' // Remove once sandbox mode is done
