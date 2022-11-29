@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+svg {
+  vertical-align: inherit;
+}
+
 body {
   margin: 0;
   color: #000000d9;
@@ -15,14 +19,42 @@ body {
   font-feature-settings: 'tnum';
 }
 
-svg {
-  vertical-align: initial;
+a {
+  @apply no-underline text-primary-main;
+}
+
+li {
+  @apply list-none;
+}
+
+button {
+  @apply bg-transparent border-none cursor-pointer;
 }
 
 hr {
   @apply border-0 border-t text-inherit;
 }
 
-html {
-  font-size: 14px;
+p {
+  @apply mb-0;
+}
+
+.ant-btn {
+  @apply inline-flex items-center justify-center;
+}
+
+.ant-btn svg {
+  margin-right: 4px;
+}
+
+.ant-btn-circle svg {
+  margin-right: 0px;
+}
+
+.ant-tabs-top > .ant-tabs-nav {
+  @apply mb-0 bg-white;
+}
+
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
+  @apply px-4 pt-2;
 }
