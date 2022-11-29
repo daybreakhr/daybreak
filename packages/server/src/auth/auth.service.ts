@@ -37,4 +37,13 @@ export class AuthService {
       return undefined
     }
   }
+
+  async getUserByEmail(email: string): Promise<UserRecord | undefined> {
+    try {
+      const user = await this.firebaseService.auth.getUserByEmail(email)
+      return user
+    } catch (error) {
+      return undefined
+    }
+  }
 }
