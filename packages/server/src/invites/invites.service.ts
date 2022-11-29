@@ -1,29 +1,76 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
+import { AWSSESService } from 'src/aws/aws.ses.service'
+import { AuthService } from 'src/auth/auth.service'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class InvitesService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService, private sesService: AWSSESService, private authService: AuthService, private configService: ConfigService) {}
 
-  async getAllInvites() {
+  async getAllInvites(workspaceId: string) {
     const invites = await this.prismaService.invitees.findMany({
+      where: {
+        workspaceId
+      },
       include: { Workspace: true, Member: true },
     })
     return invites
   }
 
-  async createInvite(email: string, workspaceId: string, memberId: string) {
+  async getInvite(inviteId: string) {
+    const invites = await this.prismaService.invitees.findMany({
+      where: {
+        id: inviteId
+      },
+      include: { Workspace: true, Member: true },
+    })
+    return invites
+  }
+
+  async createInvite(email: string, workspaceId: string, memberId: string, userName: string) {
+    const userRecord = await this.authService.getUserByEmail(email)
+    if (userRecord) {
+      const isAMember = await this.prismaService.member.findFirst({
+        where: {
+          uid: userRecord.uid
+        }
+      })
+
+      if (isAMember) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'Member already exists',
+          },
+          HttpStatus.BAD_REQUEST,
+        )
+      }
+    }
+
     const invite = await this.prismaService.invitees.create({
       data: {
         email,
         role: Role.member,
-        expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
         Workspace: { connect: { id: workspaceId } },
         Member: { connect: { uid: memberId } },
         },
         include: { Workspace: true, Member: true },
     })
-    return invite
+
+    email = 'no-reply@daybreakhire.com' // Remove once sandbox mode is done
+
+    const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
+
+    const data = await this.sesService.sendMail({
+      to: email,
+      subject: `${userName} invited you to join ${invite.Workspace.name} on Daybreak HR`,
+      body: `${userName} has invited you to join ${invite.Workspace.name} on Daybreak HR.
+Accept this invitation by clicking on this link:
+${FRONTEND_URL}/invite/${invite.id}`,
+    })
+
+    return data
   }
 }

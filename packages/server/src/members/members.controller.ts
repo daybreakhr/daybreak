@@ -4,13 +4,10 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common'
 import { Role } from '@prisma/client'
-import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
 import { MembersService } from './members.service'
 
@@ -32,12 +29,6 @@ export class MembersController {
     @Body() updateRoleDto: { role: Role },
   ) {
     const data = await this.membersService.updateRole(memberId, updateRoleDto)
-    return data
-  }
-
-  @Post('/invite')
-  async inviteMember(@Param('workspaceId') workspaceId: string, @GetUser() user: UserRecord, @Body() { email }) {
-    const data = await this.membersService.inviteMember({ email, workspaceId, memberId: user.uid, userName: user.displayName })
     return data
   }
 }
