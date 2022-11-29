@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { InvitesService } from './invites.service'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
@@ -32,13 +25,14 @@ export class InvitesController {
   async createInvite(
     @Param('workspaceId') workspaceId: string,
     @GetUser() user: UserRecord,
-    @Body() { email },
+    @Body() { email, role },
   ) {
     const data = await this.invitesService.createInvite(
       email,
       workspaceId,
       user.uid,
-      user.displayName
+      user.displayName,
+      role,
     )
     return data
   }
