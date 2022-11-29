@@ -61,6 +61,22 @@ export async function createFeedback({
   return data
 }
 
+export async function updateFeedback({
+  id,
+  candidateId,
+  body,
+}: {
+  id: string
+  candidateId: string
+  body: Partial<Candidate>
+}) {
+  const { data } = await client.patch<Feedback>(
+    `candidates/${candidateId}/feedbacks/${id}`,
+    body,
+  )
+  return data
+}
+
 export async function deleteFeedback({
   candidateId,
   id,
