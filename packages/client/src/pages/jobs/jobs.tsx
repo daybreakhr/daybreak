@@ -70,7 +70,11 @@ export default function Jobs() {
           loading={isLoading}
           dataSource={filteredData}
           rowKey={(record) => record.id}
-          columns={jobColumns(navigate, uniqueDepartments, user?.role)}
+          columns={jobColumns(uniqueDepartments)}
+          onRow={({ id }) => ({
+            className: 'cursor-pointer',
+            onClick: () => navigate(`/jobs/${id}`),
+          })}
         />
       </div>
     </div>

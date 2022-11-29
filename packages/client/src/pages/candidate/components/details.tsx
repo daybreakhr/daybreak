@@ -51,8 +51,8 @@ export default function Details({ data }: DetailsProps) {
 
   return (
     <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
-      <div className="p-3 mb-4 text-6xl bg-gray-400 rounded-full text-gray-50">
-        <AiOutlineUser />
+      <div className="flex items-center justify-center p-3 mb-4 bg-gray-400 rounded-full text-gray-50">
+        <AiOutlineUser className="text-6xl" />
       </div>
 
       <Show
