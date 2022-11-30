@@ -6,7 +6,7 @@ import { Feedback } from 'types/candidate'
 
 type FeedbackFormProps = {
   visible: boolean
-  title:string
+  title: string
   onCancel: () => void
   initialValues?: { id: string; title: string; notes: string; score: number }
   mutationFunc: (args: any) => Promise<Feedback>

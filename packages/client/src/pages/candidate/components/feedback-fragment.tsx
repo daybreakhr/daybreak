@@ -26,7 +26,7 @@ export default function FeedbackFragment({
 
   const queryClient = useQueryClient()
 
-  const { user:currentUser } = useAuth()
+  const { user: currentUser } = useAuth()
 
   const { mutateAsync: confirmDelete, isLoading: isDeletingFeedback } =
     useMutation(deleteFeedback, {
@@ -50,7 +50,7 @@ export default function FeedbackFragment({
           <Show when={canDelete(createdBy)}>
             <Button
               type="text"
-              size='small'
+              size="small"
               icon={<EditOutlined />}
               onClick={() => setFeedbackModal(true)}
             />
@@ -65,7 +65,7 @@ export default function FeedbackFragment({
             >
               <Button
                 danger
-                size='small'
+                size="small"
                 type="text"
                 icon={<DeleteOutlined />}
               />
