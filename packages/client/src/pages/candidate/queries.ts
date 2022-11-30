@@ -60,3 +60,16 @@ export async function createFeedback({
   )
   return data
 }
+
+export async function deleteFeedback({
+  candidateId,
+  id,
+}: {
+  candidateId: string
+  id: string
+}) {
+  const { data } = await client.delete<Feedback>(
+    `candidates/${candidateId}/feedbacks/${id}`,
+  )
+  return data
+}
