@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { Avatar } from 'antd'
 import { range } from 'lodash'
+import { Scrollbars } from 'react-custom-scrollbars'
 import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
 
@@ -16,9 +17,8 @@ export default function Experiences({
   return (
     <div className="text-gray-800 bg-white rounded-md shadow-md">
       <p className="m-4 text-lg font-semibold">Experiences</p>
-
-      <div className="p-4 overflow-y-auto max-h-64">
-        <ul className="space-y-4">
+      <Scrollbars autoHeight autoHide autoHeightMax={240}>
+        <ul className="p-4 space-y-4">
           <Switch>
             <Switch.Match when={isLoading}>
               {range(2).map((val) => (
@@ -75,7 +75,7 @@ export default function Experiences({
             </Switch.Match>
           </Switch>
         </ul>
-      </div>
+      </Scrollbars>
     </div>
   )
 }

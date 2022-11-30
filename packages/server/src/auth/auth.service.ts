@@ -1,10 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Member } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { FirebaseService } from 'src/firebase/firebase.service'
+import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly firebaseService: FirebaseService) {}
+  constructor(
+    private readonly firebaseService: FirebaseService,
+    private prismaService: PrismaService,
+  ) {}
 
   async verifyIdToken(idToken: string): Promise<UserRecord> {
     try {
@@ -44,6 +49,17 @@ export class AuthService {
       return user
     } catch (error) {
       return undefined
+      }
+    }
+    
+  async getMe(uid: string): Promise<Member | null> {
+    try {
+      const member = await this.prismaService.member.findUnique({
+        where: { uid },
+      })
+      return member
+    } catch (error) {
+      return null
     }
   }
 }
