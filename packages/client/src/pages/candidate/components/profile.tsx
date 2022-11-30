@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Button } from 'antd'
 import type { ResumeData } from '@affinda/affinda'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { Switch } from 'ui-kit'
@@ -105,17 +106,17 @@ export default function Profile({ data, affinda, isLoading }: ProfileProps) {
           </div>
 
           <div className="flex items-center justify-center">
-            <img src="/assets/pdf.png" className="w-12 mr-4" />
+            <img src="/assets/pdf.png" className="w-12" />
 
-            <a
+            <Button
+              type="link"
+              size="large"
               target="_blank"
-              rel="noreferrer"
               href={data?.resume ?? ''}
-              className="pl-2 text-base font-medium text-blue-600"
+              icon={<AiOutlineCloudDownload />}
             >
-              <AiOutlineCloudDownload className="text-xl" />
               Resume.pdf
-            </a>
+            </Button>
           </div>
         </div>
       </div>

@@ -2,6 +2,12 @@ import { useMemo } from 'react'
 import dayjs from 'dayjs'
 import { Card, Statistic } from 'antd'
 import { useQueries } from '@tanstack/react-query'
+import {
+  BarChartOutlined,
+  CheckCircleOutlined,
+  FileTextOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { fetchJobs } from 'pages/jobs/queries'
 import CandidatesChart from './components/candidates-chart'
@@ -47,6 +53,7 @@ export default function Home() {
         <Statistic
           title="Talent Pipeline"
           value={count.talentPipeline}
+          prefix={<BarChartOutlined />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -55,6 +62,7 @@ export default function Home() {
         <Statistic
           title="Open Jobs"
           value={count.openJobs}
+          prefix={<FileTextOutlined />}
           loading={isJobsLoading}
         />
       </Card>
@@ -63,6 +71,7 @@ export default function Home() {
         <Statistic
           title="New Candidates"
           value={count.newCandidates}
+          prefix={<UserAddOutlined />}
           loading={isCandidatesLoading}
         />
       </Card>
@@ -71,6 +80,8 @@ export default function Home() {
         <Statistic
           title="Offer Accepted"
           value={count.accepted}
+          prefix={<CheckCircleOutlined />}
+          valueStyle={{ color: '#3f8600' }}
           loading={isCandidatesLoading}
         />
       </Card>

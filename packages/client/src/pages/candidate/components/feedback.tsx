@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
+import { range } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
@@ -9,7 +10,6 @@ import { Button, Empty, Skeleton } from 'antd'
 import { Show, Switch } from 'ui-kit'
 import FeedbackForm from './feedback-form'
 import { createFeedback, fetchFeedbacks } from '../queries'
-import { range } from 'lodash'
 import FeedbackFragment from './feedback-fragment'
 
 dayjs.extend(relativeTime)
