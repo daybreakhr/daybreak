@@ -68,8 +68,6 @@ export class InvitesService {
       include: { Workspace: true, Member: true },
     })
 
-    email = 'no-reply@daybreakhire.com' // Remove once sandbox mode is done
-
     const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
 
     const data = await this.sesService.sendMail({
