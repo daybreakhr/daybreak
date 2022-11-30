@@ -6,7 +6,7 @@ import type { Department } from '@prisma/client'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
-import Show from 'components/show'
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'

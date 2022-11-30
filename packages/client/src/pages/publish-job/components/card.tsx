@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react'
 import clsx from 'clsx'
 import { Checkbox } from 'antd'
-import Show from 'components/show'
+import { Show } from 'ui-kit'
 
 type CardProps = {
   title: string
@@ -33,7 +33,7 @@ export default function Card({
           <Checkbox checked={checked} onChange={() => setChecked(true)} />
         </Show>
         <Show when={comingSoon}>
-          <span className="uppercase text-xs text-gray-500">Coming Soon</span>
+          <span className="text-xs text-gray-500 uppercase">Coming Soon</span>
         </Show>
       </div>
       <p className="text-left text-gray-500">{description}</p>
