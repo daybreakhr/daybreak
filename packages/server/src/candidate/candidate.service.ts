@@ -38,7 +38,8 @@ export class CandidateService {
 
     const isApplied = await this.prismaService.candidate.findFirst({
       where: {
-        affindaId: restParams.affindaId,
+        email: createCandidateDto.email,
+        phone: createCandidateDto.phone,
         jobId
       }
     })
