@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import Header from 'components/header'
 import useAuth from 'hooks/use-auth'
 
@@ -9,5 +9,13 @@ export default function Onboarding() {
     return <Navigate to="/home" />
   }
 
-  return <Header />
+  return (
+    <div className="flex flex-col w-screen h-screen overflow-hidden">
+      <Header />
+
+      <div className="flex flex-1 overflow-hidden">
+        <Outlet />
+      </div>
+    </div>
+  )
 }
