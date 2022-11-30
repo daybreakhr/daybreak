@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
@@ -30,12 +22,6 @@ export class MembersController {
     @Body() updateRoleDto: { role: Role },
   ) {
     const data = await this.membersService.updateRole(memberId, updateRoleDto)
-    return data
-  }
-
-  @Post('/invite')
-  async inviteMember() {
-    const data = await this.membersService.inviteMember()
     return data
   }
 }

@@ -43,11 +43,10 @@ model Invitees {
   email       String
   role        Role
   token       String    @default(uuid())
-  expiryDate  DateTime
   createdAt   DateTime  @default(now())
   Workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String    @db.ObjectId
-  Member      Member?   @relation(fields: [memberId], references: [id])
+  Member      Member?   @relation(fields: [memberId], references: [uid])
   memberId    String?   @db.ObjectId
 }
 
