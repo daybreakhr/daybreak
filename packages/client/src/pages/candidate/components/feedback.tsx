@@ -77,6 +77,7 @@ export default function Feedback() {
 
       <FeedbackForm
         visible={feedbackModal}
+        title="Add Interview Feedback"
         onCancel={() => setFeedbackModal(false)}
         mutationFunc={createFeedback}
       />

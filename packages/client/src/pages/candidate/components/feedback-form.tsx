@@ -6,6 +6,7 @@ import { Feedback } from 'types/candidate'
 
 type FeedbackFormProps = {
   visible: boolean
+  title:string
   onCancel: () => void
   initialValues?: { id: string; title: string; notes: string; score: number }
   mutationFunc: (args: any) => Promise<Feedback>
@@ -13,6 +14,7 @@ type FeedbackFormProps = {
 
 export default function FeedbackForm({
   visible,
+  title,
   onCancel,
   initialValues,
   mutationFunc,
@@ -38,7 +40,7 @@ export default function FeedbackForm({
       visible={visible}
       onCancel={onCancel}
       onOk={() => form.submit()}
-      title="Add interview feedback"
+      title={title}
       okButtonProps={{ loading: isLoading }}
     >
       <Form
