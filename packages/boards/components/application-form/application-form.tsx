@@ -23,6 +23,12 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       message.success('Successfully applied for the job!')
       push(`/${query.slug}`)
     },
+    onError: (error: any) => {
+      const errMsg = error?.response?.data?.error
+      if (errMsg) {
+        message.error(errMsg)
+      }
+    },
   })
 
   const uploadProps: UploadProps = {
