@@ -1,9 +1,10 @@
-import { Button, Spin, Tag } from 'antd'
+import { Descendant } from 'slate'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
-import { Descendant } from 'slate'
-import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
+import { Breadcrumb, Button, Spin, Tag } from 'antd'
+import { EditOutlined, WalletOutlined } from '@ant-design/icons'
 import { Reader } from 'ui-kit'
+
 import Show from 'components/show'
 import useAuth from 'hooks/use-auth'
 import { fetchJob } from './queries'
@@ -17,10 +18,18 @@ export default function Job() {
 
   return (
     <div className="px-8 pt-4 pb-8">
-      <Link to="/jobs" className="flex items-center mb-4 space-x-2">
-        <AiOutlineArrowLeft />
-        <span>Jobs List</span>
-      </Link>
+      <Breadcrumb className="mb-4">
+        <Breadcrumb.Item key="candidates">
+          <Link to="/jobs" className="space-x-1">
+            <WalletOutlined />
+            <span>Job List</span>
+          </Link>
+        </Breadcrumb.Item>
+
+        <Breadcrumb.Item key="candidate">
+          <span>Job</span>
+        </Breadcrumb.Item>
+      </Breadcrumb>
 
       <div className="flex space-x-4">
         <div className="flex-1 p-4 bg-white rounded-md shadow-md">
@@ -41,7 +50,7 @@ export default function Job() {
 
               <Show when={user?.role === 'admin'}>
                 <Link to={`/jobs/${jobId}/create`}>
-                  <Button type="primary" icon={<AiOutlineEdit />}>
+                  <Button type="primary" icon={<EditOutlined />}>
                     Edit
                   </Button>
                 </Link>
