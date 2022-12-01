@@ -4,11 +4,11 @@ import { TeamOutlined } from '@ant-design/icons'
 import { useQueries } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 
+import { Candidate as TCandidate } from 'types/candidate'
 import Profile from './components/profile'
 import Details from './components/details'
 import Feedback from './components/feedback'
 import { fetchCandidate, fetchParseResume } from './queries'
-import { Candidate as TCandidate } from 'types/candidate'
 
 export default function Candidate() {
   const { candidateId = '' } = useParams()
