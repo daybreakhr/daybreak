@@ -1,12 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthService } from 'src/auth/auth.service'
-import { InvitesService } from 'src/invites/invites.service'
 import { PrismaService } from 'src/prisma.service'
 import { FirebaseService } from 'src/firebase/firebase.service'
-import { AWSSESService } from 'src/aws/aws.ses.service'
-import { isNil } from 'lodash'
 
 @Injectable()
 export class MembersService {
@@ -14,8 +11,6 @@ export class MembersService {
     private firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private authService: AuthService,
-    private invitesService: InvitesService,
-    private sesService: AWSSESService,
   ) {}
 
   async getAllMembers(workspaceId: string) {
@@ -30,26 +25,6 @@ export class MembersService {
     })
   }
 
-  async inviteMember({ email, workspaceId, memberId, userName }: { email: string, workspaceId: string, memberId: string, userName: string }) {
-    email = 'no-reply@daybreakhire.com' // Remove once sandbox mode is done
-
-    // update the Invite db
-
-    const inviteData = await this.invitesService.createInvite(email, workspaceId, memberId)
-
-    const FRONTEND_URL = 'https://daybreakhr.com'
-
-    const data = await this.sesService.sendMail({
-      to: email,
-      subject: `${userName} invited you to join ${inviteData.Workspace.name} on Daybreak HR`,
-      body: `${userName} has invited you to join ${inviteData.Workspace.name} on Daybreak HR.
-Accept this invitation by clicking on this link:
-${FRONTEND_URL}/invite/${inviteData.id}`,
-    })
-
-    return data
-  }
-
   async updateRole(
     memberId: string,
     updateRoleDto: { role: Role },
@@ -59,32 +34,5 @@ ${FRONTEND_URL}/invite/${inviteData.id}`,
     })
     const updatedMember = await this.authService.getUser(memberId)
     return updatedMember
-  }
-
-  async validateInvitees(inviteId: string, uid: string) {
-    const invitee = await this.invitesService.getInviteById(inviteId)
-
-    if (isNil(invitee)) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Invalid Invite ID',
-        },
-        HttpStatus.BAD_REQUEST,
-      )
-    }
-
-    await this.prismaService.member.create({
-      data: {
-        uid,
-        Workspace: { connect: { id: invitee.workspaceId } },
-      }
-    })
-
-    await this.prismaService.invitees.delete({
-      where: {
-       id: invitee.id
-     }
-    })
   }
 }

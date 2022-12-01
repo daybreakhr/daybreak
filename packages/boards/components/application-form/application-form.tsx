@@ -23,6 +23,12 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       message.success('Successfully applied for the job!')
       push(`/${query.slug}`)
     },
+    onError: (error: any) => {
+      const errMsg = error?.response?.data?.error
+      if (errMsg) {
+        message.error(errMsg)
+      }
+    },
   })
 
   const uploadProps: UploadProps = {
@@ -47,7 +53,7 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
           form.setFieldValue('email', data.emails[0])
           form.setFieldValue('phone', data.phoneNumbers[0])
           form.setFieldValue('location', data.location?.city)
-          form.setFieldValue('linkedinUrl', data.linkedin)
+          form.setFieldValue('linkedInUrl', data.linkedin)
           form.setFieldValue('affindaId', file.response.meta.identifier)
         }
       }
@@ -139,7 +145,10 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       <Form.Item
         name="linkedInUrl"
         label="Linkedin Profile URL"
-        rules={[{ required: true, message: 'Please input your LinkedIn URL' }]}
+        rules={[
+          { type: 'url', message: 'The input is not a valid URL!' },
+          { required: true, message: 'Please input your LinkedIn URL' },
+        ]}
       >
         <Input placeholder="https://linkedin.com/in/username" />
       </Form.Item>

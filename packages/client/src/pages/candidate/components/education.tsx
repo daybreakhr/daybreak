@@ -3,6 +3,7 @@ import { range } from 'lodash'
 import { Avatar, Empty } from 'antd'
 import type { ResumeDataEducationItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 type EducationProps = {
   educations: ResumeDataEducationItem[] | undefined
@@ -11,10 +12,10 @@ type EducationProps = {
 
 export default function Education({ educations, isLoading }: EducationProps) {
   return (
-    <div className="flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md">
+    <div className="p-4 text-gray-800 bg-white rounded-md shadow-md ">
       <p className="mb-4 text-lg font-semibold">Educations</p>
-      <div className="p-4 overflow-y-auto max-h-56">
-        <ul className="space-y-4">
+      <Scrollbars autoHeight autoHide autoHeightMax={224}>
+        <ul className="p-4 space-y-4">
           <Switch>
             <Switch.Match when={isLoading}>
               {range(2).map((val) => (
@@ -86,7 +87,7 @@ export default function Education({ educations, isLoading }: EducationProps) {
             </Switch.Match>
           </Switch>
         </ul>
-      </div>
+      </Scrollbars>
     </div>
   )
 }
