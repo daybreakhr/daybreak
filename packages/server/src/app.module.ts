@@ -45,7 +45,7 @@ import { InvitesModule } from './invites/invites.module'
     CandidateModule,
     AWSModule,
     FeedbackModule,
-    InvitesModule
+    InvitesModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { Scrollbars } from 'react-custom-scrollbars'
 import Sidebar from 'components/sidebar'
 import Header from 'components/header'
 
@@ -9,9 +10,9 @@ export default function AppShell() {
 
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <div className="flex flex-col flex-1 overflow-y-auto bg-gray-100">
+        <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
           <Outlet />
-        </div>
+        </Scrollbars>
       </div>
     </div>
   )

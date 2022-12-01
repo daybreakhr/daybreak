@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { AiOutlineSearch } from 'react-icons/ai'
 
-import { fetchCandidate } from 'pages/candidates/queries'
+import { fetchCandidates } from 'pages/candidates/queries'
 import { candidateColumns } from 'pages/candidates/constants/candidate-list'
 
 export default function Candidates() {
   const navigate = useNavigate()
   const [input, setInput] = useState('')
-  const { data, isLoading } = useQuery(['candidates'], fetchCandidate)
+  const { data, isLoading } = useQuery(['candidates'], fetchCandidates)
 
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
