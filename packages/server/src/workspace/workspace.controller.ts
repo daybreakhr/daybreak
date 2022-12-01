@@ -39,6 +39,7 @@ export class WorkspaceController {
   }
 
   @Post('')
+  @UseGuards(AuthGuard)
   async createWorkspace(
     @Body() createWorkspaceDto: CreateWorkspaceDto,
     @GetUser() user: UserRecord,
