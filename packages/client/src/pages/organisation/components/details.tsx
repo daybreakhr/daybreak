@@ -66,7 +66,9 @@ export default function OrgDetails() {
             name="name"
             label="Name"
             className="flex-1"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: 'Enter Name of your workspace' },
+            ]}
           >
             <Input placeholder="Enter name of your organisation..." />
           </Form.Item>
