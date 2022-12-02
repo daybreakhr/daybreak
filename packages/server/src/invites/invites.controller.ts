@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { InvitesService } from './invites.service'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
+import { InvitesService } from './invites.service'
 
 @Controller(':workspaceId/invite')
 @UseGuards(AuthGuard)

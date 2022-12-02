@@ -2,6 +2,7 @@ import * as React from 'react'
 import clsx from 'clsx'
 import { useSlate } from 'slate-react'
 import type { RenderElementProps, RenderLeafProps } from 'slate-react'
+import { CustomText, ElementType, TextAlign } from 'types/editor'
 import {
   isBlockActive,
   isMarkActive,
@@ -9,7 +10,6 @@ import {
   toggleBlock,
   toggleMark,
 } from './utils'
-import { CustomText, ElementType, TextAlign } from 'types/editor'
 
 export function Element({ attributes, children, element }: RenderElementProps) {
   switch (element.type) {

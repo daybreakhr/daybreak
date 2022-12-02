@@ -3,5 +3,6 @@ build/*
 dist/*
 **/*.json
 **/*.css
+**/dist/*
 
 src/api
