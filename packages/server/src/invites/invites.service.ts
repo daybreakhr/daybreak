@@ -36,8 +36,8 @@ export class InvitesService {
   async getInviteById(inviteId: string) {
     const invitee = await this.prismaService.invitees.findUnique({
       where: {
-        id: inviteId
-      }
+        id: inviteId,
+      },
     })
 
     return invitee
@@ -48,7 +48,7 @@ export class InvitesService {
     workspaceId: string,
     memberId: string,
     userName: string,
-    role: Role
+    role: Role,
   ) {
     const userRecord = await this.authService.getUserByEmail(email)
     if (userRecord) {
@@ -109,13 +109,13 @@ ${FRONTEND_URL}/invite/${invite.id}`,
       data: {
         uid,
         Workspace: { connect: { id: invitee.workspaceId } },
-      }
+      },
     })
 
     await this.prismaService.invitees.delete({
       where: {
-       id: invitee.id
-     }
+        id: invitee.id,
+      },
     })
   }
 }

@@ -1,5 +1,5 @@
 import { ConfigProvider } from 'antd'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
@@ -17,6 +17,8 @@ import Organisation from 'pages/organisation'
 import PublishJob from 'pages/publish-job'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
+import CreateWorkspace from 'pages/create-workspace'
+import SetupWorkspace from 'pages/setup-workspace'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -30,7 +32,11 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Login />} />
-              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/onboarding" element={<Onboarding />}>
+                <Route path="" element={<Navigate to="create" />} />
+                <Route path="create" element={<CreateWorkspace />} />
+                <Route path="setup" element={<SetupWorkspace />} />
+              </Route>
               <Route path="/" element={<AuthLayout component={AppShell} />}>
                 <Route path="home" element={<Home />} />
                 <Route path="jobs" element={<Jobs />} />
