@@ -1,74 +1,62 @@
+import { Spin, Tag } from 'antd'
 import { Descendant } from 'slate'
+import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Link, useParams } from 'react-router-dom'
-import { Breadcrumb, Button, Spin, Tag } from 'antd'
-import { EditOutlined, WalletOutlined } from '@ant-design/icons'
-import { Reader } from 'ui-kit'
+import { WalletOutlined } from '@ant-design/icons'
+import { Reader, Show } from 'ui-kit'
 
-import Show from 'components/show'
-import useAuth from 'hooks/use-auth'
+import PageHeader from 'components/page-header'
 import { fetchJob } from './queries'
 import JobSummary from './components/job-summary'
 
 export default function Job() {
-  const { user } = useAuth()
   const { jobId = '' } = useParams()
 
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
 
+  const title = (
+    <>
+      <span className="mr-2">{data?.title ?? ''}</span>
+      <Tag color={data?.isPublished ? 'green' : 'red'}>
+        {data?.isPublished ? 'Published' : 'Draft'}
+      </Tag>
+    </>
+  )
+
   return (
-    <div className="px-8 pt-4 pb-8">
-      <Breadcrumb className="mb-4">
-        <Breadcrumb.Item key="candidates">
-          <Link to="/jobs" className="space-x-1">
-            <WalletOutlined />
-            <span>Job List</span>
-          </Link>
-        </Breadcrumb.Item>
-
-        <Breadcrumb.Item key="candidate">
-          <span>Job</span>
-        </Breadcrumb.Item>
-      </Breadcrumb>
-
-      <div className="flex space-x-4">
-        <div className="flex-1 p-4 bg-white rounded-md shadow-md">
-          <Show
-            when={!isLoading}
-            fallback={
-              <div className="flex items-center justify-center h-full">
-                <Spin tip="Loading Job..." />
-              </div>
-            }
-          >
-            <div className="flex items-center mb-4 space-x-4">
-              <p className="text-xl font-medium text-gray-600">{data?.title}</p>
-              <Tag color={data?.isPublished ? 'green' : 'red'}>
-                {data?.isPublished ? 'Published' : 'Draft'}
-              </Tag>
-              <div className="flex-1" />
-
-              <Show when={user?.role === 'admin'}>
-                <Link to={`/jobs/${jobId}/create`}>
-                  <Button type="primary" icon={<EditOutlined />}>
-                    Edit
-                  </Button>
-                </Link>
-              </Show>
-            </div>
-
-            <Show when={data?.description}>
-              {(description) => (
-                <div className="prose-sm prose max-w-none">
-                  <Reader initialValue={description as Descendant[]} />
+    <>
+      <PageHeader
+        isLoading={isLoading}
+        title={title}
+        breadcrumb={[
+          { label: 'Jobs', path: '/jobs', icon: <WalletOutlined /> },
+          { label: 'Job', path: `/jobs/${jobId}` },
+        ]}
+      />
+      <div className="px-8 pt-4 pb-8">
+        <div className="flex space-x-4">
+          <div className="flex-1 p-4 bg-white rounded-md shadow-md">
+            <Show
+              when={!isLoading}
+              fallback={
+                <div className="flex items-center justify-center h-full">
+                  <Spin tip="Loading Job..." />
                 </div>
-              )}
+              }
+            >
+              <Show when={data?.description}>
+                {(description) => (
+                  <div className="prose-sm prose max-w-none">
+                    <Reader initialValue={description as Descendant[]} />
+                  </div>
+                )}
+              </Show>
             </Show>
-          </Show>
-        </div>
+          </div>
 
-        <JobSummary data={data} isLoading={isLoading} />
+          <JobSummary data={data} isLoading={isLoading} />
+        </div>
       </div>
-    </div>
+    </>
   )
 }

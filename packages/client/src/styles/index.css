@@ -6,6 +6,12 @@ svg {
   vertical-align: inherit;
 }
 
+*,
+::before,
+::after {
+  @apply border-0 border-gray-200 border-solid;
+}
+
 body {
   margin: 0;
   color: #000000d9;

@@ -4,8 +4,9 @@ import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
+import PageHeader from 'components/page-header'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { candidateColumns } from 'pages/candidates/constants/candidate-list'
 
@@ -32,30 +33,37 @@ export default function Candidates() {
   }, [data])
 
   return (
-    <div className="p-8">
-      <div className="p-4 bg-white rounded-md shadow-md">
-        <p className="mb-4 font-sans text-xl font-medium">Candidates</p>
-        <div className="flex items-center justify-between mb-4">
+    <>
+      <PageHeader
+        title="Candidate List"
+        breadcrumb={[
+          { path: '/candidates', label: 'Candidates', icon: <TeamOutlined /> },
+        ]}
+      />
+
+      <div className="p-8">
+        <div className="p-4 bg-white rounded-md shadow-md">
           <Input
             value={input}
+            className="mb-4"
             style={{ width: '16rem' }}
-            prefix={<AiOutlineSearch />}
+            prefix={<SearchOutlined />}
             placeholder="Search by Candidate Name..."
             onChange={(e) => setInput(e.target.value)}
           />
-        </div>
 
-        <Table
-          loading={isLoading}
-          dataSource={filteredData}
-          rowKey={(record) => record.id}
-          columns={candidateColumns(appliedFor)}
-          onRow={(record) => ({
-            className: 'cursor-pointer',
-            onClick: () => navigate(`${record.id}`),
-          })}
-        />
+          <Table
+            loading={isLoading}
+            dataSource={filteredData}
+            rowKey={(record) => record.id}
+            columns={candidateColumns(appliedFor)}
+            onRow={(record) => ({
+              className: 'cursor-pointer',
+              onClick: () => navigate(`${record.id}`),
+            })}
+          />
+        </div>
       </div>
-    </div>
+    </>
   )
 }

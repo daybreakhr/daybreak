@@ -35,6 +35,7 @@ export default function CandidatesTable({
       <Table
         pagination={false}
         loading={isLoading}
+        rowKey={(row) => row.id}
         columns={candidatesList}
         dataSource={sortedCandidates}
       />
