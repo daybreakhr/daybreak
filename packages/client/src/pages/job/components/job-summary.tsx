@@ -1,12 +1,14 @@
-import dayjs from 'dayjs'
-import { Location } from '@prisma/client'
-import { capitalize, words } from 'lodash'
-import { Modal, Switch as Toggle } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Link, useParams } from 'react-router-dom'
+import { Button, Modal, Switch as Toggle } from 'antd'
+import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Switch from 'components/switch-match'
+import { Show } from 'ui-kit'
+
 import { Job } from 'types/job'
+import useAuth from 'hooks/use-auth'
+import Switch from 'components/switch-match'
 import { updateJobById } from 'pages/create-job/queries'
+import { fields } from '../constants/summary-fields'
 
 type JobSummaryProps = {
   data: Job | undefined
@@ -14,46 +16,12 @@ type JobSummaryProps = {
 }
 
 export default function JobSummary({ data, isLoading }: JobSummaryProps) {
+  const { user } = useAuth()
+  const { jobId = '' } = useParams()
   const queryClient = useQueryClient()
   const { mutate, isLoading: isUpdatingJob } = useMutation(updateJobById, {
     onSuccess: () => queryClient.invalidateQueries(['job', data?.id]),
   })
-
-  const fields = [
-    {
-      id: 'createdAt',
-      title: 'Job Creation Date',
-      value: (value: Date) => dayjs(value).format('MMM DD, YYYY'),
-    },
-    {
-      id: 'jobType',
-      title: 'Job Type',
-      value: (value: string) => words(value).map(capitalize).join(' '),
-    },
-    {
-      id: 'experience',
-      title: 'Experience',
-      value: (value: string) => value,
-    },
-    {
-      id: 'Location',
-      title: 'Location',
-      value: (value: Location) => value.name,
-    },
-    {
-      id: 'minSalary',
-      title: 'Salary Range',
-      value: () =>
-        `${data?.currency?.toUpperCase()} ${data?.minSalary} - ${
-          data?.maxSalary
-        }`,
-    },
-    {
-      id: 'updatedAt',
-      title: 'Last Updated At',
-      value: (value: Date) => dayjs(value).format('MMM DD, YYYY'),
-    },
-  ]
 
   function handleChange(checked: boolean) {
     Modal.confirm({
@@ -74,10 +42,19 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
   }
 
   return (
-    <div className="flex-none p-4 bg-white rounded-md shadow-md w-72 h-fit">
-      <p className="mb-4 font-sans text-xl font-medium">Job Details</p>
+    <div className="flex-none p-4 bg-white rounded-md shadow-md w-80 h-fit">
+      <div className="flex items-center justify-between mb-4">
+        <p className="font-sans text-xl font-medium">Job Details</p>
+        <Show when={user?.role === 'admin'}>
+          <Link to={`/jobs/${jobId}/edit`}>
+            <Button type="primary" icon={<EditOutlined />}>
+              Edit
+            </Button>
+          </Link>
+        </Show>
+      </div>
 
-      {fields.map(({ id, title, value }) => (
+      {fields(data).map(({ id, title, value }) => (
         <div key={id} className="mb-4">
           <p className="mb-0.5 text-gray-500">{title}</p>
 
