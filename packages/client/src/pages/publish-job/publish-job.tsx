@@ -6,9 +6,9 @@ import {
   AiOutlineLeft,
   AiOutlineRocket,
 } from 'react-icons/ai'
+import { updateJobById } from 'pages/create-job/queries'
 import Card from './components/card'
 import { publishers } from './constants/publishers'
-import { updateJobById } from 'pages/create-job/queries'
 
 export default function PublishJob() {
   const navigate = useNavigate()

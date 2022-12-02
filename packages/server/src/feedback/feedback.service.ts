@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { CandidateStatus, Feedback } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
-import { CreateFeedbackDto } from './feedback.dto'
 import { AuthService } from 'src/auth/auth.service'
 import { UserRecord } from 'firebase-admin/auth'
+import { CreateFeedbackDto } from './feedback.dto'
 
 @Injectable()
 export class FeedbackService {
@@ -55,11 +55,11 @@ export class FeedbackService {
 
     await this.prismaService.candidate.update({
       where: {
-        id: candidateId
+        id: candidateId,
       },
       data: {
-        status: CandidateStatus.interview
-      }
+        status: CandidateStatus.interview,
+      },
     })
     return feedback
   }

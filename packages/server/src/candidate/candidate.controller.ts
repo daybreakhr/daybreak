@@ -12,10 +12,10 @@ import {
 import { Express } from 'express'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { CreateCandidateDto } from './candidate.dto'
-import { CandidateService } from './candidate.service'
 import { Candidate } from '@prisma/client'
 import { Roles } from 'src/auth/roles.decorator'
+import { CreateCandidateDto } from './candidate.dto'
+import { CandidateService } from './candidate.service'
 
 @Controller(':workspaceId/candidates')
 export class CandidateController {

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { createEditor, Descendant } from 'slate'
-import { Element, Leaf } from './components'
 import {
   Editable,
   RenderElementProps,
@@ -8,6 +7,7 @@ import {
   Slate,
   withReact,
 } from 'slate-react'
+import { Element, Leaf } from './components'
 
 type ReadOnlyEditorProps = {
   initialValue: Descendant[]

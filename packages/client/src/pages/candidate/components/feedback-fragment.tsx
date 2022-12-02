@@ -4,11 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Avatar, Button, Popconfirm, Rate } from 'antd'
 import { Show } from 'ui-kit'
-import FeedbackForm from './feedback-form'
-import { deleteFeedback, updateFeedback } from '../queries'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import useAuth from 'hooks/use-auth'
 import { Feedback } from 'types/candidate'
+import { deleteFeedback, updateFeedback } from '../queries'
+import FeedbackForm from './feedback-form'
 
 dayjs.extend(relativeTime)
 

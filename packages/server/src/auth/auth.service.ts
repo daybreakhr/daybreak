@@ -49,9 +49,9 @@ export class AuthService {
       return user
     } catch (error) {
       return undefined
-      }
     }
-    
+  }
+
   async getMe(uid: string): Promise<Member | null> {
     try {
       const member = await this.prismaService.member.findUnique({

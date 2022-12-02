@@ -9,10 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { Feedback } from '@prisma/client'
-import { FeedbackService } from './feedback.service'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
+import { FeedbackService } from './feedback.service'
 import { CreateFeedbackDto } from './feedback.dto'
 
 @Controller('candidates/:candidateId/feedbacks')
