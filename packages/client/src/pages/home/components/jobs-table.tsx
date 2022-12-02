@@ -20,7 +20,11 @@ export default function JobsTable({ isLoading, data }: JobsTableProps) {
           (a, b) =>
             new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf(),
         )
-      const { high, medium, low } = groupBy(sortedJobs, (j) => j.priority)
+      const {
+        high = [],
+        medium = [],
+        low = [],
+      } = groupBy(sortedJobs, (j) => j.priority)
 
       return [...high, ...medium, ...low].slice(0, 5)
     } else {
@@ -44,6 +48,7 @@ export default function JobsTable({ isLoading, data }: JobsTableProps) {
         pagination={false}
         loading={isLoading}
         columns={jobsList}
+        rowKey={(row) => row.id}
         dataSource={jobsByPriority}
       />
     </Card>
