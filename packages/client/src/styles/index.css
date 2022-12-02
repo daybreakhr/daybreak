@@ -9,7 +9,7 @@ svg {
 *,
 ::before,
 ::after {
-  @apply border-0 border-gray-200 border-solid;
+  @apply border-0 border-gray-300 border-solid;
 }
 
 body {

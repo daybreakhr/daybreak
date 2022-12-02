@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   signOut as logOut,
 } from 'firebase/auth'
+import { useQueryClient } from '@tanstack/react-query'
 import type { Member } from '@prisma/client'
 import { storage } from 'ui-kit'
 
@@ -19,6 +20,7 @@ type AuthProps = {
 }
 
 export default function Auth({ children }: AuthProps) {
+  const queryClient = useQueryClient()
   const [authVerified, setAuthVerified] = useState(false)
   const [user, setUser] = useState<UserWithClaims | null>(auth.currentUser)
   const [member, setMember] = useState<Member | null | undefined>()
@@ -50,8 +52,8 @@ export default function Auth({ children }: AuthProps) {
 
   async function signInWithGoogle() {
     try {
-      setAuthVerified(false)
       await signInWithPopup(auth, googleAuthProvider)
+      setAuthVerified(false)
     } catch (error: any) {
       message.error(error?.message)
     }
@@ -60,6 +62,8 @@ export default function Auth({ children }: AuthProps) {
   async function signOut() {
     try {
       await logOut(auth)
+      setMember(undefined)
+      queryClient.clear() // clear react-query cache
     } catch (error: any) {
       message.error(error?.message)
     }

@@ -6,7 +6,7 @@ import type { Department } from '@prisma/client'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { PlusOutlined, SearchOutlined, WalletOutlined } from '@ant-design/icons'
 
-import Show from 'components/show'
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import PageHeader from 'components/page-header'
 import { jobColumns } from './constants/job-list'
