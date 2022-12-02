@@ -36,4 +36,10 @@ export class InvitesController {
     )
     return data
   }
+
+  @Post('/validate')
+  async validateInvitees(@GetUser() user: UserRecord, @Body() { inviteId }) {
+    const data = await this.invitesService.validateInvitees(inviteId, user.uid)
+    return data
+  }
 }
