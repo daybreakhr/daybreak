@@ -43,6 +43,15 @@ export class AuthService {
     }
   }
 
+  async getUserByEmail(email: string): Promise<UserRecord | undefined> {
+    try {
+      const user = await this.firebaseService.auth.getUserByEmail(email)
+      return user
+    } catch (error) {
+      return undefined
+    }
+  }
+
   async getMe(uid: string): Promise<Member | null> {
     try {
       const member = await this.prismaService.member.findUnique({

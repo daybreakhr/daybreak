@@ -1,9 +1,9 @@
 import { Express } from 'express'
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
-import { CreateCandidateDto } from './candidate.dto'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { Candidate } from '@prisma/client'
+import { CreateCandidateDto } from './candidate.dto'
 
 @Injectable()
 export class CandidateService {
@@ -35,6 +35,24 @@ export class CandidateService {
     createCandidateDto: CreateCandidateDto,
   ) {
     const { jobId, ...restParams } = createCandidateDto
+
+    const isApplied = await this.prismaService.candidate.findFirst({
+      where: {
+        email: createCandidateDto.email,
+        phone: createCandidateDto.phone,
+        jobId,
+      },
+    })
+
+    if (isApplied) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "You've already applied for this job",
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
 
     const { id } = await this.prismaService.candidate.create({
       data: {

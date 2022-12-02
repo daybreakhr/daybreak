@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { Tabs } from 'antd'
+import { Breadcrumb, Tabs } from 'antd'
+import { TeamOutlined } from '@ant-design/icons'
 import { useQueries } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
-import { AiOutlineArrowLeft } from 'react-icons/ai'
 
+import { Candidate as TCandidate } from 'types/candidate'
 import Profile from './components/profile'
 import Details from './components/details'
 import Feedback from './components/feedback'
 import { fetchCandidate, fetchParseResume } from './queries'
-import { Candidate as TCandidate } from 'types/candidate'
 
 export default function Candidate() {
   const { candidateId = '' } = useParams()
@@ -38,10 +38,18 @@ export default function Candidate() {
 
   return (
     <div className="flex flex-col flex-1 px-8 pt-4 pb-8">
-      <Link to="/candidates" className="flex items-center mb-4 space-x-2">
-        <AiOutlineArrowLeft />
-        <span>All Candidates</span>
-      </Link>
+      <Breadcrumb className="mb-4">
+        <Breadcrumb.Item key="candidates">
+          <Link to="/candidates" className="space-x-1">
+            <TeamOutlined />
+            <span>Candidate List</span>
+          </Link>
+        </Breadcrumb.Item>
+
+        <Breadcrumb.Item key="candidate">
+          <span>Candidate</span>
+        </Breadcrumb.Item>
+      </Breadcrumb>
 
       <div className="flex flex-1 space-x-4">
         <div className="flex-1 overflow-hidden rounded-md">
