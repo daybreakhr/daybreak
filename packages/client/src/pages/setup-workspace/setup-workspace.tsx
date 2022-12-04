@@ -155,7 +155,7 @@ export default function SetupWorkspace() {
 
         <Form.Item className="col-span-3">
           <div className="flex items-center justify-end space-x-4">
-            <Button>Skip</Button>
+            <Button onClick={() => setEnableMe(true)}>Skip</Button>
             <Button type="primary" htmlType="submit" loading={isLoading}>
               Submit
               <RightOutlined />
