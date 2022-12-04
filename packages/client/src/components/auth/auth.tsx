@@ -11,6 +11,7 @@ import { storage } from 'ui-kit'
 
 import { Role } from 'types/member'
 import { UserWithClaims } from 'types/user'
+import { WORKSPACE_ID } from 'utils/constants'
 import AuthContext from 'contexts/auth-context'
 import { auth, googleAuthProvider } from 'utils/firebase'
 import { fetchMe } from './queries'
@@ -31,7 +32,7 @@ export default function Auth({ children }: AuthProps) {
         const member = await fetchMe()
         if (member) {
           setMember(member)
-          storage.set('workspaceId', member.workspaceId)
+          storage.set(WORKSPACE_ID, member.workspaceId)
         }
 
         const idTokenResult = await authUser.getIdTokenResult()
@@ -64,6 +65,7 @@ export default function Auth({ children }: AuthProps) {
       await logOut(auth)
       setMember(undefined)
       queryClient.clear() // clear react-query cache
+      storage.remove(WORKSPACE_ID)
     } catch (error: any) {
       message.error(error?.message)
     }
@@ -78,7 +80,9 @@ export default function Auth({ children }: AuthProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, member, signOut, signInWithGoogle }}>
+    <AuthContext.Provider
+      value={{ user, member, setMember, signOut, signInWithGoogle }}
+    >
       {children}
     </AuthContext.Provider>
   )
