@@ -12,6 +12,7 @@ import {
   AiOutlineUnderline,
   AiOutlineUnorderedList,
 } from 'react-icons/ai'
+import { MacCommandOutlined } from '@ant-design/icons'
 import { MdOutlineLooksOne, MdOutlineLooksTwo } from 'react-icons/md'
 import { CustomText } from 'types/editor'
 import { toggleMark } from './utils'
@@ -54,23 +55,44 @@ export default function Editor({ initialValue, onChange }: EditorProps) {
         }
       }}
     >
-      <div className="p-4 border-x border-t rounded-t bg-gray-50 space-x-3">
-        <MarkButton format="bold" icon={<AiOutlineBold />} />
-        <MarkButton format="italic" icon={<AiOutlineItalic />} />
-        <MarkButton format="underline" icon={<AiOutlineUnderline />} />
+      <div className="p-4 space-x-3 border-t border-b rounded-t border-x bg-gray-50">
+        <MarkButton
+          format="bold"
+          icon={<AiOutlineBold />}
+          tooltip={{
+            title: 'Bold',
+            icons: [<MacCommandOutlined key={'bold'} />, 'B'],
+          }}
+        />
+        <MarkButton
+          format="italic"
+          icon={<AiOutlineItalic />}
+          tooltip={{
+            title: 'Italic',
+            icons: [<MacCommandOutlined key={'italic'} />, 'I'],
+          }}
+        />
+        <MarkButton
+          format="underline"
+          icon={<AiOutlineUnderline />}
+          tooltip={{
+            title: 'Underline',
+            icons: [<MacCommandOutlined key={'underline'} />, 'U'],
+          }}
+        />
         <BlockButton format="heading-one" icon={<MdOutlineLooksOne />} />
         <BlockButton format="heading-two" icon={<MdOutlineLooksTwo />} />
         <BlockButton format="numbered-list" icon={<AiOutlineOrderedList />} />
         <BlockButton format="bulleted-list" icon={<AiOutlineUnorderedList />} />
+
         {/* <MarkButton format="hyperlink" icon={<AiOutlineLink />} /> */}
       </div>
-      <hr />
-      <div className="prose prose-sm max-w-none">
+      <div className="prose-sm prose max-w-none">
         <Editable
           spellCheck
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          className="border-x border-b rounded-b p-4 mb-4"
+          className="p-4 mb-4 border-b rounded-b border-x"
           placeholder="Write job description or select from templates..."
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
