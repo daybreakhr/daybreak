@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { RightOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, message } from 'antd'
+import { storage } from 'ui-kit'
+import { WORKSPACE_ID } from 'utils/constants'
 import { createWorkspace, verifySlug } from './queries'
 
 export default function CreateWorkspace() {
@@ -10,7 +12,8 @@ export default function CreateWorkspace() {
   const [form] = Form.useForm()
 
   const { mutate, isLoading } = useMutation(createWorkspace, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      storage.set(WORKSPACE_ID, data.id)
       navigate('/onboarding/setup')
     },
     onError: (error: any) => {
