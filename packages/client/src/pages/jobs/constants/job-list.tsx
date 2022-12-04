@@ -7,7 +7,7 @@ import { Job } from 'types/job'
 
 export const priorityColor: Record<Priority, string> = {
   high: 'red',
-  medium: 'default',
+  medium: 'gold',
   low: 'green',
 }
 
