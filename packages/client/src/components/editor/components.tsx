@@ -1,6 +1,8 @@
 import * as React from 'react'
 import clsx from 'clsx'
+import { Tooltip } from 'antd'
 import { useSlate } from 'slate-react'
+
 import type { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { CustomText, ElementType, TextAlign } from 'types/editor'
 import {
@@ -50,31 +52,61 @@ export function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   return <span {...attributes}>{children}</span>
 }
 
+type TooltipProps =
+  | {
+      title: string
+      icons: (React.ReactNode | string)[]
+    }
+  | undefined
+
+export const TootipRenderer = ({ tooltip }: { tooltip: TooltipProps }) => {
+  return (
+    <div className="px-2 text-center">
+      {tooltip?.title}
+      <div className="flex">
+        {tooltip?.icons.map((val, index) => (
+          <>
+            {index > 0 && '+'}
+            <div className="px-2" key={index}>
+              {val}
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 type ButtonProps = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
   active: boolean
+  tooltip?: TooltipProps
   children: React.ReactNode
 }
 
 export const Button = React.forwardRef(
   (
-    { active, children, ...restProps }: ButtonProps,
+    { active, tooltip, children, ...restProps }: ButtonProps,
     ref?: React.Ref<HTMLButtonElement>,
   ) => {
     return (
-      <button
-        ref={ref}
-        type="button"
-        className={clsx(
-          'p-1 font-bold',
-          active ? 'text-black' : 'text-gray-500',
-        )}
-        {...restProps}
+      <Tooltip
+        title={tooltip ? <TootipRenderer tooltip={tooltip} /> : undefined}
       >
-        {children}
-      </button>
+        <button
+          ref={ref}
+          type="button"
+          className={clsx(
+            'p-1 font-bold',
+            active ? 'text-black' : 'text-gray-500',
+          )}
+          {...restProps}
+        >
+          {children}
+        </button>
+      </Tooltip>
     )
   },
 )
@@ -84,15 +116,17 @@ Button.displayName = 'Button'
 type MarkButtonProps = {
   format: keyof Omit<CustomText, 'text'>
   icon: React.ReactNode
+  tooltip?: TooltipProps
 }
 
-export function MarkButton({ format, icon }: MarkButtonProps) {
+export function MarkButton({ format, icon, tooltip }: MarkButtonProps) {
   const editor = useSlate()
 
   return (
     <Button
       active={isMarkActive(editor, format)}
       onClick={() => toggleMark(editor, format)}
+      tooltip={tooltip}
     >
       {icon}
     </Button>
