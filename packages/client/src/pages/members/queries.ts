@@ -1,11 +1,12 @@
+import { storage } from 'ui-kit'
 import client from 'utils/client'
 import { Member } from 'types/member'
-
-const WORKSPACE_ID = '6317158147089f094cd4598e'
+import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchMembers() {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.get<{ data: Member[] }>(
-    `${WORKSPACE_ID}/members`,
+    `${workspaceId}/members`,
   )
   return data
 }

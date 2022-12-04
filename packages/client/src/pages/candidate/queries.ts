@@ -1,15 +1,17 @@
 import axios from 'axios'
-import type { Resume } from '@affinda/affinda'
-import { Candidate } from 'types/candidate'
-import client from 'utils/client'
-import { Feedback } from '@prisma/client'
 import { User } from 'firebase/auth'
+import type { Feedback } from '@prisma/client'
+import type { Resume } from '@affinda/affinda'
+import { storage } from 'ui-kit'
 
-const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
+import client from 'utils/client'
+import { Candidate } from 'types/candidate'
+import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchCandidate(candidateId: string) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.get<Candidate>(
-    `${WORKSPACE_ID}/candidates/${candidateId}`,
+    `${workspaceId}/candidates/${candidateId}`,
   )
   return data
 }
@@ -33,8 +35,9 @@ export async function updateCandidate({
   candidateId: string
   body: Partial<Candidate>
 }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Candidate>(
-    `${WORKSPACE_ID}/candidates/${candidateId}`,
+    `${workspaceId}/candidates/${candidateId}`,
     body,
   )
   return data

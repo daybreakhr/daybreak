@@ -1,23 +1,18 @@
-import client from 'utils/client'
 import type { Department, Location } from '@prisma/client'
+import { storage } from 'ui-kit'
+import client from 'utils/client'
 import { Job } from 'types/job'
-
-const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
+import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchDepartments() {
-  const { data } = await client.get<Department[]>(`${WORKSPACE_ID}/department`)
-  return data
-}
-
-export async function createDepartment({ name }: { name: string }) {
-  const { data } = await client.post<Department>(`${WORKSPACE_ID}/department`, {
-    name,
-  })
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Department[]>(`${workspaceId}/department`)
   return data
 }
 
 export async function fetchLocations() {
-  const { data } = await client.get<Location[]>(`${WORKSPACE_ID}/location`)
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Location[]>(`${workspaceId}/location`)
   return data
 }
 
@@ -28,8 +23,9 @@ export async function updateJobById({
   jobId: string
   updateJobDto: Partial<Job>
 }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Location>(
-    `${WORKSPACE_ID}/jobs/${jobId}`,
+    `${workspaceId}/jobs/${jobId}`,
     updateJobDto,
   )
   return data
