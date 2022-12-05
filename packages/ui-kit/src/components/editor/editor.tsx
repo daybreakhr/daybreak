@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { withHistory } from 'slate-history'
 import { createEditor, Descendant } from 'slate'
@@ -12,6 +12,7 @@ import {
   AiOutlineUnderline,
   AiOutlineUnorderedList,
 } from 'react-icons/ai'
+import { MacCommandOutlined } from '@ant-design/icons'
 import { MdOutlineLooksOne, MdOutlineLooksTwo } from 'react-icons/md'
 import { CustomText } from '../../types/editor'
 import { toggleMark } from './utils'
@@ -31,12 +32,12 @@ type EditorProps = {
 }
 
 export default function Editor({ initialValue, onChange }: EditorProps) {
-  const [editor] = React.useState(() => withHistory(withReact(createEditor())))
-  const renderElement = React.useCallback(
+  const [editor] = useState(() => withHistory(withReact(createEditor())))
+  const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     [],
   )
-  const renderLeaf = React.useCallback(
+  const renderLeaf = useCallback(
     (props: RenderLeafProps) => <Leaf {...props} />,
     [],
   )
@@ -54,17 +55,38 @@ export default function Editor({ initialValue, onChange }: EditorProps) {
         }
       }}
     >
-      <div className="p-4 space-x-3 border-t rounded-t border-x bg-gray-50">
-        <MarkButton format="bold" icon={<AiOutlineBold />} />
-        <MarkButton format="italic" icon={<AiOutlineItalic />} />
-        <MarkButton format="underline" icon={<AiOutlineUnderline />} />
+      <div className="p-4 space-x-3 border-t border-b rounded-t border-x bg-gray-50">
+        <MarkButton
+          format="bold"
+          icon={<AiOutlineBold />}
+          tooltip={{
+            title: 'Bold',
+            icons: [<MacCommandOutlined key={'bold'} />, 'B'],
+          }}
+        />
+        <MarkButton
+          format="italic"
+          icon={<AiOutlineItalic />}
+          tooltip={{
+            title: 'Italic',
+            icons: [<MacCommandOutlined key={'italic'} />, 'I'],
+          }}
+        />
+        <MarkButton
+          format="underline"
+          icon={<AiOutlineUnderline />}
+          tooltip={{
+            title: 'Underline',
+            icons: [<MacCommandOutlined key={'underline'} />, 'U'],
+          }}
+        />
         <BlockButton format="heading-one" icon={<MdOutlineLooksOne />} />
         <BlockButton format="heading-two" icon={<MdOutlineLooksTwo />} />
         <BlockButton format="numbered-list" icon={<AiOutlineOrderedList />} />
         <BlockButton format="bulleted-list" icon={<AiOutlineUnorderedList />} />
+
         {/* <MarkButton format="hyperlink" icon={<AiOutlineLink />} /> */}
       </div>
-      <hr />
       <div className="prose-sm prose max-w-none">
         <Editable
           spellCheck

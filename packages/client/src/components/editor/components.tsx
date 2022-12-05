@@ -52,19 +52,17 @@ export function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   return <span {...attributes}>{children}</span>
 }
 
-type TooltipProps =
-  | {
-      title: string
-      icons: (React.ReactNode | string)[]
-    }
-  | undefined
+type TooltipProps = {
+  title: string
+  icons: (React.ReactNode | string)[]
+}
 
-export const TootipRenderer = ({ tooltip }: { tooltip: TooltipProps }) => {
+export const TootipRenderer = ({ title, icons }: TooltipProps) => {
   return (
     <div className="px-2 text-center">
-      {tooltip?.title}
+      {title}
       <div className="flex">
-        {tooltip?.icons.map((val, index) => (
+        {icons.map((val, index) => (
           <>
             {index > 0 && '+'}
             <div className="px-2" key={index}>
@@ -92,9 +90,7 @@ export const Button = React.forwardRef(
     ref?: React.Ref<HTMLButtonElement>,
   ) => {
     return (
-      <Tooltip
-        title={tooltip ? <TootipRenderer tooltip={tooltip} /> : undefined}
-      >
+      <Tooltip title={tooltip ? <TootipRenderer {...tooltip} /> : undefined}>
         <button
           ref={ref}
           type="button"
