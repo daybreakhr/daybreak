@@ -1,4 +1,4 @@
-import { Spin, Tag, Typography } from 'antd'
+import { Skeleton, Tag, Typography } from 'antd'
 import { Descendant } from 'slate'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
@@ -37,23 +37,23 @@ export default function Job() {
       <div className="px-8 pt-4 pb-8">
         <div className="flex space-x-4">
           <div className="flex-1 p-4 bg-white rounded-md shadow-md">
-            <Show when={data?.skills}>
-              <Title level={5}>Skills</Title>
-              {data?.skills.map((skill, index) => (
-                <Tag key={index} color="purple">
-                  {skill}
-                </Tag>
-              ))}
-            </Show>
-
             <Show
               when={!isLoading}
               fallback={
-                <div className="flex items-center justify-center h-full">
-                  <Spin tip="Loading Job..." />
+                <div className="mt-5">
+                  <Skeleton active title />
+                  <Skeleton active paragraph={{ rows: 5 }} />
                 </div>
               }
             >
+              <Show when={data?.skills}>
+                <Title level={5}>Skills</Title>
+                {data?.skills.map((skill, index) => (
+                  <Tag key={index} color="purple">
+                    {skill}
+                  </Tag>
+                ))}
+              </Show>
               <Show when={data?.description}>
                 {(description) => (
                   <div className="prose-sm prose max-w-none">
