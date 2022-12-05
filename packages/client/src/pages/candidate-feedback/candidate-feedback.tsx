@@ -3,18 +3,18 @@ import dayjs from 'dayjs'
 import { range } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { AiOutlinePlus } from 'react-icons/ai'
+import { Button, Empty, Skeleton } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Button, Empty, Skeleton } from 'antd'
 
 import { Show, Switch } from 'ui-kit'
-import FeedbackForm from './feedback-form'
-import { createFeedback, fetchFeedbacks } from '../queries'
-import FeedbackFragment from './feedback-fragment'
+import FeedbackForm from './components/feedback-form'
+import { createFeedback, fetchFeedbacks } from './queries'
+import FeedbackFragment from './components/feedback-fragment'
 
 dayjs.extend(relativeTime)
 
-export default function Feedback() {
+export default function CandidateFeedback() {
   const { candidateId = '' } = useParams()
   const [feedbackModal, setFeedbackModal] = useState(false)
 

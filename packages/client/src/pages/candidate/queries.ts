@@ -2,8 +2,6 @@ import axios from 'axios'
 import type { Resume } from '@affinda/affinda'
 import { Candidate } from 'types/candidate'
 import client from 'utils/client'
-import { Feedback } from '@prisma/client'
-import { User } from 'firebase/auth'
 
 const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
 
@@ -36,56 +34,6 @@ export async function updateCandidate({
   const { data } = await client.patch<Candidate>(
     `${WORKSPACE_ID}/candidates/${candidateId}`,
     body,
-  )
-  return data
-}
-
-export async function fetchFeedbacks(candidateId: string) {
-  const { data } = await client.get<Array<Feedback & { User: User }>>(
-    `candidates/${candidateId}/feedbacks`,
-  )
-  return data
-}
-
-export async function createFeedback({
-  candidateId,
-  body,
-}: {
-  candidateId: string
-  body: Partial<Candidate>
-}) {
-  const { data } = await client.post(
-    `candidates/${candidateId}/feedbacks`,
-    body,
-  )
-  return data
-}
-
-export async function updateFeedback({
-  id,
-  candidateId,
-  body,
-}: {
-  id: string
-  candidateId: string
-  body: Partial<Candidate>
-}) {
-  const { data } = await client.patch<Feedback>(
-    `candidates/${candidateId}/feedbacks/${id}`,
-    body,
-  )
-  return data
-}
-
-export async function deleteFeedback({
-  candidateId,
-  id,
-}: {
-  candidateId: string
-  id: string
-}) {
-  const { data } = await client.delete<Feedback>(
-    `candidates/${candidateId}/feedbacks/${id}`,
   )
   return data
 }
