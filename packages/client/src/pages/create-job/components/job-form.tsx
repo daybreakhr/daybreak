@@ -13,7 +13,7 @@ import {
 } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
-import Editor from 'components/editor'
+import { Editor } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
 import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
 import {
