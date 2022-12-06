@@ -1,0 +1,48 @@
+import { Descendant } from 'slate'
+import { useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { Skeleton, Tag, Typography } from 'antd'
+import { Reader, Show } from 'ui-kit'
+import { fetchJob } from 'pages/job/queries'
+import JobSummary from './components/job-summary'
+
+const { Title } = Typography
+
+export default function JobOverview() {
+  const { jobId = '' } = useParams()
+  const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
+
+  return (
+    <div className="flex px-8 pt-4 pb-8 space-x-4">
+      <div className="flex-1 p-4 bg-white rounded-md shadow-md">
+        <Show
+          when={!isLoading}
+          fallback={
+            <div className="mt-5">
+              <Skeleton active title />
+              <Skeleton active paragraph={{ rows: 5 }} />
+            </div>
+          }
+        >
+          <Show when={data?.skills}>
+            <Title level={5}>Skills</Title>
+            {data?.skills.map((skill, index) => (
+              <Tag key={index} color="purple">
+                {skill}
+              </Tag>
+            ))}
+          </Show>
+          <Show when={data?.description}>
+            {(description) => (
+              <div className="prose-sm prose max-w-none">
+                <Reader initialValue={description as Descendant[]} />
+              </div>
+            )}
+          </Show>
+        </Show>
+      </div>
+
+      <JobSummary data={data} isLoading={isLoading} />
+    </div>
+  )
+}

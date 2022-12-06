@@ -8,7 +8,7 @@ import { Job } from 'types/job'
 import useAuth from 'hooks/use-auth'
 import Switch from 'components/switch-match'
 import { updateJobById } from 'pages/create-job/queries'
-import { fields } from '../constants/summary-fields'
+import { fields } from '../../job/constants/summary-fields'
 
 type JobSummaryProps = {
   data: Job | undefined

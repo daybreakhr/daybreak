@@ -21,6 +21,8 @@ import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import CandidateProfile from 'pages/candidate-profile'
 import CandidateFeedback from 'pages/candidate-feedback'
+import JobOverview from 'pages/job-overview'
+import JobPipeline from 'pages/job-pipeline'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -42,7 +44,12 @@ export default function App() {
               <Route path="/" element={<AuthLayout component={AppShell} />}>
                 <Route path="home" element={<Home />} />
                 <Route path="jobs" element={<Jobs />} />
-                <Route path="jobs/:jobId" element={<Job />} />
+                <Route path="jobs/:jobId" element={<Job />}>
+                  <Route path="" element={<Navigate to="overview" />} />
+                  <Route path="overview" element={<JobOverview />} />
+                  <Route path="pipeline" element={<JobPipeline />} />
+                  <Route path="*" element={<Navigate to="overview" />} />
+                </Route>
                 <Route path="jobs/:jobId/create" element={<CreateJob />} />
                 <Route path="jobs/:jobId/edit" element={<CreateJob />} />
                 <Route path="jobs/:jobId/publish" element={<PublishJob />} />

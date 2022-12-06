@@ -1,19 +1,15 @@
-import { Skeleton, Tag, Typography } from 'antd'
-import { Descendant } from 'slate'
-import { useParams } from 'react-router-dom'
+import { Tag } from 'antd'
 import { useQuery } from '@tanstack/react-query'
+import { Outlet, useParams } from 'react-router-dom'
 import { WalletOutlined } from '@ant-design/icons'
-import { Reader, Show } from 'ui-kit'
 
 import PageHeader from 'components/page-header'
 import { fetchJob } from './queries'
-import JobSummary from './components/job-summary'
 
 export default function Job() {
   const { jobId = '' } = useParams()
 
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
-  const { Title } = Typography
 
   const title = (
     <>
@@ -33,40 +29,12 @@ export default function Job() {
           { label: 'Jobs', path: '/jobs', icon: <WalletOutlined /> },
           { label: 'Job', path: `/jobs/${jobId}` },
         ]}
+        tabs={[
+          { label: 'Overview', key: `/jobs/${jobId}/overview` },
+          { label: 'Pipeline', key: `/jobs/${jobId}/pipeline` },
+        ]}
       />
-      <div className="px-8 pt-4 pb-8">
-        <div className="flex space-x-4">
-          <div className="flex-1 p-4 bg-white rounded-md shadow-md">
-            <Show
-              when={!isLoading}
-              fallback={
-                <div className="mt-5">
-                  <Skeleton active title />
-                  <Skeleton active paragraph={{ rows: 5 }} />
-                </div>
-              }
-            >
-              <Show when={data?.skills}>
-                <Title level={5}>Skills</Title>
-                {data?.skills.map((skill, index) => (
-                  <Tag key={index} color="purple">
-                    {skill}
-                  </Tag>
-                ))}
-              </Show>
-              <Show when={data?.description}>
-                {(description) => (
-                  <div className="prose-sm prose max-w-none">
-                    <Reader initialValue={description as Descendant[]} />
-                  </div>
-                )}
-              </Show>
-            </Show>
-          </div>
-
-          <JobSummary data={data} isLoading={isLoading} />
-        </div>
-      </div>
+      <Outlet />
     </>
   )
 }
