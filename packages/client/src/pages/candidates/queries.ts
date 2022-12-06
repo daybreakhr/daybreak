@@ -1,9 +1,10 @@
+import { storage } from 'ui-kit'
 import client from 'utils/client'
 import { Candidate } from 'types/candidate'
-
-const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
+import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchCandidates() {
-  const { data } = await client.get<Candidate[]>(`${WORKSPACE_ID}/candidates`)
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Candidate[]>(`${workspaceId}/candidates`)
   return data
 }

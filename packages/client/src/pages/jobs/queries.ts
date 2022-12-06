@@ -1,14 +1,16 @@
-import client from 'utils/client'
+import { storage } from 'ui-kit'
 import { Job } from 'types/job'
-
-const WORKSPACE_ID = '6317158147089f094cd4598e'
+import client from 'utils/client'
+import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchJobs() {
-  const { data } = await client.get<Job[]>(`${WORKSPACE_ID}/jobs`)
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Job[]>(`${workspaceId}/jobs`)
   return data
 }
 
 export async function createJob() {
-  const { data } = await client.post<Job>(`${WORKSPACE_ID}/jobs`)
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<Job>(`${workspaceId}/jobs`)
   return data
 }
