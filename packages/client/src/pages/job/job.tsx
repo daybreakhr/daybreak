@@ -21,7 +21,7 @@ export default function Job() {
   )
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <PageHeader
         isLoading={isLoading}
         title={title}
@@ -35,6 +35,6 @@ export default function Job() {
         ]}
       />
       <Outlet />
-    </>
+    </div>
   )
 }

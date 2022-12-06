@@ -41,6 +41,16 @@ body {
   font-feature-settings: 'tnum';
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
 a {
   @apply no-underline text-primary-main;
 }
