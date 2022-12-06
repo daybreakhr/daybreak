@@ -13,8 +13,8 @@ export default function JobOverview() {
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
 
   return (
-    <div className="flex px-8 pt-4 pb-8 space-x-4">
-      <div className="flex-1 p-4 bg-white rounded-md shadow-md">
+    <div className="flex flex-1 px-8 pt-4 pb-8 space-x-4 overflow-y-auto">
+      <div className="flex-1 p-4 bg-white rounded-md shadow-md h-fit">
         <Show
           when={!isLoading}
           fallback={

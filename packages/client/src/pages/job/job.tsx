@@ -21,7 +21,7 @@ export default function Job() {
   )
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <PageHeader
         isLoading={isLoading}
         title={title}
