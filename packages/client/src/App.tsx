@@ -19,6 +19,8 @@ import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
+import CandidateProfile from 'pages/candidate-profile'
+import CandidateFeedback from 'pages/candidate-feedback'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -45,7 +47,12 @@ export default function App() {
                 <Route path="jobs/:jobId/edit" element={<CreateJob />} />
                 <Route path="jobs/:jobId/publish" element={<PublishJob />} />
                 <Route path="candidates" element={<Candidates />} />
-                <Route path="candidates/:candidateId" element={<Candidate />} />
+                <Route path="candidates/:candidateId" element={<Candidate />}>
+                  <Route path="" element={<Navigate to="profile" />} />
+                  <Route path="profile" element={<CandidateProfile />} />
+                  <Route path="feedback" element={<CandidateFeedback />} />
+                  <Route path="*" element={<Navigate to="profile" />} />
+                </Route>
                 <Route
                   path="settings/organisation"
                   element={<Organisation />}

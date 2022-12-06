@@ -84,3 +84,7 @@ p {
 .ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
   @apply px-4 pt-2;
 }
+
+.header-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap {
+  @apply px-0;
+}
