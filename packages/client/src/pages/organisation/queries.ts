@@ -1,10 +1,11 @@
-import type { Department, Location, Workspace } from '@prisma/client'
+import { storage } from 'ui-kit'
 import client from 'utils/client'
-
-const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID
+import { WORKSPACE_ID } from 'utils/constants'
+import type { Department, Location, Workspace } from '@prisma/client'
 
 export async function fetchOrganisation() {
-  const { data } = await client.get<Workspace>(`workspace?id=${WORKSPACE_ID}`)
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Workspace>(`workspace?id=${workspaceId}`)
   return data
 }
 
@@ -13,15 +14,17 @@ export async function updateOrganisation({
 }: {
   updateWorkspaceDto: Partial<Workspace>
 }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Workspace>(
-    `workspace/${WORKSPACE_ID}`,
+    `workspace/${workspaceId}`,
     updateWorkspaceDto,
   )
   return data
 }
 
 export async function addDepartment({ name }: { name: string }) {
-  const { data } = await client.post<Department>(`${WORKSPACE_ID}/department`, {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<Department>(`${workspaceId}/department`, {
     name,
   })
   return data
@@ -34,22 +37,25 @@ export async function updateDepartment({
   id: string
   name: string
 }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Department>(
-    `${WORKSPACE_ID}/department/${id}`,
+    `${workspaceId}/department/${id}`,
     { name },
   )
   return data
 }
 
 export async function deleteDepartment({ id }: { id: string }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.delete<Department>(
-    `${WORKSPACE_ID}/department/${id}`,
+    `${workspaceId}/department/${id}`,
   )
   return data
 }
 
 export async function addLocation({ name }: { name: string }) {
-  const { data } = await client.post<Location>(`${WORKSPACE_ID}/location`, {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<Location>(`${workspaceId}/location`, {
     name,
   })
   return data
@@ -62,16 +68,18 @@ export async function updateLocation({
   id: string
   name: string
 }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Location>(
-    `${WORKSPACE_ID}/location/${id}`,
+    `${workspaceId}/location/${id}`,
     { name },
   )
   return data
 }
 
 export async function deleteLocation({ id }: { id: string }) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.delete<Location>(
-    `${WORKSPACE_ID}/location/${id}`,
+    `${workspaceId}/location/${id}`,
   )
   return data
 }
