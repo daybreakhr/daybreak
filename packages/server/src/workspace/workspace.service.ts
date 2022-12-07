@@ -4,9 +4,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import type { Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
-import { CreateWorkspaceDto } from './workspace.dto'
 import { FirebaseService } from 'src/firebase/firebase.service'
 import exists from 'src/utils/prisma.exists'
+import { CreateWorkspaceDto } from './workspace.dto'
 
 @Injectable()
 export class WorkspaceService {

@@ -8,6 +8,7 @@ import { UserWithClaims } from './user'
 export type Candidate = Omit<PCandidate, 'createdAt'> & {
   createdAt: string
   Job: Job
+  Feedback: Feedback[]
 }
 
 export type Feedback = PFeedback & {

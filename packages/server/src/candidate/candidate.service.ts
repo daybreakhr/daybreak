@@ -15,7 +15,7 @@ export class CandidateService {
   async getAll(workspaceId: string) {
     const candidates = await this.prismaService.candidate.findMany({
       where: { workspaceId },
-      include: { Job: true },
+      include: { Job: true, Feedback: true },
     })
 
     return candidates

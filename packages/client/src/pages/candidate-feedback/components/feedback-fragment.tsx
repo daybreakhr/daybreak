@@ -45,14 +45,14 @@ export default function FeedbackFragment({
         {User?.displayName?.charAt(0)}
       </Avatar>
       <div className="flex-1">
-        <div className="flex">
+        <div className="flex space-x-2">
           <p className="flex-1 mb-2 font-medium">{User?.displayName}</p>
           <Show when={canDelete(createdBy)}>
             <Button
               type="text"
               size="small"
-              icon={<EditOutlined />}
               onClick={() => setFeedbackModal(true)}
+              icon={<EditOutlined className="text-primary-main" />}
             />
           </Show>
           <Show when={canDelete(createdBy)}>
