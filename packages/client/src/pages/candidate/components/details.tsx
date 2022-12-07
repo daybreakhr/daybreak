@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
 import { useClipboard } from 'use-clipboard-copy'
-import { Button, message, Modal, Tooltip } from 'antd'
+import { Button, message, Modal, Select, Tooltip } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AiFillLinkedin,
@@ -15,6 +15,7 @@ import { Candidate } from 'types/candidate'
 import { Show } from 'ui-kit'
 import { getJobType } from 'utils/utils'
 import { updateCandidate } from '../queries'
+import { candidateStatusOptions } from '../constants/candidate-status'
 
 type DetailsProps = {
   data: Candidate | undefined
@@ -25,8 +26,13 @@ export default function Details({ data }: DetailsProps) {
   const { candidateId = '' } = useParams()
 
   const { mutate } = useMutation(updateCandidate, {
-    onSuccess: () => {
-      message.info('This job application is rejected!')
+    onSuccess: ({ status }) => {
+      if (status === CandidateStatus.rejected) {
+        message.info('This job application is rejected!')
+      } else {
+        message.info('The status has been successfully updated!')
+      }
+
       queryClient.invalidateQueries(['candidate', candidateId])
       queryClient.invalidateQueries(['candidates'])
     },
@@ -128,7 +134,14 @@ export default function Details({ data }: DetailsProps) {
         <Button danger onClick={handleReject}>
           Reject
         </Button>
-        <Button type="primary">Advance</Button>
+        <Select
+          value={data?.status}
+          style={{ width: 120 }}
+          options={candidateStatusOptions}
+          onChange={(val) =>
+            mutate({ candidateId, body: { status: CandidateStatus[val] } })
+          }
+        />
       </div>
 
       <hr className="w-full my-4 border-gray-300" />
