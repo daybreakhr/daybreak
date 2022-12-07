@@ -17,11 +17,14 @@ export class MembersController {
 
   @Patch(':memberId')
   @Roles(Role.admin)
-  async updateRole(
+  async updateMember(
     @Param('memberId') memberId: string,
-    @Body() updateRoleDto: { role: Role },
+    @Body() updateMemberDto: { role: Role },
   ) {
-    const data = await this.membersService.updateRole(memberId, updateRoleDto)
+    const data = await this.membersService.updateMember(
+      memberId,
+      updateMemberDto,
+    )
     return data
   }
 }

@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { Role } from '@prisma/client'
-import { UserRecord } from 'firebase-admin/auth'
+import { Member, Role } from '@prisma/client'
 import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
-import { FirebaseService } from 'src/firebase/firebase.service'
 
 @Injectable()
 export class MembersService {
   constructor(
-    private firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private authService: AuthService,
   ) {}
@@ -17,22 +14,25 @@ export class MembersService {
     const members = await this.prismaService.member.findMany({
       where: { workspaceId },
     })
+    const memberByUid = members.reduce(
+      (acc, curr) => ({ ...acc, [curr.uid]: curr }),
+      {} as Record<string, Member>,
+    )
 
     const identifiers = members.map(({ uid }) => ({ uid }))
     const users = await this.authService.getUsers(identifiers)
     return users.map((user) => {
-      return { ...user, role: user.customClaims.role }
+      return { ...user, role: memberByUid[user.uid].role }
     })
   }
 
-  async updateRole(
-    memberId: string,
-    updateRoleDto: { role: Role },
-  ): Promise<UserRecord> {
-    await this.firebaseService.auth.setCustomUserClaims(memberId, {
-      role: updateRoleDto.role,
+  async updateMember(memberId: string, updateMemberDto: { role: Role }) {
+    const member = await this.prismaService.member.update({
+      where: { id: memberId },
+      data: updateMemberDto,
     })
-    const updatedMember = await this.authService.getUser(memberId)
-    return updatedMember
+
+    const user = await this.authService.getUser(member.uid)
+    return { ...user, role: member.role }
   }
 }
