@@ -13,4 +13,5 @@ interface ImportMetaEnv {
   VITE_WORKSPACE_ID: string
   VITE_AFFINDA_API_BASE_URL: string
   VITE_AFFINDA_TOKEN: string
+  VITE_BOARDS_APP_URL: string
 }
