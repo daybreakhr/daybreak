@@ -13,7 +13,7 @@ import { jobColumns } from './constants/job-list'
 import { createJob, fetchJobs } from './queries'
 
 export default function Jobs() {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const navigate = useNavigate()
   const [input, setInput] = useState('')
 
@@ -62,7 +62,7 @@ export default function Jobs() {
               onChange={(e) => setInput(e.target.value)}
             />
 
-            <Show when={user?.role === 'admin'}>
+            <Show when={member?.role === 'admin'}>
               <Button
                 type="primary"
                 loading={isCreatingJob}
