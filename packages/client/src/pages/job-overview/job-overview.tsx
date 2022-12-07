@@ -2,8 +2,11 @@ import { Descendant } from 'slate'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton, Tag, Typography } from 'antd'
-import { Reader, Show } from 'ui-kit'
+import { Reader, Show, Switch } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
+import { fields } from 'pages/job/constants/summary-fields'
+import { Job } from 'types/job'
+
 import JobSummary from './components/job-summary'
 
 const { Title } = Typography
@@ -32,6 +35,25 @@ export default function JobOverview() {
               </Tag>
             ))}
           </Show>
+          <Title level={5} className="mt-5">
+            Job Details
+          </Title>
+          <div className="flex justify-between">
+            {fields(data).map(({ id, title, value }) => (
+              <div key={id} className="mb-4">
+                <p className="mb-0.5 text-gray-500">{title}</p>
+                <Switch>
+                  <Switch.Match when={isLoading}>
+                    <div className="w-48 h-6 bg-gray-100 rounded animate-pulse" />
+                  </Switch.Match>
+
+                  <Switch.Match when={data?.[id as keyof Job]}>
+                    {(val: any) => value(val)}
+                  </Switch.Match>
+                </Switch>
+              </div>
+            ))}
+          </div>
           <Show when={data?.description}>
             {(description) => (
               <div className="prose-sm prose max-w-none">
