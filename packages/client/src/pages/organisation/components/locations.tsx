@@ -10,7 +10,7 @@ import { addLocation } from '../queries'
 import LocationForm from './location-form'
 
 export default function Locations() {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const [addLocationForm, setAddLocationForm] = useState(false)
   const { data, isLoading } = useQuery(['locations'], fetchLocations)
 
@@ -19,7 +19,7 @@ export default function Locations() {
       <div className="flex items-center justify-between mb-4">
         <p className="font-sans text-xl font-medium">Locations</p>
 
-        <Show when={user?.role === 'admin'}>
+        <Show when={member?.role === 'admin'}>
           <Button
             type="primary"
             icon={<AiOutlinePlus />}

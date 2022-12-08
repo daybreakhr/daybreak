@@ -21,13 +21,11 @@ export default function FeedbackFragment({
   feedback,
   candidateId,
 }: FeedbackProps) {
+  const { member } = useAuth()
   const [feedbackModal, setFeedbackModal] = useState(false)
   const { id, User, title, notes, score, createdAt, createdBy } = feedback
 
   const queryClient = useQueryClient()
-
-  const { user: currentUser } = useAuth()
-
   const { mutateAsync: confirmDelete, isLoading: isDeletingFeedback } =
     useMutation(deleteFeedback, {
       onSuccess: () => {
@@ -36,7 +34,7 @@ export default function FeedbackFragment({
     })
 
   function canDelete(createdBy: string) {
-    return currentUser?.role === 'admin' || createdBy === currentUser?.uid
+    return member?.role === 'admin' || createdBy === member?.uid
   }
 
   return (

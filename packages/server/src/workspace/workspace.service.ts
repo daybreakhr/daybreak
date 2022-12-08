@@ -1,12 +1,12 @@
 import { isEmpty } from 'lodash'
 import type { Express } from 'express'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import type { Workspace } from '@prisma/client'
+import { Role, Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
-import { CreateWorkspaceDto } from './workspace.dto'
 import { FirebaseService } from 'src/firebase/firebase.service'
 import exists from 'src/utils/prisma.exists'
+import { CreateWorkspaceDto } from './workspace.dto'
 
 @Injectable()
 export class WorkspaceService {
@@ -63,13 +63,14 @@ export class WorkspaceService {
       const workspace = await this.prismaService.workspace.create({
         data: createWorkspaceDto,
       })
-      // Add user role as admin for the user who creates workspace
-      await this.firebaseService.auth.setCustomUserClaims(uid, {
-        role: 'admin',
-      })
+
       // create member for the workspace
       await this.prismaService.member.create({
-        data: { uid, Workspace: { connect: { id: workspace.id } } },
+        data: {
+          uid,
+          role: Role.admin,
+          Workspace: { connect: { id: workspace.id } },
+        },
       })
       return workspace
     }

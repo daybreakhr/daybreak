@@ -12,7 +12,7 @@ type DepartmentActionsProps = {
 }
 
 export default function DepartmentActions({ record }: DepartmentActionsProps) {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const [editDepartment, setEditDepartment] = useState(false)
 
   const queryClient = useQueryClient()
@@ -40,7 +40,7 @@ export default function DepartmentActions({ record }: DepartmentActionsProps) {
     <div className="space-x-2">
       <Button
         type="link"
-        disabled={user?.role === 'member'}
+        disabled={member?.role === 'member'}
         onClick={() => setEditDepartment(true)}
       >
         Edit
@@ -49,7 +49,7 @@ export default function DepartmentActions({ record }: DepartmentActionsProps) {
         danger
         type="link"
         onClick={handleDelete}
-        disabled={user?.role === 'member'}
+        disabled={member?.role === 'member'}
       >
         Delete
       </Button>

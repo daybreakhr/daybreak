@@ -17,10 +17,10 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Role, Workspace } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
-import { WorkspaceService } from './workspace.service'
-import { CreateWorkspaceDto } from './workspace.dto'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { UserRecord } from 'firebase-admin/auth'
+import { WorkspaceService } from './workspace.service'
+import { CreateWorkspaceDto } from './workspace.dto'
 
 @Controller('workspace')
 export class WorkspaceController {

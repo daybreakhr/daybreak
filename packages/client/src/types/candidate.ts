@@ -3,7 +3,7 @@ import type {
   Feedback as PFeedback,
   Job,
 } from '@prisma/client'
-import { UserWithClaims } from './user'
+import { User } from 'firebase/auth'
 
 export type Candidate = Omit<PCandidate, 'createdAt'> & {
   createdAt: string
@@ -11,5 +11,5 @@ export type Candidate = Omit<PCandidate, 'createdAt'> & {
 }
 
 export type Feedback = PFeedback & {
-  User?: UserWithClaims | null
+  User?: User | null
 }

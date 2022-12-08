@@ -16,7 +16,7 @@ type JobSummaryProps = {
 }
 
 export default function JobSummary({ data, isLoading }: JobSummaryProps) {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const { jobId = '' } = useParams()
   const queryClient = useQueryClient()
   const { mutate, isLoading: isUpdatingJob } = useMutation(updateJobById, {
@@ -45,7 +45,7 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
     <div className="flex-none p-4 bg-white rounded-md shadow-md w-80 h-fit">
       <div className="flex items-center justify-between mb-4">
         <p className="font-sans text-xl font-medium">Job Details</p>
-        <Show when={user?.role === 'admin'}>
+        <Show when={member?.role === 'admin'}>
           <Link to={`/jobs/${jobId}/edit`}>
             <Button type="primary" icon={<EditOutlined />}>
               Edit

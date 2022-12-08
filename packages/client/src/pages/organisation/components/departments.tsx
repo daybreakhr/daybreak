@@ -10,7 +10,7 @@ import DepartmentForm from './department-form'
 import { departmentColumns } from '../constants/departments-list'
 
 export default function Departments() {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const [addDepartmentForm, setAddDepartmentForm] = useState(false)
   const { data, isLoading } = useQuery(['departments'], fetchDepartments)
 
@@ -19,7 +19,7 @@ export default function Departments() {
       <div className="flex items-center justify-between mb-4">
         <p className="font-sans text-xl font-medium">Departments</p>
 
-        <Show when={user?.role === 'admin'}>
+        <Show when={member?.role === 'admin'}>
           <Button
             type="primary"
             icon={<AiOutlinePlus />}

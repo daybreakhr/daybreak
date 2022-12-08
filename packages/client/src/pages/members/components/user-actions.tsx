@@ -11,10 +11,10 @@ type UserActionsProps = {
 }
 
 export default function UserActions({ uid }: UserActionsProps) {
-  const { user } = useAuth()
+  const { member } = useAuth()
 
   const overlay =
-    user?.role === 'admin' ? (
+    member?.role === 'admin' ? (
       <Menu>
         <Menu.Item key="change_role" icon={<AiOutlineSetting />}>
           Change Role
@@ -37,18 +37,18 @@ export default function UserActions({ uid }: UserActionsProps) {
       </Menu>
     )
 
-  if (user?.role === 'admin' && uid !== user.uid) {
+  if (member?.role === 'admin' && uid !== member.uid) {
     return (
       <Dropdown trigger={['click']} overlay={overlay}>
-        <button className="flex items-center justify-center w-6 h-6 hover:bg-gray-200 rounded-full">
+        <button className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200">
           <AiOutlineMore />
         </button>
       </Dropdown>
     )
-  } else if (user?.role === 'member' && uid === user.uid) {
+  } else if (member?.role === 'member' && uid === member.uid) {
     return (
       <Dropdown trigger={['click']} overlay={overlay}>
-        <button className="flex items-center justify-center w-6 h-6 hover:bg-gray-200 rounded-full">
+        <button className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200">
           <AiOutlineMore />
         </button>
       </Dropdown>

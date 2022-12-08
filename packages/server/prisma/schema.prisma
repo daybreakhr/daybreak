@@ -29,6 +29,7 @@ model Workspace {
 model Member {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   uid         String       @unique
+  role        Role
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
   workspaceId String       @db.ObjectId

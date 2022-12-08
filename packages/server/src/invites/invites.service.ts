@@ -108,6 +108,7 @@ ${FRONTEND_URL}/invite/${invite.id}`,
     await this.prismaService.member.create({
       data: {
         uid,
+        role: invitee.role,
         Workspace: { connect: { id: invitee.workspaceId } },
       },
     })
