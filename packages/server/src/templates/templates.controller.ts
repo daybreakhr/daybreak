@@ -1,15 +1,15 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { TemplatesService } from './templates.service'
 
-@Controller(':workspaceId/templates')
+@Controller('/templates')
 @UseGuards(AuthGuard)
 export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
 
   @Get('')
-  async getAllTemplates(@Param('workspaceId') workspaceId: string) {
-    const data = await this.templatesService.getAllTemplates(workspaceId)
+  async getAllTemplates() {
+    const data = await this.templatesService.getAllTemplates()
     return data
   }
 }

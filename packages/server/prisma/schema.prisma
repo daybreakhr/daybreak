@@ -24,7 +24,6 @@ model Workspace {
   Location    Location[]
   Job         Job[]
   Candidate   Candidate[]
-  Template    Template[]
 }
 
 model Member {
@@ -126,13 +125,19 @@ model Location {
 }
 
 model Template {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  title            String
-  Workspace        Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId      String    @db.ObjectId
-  description      String
-  responsibilities Json?
-  capabilities     Json?
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  category    Category
+}
+
+enum Category {
+  engineering
+  marketing
+  sales
+  it
+  hr
+  accounts
 }
 
 model Candidate {

@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class TemplatesService {
-  constructor(
-    private prismaService: PrismaService,
-    private authService: AuthService,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
-  async getAllTemplates(workspaceId: string) {
-    const members = await this.prismaService.template.findMany({
-      where: { workspaceId },
-    })
+  async getAllTemplates() {
+    const templates = await this.prismaService.template.findMany()
 
-    return members
+    return templates
   }
 }

@@ -52,9 +52,10 @@ export class InvitesService {
   ) {
     const userRecord = await this.authService.getUserByEmail(email)
     if (userRecord) {
-      const isAMember = await this.prismaService.member.findUnique({
+      const isAMember = await this.prismaService.member.findFirst({
         where: {
           uid: userRecord.uid,
+          workspaceId,
         },
       })
 
