@@ -10,3 +10,9 @@ export async function fetchMembers() {
   )
   return data
 }
+
+export async function addMember(body: Partial<Member>) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<Member>(`${workspaceId}/invite/new`, body)
+  return data
+}
