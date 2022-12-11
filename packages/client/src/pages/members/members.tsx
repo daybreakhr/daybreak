@@ -1,24 +1,36 @@
 import { useState } from 'react'
+import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import { AiOutlineFilter, AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
-import { Member } from 'types/member'
 import PageHeader from 'components/page-header'
 import { columns } from './members-list'
 import AddUser from './components/add-user'
-import { fetchMembers } from './queries'
+import { fetchInvitedMembers, fetchMembers } from './queries'
+import { getMemberTableData } from './utils'
 
 export default function Members() {
-  const { data, isLoading } = useQuery(['members'], fetchMembers)
-
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('')
   const [isVisible, setIsVisible] = useState(false)
 
-  const filteredData = matchSorter((data ?? []) as Member[], input, {
+  const [
+    { data: members, isLoading: isMembersLoading },
+    { data: invitees, isLoading: isInviteesLoading },
+  ] = useQueries({
+    queries: [
+      { queryKey: ['members'], queryFn: fetchMembers },
+      { queryKey: ['invite'], queryFn: fetchInvitedMembers },
+    ],
+  })
+
+  const isLoading = isInviteesLoading || isMembersLoading
+  const allMembers = getMemberTableData(members, invitees)
+
+  const filteredData = matchSorter(allMembers, input, {
     keys: ['displayName', 'email'],
   })
 
@@ -75,7 +87,8 @@ export default function Members() {
           columns={columns}
           loading={isLoading}
           dataSource={filterRoleData}
-          rowKey={(record) => record.uid}
+          rowKey={(record) => record.rowId}
+          onRow={(row) => ({ className: clsx({ 'opacity-50': !row.uid }) })}
         />
 
         <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />

@@ -6,9 +6,7 @@ import { Invitees, Role } from '@prisma/client'
 
 export async function fetchMembers() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<{ data: Member[] }>(
-    `${workspaceId}/members`,
-  )
+  const { data } = await client.get<Member[]>(`${workspaceId}/members`)
   return data
 }
 
@@ -24,5 +22,11 @@ export async function inviteUser({
     email,
     role,
   })
+  return data
+}
+
+export async function fetchInvitedMembers() {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<Invitees[]>(`${workspaceId}/invite`)
   return data
 }
