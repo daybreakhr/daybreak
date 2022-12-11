@@ -29,6 +29,7 @@ model Workspace {
 model Member {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   uid         String       @unique
+  role        Role
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
   workspaceId String       @db.ObjectId
@@ -46,8 +47,8 @@ model Invitees {
   createdAt   DateTime  @default(now())
   Workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String    @db.ObjectId
-  Member      Member?   @relation(fields: [memberId], references: [uid])
-  memberId    String?   @db.ObjectId
+  Member      Member    @relation(fields: [memberId], references: [uid])
+  memberId    String
 }
 
 enum Role {

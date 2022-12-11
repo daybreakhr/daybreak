@@ -12,7 +12,7 @@ type LocationActionsProps = {
 }
 
 export default function LocationActions({ record }: LocationActionsProps) {
-  const { user } = useAuth()
+  const { member } = useAuth()
   const [editLocation, setEditLocation] = useState(false)
 
   const queryClient = useQueryClient()
@@ -40,7 +40,7 @@ export default function LocationActions({ record }: LocationActionsProps) {
     <div className="space-x-2">
       <Button
         type="link"
-        disabled={user?.role === 'member'}
+        disabled={member?.role === 'member'}
         onClick={() => setEditLocation(true)}
       >
         Edit
@@ -49,7 +49,7 @@ export default function LocationActions({ record }: LocationActionsProps) {
         danger
         type="link"
         onClick={handleDelete}
-        disabled={user?.role === 'member'}
+        disabled={member?.role === 'member'}
       >
         Delete
       </Button>

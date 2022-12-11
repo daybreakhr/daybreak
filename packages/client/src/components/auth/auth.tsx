@@ -4,13 +4,12 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut as logOut,
+  User,
 } from 'firebase/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import type { Member } from '@prisma/client'
 import { storage } from 'ui-kit'
 
-import { Role } from 'types/member'
-import { UserWithClaims } from 'types/user'
 import { WORKSPACE_ID } from 'utils/constants'
 import AuthContext from 'contexts/auth-context'
 import { auth, googleAuthProvider } from 'utils/firebase'
@@ -23,7 +22,7 @@ type AuthProps = {
 export default function Auth({ children }: AuthProps) {
   const queryClient = useQueryClient()
   const [authVerified, setAuthVerified] = useState(false)
-  const [user, setUser] = useState<UserWithClaims | null>(auth.currentUser)
+  const [user, setUser] = useState<User | null>(auth.currentUser)
   const [member, setMember] = useState<Member | null | undefined>()
 
   useEffect(() => {
@@ -35,15 +34,7 @@ export default function Auth({ children }: AuthProps) {
           storage.set(WORKSPACE_ID, member.workspaceId)
         }
 
-        const idTokenResult = await authUser.getIdTokenResult()
-        const role = idTokenResult.claims?.role as Role
         setUser(authUser)
-        setUser((prev) => {
-          if (prev) {
-            prev.role = role
-          }
-          return prev
-        })
       } else {
         setUser(null)
       }

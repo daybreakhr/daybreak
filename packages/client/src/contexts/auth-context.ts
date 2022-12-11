@@ -1,9 +1,9 @@
 import { Member } from '@prisma/client'
+import { User } from 'firebase/auth'
 import { createContext, Dispatch, SetStateAction } from 'react'
-import { UserWithClaims } from 'types/user'
 
 const AuthContext = createContext<{
-  user: UserWithClaims | null
+  user: User | null
   member: Member | null | undefined
   setMember: Dispatch<SetStateAction<Member | null | undefined>>
   signOut: () => Promise<void>
