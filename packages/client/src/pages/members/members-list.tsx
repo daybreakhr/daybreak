@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { Avatar, Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
@@ -10,14 +11,14 @@ export const columns: ColumnsType<MemberTableData> = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: (_, { displayName, email, photoURL }) => (
+    render: (_, { displayName, email, photoURL, uid }) => (
       <div className="flex items-center space-x-3">
         <Avatar src={photoURL}>
           {displayName?.charAt(0) ?? email.charAt(0).toUpperCase()}
         </Avatar>
         <div className="flex flex-col">
           <span className="font-medium">{displayName}</span>
-          <span className="text-gray-500">{email}</span>
+          <span className={clsx({ 'text-gray-500': !uid })}>{email}</span>
         </div>
       </div>
     ),

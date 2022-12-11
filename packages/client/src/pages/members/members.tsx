@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
 import { useQueries } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
@@ -87,6 +88,7 @@ export default function Members() {
           loading={isLoading}
           dataSource={filterRoleData}
           rowKey={(record) => record.rowId}
+          onRow={(row) => ({ className: clsx({ 'opacity-50': !row.uid }) })}
         />
 
         <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />

@@ -17,6 +17,7 @@ export function getMemberTableData(
       photoURL,
     } as MemberTableData),
   )
+
   invitedMembers?.map(({ id, email, role }) =>
     tableData.push({ rowId: id, id, email, role } as MemberTableData),
   )
