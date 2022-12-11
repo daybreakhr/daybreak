@@ -1,8 +1,7 @@
+import { Role } from '@prisma/client'
 import { UserInfo } from 'firebase/auth'
 
-export type Role = 'admin' | 'member'
-
-export type Member = UserInfo & Role
+export type Member = UserInfo & { role: Role }
 
 export type MemberTableData = {
   rowId: string

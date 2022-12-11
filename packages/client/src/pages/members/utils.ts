@@ -1,14 +1,13 @@
 import { Invitees } from '@prisma/client'
-import { MemberTableData } from 'types/member'
-import { UserWithClaims } from 'types/user'
+import { Member, MemberTableData } from 'types/member'
 
 export function getMemberTableData(
-  members: UserWithClaims[],
-  invitedMembers: Invitees[],
+  members?: Member[],
+  invitedMembers?: Invitees[],
 ): MemberTableData[] {
   const tableData: MemberTableData[] = []
 
-  members.map(({ uid, email, role, displayName, photoURL }) =>
+  members?.map(({ uid, email, role, displayName, photoURL }) =>
     tableData.push({
       rowId: uid,
       uid,
@@ -18,7 +17,7 @@ export function getMemberTableData(
       photoURL,
     } as MemberTableData),
   )
-  invitedMembers.map(({ id, email, role }) =>
+  invitedMembers?.map(({ id, email, role }) =>
     tableData.push({ rowId: id, id, email, role } as MemberTableData),
   )
 

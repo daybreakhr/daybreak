@@ -1,4 +1,4 @@
-import { Avatar } from 'antd'
+import { Avatar, Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
 import { Show } from 'ui-kit'
@@ -12,7 +12,9 @@ export const columns: ColumnsType<MemberTableData> = [
     key: 'name',
     render: (_, { displayName, email, photoURL }) => (
       <div className="flex items-center space-x-3">
-        <Avatar src={photoURL}>{displayName?.charAt(0)}</Avatar>
+        <Avatar src={photoURL}>
+          {displayName?.charAt(0) ?? email.charAt(0).toUpperCase()}
+        </Avatar>
         <div className="flex flex-col">
           <span className="font-medium">{displayName}</span>
           <span className="text-gray-500">{email}</span>
@@ -25,14 +27,12 @@ export const columns: ColumnsType<MemberTableData> = [
     dataIndex: 'role',
     key: 'role',
     render: (_, { role, uid }) => (
-      <span>
-        {capitalize(role)}
+      <p className="flex items-center space-x-2">
+        <span>{capitalize(role)}</span>
         <Show when={!uid}>
-          <span className="px-2 ml-2 text-gray-500 bg-gray-100 rounded-sm">
-            {'Pending'}
-          </span>
+          <Tag>Pending</Tag>
         </Show>
-      </span>
+      </p>
     ),
   },
   {
