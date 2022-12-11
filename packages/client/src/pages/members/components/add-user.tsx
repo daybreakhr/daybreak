@@ -1,5 +1,7 @@
 import { AiOutlineUser } from 'react-icons/ai'
+import { useMutation } from '@tanstack/react-query'
 import { Form, Input, message, Modal, Select } from 'antd'
+import { inviteUser } from '../queries'
 
 type AddUserProps = {
   isVisible: boolean
@@ -9,30 +11,34 @@ type AddUserProps = {
 export default function AddUser({ isVisible, onClose }: AddUserProps) {
   const [form] = Form.useForm()
 
-  function handleSubmit() {
-    form.validateFields().then((values) => {
-      setTimeout(() => {
-        onClose()
-        form.resetFields()
-        message.success(`Sent email invite to ${values.email}`)
-      }, 1000)
-    })
-  }
-
   function handleCancel() {
     onClose()
     form.resetFields()
   }
 
+  const { mutate, isLoading } = useMutation(inviteUser, {
+    onSuccess: ({ email }) => {
+      message.success(`Sent email invite to ${email}`)
+      handleCancel()
+    },
+    onError: (error: any) => {
+      const errMsg = error?.response?.data?.error
+      if (errMsg) {
+        message.error(errMsg)
+      }
+    },
+  })
+
   return (
     <Modal
       width={640}
       visible={isVisible}
-      onOk={handleSubmit}
-      onCancel={handleCancel}
       title="Invite new user"
+      onCancel={handleCancel}
+      onOk={() => form.submit()}
+      okButtonProps={{ loading: isLoading }}
     >
-      <Form form={form} layout="vertical">
+      <Form form={form} layout="vertical" onFinish={(values) => mutate(values)}>
         <div className="flex items-center space-x-4">
           <Form.Item
             name="email"
@@ -61,18 +67,6 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
             </Select>
           </Form.Item>
         </div>
-
-        <Form.Item name="linkedIn" label="LinkedIn URL">
-          <Input placeholder="Enter LinkedIn URL of the user..." />
-        </Form.Item>
-
-        <Form.Item name="bio" label="Bio">
-          <Input.TextArea
-            rows={4}
-            maxLength={6}
-            placeholder="User's bio will be used when setting interviews with candidates..."
-          />
-        </Form.Item>
       </Form>
     </Modal>
   )
