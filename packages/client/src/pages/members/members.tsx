@@ -4,21 +4,38 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import { AiOutlineFilter, AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
-
-import { Member } from 'types/member'
+import { UserWithClaims } from 'types/user'
+import { Invitees } from '@prisma/client'
 import PageHeader from 'components/page-header'
 import { columns } from './members-list'
 import AddUser from './components/add-user'
-import { fetchMembers } from './queries'
+import { fetchInvitedMembers, fetchMembers } from './queries'
+import { getMemberTableData } from './utils'
 
 export default function Members() {
-  const { data, isLoading } = useQuery(['members'], fetchMembers)
+  const { data: invitedMembers, isLoading: isInviteLoading } = useQuery(
+    ['invite'],
+    fetchInvitedMembers,
+  )
+  const { data: members, isLoading: isMembersLoading } = useQuery(
+    ['members'],
+    fetchMembers,
+  )
 
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('')
   const [isVisible, setIsVisible] = useState(false)
 
-  const filteredData = matchSorter((data ?? []) as Member[], input, {
+  const isLoading = isInviteLoading || isMembersLoading
+
+  const allMembers = !isLoading
+    ? getMemberTableData(
+        (members ?? []) as UserWithClaims[],
+        (invitedMembers ?? []) as Invitees[],
+      )
+    : []
+
+  const filteredData = matchSorter(allMembers, input, {
     keys: ['displayName', 'email'],
   })
 
@@ -75,7 +92,7 @@ export default function Members() {
           columns={columns}
           loading={isLoading}
           dataSource={filterRoleData}
-          rowKey={(record) => record.uid}
+          rowKey={(record) => record.rowId}
         />
 
         <AddUser isVisible={isVisible} onClose={() => setIsVisible(false)} />

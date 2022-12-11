@@ -1,10 +1,11 @@
 import { Avatar } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
-import { Member } from 'types/member'
+import { Show } from 'ui-kit'
+import { MemberTableData } from 'types/member'
 import UserActions from './components/user-actions'
 
-export const columns: ColumnsType<Member> = [
+export const columns: ColumnsType<MemberTableData> = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -23,7 +24,16 @@ export const columns: ColumnsType<Member> = [
     title: 'Role',
     dataIndex: 'role',
     key: 'role',
-    render: (role: string) => capitalize(role),
+    render: (_, { role, uid }) => (
+      <span>
+        {capitalize(role)}
+        <Show when={!uid}>
+          <span className="px-2 ml-2 text-gray-500 bg-gray-100 rounded-sm">
+            {'Pending'}
+          </span>
+        </Show>
+      </span>
+    ),
   },
   {
     title: '',

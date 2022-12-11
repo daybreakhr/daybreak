@@ -10,3 +10,9 @@ export async function fetchMembers() {
   )
   return data
 }
+
+export async function fetchInvitedMembers() {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.get<{ data: Member[] }>(`${workspaceId}/invite`)
+  return data
+}
