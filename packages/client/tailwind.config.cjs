@@ -16,8 +16,8 @@ module.exports = {
       },
     },
     backgroundImage: {
-      'cover-image': "url('./public/assets/cover.png')",
-    }
+      'cover-image': "url('/assets/cover.png')",
+    },
   },
   plugins: [require('@tailwindcss/typography')],
   corePlugins: {
