@@ -35,7 +35,7 @@ export default function Login() {
           </button>
         </div>
       </div>
-      <div className="w-3/4 h-screen bg-repeat-round bg-cover-image" />
+      <div className="w-3/4 h-screen bg-cover-image" />
     </div>
   )
 }
