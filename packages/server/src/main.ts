@@ -7,7 +7,11 @@ async function bootstrap() {
   app.enableCors({
     origin:
       process.env.NODE_ENV === 'production'
-        ? [process.env.FRONTEND_URL, process.env.BOARDS_URL]
+        ? [
+            process.env.FRONTEND_URL,
+            process.env.FRONTEND_PREVIEW_URL,
+            process.env.BOARDS_URL,
+          ]
         : '*',
   })
 

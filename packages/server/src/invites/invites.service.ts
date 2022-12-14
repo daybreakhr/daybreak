@@ -82,15 +82,15 @@ export class InvitesService {
 
     const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
 
-    const data = await this.sesService.sendMail({
+    await this.sesService.sendMail({
       to: email,
       subject: `${userName} invited you to join ${invite.Workspace.name} on Daybreak HR`,
-      body: `${userName} has invited you to join ${invite.Workspace.name} on Daybreak HR.
-Accept this invitation by clicking on this link:
-${FRONTEND_URL}/invite/${invite.id}`,
+      body: `<p>Hi,</p>
+      <p>${userName} has invited you to join ${invite.Workspace.name} on Daybreak HR.</p>
+      <p>Accept this invitation by clicking on this link: ${FRONTEND_URL}/invite/${invite.id}</p>`,
     })
 
-    return data
+    return invite
   }
 
   async validateInvitees(inviteId: string, uid: string) {
