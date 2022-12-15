@@ -11,6 +11,7 @@ import {
   toggleMark,
 } from './utils'
 import { CustomText, ElementType, TextAlign } from '../../types/editor'
+
 export function Element({ attributes, children, element }: RenderElementProps) {
   switch (element.type) {
     case 'block-quote':
@@ -57,15 +58,15 @@ type TooltipProps = {
 
 export const TootipRenderer = ({ title, icons }: TooltipProps) => {
   return (
-    <div className="px-2 text-center">
-      {title}
-      <div className="flex">
+    <div className="flex flex-col items-center w-16 px-2 text-center">
+      <p>{title}</p>
+      <div className="flex items-center justify-center space-x-1">
         {icons.map((val, index) => (
           <>
-            {index > 0 && '+'}
-            <div className="px-2" key={index}>
+            {index > 0 && <span>+</span>}
+            <span className="px-2" key={index}>
               {val}
-            </div>
+            </span>
           </>
         ))}
       </div>
@@ -93,7 +94,7 @@ export const Button = React.forwardRef(
           ref={ref}
           type="button"
           className={clsx(
-            'p-1 font-bold',
+            'p-1 font-bold bg-gray-50',
             active ? 'text-black' : 'text-gray-500',
           )}
           {...restProps}

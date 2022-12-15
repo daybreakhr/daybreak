@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { withHistory } from 'slate-history'
 import { createEditor, Descendant } from 'slate'
@@ -87,7 +87,7 @@ export default function Editor({ initialValue, onChange }: EditorProps) {
 
         {/* <MarkButton format="hyperlink" icon={<AiOutlineLink />} /> */}
       </div>
-      <div className="prose-sm prose max-w-none">
+      <div className="prose max-w-none">
         <Editable
           spellCheck
           renderLeaf={renderLeaf}
