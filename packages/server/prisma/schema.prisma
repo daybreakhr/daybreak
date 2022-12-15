@@ -127,7 +127,7 @@ model Location {
 model Template {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  description String
+  description Json
   category    Category
 }
 

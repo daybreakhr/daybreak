@@ -34,7 +34,7 @@ export default function JobOverview() {
           </Show>
           <Show when={data?.description}>
             {(description) => (
-              <div className="prose-sm prose max-w-none">
+              <div className="prose max-w-none">
                 <Reader initialValue={description as Descendant[]} />
               </div>
             )}
