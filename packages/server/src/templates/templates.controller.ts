@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { TemplatesService } from './templates.service'
 
-@Controller('/templates')
+@Controller('templates')
 @UseGuards(AuthGuard)
 export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}

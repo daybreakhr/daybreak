@@ -15,7 +15,12 @@ import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
 import { Editor } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
-import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
+import {
+  fetchDepartments,
+  fetchJobTemplates,
+  fetchLocations,
+  updateJobById,
+} from '../queries'
 import {
   jobTypeOptions,
   experienceOptions,
@@ -31,11 +36,13 @@ export default function JobForm() {
   const queryClient = useQueryClient()
 
   const [
+    { data: templates, isLoading: isTemplatesLoading },
     { data: locations, isLoading: isLocationsLoading },
     { data: departments, isLoading: isDepartmentsLoading },
     { data: job, isLoading: isJobLoading },
   ] = useQueries({
     queries: [
+      { queryKey: ['templates'], queryFn: fetchJobTemplates },
       { queryKey: ['locations'], queryFn: fetchLocations },
       { queryKey: ['departments'], queryFn: fetchDepartments },
       {
@@ -62,7 +69,12 @@ export default function JobForm() {
     )
   }
 
-  if (isDepartmentsLoading || isJobLoading || isLocationsLoading) {
+  if (
+    isDepartmentsLoading ||
+    isJobLoading ||
+    isLocationsLoading ||
+    isTemplatesLoading
+  ) {
     return (
       <div className="flex items-center justify-center h-96">
         <Spin tip="Loading..." />
@@ -137,6 +149,7 @@ export default function JobForm() {
 
       <p className="mb-2">Job Description</p>
       <Editor
+        templates={templates ?? []}
         initialValue={job?.description as Descendant[]}
         onChange={debounce(
           (description) => updateJob({ jobId, updateJobDto: { description } }),

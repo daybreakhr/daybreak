@@ -18,7 +18,7 @@ export default function JobOverview() {
         <Show
           when={!isLoading}
           fallback={
-            <div className="mt-5">
+            <div className="mt-5 space-y-4">
               <Skeleton active title />
               <Skeleton active paragraph={{ rows: 5 }} />
             </div>
