@@ -1,18 +1,20 @@
 import React, { useCallback, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { withHistory } from 'slate-history'
+import { capitalize, groupBy } from 'lodash'
 import { createEditor, Descendant } from 'slate'
+import { Button, Dropdown, MenuProps } from 'antd'
 import { Editable, Slate, withReact } from 'slate-react'
 import type { RenderElementProps, RenderLeafProps } from 'slate-react'
 import {
   AiOutlineBold,
   AiOutlineItalic,
-  //   AiOutlineLink,
   AiOutlineOrderedList,
   AiOutlineUnderline,
   AiOutlineUnorderedList,
 } from 'react-icons/ai'
-import { MacCommandOutlined } from '@ant-design/icons'
+import type { Template } from '@prisma/client'
+import { DownOutlined, MacCommandOutlined } from '@ant-design/icons'
 import { MdOutlineLooksOne, MdOutlineLooksTwo } from 'react-icons/md'
 import { CustomText } from '../../types/editor'
 import { toggleMark } from './utils'
@@ -23,16 +25,25 @@ const HOTKEYS: Record<string, keyof Omit<CustomText, 'text'>> = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
-  //   'mod+k': 'link',
 }
 
 type EditorProps = {
   initialValue?: Descendant[] | null
   onChange: (value: Descendant[]) => void
+  templates: Template[]
 }
 
-export default function Editor({ initialValue, onChange }: EditorProps) {
+export default function Editor({
+  initialValue,
+  onChange,
+  templates,
+}: EditorProps) {
+  const [key, setKey] = useState(0)
+  const [value, setValue] = useState<Descendant[]>(
+    initialValue ?? initialValues,
+  )
   const [editor] = useState(() => withHistory(withReact(createEditor())))
+
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     [],
@@ -42,20 +53,42 @@ export default function Editor({ initialValue, onChange }: EditorProps) {
     [],
   )
 
+  const groupByCategory = groupBy(templates, (t) => t.category)
+
+  const items: MenuProps['items'] = Object.keys(groupByCategory).map((key) => ({
+    key,
+    type: 'group',
+    label: capitalize(key),
+    children: groupByCategory[key].map(({ title, id }) => ({
+      label: title,
+      key: id,
+    })),
+  }))
+
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    const template = templates.find(({ id }) => id === key)
+    setValue(template?.description as Descendant[])
+    setKey((prev) => prev + 1)
+  }
+
+  const menuProps = { items, onClick: handleMenuClick }
+
   return (
     <Slate
+      key={key}
       editor={editor}
-      value={initialValue ?? initialValues}
+      value={value}
       onChange={(value) => {
         const isAstChange = editor.operations.some(
           (op) => op.type !== 'set_selection',
         )
         if (isAstChange) {
+          setValue(value)
           onChange(value)
         }
       }}
     >
-      <div className="p-4 space-x-3 border-t border-b rounded-t border-x bg-gray-50">
+      <div className="flex items-center p-4 space-x-4 border-t border-b rounded-t border-x bg-gray-50">
         <MarkButton
           format="bold"
           icon={<AiOutlineBold />}
@@ -85,7 +118,14 @@ export default function Editor({ initialValue, onChange }: EditorProps) {
         <BlockButton format="numbered-list" icon={<AiOutlineOrderedList />} />
         <BlockButton format="bulleted-list" icon={<AiOutlineUnorderedList />} />
 
-        {/* <MarkButton format="hyperlink" icon={<AiOutlineLink />} /> */}
+        <div className="flex-1" />
+
+        <Dropdown menu={menuProps}>
+          <Button>
+            Autofill using job template
+            <DownOutlined />
+          </Button>
+        </Dropdown>
       </div>
       <div className="prose max-w-none">
         <Editable

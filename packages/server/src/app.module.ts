@@ -16,6 +16,7 @@ import { AppLoggerMiddleware } from './logger.middleware'
 import { AWSModule } from './aws/aws.module'
 import { FeedbackModule } from './feedback/feedback.module'
 import { InvitesModule } from './invites/invites.module'
+import { TemplatesModule } from './templates/templates.module'
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { InvitesModule } from './invites/invites.module'
     AWSModule,
     FeedbackModule,
     InvitesModule,
+    TemplatesModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
