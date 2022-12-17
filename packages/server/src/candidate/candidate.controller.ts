@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -58,6 +59,13 @@ export class CandidateController {
     @Body() updateCandidateDto: Partial<Candidate>,
   ) {
     const data = await this.candidateService.update(id, updateCandidateDto)
+    return data
+  }
+
+  @Delete(':id')
+  @Roles('admin')
+  async delete(@Param('id') candidateId: string) {
+    const data = await this.candidateService.delete(candidateId)
     return data
   }
 }
