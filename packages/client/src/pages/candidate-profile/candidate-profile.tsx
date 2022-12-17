@@ -54,7 +54,7 @@ export default function CandidateProfile() {
           <div className="col-span-2">
             <div className="grid grid-cols-2 gap-5">
               <div>
-                <p className="text-xs text-gray-800 uppercase">Name</p>
+                <p className="text-sm text-gray-800 uppercase">Name</p>
                 <Switch>
                   <Switch.Match when={isLoading()}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
@@ -71,7 +71,7 @@ export default function CandidateProfile() {
               </div>
 
               <div>
-                <p className="text-xs text-gray-800 uppercase">Location</p>
+                <p className="text-sm text-gray-800 uppercase">Location</p>
                 <Switch>
                   <Switch.Match when={isLoading()}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
@@ -86,7 +86,7 @@ export default function CandidateProfile() {
               </div>
 
               <div>
-                <p className="text-xs text-gray-800 uppercase">
+                <p className="text-sm text-gray-800 uppercase">
                   Current Company
                 </p>
                 <Switch>
@@ -103,7 +103,7 @@ export default function CandidateProfile() {
               </div>
 
               <div>
-                <p className="text-xs text-gray-800 uppercase">
+                <p className="text-sm text-gray-800 uppercase">
                   Total Experience
                 </p>
                 <Switch>

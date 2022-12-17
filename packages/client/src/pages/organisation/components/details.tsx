@@ -1,100 +1,110 @@
 import { useState } from 'react'
-import { AiOutlinePlus } from 'react-icons/ai'
-import type { UploadFile, UploadProps } from 'antd'
-import { Button, Form, Input, message, Upload } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
+import { Button, Form, message, Skeleton } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import useAuth from 'hooks/use-auth'
+import { Switch } from 'ui-kit'
 import { fetchOrganisation, updateOrganisation } from '../queries'
-import { customRequest } from '../utils'
+import EditOrganisation from './edit-organisation'
 
 export default function OrgDetails() {
-  const { user } = useAuth()
   const [form] = Form.useForm()
-  const [fileList, setFileList] = useState<UploadFile[]>([])
-
-  useQuery(['organisation'], fetchOrganisation, {
-    onSuccess: (data) => {
-      form.setFieldsValue({ ...data })
-      if (data.logo) {
-        setFileList([
-          { uid: data.logo, name: data.name, status: 'done', url: data.logo },
-        ])
-      }
-    },
-  })
+  const [showEditForm, setShowEditForm] = useState(false)
 
   const queryClient = useQueryClient()
-
+  const { data, isLoading } = useQuery(['organisation'], fetchOrganisation, {
+    onSuccess: (data) => {
+      form.setFieldsValue(data)
+    },
+  })
   const { mutate, isLoading: isOrganisationUpdating } = useMutation(
     updateOrganisation,
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['organisation'])
+        setShowEditForm(false)
         message.success('Successfully updated your organisation settings')
       },
     },
   )
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList.slice(-1))
+  function handleCancel() {
+    setShowEditForm(false)
+    form.setFieldsValue(data)
   }
 
   return (
-    <div className="p-4 m-8 bg-white rounded-md shadow-md">
-      <p className="mb-4 font-sans text-xl font-medium">Organisation Details</p>
-      <Upload
-        fileList={fileList}
-        listType="picture-card"
-        onChange={handleChange}
-        customRequest={customRequest(user)}
-        action={`workspace/${import.meta.env.VITE_WORKSPACE_ID}/upload`}
-        showUploadList={{ showPreviewIcon: false, showRemoveIcon: false }}
-      >
-        <div className="flex flex-col items-center justify-center w-24 h-24 space-y-3 rounded">
-          <AiOutlinePlus />
-          <p>Upload</p>
-        </div>
-      </Upload>
+    <Form
+      form={form}
+      layout="vertical"
+      className="py-4 m-8 bg-white rounded-md shadow-md"
+      onFinish={(updateWorkspaceDto) => mutate({ updateWorkspaceDto })}
+    >
+      <div className="flex items-center px-4 space-x-4">
+        <p className="mb-4 font-sans text-xl font-medium">
+          Organisation Details
+        </p>
+        <div className="flex-1" />
 
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={(updateWorkspaceDto) => mutate({ updateWorkspaceDto })}
-      >
-        <div className="flex items-center w-full space-x-4">
-          <Form.Item
-            name="name"
-            label="Name"
-            className="flex-1"
-            rules={[
-              { required: true, message: 'Enter Name of your workspace' },
-            ]}
-          >
-            <Input placeholder="Enter name of your organisation..." />
-          </Form.Item>
+        <Switch>
+          <Switch.Match when={!showEditForm}>
+            <Button
+              type="primary"
+              disabled={!data}
+              icon={<EditOutlined />}
+              onClick={() => setShowEditForm(true)}
+            >
+              Edit
+            </Button>
+          </Switch.Match>
 
-          <Form.Item name="slug" label="Slug" className="w-64">
-            <Input readOnly disabled />
-          </Form.Item>
-        </div>
+          <Switch.Match when={showEditForm}>
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isOrganisationUpdating}
+            >
+              Save Changes
+            </Button>
+          </Switch.Match>
+        </Switch>
+      </div>
 
-        <Form.Item name="description" label="About Organisation">
-          <Input.TextArea
-            rows={4}
-            placeholder="Your organisation details will be part of every job description..."
-          />
-        </Form.Item>
+      <Switch>
+        <Switch.Match when={isLoading}>
+          <div className="px-4 space-y-4">
+            <Skeleton.Image active />
+            <Skeleton active title paragraph={{ rows: 3 }} />
+          </div>
+        </Switch.Match>
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isOrganisationUpdating}
-          >
-            Save Changes
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+        <Switch.Match when={showEditForm}>
+          <EditOrganisation initialValues={data} />
+        </Switch.Match>
+
+        <Switch.Match when={data}>
+          {({ logo, name, slug, description }) => (
+            <div className="space-y-4">
+              <img width={80} src={logo ?? ''} className="mx-4" />
+
+              <div className="grid grid-cols-12 p-4 bg-gray-50">
+                <p className="col-span-2 text-gray-500">Company Name</p>
+                <p className="col-span-10">{name}</p>
+              </div>
+
+              <div className="grid grid-cols-12 p-4">
+                <p className="col-span-2 text-gray-500">Workspace slug</p>
+                <p className="col-span-10">{slug}</p>
+              </div>
+
+              <div className="grid grid-cols-12 p-4 bg-gray-50">
+                <p className="col-span-2 text-gray-500">Company Description</p>
+                <p className="col-span-10">{description}</p>
+              </div>
+            </div>
+          )}
+        </Switch.Match>
+      </Switch>
+    </Form>
   )
 }

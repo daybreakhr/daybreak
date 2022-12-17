@@ -47,7 +47,7 @@ export default function Experiences({
                       <Avatar>{organization?.[0]}</Avatar>
                       <div>
                         <p className="font-medium">{organization}</p>
-                        <p className="text-sm text-gray-800">{jobTitle}</p>
+                        <p className="text-gray-800">{jobTitle}</p>
                       </div>
                       <div className="flex-1" />
 
