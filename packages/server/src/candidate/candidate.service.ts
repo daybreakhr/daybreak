@@ -81,4 +81,11 @@ export class CandidateService {
 
     return candidate
   }
+
+  async delete(candidateId: string) {
+    const candidate = await this.prismaService.candidate.delete({
+      where: { id: candidateId },
+    })
+    return candidate
+  }
 }

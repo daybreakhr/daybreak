@@ -45,7 +45,7 @@ export default function App() {
                 <Route path="home" element={<Home />} />
                 <Route path="jobs" element={<Jobs />} />
                 <Route path="jobs/:jobId" element={<Job />}>
-                  <Route path="" element={<Navigate to="overview" />} />
+                  <Route path="" element={<Navigate to="overview" replace />} />
                   <Route path="overview" element={<JobOverview />} />
                   <Route path="pipeline" element={<JobPipeline />} />
                   <Route path="*" element={<Navigate to="overview" />} />
@@ -55,7 +55,7 @@ export default function App() {
                 <Route path="jobs/:jobId/publish" element={<PublishJob />} />
                 <Route path="candidates" element={<Candidates />} />
                 <Route path="candidates/:candidateId" element={<Candidate />}>
-                  <Route path="" element={<Navigate to="profile" />} />
+                  <Route path="" element={<Navigate to="profile" replace />} />
                   <Route path="profile" element={<CandidateProfile />} />
                   <Route path="feedback" element={<CandidateFeedback />} />
                   <Route path="*" element={<Navigate to="profile" />} />
