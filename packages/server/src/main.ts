@@ -1,4 +1,9 @@
 import { NestFactory } from '@nestjs/core'
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerCustomOptions,
+} from '@nestjs/swagger'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -14,6 +19,29 @@ async function bootstrap() {
           ]
         : '*',
   })
+
+  const config = new DocumentBuilder()
+    .setTitle('API Docs')
+    .setDescription(
+      'This is the complete API documentation for the Daybreak HR',
+    )
+    .setVersion('v1')
+    .addApiKey(
+      {
+        type: 'apiKey', // this should be apiKey
+        name: 'Authorization', // this is the name of the key you expect in header
+        in: 'header',
+      },
+      'access-key', // this is the name to show and used in swagger
+    )
+    .build()
+
+  const customOptions: SwaggerCustomOptions = {
+    customSiteTitle: 'Daybreakhr API Docs',
+  }
+
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api', app, document, customOptions)
 
   await app.listen(process.env.PORT ?? 8000)
 }

@@ -1,12 +1,63 @@
 import { IsNumber, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateFeedbackDto {
+  @ApiProperty({
+    example: 'very good candidate',
+    description: 'title of feedback',
+  })
   @IsString()
   title: string
 
+  @ApiProperty({
+    example:
+      'candidate has very good understanding of aws and cloud technolgies',
+    description: 'feedback notes',
+  })
   @IsString()
   notes: string
 
+  @ApiProperty({
+    example: '7.0',
+    description: 'feedback score',
+  })
   @IsNumber()
   score: number
+}
+
+export class Feedback {
+  @ApiProperty({
+    example: 'very good candidate',
+    description: 'title of feedback',
+  })
+  title: string
+
+  @ApiProperty({
+    example:
+      'candidate has very good understanding of aws and cloud technolgies',
+    description: 'feedback notes',
+  })
+  notes: string
+
+  @ApiProperty({
+    example: '7.0',
+    description: 'feedback score',
+  })
+  score: number
+
+  @ApiProperty({
+    example: '44738-hsdhd-8rudhd-82929',
+    description: 'uid of feedback giver',
+    required: false,
+    readOnly: true,
+  })
+  createdBy: string
+
+  @ApiProperty({
+    example: '83382e7332fac263632',
+    description: 'id of candidate',
+    required: false,
+    readOnly: true,
+  })
+  candidateId: string
 }
