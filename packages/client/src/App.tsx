@@ -61,6 +61,10 @@ export default function App() {
                   <Route path="*" element={<Navigate to="profile" />} />
                 </Route>
                 <Route
+                  path="settings"
+                  element={<Navigate to="members" replace />}
+                />
+                <Route
                   path="settings/organisation"
                   element={<Organisation />}
                 />
