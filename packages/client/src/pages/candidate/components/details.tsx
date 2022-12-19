@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
 import { useClipboard } from 'use-clipboard-copy'
-import { Button, message, Modal, Select, Tooltip } from 'antd'
+import { Button, message, Select, Tooltip } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AiFillLinkedin,
@@ -16,6 +17,7 @@ import { Show } from 'ui-kit'
 import { getJobType } from 'utils/utils'
 import { updateCandidate } from '../queries'
 import { candidateStatusOptions } from '../constants/candidate-status'
+import CandidateRejectForm from './candidate-reject-form'
 
 type DetailsProps = {
   data: Candidate | undefined
@@ -24,6 +26,7 @@ type DetailsProps = {
 export default function Details({ data }: DetailsProps) {
   const queryClient = useQueryClient()
   const { candidateId = '' } = useParams()
+  const [candidateRejectForm, setCandidateRejectForm] = useState(false)
 
   const { mutate } = useMutation(updateCandidate, {
     onSuccess: ({ status }) => {
@@ -44,16 +47,6 @@ export default function Details({ data }: DetailsProps) {
   const { copy: copyPhone, copied: isPhoneCopied } = useClipboard({
     copiedTimeout: 3000,
   })
-
-  function handleReject() {
-    Modal.warning({
-      title: 'Reject Candidate?',
-      content: 'Are you sure reject this candidate for the applied job?',
-      okText: 'Confirm',
-      onOk: () =>
-        mutate({ candidateId, body: { status: CandidateStatus.rejected } }),
-    })
-  }
 
   return (
     <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
@@ -131,9 +124,15 @@ export default function Details({ data }: DetailsProps) {
       <hr className="w-full my-4 border-gray-300" />
 
       <div className="flex items-center space-x-4">
-        <Button danger onClick={handleReject}>
+        <Button danger onClick={() => setCandidateRejectForm(true)}>
           Reject
         </Button>
+        <CandidateRejectForm
+          title="Candidate Rejection"
+          visible={candidateRejectForm}
+          onCancel={() => setCandidateRejectForm(false)}
+        />
+
         <Select
           value={data?.status}
           style={{ width: 120 }}
