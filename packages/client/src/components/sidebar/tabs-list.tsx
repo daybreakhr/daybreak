@@ -4,13 +4,18 @@ import {
   AiOutlineTeam,
   AiOutlineWallet,
 } from 'react-icons/ai'
+import { Link } from 'react-router-dom'
 
 const tabs = [
-  { key: 'home', label: 'Home', icon: <AiOutlineHome /> },
-  { key: 'jobs', label: 'Jobs', icon: <AiOutlineWallet /> },
+  { key: 'home', label: <Link to="/home">Home</Link>, icon: <AiOutlineHome /> },
+  {
+    key: 'jobs',
+    label: <Link to="/jobs">Jobs</Link>,
+    icon: <AiOutlineWallet />,
+  },
   {
     key: 'candidates',
-    label: 'Candidates',
+    label: <Link to="/candidates">Candidates</Link>,
     icon: <AiOutlineTeam />,
   },
   {
@@ -18,8 +23,14 @@ const tabs = [
     label: 'Settings',
     icon: <AiOutlineSetting />,
     children: [
-      { key: 'settings/organisation', label: 'Organisation' },
-      { key: 'settings/members', label: 'Members' },
+      {
+        key: 'settings/organisation',
+        label: <Link to="/settings/organisation">Organisation</Link>,
+      },
+      {
+        key: 'settings/members',
+        label: <Link to="/settings/members">Members</Link>,
+      },
     ],
   },
 ]
