@@ -11,6 +11,7 @@ export default function Login() {
   if (user && !member && inviteId) {
     return <Navigate to={`/invite/${inviteId}`} state={{ inviteId }} />
   }
+
   if (user && !member && !inviteId) {
     return <Navigate to="/onboarding" />
   }

@@ -23,7 +23,7 @@ import CandidateProfile from 'pages/candidate-profile'
 import CandidateFeedback from 'pages/candidate-feedback'
 import JobOverview from 'pages/job-overview'
 import JobPipeline from 'pages/job-pipeline'
-import ValidateInvite from 'pages/validate-invite/validate-invite'
+import ValidateInvite from 'pages/validate-invite'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },

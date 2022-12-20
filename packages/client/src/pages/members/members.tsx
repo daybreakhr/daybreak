@@ -62,7 +62,7 @@ export default function Members() {
 
           <Select
             value={filter}
-            className="w-28"
+            className="w-32"
             defaultValue="all"
             suffixIcon={<AiOutlineFilter />}
             onChange={(e) => setFilter(e)}

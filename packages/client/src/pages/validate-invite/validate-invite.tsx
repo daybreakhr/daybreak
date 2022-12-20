@@ -1,25 +1,39 @@
-import { useMutation } from '@tanstack/react-query'
+import { useEffect, useRef } from 'react'
 import { Spin } from 'antd'
-import useAuth from 'hooks/use-auth'
-
-import { useEffect } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { verifyMember } from './queries'
+import { storage } from 'ui-kit'
+import useAuth from 'hooks/use-auth'
+import { fetchMe } from 'components/auth/queries'
+import { WORKSPACE_ID } from 'utils/constants'
+import { verifyInvitee } from './queries'
 
 export default function Invite() {
-  const { inviteId = '' } = useParams()
-  const { user, member } = useAuth()
   const navigate = useNavigate()
+  const dataFetchedRef = useRef(false)
+  const { inviteId = '' } = useParams()
+  const { user, member, setMember } = useAuth()
 
-  const { mutate: validateMember } = useMutation(verifyMember, {
+  const { mutate: validateInvitee } = useMutation(verifyInvitee, {
+    onSuccess: async () => {
+      const me = await fetchMe()
+      if (me) {
+        setMember(me)
+        storage.set(WORKSPACE_ID, me.workspaceId)
+      }
+    },
     onError: () => {
       navigate('/onboarding')
     },
   })
 
   useEffect(() => {
-    !member && user && validateMember({ inviteId })
-  }, [inviteId, user, member, validateMember])
+    if (!member && user && !dataFetchedRef.current) {
+      dataFetchedRef.current = true
+      validateInvitee({ inviteId })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (!user) {
     return <Navigate to="/" state={{ inviteId }} />

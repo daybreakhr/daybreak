@@ -3,10 +3,12 @@ import { EditOutlined } from '@ant-design/icons'
 import { Button, Form, message, Skeleton } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Switch } from 'ui-kit'
+import useAuth from 'hooks/use-auth'
 import { fetchOrganisation, updateOrganisation } from '../queries'
 import EditOrganisation from './edit-organisation'
 
 export default function OrgDetails() {
+  const { member } = useAuth()
   const [form] = Form.useForm()
   const [showEditForm, setShowEditForm] = useState(false)
 
@@ -46,7 +48,7 @@ export default function OrgDetails() {
         <div className="flex-1" />
 
         <Switch>
-          <Switch.Match when={!showEditForm}>
+          <Switch.Match when={!showEditForm && member?.role === 'admin'}>
             <Button
               type="primary"
               disabled={!data}
