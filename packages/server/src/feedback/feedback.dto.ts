@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateFeedbackDto {
   @ApiProperty({
-    example: 'very good candidate',
+    example: 'Phone Screen',
     description: 'title of feedback',
   })
   @IsString()
@@ -11,14 +11,14 @@ export class CreateFeedbackDto {
 
   @ApiProperty({
     example:
-      'candidate has very good understanding of aws and cloud technolgies',
+      'candidate has very good understanding of aws and cloud technologies',
     description: 'feedback notes',
   })
   @IsString()
   notes: string
 
   @ApiProperty({
-    example: '7.0',
+    example: '4.5',
     description: 'feedback score',
   })
   @IsNumber()
@@ -27,7 +27,7 @@ export class CreateFeedbackDto {
 
 export class Feedback {
   @ApiProperty({
-    example: 'very good candidate',
+    example: 'Phone Screen',
     description: 'title of feedback',
   })
   title: string
@@ -40,7 +40,7 @@ export class Feedback {
   notes: string
 
   @ApiProperty({
-    example: '7.0',
+    example: '4.5',
     description: 'feedback score',
   })
   score: number

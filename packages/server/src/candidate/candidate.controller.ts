@@ -10,19 +10,38 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { Express } from 'express'
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Candidate } from '@prisma/client'
 import { Roles } from 'src/auth/roles.decorator'
-import { CreateCandidateDto } from './candidate.dto'
+import { CandidateDto, CreateCandidateDto } from './candidate.dto'
 import { CandidateService } from './candidate.service'
 
+@ApiSecurity('access-key')
+@ApiTags('Candidate')
 @Controller(':workspaceId/candidates')
 export class CandidateController {
   constructor(private readonly candidateService: CandidateService) {}
 
   @Get('')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get all Candidates' })
+  @ApiOkResponse({
+    description: 'Candidates were returned successfully',
+    type: [CandidateDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getAll(@Param('workspaceId') workspaceId: string) {
     const data = await this.candidateService.getAll(workspaceId)
     return data
@@ -30,18 +49,31 @@ export class CandidateController {
 
   @Get(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get Candidate' })
+  @ApiOkResponse({
+    description: 'Candidates were returned successfully',
+    type: CandidateDto,
+  })
+  @ApiNotFoundResponse({ description: 'Candidate not found' })
   async getById(@Param('id') id: string) {
     const data = await this.candidateService.getById(id)
     return data
   }
 
   @Post('')
+  @ApiOperation({ summary: 'Create a Candidate' })
+  @ApiCreatedResponse({
+    description: 'Created Succesfully',
+    type: CandidateDto,
+  })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @Param('workspaceId') workspaceId: string,
     @UploadedFile() file: Express.Multer.File,
     @Body() createCandidateDto: CreateCandidateDto,
-  ) {
+  ): Promise<CandidateDto> {
     const data = await this.candidateService.create(
       workspaceId,
       file,
@@ -51,6 +83,14 @@ export class CandidateController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update Candidate' })
+  @ApiOkResponse({
+    description: 'candidate updated successfully',
+    type: CandidateDto,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Feedback not found' })
+  @ApiBody({ type: CreateCandidateDto })
   @UseGuards(AuthGuard)
   @Roles('admin')
   async update(
