@@ -23,6 +23,7 @@ import CandidateProfile from 'pages/candidate-profile'
 import CandidateFeedback from 'pages/candidate-feedback'
 import JobOverview from 'pages/job-overview'
 import JobPipeline from 'pages/job-pipeline'
+import ValidateInvite from 'pages/validate-invite/validate-invite'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -41,6 +42,7 @@ export default function App() {
                 <Route path="create" element={<CreateWorkspace />} />
                 <Route path="setup" element={<SetupWorkspace />} />
               </Route>
+              <Route path="/invite/:inviteId" element={<ValidateInvite />} />
               <Route path="/" element={<AuthLayout component={AppShell} />}>
                 <Route path="home" element={<Home />} />
                 <Route path="jobs" element={<Jobs />} />
