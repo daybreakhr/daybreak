@@ -4,7 +4,6 @@ import { useMutation } from '@tanstack/react-query'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { storage } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
-import { fetchMe } from 'components/auth/queries'
 import { WORKSPACE_ID } from 'utils/constants'
 import { verifyInvitee } from './queries'
 
@@ -15,12 +14,9 @@ export default function Invite() {
   const { user, member, setMember } = useAuth()
 
   const { mutate: validateInvitee } = useMutation(verifyInvitee, {
-    onSuccess: async () => {
-      const me = await fetchMe()
-      if (me) {
-        setMember(me)
-        storage.set(WORKSPACE_ID, me.workspaceId)
-      }
+    onSuccess: (data) => {
+      setMember(data)
+      storage.set(WORKSPACE_ID, data.workspaceId)
     },
     onError: () => {
       navigate('/onboarding')
