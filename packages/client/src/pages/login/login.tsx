@@ -6,8 +6,13 @@ export default function Login() {
   const { signInWithGoogle, user, member } = useAuth()
   const { state }: any = useLocation()
   const from = state?.from?.pathname ?? '/home'
+  const inviteId = state?.inviteId
 
-  if (user && !member) {
+  if (user && !member && inviteId) {
+    return <Navigate to={`/invite/${inviteId}`} state={{ inviteId }} />
+  }
+
+  if (user && !member && !inviteId) {
     return <Navigate to="/onboarding" />
   }
 

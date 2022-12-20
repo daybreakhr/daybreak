@@ -1,5 +1,5 @@
 import { AiOutlineUser } from 'react-icons/ai'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Form, Input, message, Modal, Select } from 'antd'
 import { inviteUser } from '../queries'
 
@@ -16,8 +16,10 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
     form.resetFields()
   }
 
+  const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(inviteUser, {
     onSuccess: ({ email }) => {
+      queryClient.invalidateQueries(['invite'])
       message.success(`Sent email invite to ${email}`)
       handleCancel()
     },
@@ -32,7 +34,7 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
   return (
     <Modal
       width={640}
-      visible={isVisible}
+      open={isVisible}
       title="Invite new user"
       onCancel={handleCancel}
       onOk={() => form.submit()}

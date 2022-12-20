@@ -34,13 +34,23 @@ export class InvitesService {
   }
 
   async getInviteById(inviteId: string) {
-    const invitee = await this.prismaService.invitees.findUnique({
-      where: {
-        id: inviteId,
-      },
-    })
+    try {
+      const invitee = await this.prismaService.invitees.findUnique({
+        where: {
+          id: inviteId,
+        },
+      })
 
-    return invitee
+      return invitee
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Invitee not found. Invalid invite id.',
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 
   async createInvite(
@@ -106,7 +116,7 @@ export class InvitesService {
       )
     }
 
-    await this.prismaService.member.create({
+    const member = await this.prismaService.member.create({
       data: {
         uid,
         role: invitee.role,
@@ -114,10 +124,18 @@ export class InvitesService {
       },
     })
 
-    await this.prismaService.invitees.delete({
+    await this.deleteInvitee(invitee.id)
+
+    return member
+  }
+
+  async deleteInvitee(inviteId: string) {
+    const invitee = await this.prismaService.invitees.delete({
       where: {
-        id: invitee.id,
+        id: inviteId,
       },
     })
+
+    return invitee
   }
 }
