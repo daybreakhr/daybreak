@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Button } from 'antd'
+import { Button, Result } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
@@ -49,6 +49,18 @@ export default function CandidateProfile() {
   return (
     <>
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
+        <Switch>
+          <Switch.Match when={data?.status === 'rejected'}>
+            {
+              <Result
+                status="error"
+                title="This applicant has been rejected"
+                subTitle="Reason: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at nibh id mauris cursus lobortis vitae non ligula. Praesent ipsum arcu, vestibulum ut auctor consequat, sodales ut arcu. Pell"
+              />
+            }
+          </Switch.Match>
+        </Switch>
+
         <p className="mb-4 text-lg font-semibold">Personal Details</p>
         <div className="grid grid-cols-3 gap-5 mb-6">
           <div className="col-span-2">
