@@ -128,7 +128,6 @@ export default function Details({ data }: DetailsProps) {
           Reject
         </Button>
         <CandidateRejectForm
-          title="Candidate Rejection"
           visible={candidateRejectForm}
           onCancel={() => setCandidateRejectForm(false)}
         />
