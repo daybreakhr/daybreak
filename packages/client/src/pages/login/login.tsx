@@ -39,6 +39,12 @@ export default function Login() {
             <span className="font-semibold">Continue with Google</span>
           </button>
         </div>
+        <div className="flex flex-col items-center justify-center w-full h-16 space-y-4 text-sm text-gray-500">
+          <p className="text-center">
+            © Copyright {new Date().getFullYear()} Daybreak Technologies Private
+            Limited. All rights reserved.
+          </p>
+        </div>
       </div>
       <div className="w-3/4 h-screen bg-cover bg-cover-image" />
     </div>
