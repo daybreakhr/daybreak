@@ -51,13 +51,11 @@ export default function CandidateProfile() {
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
         <Switch>
           <Switch.Match when={data?.status === 'rejected'}>
-            {
-              <Result
-                status="error"
-                title="This applicant has been rejected"
-                subTitle="Reason: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at nibh id mauris cursus lobortis vitae non ligula. Praesent ipsum arcu, vestibulum ut auctor consequat, sodales ut arcu. Pell"
-              />
-            }
+            <Result
+              status="error"
+              title="This applicant has been rejected"
+              subTitle="Reason: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at nibh id mauris cursus lobortis vitae non ligula. Praesent ipsum arcu, vestibulum ut auctor consequat, sodales ut arcu. Pell"
+            />
           </Switch.Match>
         </Switch>
 
