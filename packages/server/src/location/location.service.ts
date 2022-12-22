@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import type { Location } from '@prisma/client'
+import { CreateLocation, Location, UpdateLocation } from './location.dto'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class LocationService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAll(workspaceId: string) {
+  async getAll(workspaceId: string): Promise<Location[]> {
     const locations = await this.prismaService.location.findMany({
       where: { workspaceId },
     })
@@ -15,9 +15,9 @@ export class LocationService {
 
   async create(
     workspaceId: string,
-    createLocationDto: { name: string },
+    createLocationDto: CreateLocation,
     uid: string,
-  ) {
+  ): Promise<Location> {
     const location = await this.prismaService.location.create({
       data: {
         name: createLocationDto.name,
@@ -28,7 +28,7 @@ export class LocationService {
     return location
   }
 
-  async update(locationId: string, updateLocationDto: Partial<Location>) {
+  async update(locationId: string, updateLocationDto: UpdateLocation): Promise<Location> {
     if (updateLocationDto) {
       const location = await this.prismaService.location.update({
         where: { id: locationId },
@@ -46,7 +46,7 @@ export class LocationService {
     }
   }
 
-  async delete(locationId: string) {
+  async delete(locationId: string): Promise<Location> {
     const jobs = await this.prismaService.job.findMany({
       where: { locationId },
     })
