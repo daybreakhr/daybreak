@@ -1,9 +1,11 @@
-// In this file you can configure migrate-mongo
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
+// In this file you can configure migrate-mongo
 module.exports = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: 'mongodb+srv://hnagrath09:Test12345@cluster0.wjc0gun.mongodb.net/daybreak?retryWrites=true&w=majority',
+    url: process.env.DATABASE_URL,
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting
