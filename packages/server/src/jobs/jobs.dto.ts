@@ -12,7 +12,8 @@ export class Job {
   @ApiProperty({
     example: 'Software Engineer',
     description: 'title of Job',
-    required: true
+    required: true,
+    enum: Priority
   })
   priority: Priority
 
@@ -26,7 +27,8 @@ export class Job {
   @ApiProperty({
     example: 'fullTime',
     description: 'type of Job',
-    required: false
+    required: false,
+    enum: JobType
   })
   jobType: JobType
 
@@ -68,7 +70,8 @@ export class Job {
   @ApiProperty({
     example: 'usd',
     description: 'currency of job paycheck',
-    required: false
+    required: false,
+    enum: Currency
   })
   currency: Currency
 
