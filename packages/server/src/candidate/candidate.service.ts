@@ -74,31 +74,26 @@ export class CandidateService {
 
     const job = await this.prismaService.job.findUnique({
       where: { id: jobId },
-      include: { Location: true, Workspace: true },
     })
 
     const createdByUserData = await this.firebaseService.auth.getUser(job.createdBy)
 
-    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
 
-    const credential = new AffindaCredential(AFFINDA_TOKEN)
-    const client = new AffindaAPI(credential)
-
-    const { data } = await client.getResume(candidate.affindaId)
+    const data  = await this.getParsedResume(candidate.affindaId)
 
     const currentOrg = this.getLatestOrg(data.workExperience) || "None";
 
     const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
 
     const CANDIDATE_PROFILE_URL = `${FRONTEND_URL}/candidates/${id}`;
-    const APPLICATION_SOURCE = `${FRONTEND_URL}/jobs`;
+    const APPLICATION_SOURCE = this.configService.get<string>('BOARDS_URL')
 
     const candidateName = `${candidate.firstName} ${candidate.lastName}`
 
     await this.sesService.sendMail({
       to: createdByUserData.email,
       subject: `${candidateName} applied to your ${job.title} job on Daybreak HR`,
-      body: `<p>Dear ${job.createdBy}</p>
+      body: `<p>Dear ${createdByUserData.displayName}</p>
 
       <p>You have received a new application for Job Requisition ${job.title} through ${APPLICATION_SOURCE}.</p>
       
@@ -130,6 +125,17 @@ export class CandidateService {
     if(currentOrgObj){
       return currentOrgObj.organization
     }
+  }
+
+  async getParsedResume(affindaId) {
+    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
+
+    const credential = new AffindaCredential(AFFINDA_TOKEN)
+    const client = new AffindaAPI(credential)
+
+    const { data } = await client.getResume(affindaId)
+
+    return data;
   }
 
   async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
