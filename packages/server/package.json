@@ -33,6 +33,7 @@
     "aws-sdk": "^2.1236.0",
     "class-validator": "^0.13.2",
     "firebase-admin": "^11.0.1",
+    "@affinda/affinda": "^2.5.2",
     "joi": "^17.6.0",
     "lodash": "^4.17.21",
     "nodemailer": "^6.8.0",

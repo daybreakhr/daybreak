@@ -1,9 +1,11 @@
 import { Express } from 'express'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { AffindaCredential, AffindaAPI } from "@affinda/affinda";
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { Candidate } from '@prisma/client'
 import { CreateCandidateDto } from './candidate.dto'
+import { find } from 'lodash';
 
 @Injectable()
 export class CandidateService {
@@ -70,7 +72,64 @@ export class CandidateService {
       data: { resume: uploadResult.Location },
     })
 
+    const job = await this.prismaService.job.findUnique({
+      where: { id: jobId },
+      include: { Location: true, Workspace: true },
+    })
+
+    const createdByUserData = await this.firebaseService.auth.getUser(job.createdBy)
+
+    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
+
+    const credential = new AffindaCredential(AFFINDA_TOKEN)
+    const client = new AffindaAPI(credential)
+
+    const { data } = await client.getResume(candidate.affindaId)
+
+    const currentOrg = this.getLatestOrg(data.workExperience) || "None";
+
+    const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
+
+    const CANDIDATE_PROFILE_URL = `${FRONTEND_URL}/candidates/${id}`;
+    const APPLICATION_SOURCE = `${FRONTEND_URL}/jobs`;
+
+    const candidateName = `${candidate.firstName} ${candidate.lastName}`
+
+    await this.sesService.sendMail({
+      to: createdByUserData.email,
+      subject: `${candidateName} applied to your ${job.title} job on Daybreak HR`,
+      body: `<p>Dear ${job.createdBy}</p>
+
+      <p>You have received a new application for Job Requisition ${job.title} through ${APPLICATION_SOURCE}.</p>
+      
+      <p>The candidate snapshot is as below -</p>
+      
+      <p>Name - ${candidateName}</p>
+      
+      <p>Current Company - ${currentOrg}</p>
+      
+      <p>Email - ${candidate.email}</p>
+      
+      <p>Phone - ${candidate.phone}</p>
+      
+      <p>
+      For more information, please access the candidate profile at ${CANDIDATE_PROFILE_URL} and proceed with the next steps.</p>
+      
+      <p>Regards<br />
+      Daybreak admin</p>`,
+    })
+
     return candidate
+  }
+
+  const getLatestOrg(workExp): string | undefined {
+    const currentOrgObj = find(workExp, (obj) => {
+      return obj.dates.isCurrent
+    })
+
+    if(currentOrgObj){
+      return currentOrgObj.organization
+    }
   }
 
   async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
