@@ -32,7 +32,7 @@ export default function AddUser({ isVisible, onClose }: AddUserProps) {
   return (
     <Modal
       width={640}
-      visible={isVisible}
+      open={isVisible}
       title="Invite new user"
       onCancel={handleCancel}
       onOk={() => form.submit()}

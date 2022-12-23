@@ -20,11 +20,11 @@ import {
   ApiSecurity,
 } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
-import { CreateLocation, Location, UpdateLocation } from './location.dto'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
+import { CreateLocation, Location, UpdateLocation } from './location.dto'
 import { LocationService } from './location.service'
 
 @ApiSecurity('access-key')

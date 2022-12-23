@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common'
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger'
 import { Department, Role } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
@@ -47,11 +49,12 @@ export class DepartmentController {
   @Post('')
   @Roles(Role.admin)
   @ApiOperation({ summary: 'Create Department' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'department created successfully',
     type: DepartmentDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   async create(
     @Param('workspaceId') workspaceId: string,
     @Body() createDepartmentDto: { name: string },
