@@ -6,12 +6,12 @@ import {
   ApiTags,
   ApiNotFoundResponse,
   ApiSecurity,
-  ApiBody
+  ApiBody,
 } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
-import { Member } from './members.dto'
+import { MemberDto } from './members.dto'
 import { MembersService } from './members.service'
 
 @ApiSecurity('access-key')
@@ -25,7 +25,7 @@ export class MembersController {
   @ApiOperation({ summary: 'Get all Members By Workspace' })
   @ApiOkResponse({
     description: 'Members were returned successfully',
-    type: [Member],
+    type: [MemberDto],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getAllMembers(@Param('workspaceId') workspaceId: string) {
@@ -38,14 +38,14 @@ export class MembersController {
   @ApiOperation({ summary: 'Update Member' })
   @ApiOkResponse({
     description: 'member updated successfully',
-    type: Member,
+    type: MemberDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Member not found' })
-  @ApiBody({ type: Member })
+  @ApiBody({ type: MemberDto })
   async updateMember(
     @Param('memberId') memberId: string,
-    @Body() updateMemberDto: Member,
+    @Body() updateMemberDto: { role: Role },
   ) {
     const data = await this.membersService.updateMember(
       memberId,
