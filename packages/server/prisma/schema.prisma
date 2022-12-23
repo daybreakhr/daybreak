@@ -28,7 +28,7 @@ model Workspace {
 
 model Member {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  uid         String       @unique
+  uid         String       @unique // unique id provided firebase authentication
   role        Role
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
@@ -57,29 +57,31 @@ enum Role {
 }
 
 model Job {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  title        String?
-  priority     Priority    @default(medium)
-  Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  departmentId String?     @db.ObjectId
-  jobType      JobType?
-  Location     Location?   @relation(fields: [locationId], references: [id])
-  locationId   String?     @db.ObjectId
-  isRemote     Boolean     @default(false)
-  description  Json?
-  skills       String[]
-  experience   String?
-  currency     Currency?
-  minSalary    Int?
-  maxSalary    Int?
-  isPublished  Boolean     @default(false)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  Workspace    Workspace   @relation(fields: [workspaceId], references: [id])
-  workspaceId  String      @db.ObjectId
-  Member       Member      @relation(fields: [createdBy], references: [uid])
-  createdBy    String
-  Candidate    Candidate[]
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  title         String?
+  priority      Priority    @default(medium)
+  Department    Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  departmentId  String?     @db.ObjectId
+  jobType       JobType?
+  Location      Location?   @relation(fields: [locationId], references: [id])
+  locationId    String?     @db.ObjectId
+  isRemote      Boolean     @default(false)
+  hiringManager String? // uid of user
+  hireBy        DateTime?
+  description   Json?
+  skills        String[]
+  experience    String?
+  currency      Currency?
+  minSalary     Int?
+  maxSalary     Int?
+  isPublished   Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
+  workspaceId   String      @db.ObjectId
+  Member        Member      @relation(fields: [createdBy], references: [uid])
+  createdBy     String
+  Candidate     Candidate[]
 }
 
 enum Priority {
