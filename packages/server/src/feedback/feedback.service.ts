@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CandidateStatus, Feedback } from '@prisma/client'
+import { CandidateStatus } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
 import { AuthService } from 'src/auth/auth.service'
 import { UserRecord } from 'firebase-admin/auth'
-import { CreateFeedbackDto } from './feedback.dto'
+import { CreateFeedbackDto, Feedback } from './feedback.dto'
 
 @Injectable()
 export class FeedbackService {
@@ -13,7 +13,7 @@ export class FeedbackService {
     private authService: AuthService,
   ) {}
 
-  async getAll(candidateId: string) {
+  async getAll(candidateId: string): Promise<Feedback[]> {
     const feedbacks = await this.prismaService.feedback.findMany({
       where: { candidateId },
     })
@@ -32,7 +32,7 @@ export class FeedbackService {
     }))
   }
 
-  async getFeedback(feedbackId: string) {
+  async getFeedback(feedbackId: string): Promise<Feedback> {
     const feedback = await this.prismaService.feedback.findUnique({
       where: { id: feedbackId },
       include: { Member: true },
@@ -44,7 +44,7 @@ export class FeedbackService {
     candidateId: string,
     createdBy: string,
     feedbackBody: CreateFeedbackDto,
-  ) {
+  ): Promise<Feedback> {
     const feedback = await this.prismaService.feedback.create({
       data: {
         ...feedbackBody,
@@ -64,7 +64,10 @@ export class FeedbackService {
     return feedback
   }
 
-  async update(feedbackId: string, feedbackBody: Partial<Feedback>) {
+  async update(
+    feedbackId: string,
+    feedbackBody: Partial<Feedback>,
+  ): Promise<Feedback> {
     if (!isEmpty(feedbackBody)) {
       const feedback = await this.prismaService.feedback.update({
         where: { id: feedbackId },
@@ -82,7 +85,7 @@ export class FeedbackService {
     }
   }
 
-  async delete(feedbackId: string) {
+  async delete(feedbackId: string): Promise<Feedback> {
     const feedback = await this.prismaService.feedback.delete({
       where: { id: feedbackId },
     })

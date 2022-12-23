@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import type { Job } from '@prisma/client'
+import { Job } from './jobs.dto'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()

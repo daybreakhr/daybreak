@@ -21,22 +21,23 @@ export class WorkspaceService {
     return workspaces
   }
 
-  async getBySlugOrId(slug: string, id: string) {
+  async getBySlugOrId(slug?: string, id?: string) {
     const query = {
       ...(slug ? { slug } : {}),
       ...(id ? { id } : {}),
     }
 
     if (isEmpty(query)) {
-      return await this.getAllWorkspaces()
+      const workspaces = await this.getAllWorkspaces()
+      return workspaces
     }
 
-    const workspaces = await this.prismaService.workspace.findUnique({
+    const workspace = await this.prismaService.workspace.findUnique({
       where: query,
       include: { Job: true },
     })
 
-    return workspaces
+    return workspace
   }
 
   async verifySlug(slug: string) {
