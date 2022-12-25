@@ -18,17 +18,15 @@ import {
   ApiBody,
   ApiSecurity,
 } from '@nestjs/swagger'
-import { Job, UpdateJob } from './jobs.dto'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
+import { Job, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
 
-@ApiSecurity('access-key')
 @ApiTags('Job')
 @Controller('')
-@UseGuards(AuthGuard)
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
@@ -38,20 +36,23 @@ export class JobsController {
     description: 'Jobs were returned successfully',
     type: [Job],
   })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getAllJobs(): Promise<Job[]> {
     const data = await this.jobsService.getAllJobs()
     return data
   }
 
   @Get(':workspaceId/jobs')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
   @ApiOperation({ summary: 'Get all Jobs By Workspace' })
   @ApiOkResponse({
     description: 'Jobs were returned successfully',
     type: [Job],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAllByWorkspaceId(@Param('workspaceId') workspaceId: string): Promise<Job[]> {
+  async getAllByWorkspaceId(
+    @Param('workspaceId') workspaceId: string,
+  ): Promise<Job[]> {
     const data = await this.jobsService.getAllByWorkspaceId(workspaceId)
     return data
   }
@@ -62,7 +63,6 @@ export class JobsController {
     description: 'job returned successfully',
     type: Job,
   })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Job not found' })
   async getById(@Param('id') id: string): Promise<Job> {
     const data = await this.jobsService.getById(id)
@@ -70,7 +70,9 @@ export class JobsController {
   }
 
   @Post(':workspaceId/jobs')
+  @UseGuards(AuthGuard)
   @Roles('admin')
+  @ApiSecurity('access-key')
   @ApiOperation({ summary: 'Create a job' })
   @ApiCreatedResponse({ description: 'Created Succesfully', type: Job })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
@@ -84,7 +86,9 @@ export class JobsController {
   }
 
   @Patch(':workspaceId/jobs/:id')
+  @UseGuards(AuthGuard)
   @Roles('admin')
+  @ApiSecurity('access-key')
   @ApiOperation({ summary: 'Update job' })
   @ApiOkResponse({
     description: 'job updated successfully',
@@ -93,7 +97,10 @@ export class JobsController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Job not found' })
   @ApiBody({ type: UpdateJob })
-  async update(@Param('id') id: string, @Body() updateJobDto: UpdateJob): Promise<Job> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateJobDto: UpdateJob,
+  ): Promise<Job> {
     const data = await this.jobsService.update(id, updateJobDto)
     return data
   }
