@@ -62,7 +62,9 @@ export default function JobForm() {
         onSuccess(data: Job) {
           const { hireBy, ...restData } = data
           form.setFieldsValue(restData)
-          form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
+          if (hireBy) {
+            form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
+          }
         },
       },
       { queryKey: ['members'], queryFn: fetchMembers },
