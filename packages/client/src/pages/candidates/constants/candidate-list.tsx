@@ -54,5 +54,6 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
       { text: 'Rejected', value: 'rejected' },
     ],
     onFilter: (value, record) => record.status === value,
+    defaultFilteredValue: ['applied', 'interview', 'offered', 'accepted'],
   },
 ]
