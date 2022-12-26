@@ -45,7 +45,7 @@ export default function CreateWorkspace() {
           <div className="flex items-center w-full space-x-4">
             <Form.Item
               name="name"
-              label="Name"
+              label="Company Name"
               className="flex-1"
               rules={[
                 { required: true, message: 'Enter Name of your workspace' },

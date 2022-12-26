@@ -1,9 +1,15 @@
+import { useMemo } from 'react'
+import dayjs from 'dayjs'
 import { debounce } from 'lodash'
 import type { Descendant } from 'slate'
+import weekday from 'dayjs/plugin/weekday'
+import localeData from 'dayjs/plugin/localeData'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
+  Avatar,
   Button,
   Checkbox,
+  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -15,6 +21,7 @@ import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
 import { Editor } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
+import { fetchMembers } from 'pages/members/queries'
 import {
   fetchDepartments,
   fetchJobTemplates,
@@ -29,6 +36,9 @@ import {
   jobPriority,
 } from '../constants/create-job-values'
 
+dayjs.extend(weekday)
+dayjs.extend(localeData)
+
 export default function JobForm() {
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -40,6 +50,7 @@ export default function JobForm() {
     { data: locations, isLoading: isLocationsLoading },
     { data: departments, isLoading: isDepartmentsLoading },
     { data: job, isLoading: isJobLoading },
+    { data: members, isLoading: isMembersLoading },
   ] = useQueries({
     queries: [
       { queryKey: ['templates'], queryFn: fetchJobTemplates },
@@ -49,13 +60,34 @@ export default function JobForm() {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
         onSuccess(data: Job) {
-          form.setFieldsValue(data)
+          const { hireBy, ...restData } = data
+          form.setFieldsValue(restData)
+          form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
         },
       },
+      { queryKey: ['members'], queryFn: fetchMembers },
     ],
   })
 
   const { mutate: updateJob } = useMutation(updateJobById)
+
+  const membersList = useMemo(
+    () =>
+      members?.map(({ uid, photoURL, displayName }) => ({
+        value: uid,
+        label: (
+          <div className="flex items-center space-x-2">
+            <Avatar src={photoURL} size="small" className="flex-none">
+              {displayName?.charAt(0)}
+            </Avatar>
+            <p className="truncate" title={displayName ?? ''}>
+              {displayName}
+            </p>
+          </div>
+        ),
+      })) ?? [],
+    [members],
+  )
 
   const handleSubmit = (values: any) => {
     updateJob(
@@ -73,7 +105,8 @@ export default function JobForm() {
     isDepartmentsLoading ||
     isJobLoading ||
     isLocationsLoading ||
-    isTemplatesLoading
+    isTemplatesLoading ||
+    isMembersLoading
   ) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -92,6 +125,34 @@ export default function JobForm() {
           rules={[{ required: true, message: 'Job-Title is required!' }]}
         >
           <Input placeholder="Job Title..." />
+        </Form.Item>
+
+        <Form.Item
+          name="hiringManager"
+          className="w-64"
+          label="Hiring Manager"
+          rules={[
+            {
+              required: true,
+              message: 'Please select a hiring manager for this job',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            options={membersList}
+            filterOption={(input, option) => {
+              const member = members?.find(({ uid }) => uid === option?.value)
+              if (member) {
+                return !!member.displayName
+                  ?.toLowerCase()
+                  .includes(input.toLowerCase())
+              } else {
+                return false
+              }
+            }}
+            placeholder="Select Hiring Manager"
+          />
         </Form.Item>
 
         <Form.Item name="priority" label="Priority" className="w-48">
@@ -186,6 +247,17 @@ export default function JobForm() {
           <Select
             placeholder="Select Experience Required..."
             options={experienceOptions}
+          />
+        </Form.Item>
+
+        <Form.Item name="hireBy" label="Hire By" className="w-64">
+          <DatePicker
+            className="w-full"
+            format="DD-MM-YYYY"
+            placeholder="Select Target Date..."
+            disabledDate={(current) =>
+              current && current < dayjs().endOf('day')
+            }
           />
         </Form.Item>
       </div>

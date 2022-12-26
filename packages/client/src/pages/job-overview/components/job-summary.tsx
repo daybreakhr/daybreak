@@ -1,14 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 import { Button, Modal, Switch as Toggle } from 'antd'
 import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Show } from 'ui-kit'
 
 import { Job } from 'types/job'
 import useAuth from 'hooks/use-auth'
 import Switch from 'components/switch-match'
 import { updateJobById } from 'pages/create-job/queries'
-import { fields } from '../../job/constants/summary-fields'
+import { fetchMembers } from 'pages/members/queries'
+import { fields } from '../constants/summary-fields'
 
 type JobSummaryProps = {
   data: Job | undefined
@@ -18,6 +19,9 @@ type JobSummaryProps = {
 export default function JobSummary({ data, isLoading }: JobSummaryProps) {
   const { member } = useAuth()
   const { jobId = '' } = useParams()
+
+  const { data: members } = useQuery(['members'], fetchMembers)
+
   const queryClient = useQueryClient()
   const { mutate, isLoading: isUpdatingJob } = useMutation(updateJobById, {
     onSuccess: () => queryClient.invalidateQueries(['job', data?.id]),
@@ -54,7 +58,7 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
         </Show>
       </div>
 
-      {fields(data).map(({ id, title, value }) => (
+      {fields(data, members).map(({ id, title, value }) => (
         <div key={id} className="mb-4">
           <p className="mb-0.5 text-gray-500">{title}</p>
 
