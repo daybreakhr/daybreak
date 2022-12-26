@@ -1,11 +1,15 @@
 import { useMemo } from 'react'
+import dayjs from 'dayjs'
 import { debounce } from 'lodash'
 import type { Descendant } from 'slate'
+import weekday from 'dayjs/plugin/weekday'
+import localeData from 'dayjs/plugin/localeData'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   Avatar,
   Button,
   Checkbox,
+  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -32,6 +36,9 @@ import {
   jobPriority,
 } from '../constants/create-job-values'
 
+dayjs.extend(weekday)
+dayjs.extend(localeData)
+
 export default function JobForm() {
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -53,7 +60,9 @@ export default function JobForm() {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
         onSuccess(data: Job) {
-          form.setFieldsValue(data)
+          const { hireBy, ...restData } = data
+          form.setFieldsValue(restData)
+          form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
         },
       },
       { queryKey: ['members'], queryFn: fetchMembers },
@@ -238,6 +247,17 @@ export default function JobForm() {
           <Select
             placeholder="Select Experience Required..."
             options={experienceOptions}
+          />
+        </Form.Item>
+
+        <Form.Item name="hireBy" label="Hire By" className="w-64">
+          <DatePicker
+            className="w-full"
+            format="DD-MM-YYYY"
+            placeholder="Select Target Date..."
+            disabledDate={(current) =>
+              current && current < dayjs().endOf('day')
+            }
           />
         </Form.Item>
       </div>
