@@ -18,26 +18,31 @@ export default function JobPipeline() {
       <StatusList
         title="Applied"
         isLoading={isLoading}
+        className="border-t-amber-500"
         candidates={groupByStatus[CandidateStatus.applied]}
       />
       <StatusList
         title="Interviewing"
         isLoading={isLoading}
+        className="border-t-lime-500"
         candidates={groupByStatus[CandidateStatus.interview]}
       />
       <StatusList
         title="Offer Extended"
         isLoading={isLoading}
+        className="border-t-indigo-500"
         candidates={groupByStatus[CandidateStatus.offered]}
       />
       <StatusList
         title="Accepted"
         isLoading={isLoading}
+        className="border-t-green-500"
         candidates={groupByStatus[CandidateStatus.accepted]}
       />
       <StatusList
         title="Rejected"
         isLoading={isLoading}
+        className="border-t-red-500"
         candidates={groupByStatus[CandidateStatus.rejected]}
       />
     </div>

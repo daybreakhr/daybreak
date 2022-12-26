@@ -88,7 +88,16 @@ export default function Editor({
         }
       }}
     >
-      <div className="flex items-center p-4 space-x-4 border-t border-b rounded-t border-x bg-gray-50">
+      <div
+        className="flex items-center p-4 space-x-4 border-b bg-gray-50"
+        style={{
+          borderTopWidth: '1px',
+          borderRightWidth: '1px',
+          borderLeftWidth: '1px',
+          borderTopRightRadius: '0.25rem',
+          borderTopLeftRadius: '0.25rem',
+        }}
+      >
         <MarkButton
           format="bold"
           icon={<AiOutlineBold />}
@@ -133,6 +142,12 @@ export default function Editor({
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           className="p-4 mb-4 border-b rounded-b border-x"
+          style={{
+            borderRightWidth: '1px',
+            borderLeftWidth: '1px',
+            borderBottomRightRadius: '0.25rem',
+            borderBottomLeftRadius: '0.25rem',
+          }}
           placeholder="Write job description or select from templates..."
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {

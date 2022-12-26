@@ -1,24 +1,37 @@
-import { Skeleton } from 'antd'
+import clsx from 'clsx'
 import { range } from 'lodash'
-import { Link } from 'react-router-dom'
-import { Candidate } from 'types/candidate'
+import { Skeleton } from 'antd'
 import { Switch } from 'ui-kit'
+import { Candidate } from 'types/candidate'
 import CandidateCard from './candidate-card'
 
 type StatusListProps = {
   title: string
+  className: string
   isLoading: boolean
   candidates?: Candidate[]
 }
 
 export default function StatusList({
   title,
+  className,
   isLoading,
   candidates,
 }: StatusListProps) {
   return (
     <div className="flex-none w-72">
-      <p className="mb-2 text-base font-medium text-gray-700">{title}</p>
+      <div
+        className={clsx(
+          'flex items-center justify-between px-4 py-3 mb-4 bg-white rounded-md shadow border-b-white border-y-4',
+          className,
+        )}
+      >
+        <p className="text-base font-medium text-gray-700">{title}</p>
+        <p className="flex items-center justify-center w-6 h-6 p-1 text-gray-100 bg-gray-500 rounded">
+          <span>{candidates?.length ?? 0}</span>
+        </p>
+      </div>
+
       <div className="flex flex-col space-y-4">
         <Switch>
           <Switch.Match when={isLoading}>
@@ -32,9 +45,11 @@ export default function StatusList({
           <Switch.Match when={candidates}>
             {(data) =>
               data.map((candidate) => (
-                <Link
-                  to={`/candidates/${candidate.id}/profile`}
+                <a
+                  target="_blank"
+                  rel="noreferrer"
                   key={candidate.id}
+                  href={`/candidates/${candidate.id}/profile`}
                 >
                   <CandidateCard
                     createdAt={candidate.createdAt}
@@ -43,7 +58,7 @@ export default function StatusList({
                       candidate.middleName ?? ''
                     } ${candidate.lastName}`}
                   />
-                </Link>
+                </a>
               ))
             }
           </Switch.Match>
