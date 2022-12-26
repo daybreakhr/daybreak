@@ -1,4 +1,3 @@
-import { Express } from 'express'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { AffindaCredential, AffindaAPI } from "@affinda/affinda";
 import { PrismaService } from 'src/prisma.service'
@@ -6,12 +5,18 @@ import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { Candidate } from '@prisma/client'
 import { CreateCandidateDto } from './candidate.dto'
 import { find } from 'lodash';
+import { AWSSESService } from 'src/aws/aws.ses.service';
+import { FirebaseService } from 'src/firebase/firebase.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CandidateService {
   constructor(
     private prismaService: PrismaService,
     private s3Service: AWSS3Service,
+    private sesService: AWSSESService,
+    private firebaseService: FirebaseService,
+    private configService: ConfigService
   ) {}
 
   async getAll(workspaceId: string) {
@@ -117,7 +122,7 @@ export class CandidateService {
     return candidate
   }
 
-  const getLatestOrg(workExp): string | undefined {
+  getLatestOrg(workExp): string | undefined {
     const currentOrgObj = find(workExp, (obj) => {
       return obj.dates.isCurrent
     })
