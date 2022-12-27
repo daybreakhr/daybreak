@@ -28,7 +28,7 @@ export default function CandidatesChart({ data }: CandidatesChartProps) {
   }, [data])
 
   return (
-    <Card className="col-span-4">
+    <Card className="col-span-3">
       <p className="text-black/[0.45] mb-6">Candidates Applied</p>
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
