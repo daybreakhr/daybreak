@@ -2,13 +2,10 @@ import { find } from 'lodash'
 import { Express } from 'express'
 import { Candidate } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
-import {
-  AffindaCredential,
-  AffindaAPI,
-  ResumeDataWorkExperienceItem,
-} from '@affinda/affinda'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 
+import { catchError, firstValueFrom } from 'rxjs'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
@@ -23,6 +20,7 @@ export class CandidateService {
     private sesService: AWSSESService,
     private authService: AuthService,
     private configService: ConfigService,
+    private httpService: HttpService,
   ) {}
 
   async getAll(workspaceId: string) {
@@ -89,7 +87,7 @@ export class CandidateService {
 
     const createdByUserData = await this.authService.getUser(job.createdBy)
 
-    const data = await this.getParsedResume(candidate.affindaId)
+    const { data } = await this.getParsedResume(candidate.affindaId)
 
     const currentOrg = this.getLatestOrg(data.workExperience) || 'None'
 
@@ -127,7 +125,7 @@ export class CandidateService {
     return candidate
   }
 
-  getLatestOrg(workExp: ResumeDataWorkExperienceItem[]): string | undefined {
+  getLatestOrg(workExp): string | undefined {
     const currentOrgObj = find(workExp, (obj) => {
       return obj.dates.isCurrent
     })
@@ -139,11 +137,23 @@ export class CandidateService {
 
   async getParsedResume(affindaId) {
     const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
+    const AFFINDA_URL = this.configService.get<string>('AFFINDA_URL')
 
-    const credential = new AffindaCredential(AFFINDA_TOKEN)
-    const client = new AffindaAPI(credential)
+    const url = `${AFFINDA_URL}/resumes/${affindaId}`
 
-    const { data } = await client.getResume(affindaId)
+    const { data } = await firstValueFrom(
+      this.httpService
+        .get(url, {
+          headers: {
+            Authorization: `Bearer ${AFFINDA_TOKEN}`,
+          },
+        })
+        .pipe(
+          catchError((error) => {
+            throw error
+          }),
+        ),
+    )
 
     return data
   }
