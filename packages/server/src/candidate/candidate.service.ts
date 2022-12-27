@@ -1,13 +1,19 @@
+import { find } from 'lodash'
+import { Express } from 'express'
+import { Candidate } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
+import {
+  AffindaCredential,
+  AffindaAPI,
+  ResumeDataWorkExperienceItem,
+} from '@affinda/affinda'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { AffindaCredential, AffindaAPI } from "@affinda/affinda";
+
+import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
-import { Candidate } from '@prisma/client'
+import { AWSSESService } from 'src/aws/aws.ses.service'
 import { CreateCandidateDto } from './candidate.dto'
-import { find } from 'lodash';
-import { AWSSESService } from 'src/aws/aws.ses.service';
-import { FirebaseService } from 'src/firebase/firebase.service';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CandidateService {
@@ -15,8 +21,8 @@ export class CandidateService {
     private prismaService: PrismaService,
     private s3Service: AWSS3Service,
     private sesService: AWSSESService,
-    private firebaseService: FirebaseService,
-    private configService: ConfigService
+    private authService: AuthService,
+    private configService: ConfigService,
   ) {}
 
   async getAll(workspaceId: string) {
@@ -81,16 +87,15 @@ export class CandidateService {
       where: { id: jobId },
     })
 
-    const createdByUserData = await this.firebaseService.auth.getUser(job.createdBy)
+    const createdByUserData = await this.authService.getUser(job.createdBy)
 
+    const data = await this.getParsedResume(candidate.affindaId)
 
-    const data  = await this.getParsedResume(candidate.affindaId)
-
-    const currentOrg = this.getLatestOrg(data.workExperience) || "None";
+    const currentOrg = this.getLatestOrg(data.workExperience) || 'None'
 
     const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
 
-    const CANDIDATE_PROFILE_URL = `${FRONTEND_URL}/candidates/${id}`;
+    const CANDIDATE_PROFILE_URL = `${FRONTEND_URL}/candidates/${id}`
     const APPLICATION_SOURCE = this.configService.get<string>('BOARDS_URL')
 
     const candidateName = `${candidate.firstName} ${candidate.lastName}`
@@ -122,12 +127,12 @@ export class CandidateService {
     return candidate
   }
 
-  getLatestOrg(workExp): string | undefined {
+  getLatestOrg(workExp: ResumeDataWorkExperienceItem[]): string | undefined {
     const currentOrgObj = find(workExp, (obj) => {
       return obj.dates.isCurrent
     })
 
-    if(currentOrgObj){
+    if (currentOrgObj) {
       return currentOrgObj.organization
     }
   }
@@ -140,7 +145,7 @@ export class CandidateService {
 
     const { data } = await client.getResume(affindaId)
 
-    return data;
+    return data
   }
 
   async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
