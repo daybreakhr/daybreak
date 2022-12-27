@@ -24,7 +24,6 @@ import {
 } from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { Candidate } from '@prisma/client'
 import { Roles } from 'src/auth/roles.decorator'
 import { CandidateDto, CreateCandidateDto } from './candidate.dto'
 import { CandidateService } from './candidate.service'
@@ -90,13 +89,13 @@ export class CandidateController {
     type: CandidateDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Feedback not found' })
+  @ApiNotFoundResponse({ description: 'Candidate not found' })
   @ApiBody({ type: CreateCandidateDto })
   @UseGuards(AuthGuard)
   @Roles('admin')
   async update(
     @Param('id') id: string,
-    @Body() updateCandidateDto: Partial<Candidate>,
+    @Body() updateCandidateDto: Partial<CreateCandidateDto>,
   ) {
     const data = await this.candidateService.update(id, updateCandidateDto)
     return data

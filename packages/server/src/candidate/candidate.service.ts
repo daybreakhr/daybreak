@@ -1,6 +1,5 @@
 import { find } from 'lodash'
 import { Express } from 'express'
-import { Candidate } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 
 import { catchError, firstValueFrom } from 'rxjs'
@@ -10,7 +9,7 @@ import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AWSSESService } from 'src/aws/aws.ses.service'
-import { CreateCandidateDto } from './candidate.dto'
+import { CandidateDto, CreateCandidateDto } from './candidate.dto'
 
 @Injectable()
 export class CandidateService {
@@ -23,7 +22,7 @@ export class CandidateService {
     private httpService: HttpService,
   ) {}
 
-  async getAll(workspaceId: string) {
+  async getAll(workspaceId: string): Promise<CandidateDto[]> {
     const candidates = await this.prismaService.candidate.findMany({
       where: { workspaceId },
       include: { Job: true, Feedback: true },
@@ -32,7 +31,7 @@ export class CandidateService {
     return candidates
   }
 
-  async getById(id: string) {
+  async getById(id: string): Promise<CandidateDto> {
     const candidate = await this.prismaService.candidate.findUnique({
       where: { id },
       include: { Job: true },
@@ -44,7 +43,7 @@ export class CandidateService {
     workspaceId: string,
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,
-  ) {
+  ): Promise<CandidateDto> {
     const { jobId, ...restParams } = createCandidateDto
 
     const isApplied = await this.prismaService.candidate.findFirst({
@@ -158,7 +157,7 @@ export class CandidateService {
     return data
   }
 
-  async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
+  async update(candidateId: string, updateCandidateDto: Partial<CandidateDto>) {
     const candidate = this.prismaService.candidate.update({
       where: { id: candidateId },
       data: { ...updateCandidateDto },
@@ -167,7 +166,7 @@ export class CandidateService {
     return candidate
   }
 
-  async delete(candidateId: string) {
+  async delete(candidateId: string): Promise<CandidateDto> {
     const candidate = await this.prismaService.candidate.delete({
       where: { id: candidateId },
     })

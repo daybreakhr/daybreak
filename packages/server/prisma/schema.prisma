@@ -154,6 +154,7 @@ model Candidate {
   affindaId   String          @unique
   linkedInUrl String
   status      CandidateStatus @default(applied)
+  rejectionMessage String?
   createdAt   DateTime        @default(now())
   Job         Job             @relation(fields: [jobId], references: [id])
   jobId       String          @db.ObjectId

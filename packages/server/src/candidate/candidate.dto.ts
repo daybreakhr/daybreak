@@ -61,6 +61,14 @@ export class CreateCandidateDto {
   email: string
 
   @ApiProperty({
+    example: 'Rejected due to lack of clarity of AWS concepts',
+    description: 'Rejection Message',
+    required: false,
+  })
+  @IsString()
+  rejectionMessage: string
+
+  @ApiProperty({
     example: '6353816a46c2e84a635460ab',
     description: 'id of job for which candidate applied',
   })
@@ -138,4 +146,12 @@ export class CandidateDto {
     description: 'id of workspace',
   })
   workspaceId: string
+
+  @ApiProperty({
+    example: 'Rejected due to lack of clarity of AWS concepts',
+    description: 'Rejection Message',
+    required: false,
+  })
+  @IsString()
+  rejectionMessage: string
 }
