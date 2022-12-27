@@ -11,7 +11,7 @@ import {
 import { Role } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
-import { MemberDto } from './members.dto'
+import { MemberDto, UpdateMemberDto } from './members.dto'
 import { MembersService } from './members.service'
 
 @ApiSecurity('access-key')
@@ -45,7 +45,7 @@ export class MembersController {
   @ApiBody({ type: MemberDto })
   async updateMember(
     @Param('memberId') memberId: string,
-    @Body() updateMemberDto: { role: Role },
+    @Body() updateMemberDto: UpdateMemberDto,
   ) {
     const data = await this.membersService.updateMember(
       memberId,

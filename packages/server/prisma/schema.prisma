@@ -33,6 +33,7 @@ model Member {
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
   workspaceId String       @db.ObjectId
+  isSuspended Boolean      @default(false)
   Department  Department[]
   Location    Location[]
   Job         Job[]

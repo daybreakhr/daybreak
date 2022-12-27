@@ -22,6 +22,15 @@ export class MemberDto {
     required: true,
   })
   workspaceId: string
+
+  @ApiProperty({
+    example: false,
+    description: 'Whether this member is suspended or not',
+    required: false,
+  })
+  isSuspended: string
 }
 
 export class CreateMemberDto extends PartialType(MemberDto) {}
+
+export class UpdateMemberDto extends PartialType(MemberDto) {}
