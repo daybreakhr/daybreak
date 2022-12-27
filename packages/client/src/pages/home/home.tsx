@@ -10,9 +10,10 @@ import {
 } from '@ant-design/icons'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { fetchJobs } from 'pages/jobs/queries'
+import JobsTable from './components/jobs-table'
+import TalentFunnel from './components/talent-pipeline'
 import CandidatesChart from './components/candidates-chart'
 import CandidatesTable from './components/candidates-table'
-import JobsTable from './components/jobs-table'
 
 const now = dayjs()
 
@@ -87,6 +88,7 @@ export default function Home() {
       </Card>
 
       <CandidatesChart data={candidates} />
+      <TalentFunnel data={candidates} />
       <CandidatesTable isLoading={isCandidatesLoading} data={candidates} />
       <JobsTable isLoading={isJobsLoading} data={jobs} />
     </div>
