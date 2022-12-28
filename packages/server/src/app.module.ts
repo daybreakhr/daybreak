@@ -17,6 +17,8 @@ import { AWSModule } from './aws/aws.module'
 import { FeedbackModule } from './feedback/feedback.module'
 import { InvitesModule } from './invites/invites.module'
 import { TemplatesModule } from './templates/templates.module'
+import { NotificationModule } from './notification/notification.module'
+import { AffindaModule } from './affinda/affinda.module'
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { TemplatesModule } from './templates/templates.module'
     FeedbackModule,
     InvitesModule,
     TemplatesModule,
+    NotificationModule,
+    AffindaModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
