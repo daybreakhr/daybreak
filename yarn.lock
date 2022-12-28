@@ -2217,6 +2217,13 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@nestjs/axios@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/axios/-/axios-1.0.1.tgz#7a872e032b9d12037f2663a7316b81507cd7957a"
+  integrity sha512-TpoZM/0ZJ9xiC04qkRDFod93LCZ12TQARRU3ejDvBK2E8emvzM4HThOs5ePklVxce4Q1ZsnrIWqnImvoDmJYnQ==
+  dependencies:
+    axios "1.2.1"
+
 "@nestjs/cli@^9.1.4":
   version "9.1.4"
   resolved "https://registry.npmjs.org/@nestjs/cli/-/cli-9.1.4.tgz"
@@ -3679,6 +3686,15 @@ axe-core@^4.4.3:
   version "4.4.3"
   resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.4.3.tgz"
   integrity sha512-32+ub6kkdhhWick/UjvEwRchgoetXqTK14INLqbGm5U2TzBkBNF3nQtLYm8ovxSkQWArjEQvftCKryjZaATu3w==
+
+axios@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.2.1.tgz#44cf04a3c9f0c2252ebd85975361c026cb9f864a"
+  integrity sha512-I88cFiGu9ryt/tfVEi4kX2SITsvDddTajXTOFmt2uK1ZVA8LytjtdeyefdQWEf5PU8w+4SSJDoYnggflB5tW4A==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 axios@^0.21.1:
   version "0.21.4"
