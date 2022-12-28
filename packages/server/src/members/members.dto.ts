@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
+import { IsOptional } from 'class-validator'
 
 export class MemberDto {
   @ApiProperty({
@@ -28,7 +29,8 @@ export class MemberDto {
     description: 'Whether this member is suspended or not',
     required: false,
   })
-  isSuspended: string
+  @IsOptional()
+  isSuspended: boolean
 }
 
 export class CreateMemberDto extends PartialType(MemberDto) {}

@@ -144,24 +144,24 @@ enum Category {
 }
 
 model Candidate {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstName   String
-  middleName  String?
-  lastName    String
-  email       String
-  phone       String
-  location    String
-  resume      String?
-  affindaId   String          @unique
-  linkedInUrl String
-  status      CandidateStatus @default(applied)
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  firstName        String
+  middleName       String?
+  lastName         String
+  email            String
+  phone            String
+  location         String
+  resume           String?
+  affindaId        String          @unique
+  linkedInUrl      String
+  status           CandidateStatus @default(applied)
   rejectionMessage String?
-  createdAt   DateTime        @default(now())
-  Job         Job             @relation(fields: [jobId], references: [id])
-  jobId       String          @db.ObjectId
-  Workspace   Workspace       @relation(fields: [workspaceId], references: [id])
-  workspaceId String          @db.ObjectId
-  Feedback    Feedback[]
+  createdAt        DateTime        @default(now())
+  Job              Job             @relation(fields: [jobId], references: [id])
+  jobId            String          @db.ObjectId
+  Workspace        Workspace       @relation(fields: [workspaceId], references: [id])
+  workspaceId      String          @db.ObjectId
+  Feedback         Feedback[]
 }
 
 enum CandidateStatus {

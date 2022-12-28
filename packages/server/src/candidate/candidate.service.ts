@@ -22,7 +22,7 @@ export class CandidateService {
     private httpService: HttpService,
   ) {}
 
-  async getAll(workspaceId: string): Promise<CandidateDto[]> {
+  async getAll(workspaceId: string) {
     const candidates = await this.prismaService.candidate.findMany({
       where: { workspaceId },
       include: { Job: true, Feedback: true },
@@ -31,7 +31,7 @@ export class CandidateService {
     return candidates
   }
 
-  async getById(id: string): Promise<CandidateDto> {
+  async getById(id: string) {
     const candidate = await this.prismaService.candidate.findUnique({
       where: { id },
       include: { Job: true },
@@ -43,7 +43,7 @@ export class CandidateService {
     workspaceId: string,
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,
-  ): Promise<CandidateDto> {
+  ) {
     const { jobId, ...restParams } = createCandidateDto
 
     const isApplied = await this.prismaService.candidate.findFirst({
@@ -166,7 +166,7 @@ export class CandidateService {
     return candidate
   }
 
-  async delete(candidateId: string): Promise<CandidateDto> {
+  async delete(candidateId: string) {
     const candidate = await this.prismaService.candidate.delete({
       where: { id: candidateId },
     })
