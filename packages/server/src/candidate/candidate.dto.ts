@@ -62,6 +62,15 @@ export class CreateCandidateDto {
   email: string
 
   @ApiProperty({
+    example:
+      'https://daybreakhr.s3.amazonaws.com/candidate/63a18917706dfc29c7bdc207/Smitendu%27s%20Resume.pdf',
+    description: 'S3 url for resume',
+    required: false,
+  })
+  @IsOptional()
+  resume: string | null
+
+  @ApiProperty({
     example: 'Rejected due to lack of clarity of AWS concepts',
     description: 'Rejection Message',
     required: false,
@@ -88,7 +97,12 @@ export class CandidateDto {
   @ApiProperty({ example: 'Ramesh', description: 'First Name' })
   firstName: string
 
-  @ApiProperty({ example: 'Kumar', description: 'Middle Name' })
+  @ApiProperty({
+    example: 'Kumar',
+    description: 'Middle Name',
+    required: false,
+  })
+  @IsOptional()
   middleName: string | null
 
   @ApiProperty({ example: 'Chadha', description: 'Last Name' })
@@ -113,7 +127,9 @@ export class CandidateDto {
     example:
       'https://daybreakhr.s3.amazonaws.com/candidate/63a18917706dfc29c7bdc207/Smitendu%27s%20Resume.pdf',
     description: 'S3 url for resume',
+    required: false,
   })
+  @IsOptional()
   resume: string | null
 
   @ApiProperty({

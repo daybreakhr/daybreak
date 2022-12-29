@@ -151,7 +151,7 @@ model Candidate {
   email            String
   phone            String
   location         String
-  resume           String
+  resume           String?
   affindaId        String          @unique
   linkedInUrl      String
   status           CandidateStatus @default(applied)
