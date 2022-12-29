@@ -54,7 +54,7 @@ export default function CandidateProfile() {
             <Result
               status="error"
               title="This applicant has been rejected"
-              subTitle="Reason: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at nibh id mauris cursus lobortis vitae non ligula. Praesent ipsum arcu, vestibulum ut auctor consequat, sodales ut arcu. Pell"
+              subTitle={data?.rejectionMessage}
             />
           </Switch.Match>
         </Switch>
