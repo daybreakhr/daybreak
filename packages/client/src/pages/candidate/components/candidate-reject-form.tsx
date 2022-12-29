@@ -27,8 +27,17 @@ export default function CandidateRejectForm({
       onCancel()
     },
   })
+
   function handleOk() {
-    mutate({ candidateId, body: { status: CandidateStatus.rejected } })
+    form.validateFields().then((values) => {
+      mutate({
+        candidateId,
+        body: {
+          status: CandidateStatus.rejected,
+          rejectionMessage: values.rejectionMessage,
+        },
+      })
+    })
   }
 
   function handleCancel() {
@@ -47,9 +56,18 @@ export default function CandidateRejectForm({
       okButtonProps={{ danger: true, loading: isLoading }}
     >
       <Form form={form} layout="vertical">
-        <Form.Item required name="reason" label="Reason for rejection:">
+        <Form.Item
+          required
+          name="rejectionMessage"
+          rules={[
+            {
+              required: true,
+              message: 'Please provide a reason for Rejection!',
+            },
+          ]}
+          label="Reason for rejection:"
+        >
           <TextArea
-            required
             rows={4}
             className="resize-none"
             placeholder="Please specify the reason that lead to rejection..."
