@@ -13,6 +13,7 @@ export class CreateCandidateDto {
   @ApiProperty({
     example: 'Kumar',
     description: 'Middle Name',
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -153,5 +154,6 @@ export class CandidateDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   rejectionMessage: string
 }

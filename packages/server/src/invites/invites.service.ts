@@ -1,18 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
-import { AWSSESService } from 'src/aws/aws.ses.service'
 import { AuthService } from 'src/auth/auth.service'
-import { ConfigService } from '@nestjs/config'
+import { NotificationService } from 'src/notification/notification.service'
 import { isNil } from 'lodash'
 
 @Injectable()
 export class InvitesService {
   constructor(
     private prismaService: PrismaService,
-    private sesService: AWSSESService,
     private authService: AuthService,
-    private configService: ConfigService,
+    private notificationService: NotificationService,
   ) {}
 
   async getAllInvites(workspaceId: string) {
@@ -89,7 +87,7 @@ export class InvitesService {
     })
 
     if (isAlreadyInvited) {
-      await this.sendInviteMail(email, userName, {
+      await this.notificationService.sendInviteMail(email, userName, {
         workspaceName: isAlreadyInvited.Workspace.name,
         id: isAlreadyInvited.id,
       })
@@ -107,28 +105,12 @@ export class InvitesService {
       include: { Workspace: true, Member: true },
     })
 
-    await this.sendInviteMail(email, userName, {
+    await this.notificationService.sendInviteMail(email, userName, {
       workspaceName: invite.Workspace.name,
       id: invite.id,
     })
 
     return invite
-  }
-
-  async sendInviteMail(
-    email: string,
-    userName: string,
-    inviteConfig: { workspaceName: string; id: string },
-  ): Promise<void> {
-    const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
-
-    await this.sesService.sendMail({
-      to: email,
-      subject: `${userName} invited you to join ${inviteConfig.workspaceName} on Daybreak HR`,
-      body: `<p>Hi,</p>
-      <p>${userName} has invited you to join ${inviteConfig.workspaceName} on Daybreak HR.</p>
-      <p>Accept this invitation by clicking on this link: ${FRONTEND_URL}/invite/${inviteConfig.id}</p>`,
-    })
   }
 
   async validateInvitees(inviteId: string, uid: string) {

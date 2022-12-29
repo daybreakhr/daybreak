@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator'
+import { IsNumber, IsString, IsOptional } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateFeedbackDto {
@@ -59,5 +59,6 @@ export class Feedback {
     required: false,
     readOnly: true,
   })
+  @IsOptional()
   candidateId: string
 }
