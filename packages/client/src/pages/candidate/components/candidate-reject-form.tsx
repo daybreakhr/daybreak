@@ -24,6 +24,7 @@ export default function CandidateRejectForm({
       message.info('This job application is rejected!')
       queryClient.invalidateQueries(['candidate', candidateId])
       queryClient.invalidateQueries(['candidates'])
+      onCancel()
     },
   })
   function handleOk() {
@@ -48,6 +49,7 @@ export default function CandidateRejectForm({
       <Form form={form} layout="vertical">
         <Form.Item required name="reason" label="Reason for rejection:">
           <TextArea
+            required
             rows={4}
             className="resize-none"
             placeholder="Please specify the reason that lead to rejection..."
