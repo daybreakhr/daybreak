@@ -1,4 +1,8 @@
-import { Form, Modal, Input } from 'antd'
+import { Form, Modal, message, Input } from 'antd'
+import { useParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { CandidateStatus } from '@prisma/client'
+import { updateCandidate } from '../queries'
 
 type CandidateRejectFormProps = {
   visible: boolean
@@ -12,9 +16,19 @@ export default function CandidateRejectForm({
   onCancel,
 }: CandidateRejectFormProps) {
   const [form] = Form.useForm()
+  const { candidateId = '' } = useParams()
+  const queryClient = useQueryClient()
 
+  const { mutate, isLoading } = useMutation(updateCandidate, {
+    onSuccess: () => {
+      message.info('This job application is rejected!')
+      queryClient.invalidateQueries(['candidate', candidateId])
+      queryClient.invalidateQueries(['candidates'])
+      onCancel()
+    },
+  })
   function handleOk() {
-    form.submit()
+    mutate({ candidateId, body: { status: CandidateStatus.rejected } })
   }
 
   function handleCancel() {
@@ -30,11 +44,12 @@ export default function CandidateRejectForm({
       open={visible}
       onCancel={handleCancel}
       okText="Reject"
-      okButtonProps={{ danger: true }}
+      okButtonProps={{ danger: true, loading: isLoading }}
     >
       <Form form={form} layout="vertical">
         <Form.Item required name="reason" label="Reason for rejection:">
           <TextArea
+            required
             rows={4}
             className="resize-none"
             placeholder="Please specify the reason that lead to rejection..."
