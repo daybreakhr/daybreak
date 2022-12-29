@@ -19,7 +19,7 @@ export default function CandidateRejectForm({
   const { candidateId = '' } = useParams()
   const queryClient = useQueryClient()
 
-  const { mutate } = useMutation(updateCandidate, {
+  const { mutate, isLoading } = useMutation(updateCandidate, {
     onSuccess: () => {
       message.info('This job application is rejected!')
       queryClient.invalidateQueries(['candidate', candidateId])
@@ -44,7 +44,7 @@ export default function CandidateRejectForm({
       open={visible}
       onCancel={handleCancel}
       okText="Reject"
-      okButtonProps={{ danger: true }}
+      okButtonProps={{ danger: true, loading: isLoading }}
     >
       <Form form={form} layout="vertical">
         <Form.Item required name="reason" label="Reason for rejection:">

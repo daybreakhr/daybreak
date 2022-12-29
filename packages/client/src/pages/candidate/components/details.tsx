@@ -18,7 +18,7 @@ import { getJobType } from 'utils/utils'
 import { updateCandidate } from '../queries'
 import { candidateStatusOptions } from '../constants/candidate-status'
 import CandidateRejectForm from './candidate-reject-form'
-import CandidateReEnrollConfirmation from './CandidateReEnrollConfirmation'
+import ReEnrollConfirmation from './re-enroll-confirmation'
 
 type DetailsProps = {
   data: Candidate | undefined
@@ -28,7 +28,7 @@ export default function Details({ data }: DetailsProps) {
   const queryClient = useQueryClient()
   const { candidateId = '' } = useParams()
   const [candidateRejectForm, setCandidateRejectForm] = useState(false)
-  const [candidateReEnrollConfirmation, setCandidateReEnrollConfirmation] =
+  const [candidateReEnrollConfirmation, setReEnrollConfirmation] =
     useState(false)
 
   const { mutate } = useMutation(updateCandidate, {
@@ -146,15 +146,12 @@ export default function Details({ data }: DetailsProps) {
       </Show>
       <Show when={data?.status === CandidateStatus.rejected}>
         <div className="flex items-center space-x-4">
-          <Button
-            type="primary"
-            onClick={() => setCandidateReEnrollConfirmation(true)}
-          >
+          <Button type="primary" onClick={() => setReEnrollConfirmation(true)}>
             Re-Enroll
           </Button>
-          <CandidateReEnrollConfirmation
+          <ReEnrollConfirmation
             visible={candidateReEnrollConfirmation}
-            onCancel={() => setCandidateReEnrollConfirmation(false)}
+            onCancel={() => setReEnrollConfirmation(false)}
           />
         </div>
       </Show>
