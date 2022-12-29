@@ -66,6 +66,7 @@ export class CreateCandidateDto {
     description: 'Rejection Message',
     required: false,
   })
+  @IsOptional()
   @IsString()
   rejectionMessage: string
 

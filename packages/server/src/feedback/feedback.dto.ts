@@ -51,6 +51,7 @@ export class Feedback {
     required: false,
     readOnly: true,
   })
+  @IsOptional()
   createdBy: string
 
   @ApiProperty({
