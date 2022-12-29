@@ -2,8 +2,6 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
-import { InvitesService } from './invites.service'
-import { Invite } from './invites.dto'
 import {
   ApiOkResponse,
   ApiForbiddenResponse,
@@ -14,6 +12,8 @@ import {
   ApiNotFoundResponse,
   ApiSecurity,
 } from '@nestjs/swagger'
+import { InvitesService } from './invites.service'
+import { Invite } from './invites.dto'
 
 @ApiSecurity('access-key')
 @ApiTags('Invite')

@@ -1,18 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
-import { AWSSESService } from 'src/aws/aws.ses.service'
 import { AuthService } from 'src/auth/auth.service'
-import { ConfigService } from '@nestjs/config'
+import { NotificationService } from 'src/notification/notification.service'
 import { isNil } from 'lodash'
 
 @Injectable()
 export class InvitesService {
   constructor(
     private prismaService: PrismaService,
-    private sesService: AWSSESService,
     private authService: AuthService,
-    private configService: ConfigService,
+    private notificationService: NotificationService,
   ) {}
 
   async getAllInvites(workspaceId: string) {
@@ -80,6 +78,23 @@ export class InvitesService {
       }
     }
 
+    const isAlreadyInvited = await this.prismaService.invitees.findFirst({
+      where: {
+        email,
+        workspaceId,
+      },
+      include: { Workspace: true, Member: true },
+    })
+
+    if (isAlreadyInvited) {
+      await this.notificationService.sendInviteMail(email, userName, {
+        workspaceName: isAlreadyInvited.Workspace.name,
+        id: isAlreadyInvited.id,
+      })
+
+      return isAlreadyInvited
+    }
+
     const invite = await this.prismaService.invitees.create({
       data: {
         email,
@@ -90,14 +105,9 @@ export class InvitesService {
       include: { Workspace: true, Member: true },
     })
 
-    const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
-
-    await this.sesService.sendMail({
-      to: email,
-      subject: `${userName} invited you to join ${invite.Workspace.name} on Daybreak HR`,
-      body: `<p>Hi,</p>
-      <p>${userName} has invited you to join ${invite.Workspace.name} on Daybreak HR.</p>
-      <p>Accept this invitation by clicking on this link: ${FRONTEND_URL}/invite/${invite.id}</p>`,
+    await this.notificationService.sendInviteMail(email, userName, {
+      workspaceName: invite.Workspace.name,
+      id: invite.id,
     })
 
     return invite

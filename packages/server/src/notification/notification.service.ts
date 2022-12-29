@@ -69,4 +69,24 @@ export class NotificationService {
       this.logger.error(error, 'Error sending candidate applied notification')
     }
   }
+
+  async sendInviteMail(
+    email: string,
+    userName: string,
+    inviteConfig: { workspaceName: string; id: string },
+  ): Promise<void> {
+    try {
+      const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL')
+
+      await this.sesService.sendMail({
+        to: email,
+        subject: `${userName} invited you to join ${inviteConfig.workspaceName} on Daybreak HR`,
+        body: `<p>Hi,</p>
+        <p>${userName} has invited you to join ${inviteConfig.workspaceName} on Daybreak HR.</p>
+        <p>Accept this invitation by clicking on this link: ${FRONTEND_URL}/invite/${inviteConfig.id}</p>`,
+      })
+    } catch (error) {
+      this.logger.error(error, 'Error sending invite mail')
+    }
+  }
 }

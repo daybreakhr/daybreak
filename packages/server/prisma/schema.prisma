@@ -33,6 +33,7 @@ model Member {
   invites     Invitees[]
   Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
   workspaceId String       @db.ObjectId
+  isSuspended Boolean      @default(false)
   Department  Department[]
   Location    Location[]
   Job         Job[]
@@ -143,23 +144,24 @@ enum Category {
 }
 
 model Candidate {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstName   String
-  middleName  String?
-  lastName    String
-  email       String
-  phone       String
-  location    String
-  resume      String?
-  affindaId   String          @unique
-  linkedInUrl String
-  status      CandidateStatus @default(applied)
-  createdAt   DateTime        @default(now())
-  Job         Job             @relation(fields: [jobId], references: [id])
-  jobId       String          @db.ObjectId
-  Workspace   Workspace       @relation(fields: [workspaceId], references: [id])
-  workspaceId String          @db.ObjectId
-  Feedback    Feedback[]
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  firstName        String
+  middleName       String?
+  lastName         String
+  email            String
+  phone            String
+  location         String
+  resume           String
+  affindaId        String          @unique
+  linkedInUrl      String
+  status           CandidateStatus @default(applied)
+  rejectionMessage String?
+  createdAt        DateTime        @default(now())
+  Job              Job             @relation(fields: [jobId], references: [id])
+  jobId            String          @db.ObjectId
+  Workspace        Workspace       @relation(fields: [workspaceId], references: [id])
+  workspaceId      String          @db.ObjectId
+  Feedback         Feedback[]
 }
 
 enum CandidateStatus {

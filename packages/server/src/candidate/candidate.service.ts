@@ -1,6 +1,6 @@
-import { Express } from 'express'
 import { Candidate } from '@prisma/client'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Express } from 'express'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { Member, Role } from '@prisma/client'
 import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
+import { MemberDto, UpdateMemberDto } from './members.dto'
 
 @Injectable()
 export class MembersService {
@@ -16,7 +16,7 @@ export class MembersService {
     })
     const memberByUid = members.reduce(
       (acc, curr) => ({ ...acc, [curr.uid]: curr }),
-      {} as Record<string, Member>,
+      {} as Record<string, MemberDto>,
     )
 
     const identifiers = members.map(({ uid }) => ({ uid }))
@@ -26,7 +26,7 @@ export class MembersService {
     })
   }
 
-  async updateMember(memberId: string, updateMemberDto: { role: Role }) {
+  async updateMember(memberId: string, updateMemberDto: UpdateMemberDto) {
     const member = await this.prismaService.member.update({
       where: { id: memberId },
       data: updateMemberDto,
