@@ -1,7 +1,8 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AiOutlineLogout } from 'react-icons/ai'
-import { Avatar, Dropdown, MenuProps } from 'antd'
+import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import useAuth from 'hooks/use-auth'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -10,15 +11,6 @@ export default function Header() {
   const items: MenuProps['items'] = [
     {
       key: 1,
-      label: (
-        <div className="border-b">
-          <p className="mb-0 text-xs text-gray-700">Signed-in as</p>
-          <p className="mb-0">{user?.displayName}</p>
-        </div>
-      ),
-    },
-    {
-      key: 2,
       label: 'Logout',
       icon: <AiOutlineLogout />,
       onClick: () => signOut().then(() => navigate('/')),
@@ -26,14 +18,34 @@ export default function Header() {
   ]
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 border-b">
-      <img
-        src="/assets/logo_large.svg"
-        className="flex items-center object-center w-40 h-8"
-      />
+    <header className="flex items-center px-5 py-2 space-x-4 border-b">
+      <Link to="/home">
+        <img
+          src="/assets/logo_large.svg"
+          className="flex items-center object-center w-40 h-8"
+        />
+      </Link>
+
+      <div className="flex-1" />
+
+      <Button
+        href=""
+        type="link"
+        target="_blank"
+        className="text-gray-500"
+        icon={<QuestionCircleOutlined />}
+      >
+        Help
+      </Button>
 
       <Dropdown menu={{ items }}>
-        <Avatar src={user?.photoURL}>{user?.displayName?.charAt(0)}</Avatar>
+        <div className="flex items-center px-3 py-1 space-x-2 rounded-md cursor-pointer hover:bg-gray-100">
+          <Avatar src={user?.photoURL}>{user?.displayName?.charAt(0)}</Avatar>
+          <div>
+            <p className="text-sm">{user?.displayName}</p>
+            <p className="text-xs text-gray-500">{user?.email}</p>
+          </div>
+        </div>
       </Dropdown>
     </header>
   )
