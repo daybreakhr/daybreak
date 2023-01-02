@@ -29,7 +29,7 @@ export default function Header() {
     <header className="flex items-center justify-between px-4 py-3 border-b">
       <img
         src="/assets/logo_large.svg"
-        className="flex items-center object-cover object-center w-40 h-8 -translate-x-2 translate-y-2"
+        className="flex items-center object-center w-40 h-8"
       />
 
       <Dropdown menu={{ items }}>
