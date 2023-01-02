@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { GoogleLogin } from '@react-oauth/google'
 import { Navigate, useLocation } from 'react-router-dom'
 import useAuth from 'hooks/use-auth'
 
@@ -30,18 +30,13 @@ export default function Login() {
           />
         </div>
         <div className="flex flex-col justify-center h-full">
-          <Button
-            onClick={signInWithGoogle}
-            className="flex items-center space-x-2"
-            icon={
-              <img
-                className="inline w-5 h-5"
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-              />
-            }
-          >
-            Sign in with Google
-          </Button>
+          <GoogleLogin
+            onSuccess={({ credential }) => {
+              if (credential) {
+                signInWithGoogle(credential)
+              }
+            }}
+          />
         </div>
         <div className="flex flex-col items-center justify-center w-full h-16 space-y-4 text-sm text-gray-500">
           <p className="text-center">

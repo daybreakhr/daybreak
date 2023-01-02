@@ -24,6 +24,7 @@ import CandidateFeedback from 'pages/candidate-feedback'
 import JobOverview from 'pages/job-overview'
 import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -33,48 +34,56 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider theme={{ token: { colorPrimary: '#9155fd' } }}>
-        <Auth>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/onboarding" element={<Onboarding />}>
-                <Route path="" element={<Navigate to="create" />} />
-                <Route path="create" element={<CreateWorkspace />} />
-                <Route path="setup" element={<SetupWorkspace />} />
-              </Route>
-              <Route path="/invite/:inviteId" element={<ValidateInvite />} />
-              <Route path="/" element={<AuthLayout component={AppShell} />}>
-                <Route path="home" element={<Home />} />
-                <Route path="jobs" element={<Jobs />} />
-                <Route path="jobs/:jobId" element={<Job />}>
-                  <Route path="" element={<Navigate to="overview" replace />} />
-                  <Route path="overview" element={<JobOverview />} />
-                  <Route path="pipeline" element={<JobPipeline />} />
-                  <Route path="*" element={<Navigate to="overview" />} />
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
+          <Auth>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/onboarding" element={<Onboarding />}>
+                  <Route path="" element={<Navigate to="create" />} />
+                  <Route path="create" element={<CreateWorkspace />} />
+                  <Route path="setup" element={<SetupWorkspace />} />
                 </Route>
-                <Route path="jobs/:jobId/create" element={<CreateJob />} />
-                <Route path="jobs/:jobId/edit" element={<CreateJob />} />
-                <Route path="jobs/:jobId/publish" element={<PublishJob />} />
-                <Route path="candidates" element={<Candidates />} />
-                <Route path="candidates/:candidateId" element={<Candidate />}>
-                  <Route path="" element={<Navigate to="profile" replace />} />
-                  <Route path="profile" element={<CandidateProfile />} />
-                  <Route path="feedback" element={<CandidateFeedback />} />
-                  <Route path="*" element={<Navigate to="profile" />} />
+                <Route path="/invite/:inviteId" element={<ValidateInvite />} />
+                <Route path="/" element={<AuthLayout component={AppShell} />}>
+                  <Route path="home" element={<Home />} />
+                  <Route path="jobs" element={<Jobs />} />
+                  <Route path="jobs/:jobId" element={<Job />}>
+                    <Route
+                      path=""
+                      element={<Navigate to="overview" replace />}
+                    />
+                    <Route path="overview" element={<JobOverview />} />
+                    <Route path="pipeline" element={<JobPipeline />} />
+                    <Route path="*" element={<Navigate to="overview" />} />
+                  </Route>
+                  <Route path="jobs/:jobId/create" element={<CreateJob />} />
+                  <Route path="jobs/:jobId/edit" element={<CreateJob />} />
+                  <Route path="jobs/:jobId/publish" element={<PublishJob />} />
+                  <Route path="candidates" element={<Candidates />} />
+                  <Route path="candidates/:candidateId" element={<Candidate />}>
+                    <Route
+                      path=""
+                      element={<Navigate to="profile" replace />}
+                    />
+                    <Route path="profile" element={<CandidateProfile />} />
+                    <Route path="feedback" element={<CandidateFeedback />} />
+                    <Route path="*" element={<Navigate to="profile" />} />
+                  </Route>
+                  <Route
+                    path="settings"
+                    element={<Navigate to="members" replace />}
+                  />
+                  <Route
+                    path="settings/organisation"
+                    element={<Organisation />}
+                  />
+                  <Route path="settings/members" element={<Members />} />
                 </Route>
-                <Route
-                  path="settings"
-                  element={<Navigate to="members" replace />}
-                />
-                <Route
-                  path="settings/organisation"
-                  element={<Organisation />}
-                />
-                <Route path="settings/members" element={<Members />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </Auth>
+              </Routes>
+            </BrowserRouter>
+          </Auth>
+        </GoogleOAuthProvider>
       </ConfigProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   VITE_STORAGE_BUCKET: string
   VITE_MESSAGING_SENDER_ID: string
   VITE_APP_ID: string
+  VITE_CLIENT_ID: string
   VITE_API_BASE_URL: string
   VITE_WORKSPACE_ID: string
   VITE_AFFINDA_API_BASE_URL: string

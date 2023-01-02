@@ -7,7 +7,7 @@ const AuthContext = createContext<{
   member: Member | null | undefined
   setMember: Dispatch<SetStateAction<Member | null | undefined>>
   signOut: () => Promise<void>
-  signInWithGoogle: () => void
+  signInWithGoogle: (token: string) => void
 }>({
   user: null,
   member: undefined,
