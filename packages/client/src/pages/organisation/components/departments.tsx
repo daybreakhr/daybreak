@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Button, Table } from 'antd'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Show } from 'ui-kit'
+
 import useAuth from 'hooks/use-auth'
 import { fetchDepartments } from 'pages/create-job/queries'
+
 import { addDepartment } from '../queries'
 import DepartmentForm from './department-form'
 import { departmentColumns } from '../constants/departments-list'
@@ -22,7 +24,7 @@ export default function Departments() {
         <Show when={member?.role === 'admin'}>
           <Button
             type="primary"
-            icon={<AiOutlinePlus />}
+            icon={<PlusOutlined />}
             onClick={() => setAddDepartmentForm(true)}
           >
             Add Department

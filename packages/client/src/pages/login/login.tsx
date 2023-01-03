@@ -1,4 +1,4 @@
-import { AiOutlineGoogle } from 'react-icons/ai'
+import { GoogleLogin } from '@react-oauth/google'
 import { Navigate, useLocation } from 'react-router-dom'
 import useAuth from 'hooks/use-auth'
 
@@ -26,18 +26,17 @@ export default function Login() {
         <div>
           <img
             src="/assets/logo_large.svg"
-            className="object-cover object-center h-16 -translate-x-2 translate-y-2 w-60"
+            className="object-center h-16 w-60"
           />
         </div>
-        <div className="flex flex-col items-center justify-center h-full">
-          <h1 className="pb-4 text-3xl font-medium text-gray-800">Sign in</h1>
-          <button
-            className="flex items-center justify-center w-64 px-4 py-2 mb-4 space-x-4 text-base text-white bg-purple-600 rounded focus:outline-none hover:bg-purple-500"
-            onClick={signInWithGoogle}
-          >
-            <AiOutlineGoogle className="text-xl" />
-            <span className="font-semibold">Continue with Google</span>
-          </button>
+        <div className="flex flex-col justify-center h-full">
+          <GoogleLogin
+            onSuccess={({ credential }) => {
+              if (credential) {
+                signInWithGoogle(credential)
+              }
+            }}
+          />
         </div>
         <div className="flex flex-col items-center justify-center w-full h-16 space-y-4 text-sm text-gray-500">
           <p className="text-center">

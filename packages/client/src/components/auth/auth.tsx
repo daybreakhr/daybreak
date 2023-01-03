@@ -1,8 +1,9 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { message, Spin } from 'antd'
 import {
+  GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithPopup,
+  signInWithCredential,
   signOut as logOut,
   User,
 } from 'firebase/auth'
@@ -12,7 +13,7 @@ import { storage } from 'ui-kit'
 
 import { WORKSPACE_ID } from 'utils/constants'
 import AuthContext from 'contexts/auth-context'
-import { auth, googleAuthProvider } from 'utils/firebase'
+import { auth } from 'utils/firebase'
 import { fetchMe } from './queries'
 
 type AuthProps = {
@@ -42,9 +43,10 @@ export default function Auth({ children }: AuthProps) {
     })
   }, [user])
 
-  async function signInWithGoogle() {
+  async function signInWithGoogle(token: string) {
     try {
-      await signInWithPopup(auth, googleAuthProvider)
+      const credential = GoogleAuthProvider.credential(token)
+      await signInWithCredential(auth, credential)
       setAuthVerified(false)
     } catch (error: any) {
       message.error(error?.message)

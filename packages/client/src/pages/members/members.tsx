@@ -3,8 +3,12 @@ import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
 import { useQueries } from '@tanstack/react-query'
 import { Button, Input, Select, Table } from 'antd'
-import { SettingOutlined } from '@ant-design/icons'
-import { AiOutlineFilter, AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
+import {
+  FilterOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
 import { columns } from './members-list'
@@ -55,16 +59,16 @@ export default function Members() {
           <Input
             value={input}
             style={{ width: '16rem' }}
-            prefix={<AiOutlineSearch />}
             placeholder="Search by name or email..."
             onChange={(e) => setInput(e.target.value)}
+            prefix={<SearchOutlined className="text-gray-300" />}
           />
 
           <Select
             value={filter}
             className="w-32"
             defaultValue="all"
-            suffixIcon={<AiOutlineFilter />}
+            suffixIcon={<FilterOutlined />}
             onChange={(e) => setFilter(e)}
           >
             <Select.Option value="">All Users</Select.Option>
@@ -76,7 +80,7 @@ export default function Members() {
 
           <Button
             type="primary"
-            icon={<AiOutlinePlus />}
+            icon={<PlusOutlined />}
             onClick={() => setIsVisible((prev) => !prev)}
           >
             Add User
