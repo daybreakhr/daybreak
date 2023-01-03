@@ -24,6 +24,7 @@ import CandidateFeedback from 'pages/candidate-feedback'
 import JobOverview from 'pages/job-overview'
 import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
+import InviteToWorkspace from 'pages/invite-to-workspace'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -41,6 +42,7 @@ export default function App() {
                 <Route path="" element={<Navigate to="create" />} />
                 <Route path="create" element={<CreateWorkspace />} />
                 <Route path="setup" element={<SetupWorkspace />} />
+                <Route path="invite" element={<InviteToWorkspace />} />
               </Route>
               <Route path="/invite/:inviteId" element={<ValidateInvite />} />
               <Route path="/" element={<AuthLayout component={AppShell} />}>

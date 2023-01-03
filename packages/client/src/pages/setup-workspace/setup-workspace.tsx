@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { union } from 'lodash'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { fetchMe } from 'components/auth/queries'
+
 import { addDepartment, addLocation } from 'pages/organisation/queries'
-import useAuth from 'hooks/use-auth'
 
 type FormValue = {
   departments: { department: string }[]
@@ -14,17 +13,8 @@ type FormValue = {
 }
 export default function SetupWorkspace() {
   const navigate = useNavigate()
-  const { setMember } = useAuth()
-  const [enableMe, setEnableMe] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
-  useQuery(['me'], fetchMe, {
-    enabled: enableMe,
-    onSuccess: (member) => {
-      setMember(member)
-      navigate('/home')
-    },
-  })
+  const [isLoading, setIsLoading] = useState(false)
 
   const { mutateAsync: createLocation } = useMutation(addLocation)
   const { mutateAsync: createDepartment } = useMutation(addDepartment)
@@ -43,7 +33,7 @@ export default function SetupWorkspace() {
     )
       .then(() => {
         setIsLoading(false)
-        setEnableMe(true)
+        navigate('/onboarding/invite')
       })
       .catch(() => {
         message.error('Something went wrong!')
@@ -155,7 +145,7 @@ export default function SetupWorkspace() {
 
         <Form.Item className="col-span-3">
           <div className="flex items-center justify-end space-x-4">
-            <Button onClick={() => setEnableMe(true)}>Skip</Button>
+            <Button onClick={() => navigate('/onboarding/invite')}>Skip</Button>
             <Button type="primary" htmlType="submit" loading={isLoading}>
               Submit
               <RightOutlined />
