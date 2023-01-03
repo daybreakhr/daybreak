@@ -40,7 +40,7 @@ export default function UserActions({ uid }: UserActionsProps) {
   if (member?.role === 'admin' && uid !== member.uid) {
     return (
       <Dropdown trigger={['click']} overlay={overlay}>
-        <button className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200">
+        <button className="flex items-center justify-center w-6 h-6 bg-transparent rounded-full hover:bg-gray-100">
           <AiOutlineMore />
         </button>
       </Dropdown>
@@ -48,7 +48,7 @@ export default function UserActions({ uid }: UserActionsProps) {
   } else if (member?.role === 'member' && uid === member.uid) {
     return (
       <Dropdown trigger={['click']} overlay={overlay}>
-        <button className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200">
+        <button className="flex items-center justify-center w-6 h-6 bg-transparent rounded-full hover:bg-gray-100">
           <AiOutlineMore />
         </button>
       </Dropdown>
