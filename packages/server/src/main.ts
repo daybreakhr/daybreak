@@ -16,6 +16,7 @@ async function bootstrap() {
             process.env.FRONTEND_URL,
             process.env.FRONTEND_PREVIEW_URL,
             process.env.BOARDS_URL,
+            /^https:\/\/daybreakhr-.*.web.app$/,
           ]
         : '*',
   })
@@ -43,6 +44,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document, customOptions)
 
-  await app.listen(process.env.PORT ?? 8000, () => console.info(`Nest application started on ${process.env.PORT ?? 8000} port`))
+  await app.listen(process.env.PORT ?? 8000, () =>
+    console.info(
+      `Nest application started on ${process.env.PORT ?? 8000} port`,
+    ),
+  )
 }
 bootstrap()
