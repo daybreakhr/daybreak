@@ -26,6 +26,7 @@ import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import Integrations from 'pages/integrations'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -81,6 +82,10 @@ export default function App() {
                     element={<Organisation />}
                   />
                   <Route path="settings/members" element={<Members />} />
+                  <Route
+                    path="settings/integrations"
+                    element={<Integrations />}
+                  />
                 </Route>
               </Routes>
             </BrowserRouter>
