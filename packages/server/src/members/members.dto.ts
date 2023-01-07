@@ -31,6 +31,13 @@ export class MemberDto {
   })
   @IsOptional()
   isSuspended: boolean
+
+  @ApiProperty({
+    example: '638ca581202bf45fadf5e31e',
+    description: 'id of the member',
+    required: true,
+  })
+  id: string
 }
 
 export class CreateMemberDto extends PartialType(MemberDto) {}

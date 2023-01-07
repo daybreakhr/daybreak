@@ -27,9 +27,14 @@ export const columns: ColumnsType<MemberTableData> = [
     title: 'Role',
     dataIndex: 'role',
     key: 'role',
-    render: (_, { role, uid }) => (
+    render: (_, { role, isSuspended, uid }) => (
       <p className="flex items-center space-x-2">
-        <span>{capitalize(role)}</span>
+        <Show when={isSuspended}>
+          <span className="line-through opacity-50">Suspended</span>
+        </Show>
+        <Show when={!isSuspended}>
+          <span>{capitalize(role)}</span>
+        </Show>
         <Show when={!uid}>
           <Tag>Pending</Tag>
         </Show>
@@ -40,6 +45,8 @@ export const columns: ColumnsType<MemberTableData> = [
     title: '',
     dataIndex: 'actions',
     key: 'actions',
-    render: (_, { uid }) => <UserActions uid={uid} />,
+    render: (_, member) => {
+      return <UserActions {...member} />
+    },
   },
 ]

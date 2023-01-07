@@ -30,3 +30,18 @@ export async function fetchInvitedMembers() {
   const { data } = await client.get<Invitees[]>(`${workspaceId}/invite`)
   return data
 }
+
+export async function updateMember({
+  memberId,
+  body,
+}: {
+  memberId: string
+  body: Partial<Member>
+}) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.patch<Member>(
+    `${workspaceId}/members/${memberId}`,
+    body,
+  )
+  return data
+}
