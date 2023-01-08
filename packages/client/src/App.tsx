@@ -26,6 +26,7 @@ import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import CandidateEngagement from 'pages/candidate-engagement'
 import Integrations from 'pages/integrations'
 
 const queryClient = new QueryClient({
@@ -71,6 +72,10 @@ export default function App() {
                     />
                     <Route path="profile" element={<CandidateProfile />} />
                     <Route path="feedback" element={<CandidateFeedback />} />
+                    <Route
+                      path="engagement"
+                      element={<CandidateEngagement />}
+                    />
                     <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
                   <Route
