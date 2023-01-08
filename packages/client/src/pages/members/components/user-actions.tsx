@@ -5,6 +5,7 @@ import {
   AiOutlineSetting,
 } from 'react-icons/ai'
 import useAuth from 'hooks/use-auth'
+import { Switch } from 'ui-kit'
 import { ExclamationCircleOutlined, ToolOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MemberTableData } from 'types/member'
@@ -51,23 +52,26 @@ export default function UserActions({
         <Menu.Item key="change_role" icon={<AiOutlineSetting />}>
           Change Role
         </Menu.Item>
-        {!isSuspended ? (
-          <Menu.Item
-            key="remove_user"
-            icon={<AiOutlineDelete className="text-red-500" />}
-            onClick={() => updateActivation(false)}
-          >
-            <span className="text-red-500">Suspend Account</span>
-          </Menu.Item>
-        ) : (
-          <Menu.Item
-            key="remove_user"
-            icon={<ToolOutlined />}
-            onClick={() => updateActivation(true)}
-          >
-            Activate Account
-          </Menu.Item>
-        )}
+        <Switch>
+          <Switch.Match when={!isSuspended}>
+            <Menu.Item
+              key="remove_user"
+              icon={<AiOutlineDelete className="text-red-500" />}
+              onClick={() => updateActivation(false)}
+            >
+              <span className="text-red-500">Suspend Account</span>
+            </Menu.Item>
+          </Switch.Match>
+          <Switch.Match when={isSuspended}>
+            <Menu.Item
+              key="remove_user"
+              icon={<ToolOutlined />}
+              onClick={() => updateActivation(true)}
+            >
+              Activate Account
+            </Menu.Item>
+          </Switch.Match>
+        </Switch>
       </Menu>
     ) : (
       <Menu>
