@@ -14,6 +14,7 @@ export class MembersService {
     const members = await this.prismaService.member.findMany({
       where: { workspaceId },
     })
+
     const memberByUid = members.reduce(
       (acc, curr) => ({ ...acc, [curr.uid]: curr }),
       {} as Record<string, MemberDto>,
@@ -21,8 +22,14 @@ export class MembersService {
 
     const identifiers = members.map(({ uid }) => ({ uid }))
     const users = await this.authService.getUsers(identifiers)
+
     return users.map((user) => {
-      return { ...user, role: memberByUid[user.uid].role }
+      return {
+        ...user,
+        role: memberByUid[user.uid].role,
+        memberId: memberByUid[user.uid].id,
+        isSuspended: memberByUid[user.uid].isSuspended,
+      }
     })
   }
 
@@ -33,6 +40,11 @@ export class MembersService {
     })
 
     const user = await this.authService.getUser(member.uid)
-    return { ...user, role: member.role }
+    return {
+      ...user,
+      role: member.role,
+      memberId: member.id,
+      isSuspended: member.isSuspended,
+    }
   }
 }
