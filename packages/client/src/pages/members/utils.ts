@@ -7,15 +7,18 @@ export function getMemberTableData(
 ): MemberTableData[] {
   const tableData: MemberTableData[] = []
 
-  members?.map(({ uid, email, role, displayName, photoURL }) =>
-    tableData.push({
-      rowId: uid,
-      uid,
-      email,
-      role,
-      displayName,
-      photoURL,
-    } as MemberTableData),
+  members?.map(
+    ({ uid, memberId, email, role, displayName, photoURL, isSuspended }) =>
+      tableData.push({
+        rowId: uid,
+        memberId,
+        uid,
+        email,
+        role,
+        displayName,
+        photoURL,
+        isSuspended,
+      } as MemberTableData),
   )
 
   invitedMembers?.map(({ id, email, role }) =>
