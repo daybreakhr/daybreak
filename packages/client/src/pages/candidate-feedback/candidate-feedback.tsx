@@ -2,8 +2,8 @@ import { useState } from 'react'
 import dayjs from 'dayjs'
 import { range } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { AiOutlinePlus } from 'react-icons/ai'
 import { Button, Empty, Skeleton } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -29,7 +29,7 @@ export default function CandidateFeedback() {
         <Show when={data && data.length > 0}>
           <Button
             type="primary"
-            icon={<AiOutlinePlus />}
+            icon={<PlusOutlined />}
             onClick={() => setFeedbackModal(true)}
           >
             Add Feedback
@@ -51,7 +51,7 @@ export default function CandidateFeedback() {
             <Empty description="No feedback has been added yet...">
               <Button
                 type="primary"
-                icon={<AiOutlinePlus />}
+                icon={<PlusOutlined />}
                 onClick={() => setFeedbackModal(true)}
               >
                 Add Feedback

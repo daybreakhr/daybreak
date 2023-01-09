@@ -17,7 +17,8 @@ export default function Integrations() {
         ]}
       />
 
-      <div className="p-4 m-8 bg-white rounded-md shadow-md">
+      <div className="p-4 m-8 bg-white rounded-md shadow-md h-fit">
+        <p className="mb-4 font-sans text-xl font-medium">Available Apps</p>
         <Calendar />
       </div>
     </>
