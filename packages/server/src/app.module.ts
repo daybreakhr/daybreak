@@ -35,6 +35,8 @@ import { AffindaModule } from './affinda/affinda.module'
         FIREBASE_PROJECT_ID: Joi.string(),
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
+        FIREBASE_CLIENT_ID: Joi.string(),
+        FIREBASE_CLIENT_SECRET: Joi.string(),
       }),
       envFilePath: ['.env'],
       isGlobal: true,
