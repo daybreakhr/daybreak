@@ -5,7 +5,6 @@ import type { Job, Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import { Show } from 'ui-kit'
 import client from 'utils/client'
-import { getWorkspaceInitials } from './utils'
 
 type WorkspaceWithJob = Workspace & { Job: Job[] }
 
@@ -56,17 +55,14 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
 
       <div className="w-screen h-screen max-w-3xl py-8 mx-auto prose prose-stone">
         <Show when={workspace.logo}>
-          <Image
-            width={48}
-            height={48}
-            alt="Company logo"
-            src={workspace.logo ?? ''}
-          />
+          {(logo) => (
+            <Image width={48} height={48} alt="Company logo" src={logo} />
+          )}
         </Show>
         <Show when={!workspace.logo}>
           <div className="flex items-center justify-center w-12 h-12 rounded-md bg-slate-500">
             <p className="text-xl font-medium text-white">
-              {getWorkspaceInitials(workspace.name)}
+              {workspace.name.charAt(0).toUpperCase()}
             </p>
           </div>
         </Show>

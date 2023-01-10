@@ -41,12 +41,18 @@ export default function JobPage({ job }: JobPageProps) {
       </Head>
 
       <div className="w-screen h-screen max-w-3xl py-8 mx-auto">
-        <Image
-          width={48}
-          height={48}
-          alt="Company logo"
-          src={job.Workspace.logo ?? ''}
-        />
+        <Show when={job.Workspace.logo}>
+          {(logo) => (
+            <Image width={48} height={48} alt="Company logo" src={logo} />
+          )}
+        </Show>
+        <Show when={!job.Workspace.logo}>
+          <div className="flex items-center justify-center w-12 h-12 rounded-md bg-slate-500">
+            <p className="text-xl font-medium text-white">
+              {job.Workspace.name.charAt(0).toUpperCase()}
+            </p>
+          </div>
+        </Show>
 
         <div className="mt-2 mb-4 prose prose-stone max-w-none">
           <h3 className="mb-1 text-xl font-semibold">{job.title}</h3>
