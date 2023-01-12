@@ -104,9 +104,13 @@ export default function CandidateProfile() {
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
                   </Switch.Match>
 
+                  <Switch.Match when={sortedExperiences.length === 0}>
+                    <p className="font-medium">N/A</p>
+                  </Switch.Match>
+
                   <Switch.Match when={sortedExperiences}>
                     {([current]) => (
-                      <p className="font-medium">{current.organization}</p>
+                      <p className="font-medium">{current?.organization}</p>
                     )}
                   </Switch.Match>
                 </Switch>
