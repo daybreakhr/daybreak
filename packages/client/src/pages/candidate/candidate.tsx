@@ -28,6 +28,7 @@ export default function Candidate() {
         tabs={[
           { label: 'Profile', key: `/candidates/${candidateId}/profile` },
           { label: 'Feedback', key: `/candidates/${candidateId}/feedback` },
+          { label: 'Engagement', key: `/candidates/${candidateId}/engagement` },
         ]}
       />
 
