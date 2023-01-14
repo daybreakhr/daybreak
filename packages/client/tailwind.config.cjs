@@ -13,6 +13,9 @@ module.exports = {
         primary: {
           main: '#9155fd',
         },
+        secondary: {
+          main: '#EBD966',
+        },
       },
     },
     backgroundImage: {

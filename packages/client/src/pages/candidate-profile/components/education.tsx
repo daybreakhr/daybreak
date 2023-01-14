@@ -57,7 +57,8 @@ export default function Education({ educations, isLoading }: EducationProps) {
                         <div>
                           <p className="font-medium">{organization}</p>
                           <p className="text-gray-500">
-                            {accreditation?.education}, {grade?.raw}
+                            {accreditation?.education}{' '}
+                            {grade?.raw ? `, ${grade.raw}` : null}
                           </p>
                         </div>
                         <div className="flex-1" />

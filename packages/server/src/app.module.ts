@@ -20,6 +20,7 @@ import { TemplatesModule } from './templates/templates.module'
 import { NotificationModule } from './notification/notification.module'
 import { AffindaModule } from './affinda/affinda.module'
 import { ProspectModule } from './prospect/prospect.module'
+import { CalendarModule } from './calendar/calendar.module'
 
 @Module({
   imports: [
@@ -36,6 +37,8 @@ import { ProspectModule } from './prospect/prospect.module'
         FIREBASE_PROJECT_ID: Joi.string(),
         FIREBASE_CLIENT_EMAIL: Joi.string(),
         FIREBASE_PRIVATE_KEY: Joi.string(),
+        FIREBASE_CLIENT_ID: Joi.string(),
+        FIREBASE_CLIENT_SECRET: Joi.string(),
       }),
       envFilePath: ['.env'],
       isGlobal: true,
@@ -54,6 +57,7 @@ import { ProspectModule } from './prospect/prospect.module'
     NotificationModule,
     AffindaModule,
     ProspectModule,
+    CalendarModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

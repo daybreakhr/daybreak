@@ -1,4 +1,5 @@
 import { Dropdown, Menu, message, Modal } from 'antd'
+import { useState } from 'react'
 import {
   AiOutlineDelete,
   AiOutlineMore,
@@ -11,6 +12,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MemberTableData } from 'types/member'
 import { updateMember } from '../queries'
 
+import ChangeRoleForm from './change-role-form'
+
 export default function UserActions({
   uid,
   memberId,
@@ -18,6 +21,7 @@ export default function UserActions({
 }: MemberTableData) {
   const { member: currentMember } = useAuth()
   const queryClient = useQueryClient()
+  const [changeRoleModal, setChangeRoleModal] = useState(false)
 
   const { mutateAsync: suspendAccount } = useMutation(updateMember, {
     onSuccess: ({ isSuspended }) => {
@@ -48,31 +52,42 @@ export default function UserActions({
 
   const overlay =
     currentMember?.role === 'admin' ? (
-      <Menu>
-        <Menu.Item key="change_role" icon={<AiOutlineSetting />}>
-          Change Role
-        </Menu.Item>
-        <Switch>
-          <Switch.Match when={!isSuspended}>
-            <Menu.Item
-              key="remove_user"
-              icon={<AiOutlineDelete className="text-red-500" />}
-              onClick={() => updateActivation(false)}
-            >
-              <span className="text-red-500">Suspend Account</span>
-            </Menu.Item>
-          </Switch.Match>
-          <Switch.Match when={isSuspended}>
-            <Menu.Item
-              key="remove_user"
-              icon={<ToolOutlined />}
-              onClick={() => updateActivation(true)}
-            >
-              Activate Account
-            </Menu.Item>
-          </Switch.Match>
-        </Switch>
-      </Menu>
+      <>
+        <Menu>
+          <Menu.Item
+            key="change_role"
+            icon={<AiOutlineSetting />}
+            onClick={() => setChangeRoleModal(true)}
+          >
+            Change Role
+          </Menu.Item>
+          <Switch>
+            <Switch.Match when={!isSuspended}>
+              <Menu.Item
+                key="remove_user"
+                icon={<AiOutlineDelete className="text-red-500" />}
+                onClick={() => updateActivation(false)}
+              >
+                <span className="text-red-500">Suspend Account</span>
+              </Menu.Item>
+            </Switch.Match>
+            <Switch.Match when={isSuspended}>
+              <Menu.Item
+                key="remove_user"
+                icon={<ToolOutlined />}
+                onClick={() => updateActivation(true)}
+              >
+                Activate Account
+              </Menu.Item>
+            </Switch.Match>
+          </Switch>
+        </Menu>
+        <ChangeRoleForm
+          memberId={memberId}
+          visible={changeRoleModal}
+          onCancel={() => setChangeRoleModal(false)}
+        />
+      </>
     ) : (
       <Menu>
         <Menu.Item
