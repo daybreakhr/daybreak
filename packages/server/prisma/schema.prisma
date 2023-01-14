@@ -24,6 +24,7 @@ model Workspace {
   Location    Location[]
   Job         Job[]
   Candidate   Candidate[]
+  Prospect    Prospect[]
 }
 
 model Member {
@@ -170,6 +171,22 @@ enum CandidateStatus {
   offered
   accepted
   rejected
+}
+
+model Prospect {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  middleName  String?
+  lastName    String
+  email       String
+  phone       String
+  location    String
+  resume      String?
+  affindaId   String    @unique
+  linkedInUrl String
+  createdAt   DateTime  @default(now())
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @db.ObjectId
 }
 
 model Feedback {
