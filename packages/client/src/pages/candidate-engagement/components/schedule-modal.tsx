@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
 import { gapi } from 'gapi-script'
 import { useParams } from 'react-router-dom'
-import { useQueries } from '@tanstack/react-query'
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Avatar, DatePicker, Form, Input, Modal, Select } from 'antd'
 
-import { fetchMembers } from 'pages/members/queries'
 import { insertEvent } from 'utils/calendar'
+import { fetchMembers } from 'pages/members/queries'
 import { fetchCandidate } from 'pages/candidate/queries'
+import { createCalendarEvent } from '../queries'
 
 type ScheduleModalProps = {
   isModalOpen: boolean
@@ -28,6 +29,14 @@ export default function ScheduleModal({
         queryFn: () => fetchCandidate(candidateId),
       },
     ],
+  })
+
+  const queryClient = useQueryClient()
+  const { mutate, isLoading } = useMutation(createCalendarEvent, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['calendars', candidateId])
+      onCancel()
+    },
   })
 
   const membersList = useMemo(
@@ -63,9 +72,18 @@ export default function ScheduleModal({
         ],
       }
 
-      await insertEvent(event)
+      const response = await insertEvent(event)
 
-      onCancel()
+      mutate({
+        candidateId,
+        body: {
+          eventId: response?.result.id,
+          title: response?.result.summary,
+          attendees: values.interviewers,
+          startTime,
+          endTime,
+        },
+      })
     })
   }
 
@@ -75,6 +93,7 @@ export default function ScheduleModal({
       open={isModalOpen}
       onCancel={onCancel}
       title="Schedule interview"
+      okButtonProps={{ loading: isLoading }}
     >
       <Form layout="vertical" form={form}>
         <Form.Item
