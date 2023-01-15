@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger'
+import { Response } from 'express'
 import { UserRecord } from 'firebase-admin/auth'
 import { MemberDto } from 'src/members/members.dto'
 import { AuthGuard } from './auth.guard'
@@ -37,8 +38,15 @@ export class AuthController {
   @ApiCreatedResponse({
     description: 'Received tokens successfully',
   })
-  async getGoogleCredentials(@Body() code: string) {
+  async getGoogleCredentials(
+    @Body() code: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const data = await this.authService.getGoogleCredentials(code)
+    response.cookie('accessToken', data.access_token, {
+      expires: new Date(data.expiry_date),
+    })
+    response.cookie('refresh_token', data.refresh_token)
     return data
   }
 
