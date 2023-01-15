@@ -11,7 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     if (authorization) {
       const user = await this.authService.verifyIdToken(authorization)
-      if (user) {
+      if (user && !user.disabled) {
         // @ts-ignore
         req.user = user
       }
