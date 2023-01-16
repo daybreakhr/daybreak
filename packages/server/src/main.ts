@@ -20,6 +20,7 @@ async function bootstrap() {
             process.env.FRONTEND_URL,
             process.env.FRONTEND_PREVIEW_URL,
             process.env.BOARDS_URL,
+            /^https:\/\/daybreakhr-.*.web.app$/,
           ]
         : '*',
   })
