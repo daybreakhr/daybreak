@@ -1,12 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { Member } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
+import type { Member } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
+import { OAuth2Client, UserRefreshClient } from 'google-auth-library'
 import { FirebaseService } from 'src/firebase/firebase.service'
 import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
   ) {}
@@ -61,5 +64,27 @@ export class AuthService {
     } catch (error) {
       return null
     }
+  }
+
+  async getGoogleCredentials(code: string) {
+    const oAuth2Client = new OAuth2Client(
+      this.configService.get<string>('FIREBASE_CLIENT_ID'),
+      this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
+      'postmessage',
+    )
+
+    const { tokens } = await oAuth2Client.getToken(code)
+    return tokens
+  }
+
+  async getRefreshAccessToken(refreshToken: string) {
+    const user = new UserRefreshClient(
+      this.configService.get<string>('FIREBASE_CLIENT_ID'),
+      this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
+      refreshToken,
+    )
+
+    const { credentials } = await user.refreshAccessToken()
+    return credentials
   }
 }

@@ -26,6 +26,9 @@ import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import CandidateEngagement from 'pages/candidate-engagement'
+import Integrations from 'pages/integrations'
+import Logrocket from 'components/logrocket'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -70,6 +73,10 @@ export default function App() {
                     />
                     <Route path="profile" element={<CandidateProfile />} />
                     <Route path="feedback" element={<CandidateFeedback />} />
+                    <Route
+                      path="engagement"
+                      element={<CandidateEngagement />}
+                    />
                     <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
                   <Route
@@ -81,8 +88,13 @@ export default function App() {
                     element={<Organisation />}
                   />
                   <Route path="settings/members" element={<Members />} />
+                  <Route
+                    path="settings/integrations"
+                    element={<Integrations />}
+                  />
                 </Route>
               </Routes>
+              {import.meta.env.PROD && <Logrocket />}
             </BrowserRouter>
           </Auth>
         </GoogleOAuthProvider>

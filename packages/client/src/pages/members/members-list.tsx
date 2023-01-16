@@ -11,13 +11,19 @@ export const columns: ColumnsType<MemberTableData> = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: (_, { displayName, email, photoURL, uid }) => (
+    render: (_, { displayName, email, photoURL, isSuspended, uid }) => (
       <div className="flex items-center space-x-3">
         <Avatar src={photoURL}>
           {displayName?.charAt(0) ?? email.charAt(0).toUpperCase()}
         </Avatar>
         <div className="flex flex-col">
-          <span className="font-medium">{displayName}</span>
+          <span
+            className={
+              isSuspended ? ' font-medium line-through' : 'font-medium'
+            }
+          >
+            {displayName}
+          </span>
           <span className={clsx({ 'text-gray-500': !uid })}>{email}</span>
         </div>
       </div>
@@ -27,9 +33,14 @@ export const columns: ColumnsType<MemberTableData> = [
     title: 'Role',
     dataIndex: 'role',
     key: 'role',
-    render: (_, { role, uid }) => (
+    render: (_, { role, isSuspended, uid }) => (
       <p className="flex items-center space-x-2">
-        <span>{capitalize(role)}</span>
+        <Show when={isSuspended}>
+          <span className="opacity-50 ">Suspended</span>
+        </Show>
+        <Show when={!isSuspended}>
+          <span>{capitalize(role)}</span>
+        </Show>
         <Show when={!uid}>
           <Tag>Pending</Tag>
         </Show>
@@ -40,6 +51,8 @@ export const columns: ColumnsType<MemberTableData> = [
     title: '',
     dataIndex: 'actions',
     key: 'actions',
-    render: (_, { uid }) => <UserActions uid={uid} />,
+    render: (_, member) => {
+      return <UserActions {...member} />
+    },
   },
 ]
