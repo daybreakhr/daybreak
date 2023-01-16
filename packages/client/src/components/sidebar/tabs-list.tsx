@@ -31,10 +31,10 @@ const tabs = [
         key: 'settings/members',
         label: <Link to="/settings/members">Members</Link>,
       },
-      {
-        key: 'settings/integrations',
-        label: <Link to="/settings/integrations">Integrations</Link>,
-      },
+      // {
+      //   key: 'settings/integrations',
+      //   label: <Link to="/settings/integrations">Integrations</Link>,
+      // },
     ],
   },
 ]
