@@ -19,6 +19,7 @@ import { InvitesModule } from './invites/invites.module'
 import { TemplatesModule } from './templates/templates.module'
 import { NotificationModule } from './notification/notification.module'
 import { AffindaModule } from './affinda/affinda.module'
+import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 
 @Module({
@@ -55,6 +56,7 @@ import { CalendarModule } from './calendar/calendar.module'
     TemplatesModule,
     NotificationModule,
     AffindaModule,
+    ProspectModule,
     CalendarModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
