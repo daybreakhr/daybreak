@@ -41,7 +41,7 @@ export class ProspectController {
     type: [Prospect],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('workspaceId') workspaceId: string): Promise<Prospect[]> {
+  async getAll(@Param('workspaceId') workspaceId: string) {
     const data = await this.prospectService.getAll(workspaceId)
     return data
   }
@@ -54,7 +54,7 @@ export class ProspectController {
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Prospect not found' })
-  async getProspect(@Param('id') id: string): Promise<Prospect> {
+  async getProspect(@Param('id') id: string) {
     const data = await this.prospectService.getProspect(id)
     return data
   }
@@ -67,7 +67,7 @@ export class ProspectController {
   async createProspect(
     @Param('workspaceId') workspaceId: string,
     @Body() prospectBody: CreateProspectDto,
-  ): Promise<Prospect> {
+  ) {
     const data = await this.prospectService.create(workspaceId, prospectBody)
     return data
   }
@@ -84,7 +84,7 @@ export class ProspectController {
   async AddProspectToCandidate(
     @Param('id') id: string,
     @Body() { jobId }: AddProspectToCandidate,
-  ): Promise<Prospect> {
+  ) {
     const data = await this.prospectService.addToCandidate(id, jobId)
     return data
   }
@@ -101,7 +101,7 @@ export class ProspectController {
   async patchProspect(
     @Param('id') id: string,
     @Body() prospectBody: Partial<Prospect>,
-  ): Promise<Prospect> {
+  ) {
     const data = await this.prospectService.update(id, prospectBody)
     return data
   }
@@ -111,7 +111,7 @@ export class ProspectController {
   @ApiOkResponse({ description: 'prospect deleted successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Prospect not found' })
-  async deleteProspect(@Param('id') id: string): Promise<Prospect> {
+  async deleteProspect(@Param('id') id: string) {
     const data = await this.prospectService.delete(id)
     return data
   }

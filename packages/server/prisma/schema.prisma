@@ -85,6 +85,8 @@ model Job {
   Member        Member      @relation(fields: [createdBy], references: [uid])
   createdBy     String
   Candidate     Candidate[]
+  Prospects     Prospect[]  @relation(fields: [prospectIds], references: [id])
+  prospectIds   String[]    @db.ObjectId
 }
 
 enum Priority {
@@ -184,11 +186,12 @@ model Prospect {
   phone       String
   location    String
   resume      String?
-  affindaId   String    @unique
   linkedInUrl String
   createdAt   DateTime  @default(now())
   Workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String    @db.ObjectId
+  Jobs        Job[]     @relation(fields: [jobIds], references: [id])
+  jobIds      String[]  @db.ObjectId
 }
 
 model Feedback {
