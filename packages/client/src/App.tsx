@@ -29,6 +29,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import CandidateEngagement from 'pages/candidate-engagement'
 import Integrations from 'pages/integrations'
 import CreateCandidate from 'pages/create-candidate'
+import Logrocket from 'components/logrocket'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -99,6 +100,7 @@ export default function App() {
                   />
                 </Route>
               </Routes>
+              {import.meta.env.PROD && <Logrocket />}
             </BrowserRouter>
           </Auth>
         </GoogleOAuthProvider>

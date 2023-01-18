@@ -34,4 +34,29 @@ export class AffindaService {
 
     return data.data
   }
+
+  async uploadResume(resumeUrl: string) {
+    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
+    const AFFINDA_URL = this.configService.get<string>('AFFINDA_URL')
+
+    const url = `${AFFINDA_URL}/resumes`
+
+    const { data } = await firstValueFrom(
+      this.httpService
+        .post<Resume>(url, null, {
+          headers: { Authorization: `Bearer ${AFFINDA_TOKEN}` },
+          data: {
+            url: resumeUrl,
+          },
+        })
+        .pipe(
+          catchError((error) => {
+            this.logger.error(error.response.data)
+            throw error
+          }),
+        ),
+    )
+
+    return data.meta.identifier
+  }
 }

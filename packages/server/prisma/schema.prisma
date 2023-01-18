@@ -24,6 +24,7 @@ model Workspace {
   Location    Location[]
   Job         Job[]
   Candidate   Candidate[]
+  Prospect    Prospect[]
 }
 
 model Member {
@@ -38,6 +39,7 @@ model Member {
   Location    Location[]
   Job         Job[]
   Feedback    Feedback[]
+  Calendar    Calendar[]
 }
 
 model Invitees {
@@ -83,6 +85,8 @@ model Job {
   Member        Member      @relation(fields: [createdBy], references: [uid])
   createdBy     String
   Candidate     Candidate[]
+  Prospects     Prospect[]  @relation(fields: [prospectIds], references: [id])
+  prospectIds   String[]    @db.ObjectId
 }
 
 enum Priority {
@@ -162,6 +166,7 @@ model Candidate {
   Workspace        Workspace       @relation(fields: [workspaceId], references: [id])
   workspaceId      String          @db.ObjectId
   Feedback         Feedback[]
+  Calendar         Calendar[]
 }
 
 enum CandidateStatus {
@@ -170,6 +175,23 @@ enum CandidateStatus {
   offered
   accepted
   rejected
+}
+
+model Prospect {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  middleName  String?
+  lastName    String
+  email       String
+  phone       String
+  location    String
+  resume      String?
+  linkedInUrl String
+  createdAt   DateTime  @default(now())
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @db.ObjectId
+  Jobs        Job[]     @relation(fields: [jobIds], references: [id])
+  jobIds      String[]  @db.ObjectId
 }
 
 model Feedback {
@@ -182,4 +204,18 @@ model Feedback {
   createdBy   String
   Candidate   Candidate @relation(fields: [candidateId], references: [id])
   candidateId String    @db.ObjectId
+}
+
+model Calendar {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  eventId     String    @unique // eventId from google calendar
+  title       String
+  startTime   DateTime
+  endTime     DateTime
+  attendees   String[]
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String    @db.ObjectId
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+  createdAt   DateTime  @default(now())
 }

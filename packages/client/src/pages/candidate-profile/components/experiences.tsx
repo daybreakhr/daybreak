@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Avatar } from 'antd'
+import { Avatar, Empty } from 'antd'
 import { range } from 'lodash'
 import { Scrollbars } from 'react-custom-scrollbars'
 import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
@@ -37,6 +37,17 @@ export default function Experiences({
                   </div>
                 </li>
               ))}
+            </Switch.Match>
+
+            <Switch.Match when={experiences.length === 0}>
+              <Empty
+                description={
+                  <div>
+                    <p>Unable to parse experiences from resume</p>
+                    <p>View Resume for more details</p>
+                  </div>
+                }
+              />
             </Switch.Match>
 
             <Switch.Match when={experiences}>

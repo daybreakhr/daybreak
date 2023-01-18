@@ -3,6 +3,7 @@ import { Button } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import { useGoogleLogin } from '@react-oauth/google'
 import { storage } from 'ui-kit'
+import { fetchGoogleTokens } from '../queries'
 
 export default function Calendar() {
   const [isConnected, setIsConnected] = useState(
@@ -12,15 +13,17 @@ export default function Calendar() {
   const googleLogin = useGoogleLogin({
     // Get authorisation token for reading and editing events in google calendar
     scope: 'https://www.googleapis.com/auth/calendar.events',
-    onSuccess: ({ access_token }) => {
-      storage.set('accessToken', access_token)
+    onSuccess: async ({ code }) => {
+      const data = await fetchGoogleTokens({ code })
+      storage.set('accessToken', data.access_token ?? '')
       setIsConnected(true)
     },
+    flow: 'auth-code',
   })
 
   return (
     <div className="p-4 border rounded-md shadow w-96">
-      <div className="flex mb-2 space-x-3">
+      <div className="flex mb-2 space-x-4">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
           className="w-16 h-16"
