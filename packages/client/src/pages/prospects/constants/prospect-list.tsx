@@ -1,10 +1,11 @@
 import dayjs from 'dayjs'
 import type { ColumnsType } from 'antd/es/table'
-import { message, Popconfirm, Space, Select } from 'antd'
+import { message, Popconfirm, Space, Select, Tooltip, Button } from 'antd'
 
 import type { Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 import { Show } from 'ui-kit'
+import { AiFillLinkedin } from 'react-icons/ai'
 
 const confirm = () => {
   message.success('Prospect Deleted')
@@ -67,23 +68,23 @@ export const prospectColumns = (
         </Popconfirm>
         <Show when={record.resume}>
           <a
-            // href={record.resume}
+            href={record?.resume ?? ''}
             target="_blank"
             rel="noreferrer"
             className="text-blue-600"
           >
-            Resume
+            View Resume
           </a>
         </Show>
         <Show when={record.linkedInUrl}>
-          <a
-            href={record.linkedInUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-600"
-          >
-            Linkedin
-          </a>
+          <Tooltip title="Visit LinkedIn Profile">
+            <Button
+              shape="circle"
+              target="_blank"
+              href={record?.linkedInUrl}
+              icon={<AiFillLinkedin />}
+            />
+          </Tooltip>
         </Show>
       </Space>
     ),
