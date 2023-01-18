@@ -14,8 +14,8 @@ const tabs = [
     icon: <AiOutlineWallet />,
   },
   {
-    key: 'candidates',
-    label: <Link to="/candidates">Candidates</Link>,
+    key: 'prospects',
+    label: <Link to="/prospects">Prospects</Link>,
     icon: <AiOutlineTeam />,
   },
   {
