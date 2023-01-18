@@ -34,7 +34,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        if (newCredentials.access_token) {
+        if (newCredentials?.access_token) {
           // set new access token in the cookie
           response.cookie('access_token', newCredentials.access_token, {
             expires: new Date(newCredentials.expiry_date - 5000),
