@@ -106,7 +106,7 @@ export default function CandidateProfile() {
 
                   <Switch.Match when={sortedExperiences}>
                     {([current]) => (
-                      <p className="font-medium">{current.organization}</p>
+                      <p className="font-medium">{current?.organization}</p>
                     )}
                   </Switch.Match>
                 </Switch>

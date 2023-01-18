@@ -28,6 +28,7 @@ import InviteToWorkspace from 'pages/invite-to-workspace'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import CandidateEngagement from 'pages/candidate-engagement'
 import Integrations from 'pages/integrations'
+import CreateCandidate from 'pages/create-candidate'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -65,6 +66,11 @@ export default function App() {
                   <Route path="jobs/:jobId/edit" element={<CreateJob />} />
                   <Route path="jobs/:jobId/publish" element={<PublishJob />} />
                   <Route path="candidates" element={<Candidates />} />
+                  <Route
+                    path="candidates/create"
+                    element={<CreateCandidate />}
+                  />
+
                   <Route path="candidates/:candidateId" element={<Candidate />}>
                     <Route
                       path=""
