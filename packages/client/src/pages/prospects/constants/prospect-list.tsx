@@ -1,15 +1,17 @@
 import dayjs from 'dayjs'
 import type { ColumnsType } from 'antd/es/table'
-import type { CandidateStatus, Job } from '@prisma/client'
-import { Candidate } from 'types/candidate'
-import { Button, Space } from 'antd'
+import { message, Popconfirm, Space, Select } from 'antd'
 
-export const statusColor: Record<CandidateStatus, string> = {
-  applied: 'cyan',
-  interview: 'blue',
-  offered: 'gold',
-  accepted: 'green',
-  rejected: 'red',
+import type { Job } from '@prisma/client'
+import { Candidate } from 'types/candidate'
+import { Show } from 'ui-kit'
+
+const confirm = () => {
+  message.success('Prospect Deleted')
+}
+
+const cancel = () => {
+  null
 }
 
 export const prospectColumns = (
@@ -24,14 +26,6 @@ export const prospectColumns = (
       `${record.firstName} ${record.middleName ?? ''} ${record.lastName}`,
   },
   { title: 'Email', dataIndex: 'email', key: 'email' },
-  {
-    title: 'Applied For',
-    dataIndex: 'Job',
-    key: 'Job',
-    render: ({ title }) => title,
-    filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
-    onFilter: (value, record) => record.Job?.id === value,
-  },
   {
     title: 'Location',
     dataIndex: 'location',
@@ -53,10 +47,44 @@ export const prospectColumns = (
   {
     title: 'Actions',
     key: 'actions',
-    render: () => (
+    render: (_, record) => (
       <Space size="middle">
-        <Button type="primary">Add to Job</Button>
-        <a className="text-red-600">Delete</a>
+        <Select value="Add to job">
+          {appliedFor.map(({ id, title }) => (
+            <Select.Option key={id} value={id}>
+              {title}
+            </Select.Option>
+          ))}
+        </Select>
+        <Popconfirm
+          title="Delete this prospect"
+          onConfirm={confirm}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <a className="text-red-600">Delete</a>
+        </Popconfirm>
+        <Show when={record.resume}>
+          <a
+            // href={record.resume}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600"
+          >
+            Resume
+          </a>
+        </Show>
+        <Show when={record.linkedInUrl}>
+          <a
+            href={record.linkedInUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600"
+          >
+            Linkedin
+          </a>
+        </Show>
       </Space>
     ),
   },
