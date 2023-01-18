@@ -39,6 +39,10 @@ export default function Candidates() {
         breadcrumb={[
           { path: '/candidates', label: 'Candidates', icon: <TeamOutlined /> },
         ]}
+        tabs={[
+          { label: 'Candidates', key: '/candidates' },
+          { label: 'Prospects', key: '/prospects/' },
+        ]}
       />
 
       <div className="p-8">
