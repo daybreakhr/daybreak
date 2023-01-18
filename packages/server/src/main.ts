@@ -4,18 +4,23 @@ import {
   DocumentBuilder,
   SwaggerCustomOptions,
 } from '@nestjs/swagger'
+import * as cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
+  app.use(cookieParser())
+
   app.enableCors({
+    credentials: true,
     origin:
       process.env.NODE_ENV === 'production'
         ? [
             process.env.FRONTEND_URL,
             process.env.FRONTEND_PREVIEW_URL,
             process.env.BOARDS_URL,
+            /^https:\/\/daybreakhr-.*.web.app$/,
           ]
         : '*',
   })
@@ -43,6 +48,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document, customOptions)
 
-  await app.listen(process.env.PORT ?? 8000, () => console.info(`Nest application started on ${process.env.PORT ?? 8000} port`))
+  await app.listen(process.env.PORT ?? 8000, () =>
+    // eslint-disable-next-line no-console
+    console.info(
+      `Nest application started on ${process.env.PORT ?? 8000} port`,
+    ),
+  )
 }
 bootstrap()
