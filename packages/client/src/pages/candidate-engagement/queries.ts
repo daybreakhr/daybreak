@@ -4,6 +4,7 @@ import client from 'utils/client'
 export async function fetchCalendarEvents(candidateId: string) {
   const { data } = await client.get<Calendar[]>(
     `candidates/${candidateId}/calendars`,
+    { withCredentials: true },
   )
   return data
 }
@@ -18,6 +19,7 @@ export async function createCalendarEvent({
   const { data } = await client.post<Calendar>(
     `candidates/${candidateId}/calendars`,
     body,
+    { withCredentials: true },
   )
   return data
 }

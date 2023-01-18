@@ -43,8 +43,8 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const data = await this.authService.getGoogleCredentials(code)
-    response.cookie('accessToken', data.access_token, {
-      expires: new Date(data.expiry_date),
+    response.cookie('access_token', data.access_token, {
+      expires: new Date(data.expiry_date - 5000),
     })
     response.cookie('refresh_token', data.refresh_token)
     return data
