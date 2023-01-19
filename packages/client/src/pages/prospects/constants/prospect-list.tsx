@@ -1,19 +1,29 @@
 import dayjs from 'dayjs'
 import type { ColumnsType } from 'antd/es/table'
-import { message, Popconfirm, Space, Select, Tooltip, Button } from 'antd'
+import { message, Space, Tooltip, Button, Dropdown } from 'antd'
+import type { MenuProps } from 'antd'
+import { AiFillLinkedin, AiOutlineFilePdf, AiOutlineMore } from 'react-icons/ai'
+import { Show } from 'ui-kit'
 
 import type { Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
-import { Show } from 'ui-kit'
-import { AiFillLinkedin } from 'react-icons/ai'
 
 const confirm = () => {
   message.success('Prospect Deleted')
 }
 
-const cancel = () => {
-  null
-}
+const items: MenuProps['items'] = [
+  {
+    label: 'Add to job',
+    key: 'add-to-job',
+  },
+  {
+    label: 'Delete',
+    key: 'delete',
+    danger: true,
+    onClick: confirm,
+  },
+]
 
 export const prospectColumns = (
   appliedFor: Job[],
@@ -46,35 +56,21 @@ export const prospectColumns = (
     defaultSortOrder: 'descend',
   },
   {
-    title: 'Actions',
-    key: 'actions',
+    title: 'Available Links',
+    key: 'links',
+    align: 'center',
+    width: 150,
     render: (_, record) => (
       <Space size="middle">
-        <Select value="Add to job">
-          {appliedFor.map(({ id, title }) => (
-            <Select.Option key={id} value={id}>
-              {title}
-            </Select.Option>
-          ))}
-        </Select>
-        <Popconfirm
-          title="Delete this prospect"
-          onConfirm={confirm}
-          onCancel={cancel}
-          okText="Yes"
-          cancelText="No"
-        >
-          <a className="text-red-600">Delete</a>
-        </Popconfirm>
         <Show when={record.resume}>
-          <a
-            href={record?.resume ?? ''}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-600"
-          >
-            View Resume
-          </a>
+          <Tooltip title="View Resume">
+            <Button
+              shape="circle"
+              target="_blank"
+              href={record?.resume ?? ''}
+              icon={<AiOutlineFilePdf />}
+            />
+          </Tooltip>
         </Show>
         <Show when={record.linkedInUrl}>
           <Tooltip title="Visit LinkedIn Profile">
@@ -82,11 +78,31 @@ export const prospectColumns = (
               shape="circle"
               target="_blank"
               href={record?.linkedInUrl}
-              icon={<AiFillLinkedin />}
+              icon={<AiFillLinkedin fill="RoyalBlue" />}
             />
           </Tooltip>
         </Show>
       </Space>
+    ),
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    align: 'center',
+    width: 100,
+    render: () => (
+      <>
+        <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']}>
+          <Button shape="circle" target="_blank" icon={<AiOutlineMore />} />
+        </Dropdown>
+        {/* <Select value="Add to job">
+          {appliedFor.map(({ id, title }) => (
+            <Select.Option key={id} value={id}>
+              {title}
+            </Select.Option>
+          ))}
+        </Select> */}
+      </>
     ),
   },
 ]
