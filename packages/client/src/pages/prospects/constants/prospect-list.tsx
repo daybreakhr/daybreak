@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import type { ColumnsType } from 'antd/es/table'
-import { message, Space, Tooltip, Button, Dropdown } from 'antd'
-import type { MenuProps } from 'antd'
+import { message, Space, Tooltip, Button, Dropdown, MenuProps, Tag } from 'antd'
 import { AiFillLinkedin, AiOutlineFilePdf, AiOutlineMore } from 'react-icons/ai'
 import { Show } from 'ui-kit'
 
@@ -45,6 +44,14 @@ export const prospectColumns = (
       value: id,
       text: title,
     })),
+  },
+  {
+    title: 'Applied For',
+    dataIndex: 'Job',
+    key: 'Job',
+    render: ({ title }) => <Tag>{title}</Tag>,
+    filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
+    onFilter: (value, record) => record.Job?.id === value,
   },
   {
     title: 'Added on',

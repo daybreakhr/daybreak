@@ -1,3 +1,3 @@
-import Prospects from './prospects'
+import Prospects from './mock-prospects'
 
 export default Prospects
