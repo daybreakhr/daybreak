@@ -22,7 +22,7 @@ async function bootstrap() {
             process.env.BOARDS_URL,
             /^https:\/\/daybreakhr-.*.web.app$/,
           ]
-        : '*',
+        : ['http://localhost:3000', 'http://localhost:5173'],
   })
 
   const config = new DocumentBuilder()
