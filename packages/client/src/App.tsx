@@ -29,6 +29,7 @@ import InviteToWorkspace from 'pages/invite-to-workspace'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import CandidateEngagement from 'pages/candidate-engagement'
 import Integrations from 'pages/integrations'
+import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 
 const queryClient = new QueryClient({
@@ -67,6 +68,10 @@ export default function App() {
                   <Route path="jobs/:jobId/edit" element={<CreateJob />} />
                   <Route path="jobs/:jobId/publish" element={<PublishJob />} />
                   <Route path="candidates" element={<Candidates />} />
+                  <Route
+                    path="candidates/create"
+                    element={<CreateCandidate />}
+                  />
                   <Route path="prospects" element={<Prospects />} />
                   <Route path="candidates/:candidateId" element={<Candidate />}>
                     <Route

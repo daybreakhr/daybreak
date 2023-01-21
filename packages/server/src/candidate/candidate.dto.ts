@@ -85,6 +85,10 @@ export class CreateCandidateDto {
   })
   @IsString()
   jobId: string
+
+  @ApiProperty({ example: 'applied', description: 'current candidate status' })
+  @IsOptional()
+  status: CandidateStatus
 }
 
 export class CandidateDto {

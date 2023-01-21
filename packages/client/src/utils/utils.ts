@@ -1,5 +1,13 @@
 import { JobType } from '@prisma/client'
 
+export const candidateStatusOptions = [
+  { label: 'Applied', value: 'applied' },
+  { label: 'Interview', value: 'interview' },
+  { label: 'Offered', value: 'offered' },
+  { label: 'Accepted', value: 'accepted' },
+  { label: 'Rejected', value: 'rejected' },
+]
+
 export function getJobType(jobType: JobType | null | undefined) {
   switch (jobType) {
     case JobType.fullTime:
