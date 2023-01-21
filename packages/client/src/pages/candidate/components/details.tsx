@@ -11,12 +11,10 @@ import {
   AiOutlinePhone,
   AiOutlineUser,
 } from 'react-icons/ai'
-
 import { Candidate } from 'types/candidate'
 import { Show } from 'ui-kit'
-import { getJobType } from 'utils/utils'
+import { candidateStatusOptions, getJobType } from 'utils/utils'
 import { updateCandidate } from '../queries'
-import { candidateStatusOptions } from '../constants/candidate-status'
 import CandidateRejectForm from './candidate-reject-form'
 import ReEnrollConfirmation from './re-enroll-confirmation'
 
