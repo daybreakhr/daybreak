@@ -1,6 +1,7 @@
 import { ConfigProvider } from 'antd'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Auth from 'components/auth'
@@ -25,11 +26,11 @@ import JobOverview from 'pages/job-overview'
 import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
-import { GoogleOAuthProvider } from '@react-oauth/google'
 import CandidateEngagement from 'pages/candidate-engagement'
 import Integrations from 'pages/integrations'
 import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
+import PrivacyPolicy from 'pages/privacy-policy'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -44,6 +45,7 @@ export default function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Login />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/onboarding" element={<Onboarding />}>
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
