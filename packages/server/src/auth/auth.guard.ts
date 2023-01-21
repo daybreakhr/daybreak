@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
       },
     })
 
-    if (member.isSuspended) {
+    if (member && member.isSuspended) {
       return false
     }
 

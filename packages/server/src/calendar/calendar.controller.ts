@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import {
   ApiCreatedResponse,
@@ -20,6 +21,7 @@ import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Request } from 'express'
+import { RefreshTokenInterceptor } from 'src/auth/refresh-token.interceptor'
 import { CalendarDto, CreateCalendarDto } from './calendar.dto'
 import { CalendarService } from './calendar.service'
 
@@ -27,6 +29,7 @@ import { CalendarService } from './calendar.service'
 @ApiTags('Calendar')
 @Controller('candidates/:candidateId/calendars')
 @UseGuards(AuthGuard)
+@UseInterceptors(RefreshTokenInterceptor)
 export class CalendarController {
   constructor(private readonly calendarService: CalendarService) {}
 

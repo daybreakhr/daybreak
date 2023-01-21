@@ -39,6 +39,7 @@ import { CalendarModule } from './calendar/calendar.module'
         FIREBASE_PRIVATE_KEY: Joi.string(),
         FIREBASE_CLIENT_ID: Joi.string(),
         FIREBASE_CLIENT_SECRET: Joi.string(),
+        COOKIE_DOMAIN: Joi.string(),
       }),
       envFilePath: ['.env'],
       isGlobal: true,

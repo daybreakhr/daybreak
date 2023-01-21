@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -19,7 +20,10 @@ import { GetUser } from './get-user.decorator'
 @Controller('auth')
 @UseGuards(AuthGuard)
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get('me')
   @ApiOperation({ summary: 'Get Member details' })
@@ -43,10 +47,13 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const data = await this.authService.getGoogleCredentials(code)
-    response.cookie('accessToken', data.access_token, {
-      expires: new Date(data.expiry_date),
+    response.cookie('access_token', data.access_token, {
+      expires: new Date(data.expiry_date - 5000),
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
     })
-    response.cookie('refresh_token', data.refresh_token)
+    response.cookie('refresh_token', data.refresh_token, {
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
+    })
     return data
   }
 
