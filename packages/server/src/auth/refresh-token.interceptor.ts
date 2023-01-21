@@ -5,12 +5,16 @@ import {
   NestInterceptor,
 } from '@nestjs/common'
 import { Observable, tap } from 'rxjs'
+import { ConfigService } from '@nestjs/config'
 import type { Credentials } from 'google-auth-library'
 import { AuthService } from './auth.service'
 
 @Injectable()
 export class RefreshTokenInterceptor implements NestInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async intercept(
     context: ExecutionContext,
@@ -38,6 +42,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
           // set new access token in the cookie
           response.cookie('access_token', newCredentials.access_token, {
             expires: new Date(newCredentials.expiry_date - 5000),
+            domain: this.configService.get<string>('COOKIE_DOMAIN'),
           })
         }
       }),
