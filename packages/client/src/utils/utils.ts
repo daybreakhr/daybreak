@@ -1,11 +1,11 @@
 import { JobType } from '@prisma/client'
 
 export const candidateStatusOptions = [
-  { text: 'Applied', value: 'applied' },
-  { text: 'interview', value: 'interview' },
-  { text: 'Offered', value: 'offered' },
-  { text: 'Accepted', value: 'accepted' },
-  { text: 'Rejected', value: 'rejected' },
+  { label: 'Applied', value: 'applied' },
+  { label: 'Interview', value: 'interview' },
+  { label: 'Offered', value: 'offered' },
+  { label: 'Accepted', value: 'accepted' },
+  { label: 'Rejected', value: 'rejected' },
 ]
 
 export function getJobType(jobType: JobType | null | undefined) {

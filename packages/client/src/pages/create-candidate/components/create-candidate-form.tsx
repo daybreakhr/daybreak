@@ -82,30 +82,31 @@ export default function CandidateForm() {
   }
 
   return (
-    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      className="mx-64"
+    >
       <Form.Item name="affindaId" hidden />
-      <p className="mb-2">Upload Resume</p>
-      <div className="flex items-center">
-        <div className="w-64" />
-        <Form.Item
-          name="file"
-          valuePropName="file"
-          className="flex-1"
-          rules={[{ required: true, message: 'Please upload your resume!' }]}
-        >
-          <Dragger {...uploadProps}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">PDF, Word or Rich Text only</p>
-          </Dragger>
-        </Form.Item>
-        <div className="w-64" />
-      </div>
-      <div className="flex items-center pr-64 space-x-4">
+      <p className="mb-2 font-medium">Upload Resume</p>
+      <Form.Item
+        name="file"
+        valuePropName="file"
+        className="max-w-2xl mx-auto"
+        rules={[{ required: true, message: 'Please upload your resume!' }]}
+      >
+        <Dragger {...uploadProps}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">PDF, Word or Rich Text only</p>
+        </Dragger>
+      </Form.Item>
+      <div className="flex items-center space-x-4">
         <Form.Item
           label="Job"
           name="jobId"
@@ -132,84 +133,74 @@ export default function CandidateForm() {
           />
         </Form.Item>
       </div>
-      <div className="pr-64">
-        <p className="mb-2">Info</p>
-
-        <div className="flex justify-between space-x-4">
-          <Form.Item
-            name="firstName"
-            label="First Name"
-            className="flex-1"
-            rules={[
-              { required: true, message: 'Please input your First Name' },
-            ]}
-          >
-            <Input placeholder="First Name..." />
-          </Form.Item>
-          <Form.Item name="middleName" label="Midle Name" className="flex-1">
-            <Input placeholder="Middle Name..." />
-          </Form.Item>
-          <Form.Item
-            name="lastName"
-            label="Last Name"
-            className="flex-1"
-            rules={[{ required: true, message: 'Please input your Last Name' }]}
-          >
-            <Input placeholder="Last Name..." />
-          </Form.Item>
-        </div>
-
+      <p className="mb-2 font-medium">Info</p>
+      <div className="flex justify-between space-x-4">
         <Form.Item
-          name="email"
-          label="E-mail"
-          rules={[
-            { type: 'email', message: 'The input is not valid E-mail!' },
-            { required: true, message: 'Please input your E-mail!' },
-          ]}
+          name="firstName"
+          label="First Name"
+          className="flex-1"
+          rules={[{ required: true, message: 'Please input your First Name' }]}
         >
-          <Input placeholder="Enter your Email..." />
+          <Input placeholder="First Name..." />
         </Form.Item>
-
-        <Form.Item
-          name="phone"
-          label="Phone Number"
-          rules={[
-            { required: true, message: 'Please input your phone number!' },
-          ]}
-          required
-        >
-          <Input placeholder="Enter your Phone Number..." />
+        <Form.Item name="middleName" label="Midle Name" className="flex-1">
+          <Input placeholder="Middle Name..." />
         </Form.Item>
-
         <Form.Item
-          name="location"
-          label="City / Country"
-          rules={[
-            { required: true, message: 'Please input your phone number!' },
-          ]}
-          required
+          name="lastName"
+          label="Last Name"
+          className="flex-1"
+          rules={[{ required: true, message: 'Please input your Last Name' }]}
         >
-          <Input placeholder="Enter your current location..." />
-        </Form.Item>
-
-        <Form.Item
-          name="linkedInUrl"
-          label="Linkedin Profile URL"
-          rules={[
-            { type: 'url', message: 'The input is not a valid URL!' },
-            { required: true, message: 'Please input your LinkedIn URL' },
-          ]}
-        >
-          <Input placeholder="https://linkedin.com/in/username" />
+          <Input placeholder="Last Name..." />
         </Form.Item>
       </div>
+
+      <Form.Item
+        name="email"
+        label="E-mail"
+        rules={[
+          { type: 'email', message: 'The input is not valid E-mail!' },
+          { required: true, message: 'Please input your E-mail!' },
+        ]}
+      >
+        <Input placeholder="Enter your Email..." />
+      </Form.Item>
+      <Form.Item
+        name="phone"
+        label="Phone Number"
+        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        required
+      >
+        <Input placeholder="Enter your Phone Number..." />
+      </Form.Item>
+
+      <Form.Item
+        name="location"
+        label="City / Country"
+        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        required
+      >
+        <Input placeholder="Enter your current location..." />
+      </Form.Item>
+
+      <Form.Item
+        name="linkedInUrl"
+        label="Linkedin Profile URL"
+        rules={[
+          { type: 'url', message: 'The input is not a valid URL!' },
+          { required: true, message: 'Please input your LinkedIn URL' },
+        ]}
+      >
+        <Input placeholder="https://linkedin.com/in/username" />
+      </Form.Item>
       <div className="flex items-center justify-end space-x-3">
         <Button htmlType="button" onClick={() => navigate(-1)}>
           Cancel
         </Button>
 
         <Button type="primary" htmlType="submit" loading={isLoading}>
-          Add this candidate
+          Submit
         </Button>
       </div>
     </Form>
