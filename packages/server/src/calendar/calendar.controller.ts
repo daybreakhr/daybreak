@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -11,6 +19,7 @@ import {
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
+import { Request } from 'express'
 import { CalendarDto, CreateCalendarDto } from './calendar.dto'
 import { CalendarService } from './calendar.service'
 
@@ -44,9 +53,11 @@ export class CalendarController {
   async createCalendarEvent(
     @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,
+    @Req() req: Request,
     @Body() calendarBody: CreateCalendarDto,
   ) {
     const data = await this.calendarService.createCalendarEvent(
+      req.cookies,
       candidateId,
       user.uid,
       calendarBody,
