@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
-import { gapi } from 'gapi-script'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Avatar, DatePicker, Form, Input, Modal, Select } from 'antd'
 
-import { insertEvent } from 'utils/calendar'
 import { fetchMembers } from 'pages/members/queries'
 import { fetchCandidate } from 'pages/candidate/queries'
 import { createCalendarEvent } from '../queries'
@@ -62,24 +60,11 @@ export default function ScheduleModal({
       const startTime = values.startTime.format()
       const endTime = values.endTime.format()
 
-      const event: gapi.client.calendar.Event = {
-        summary: values.summary,
-        start: { dateTime: startTime },
-        end: { dateTime: endTime },
-        attendees: [
-          ...values.interviewers.map((email: string) => ({ email })),
-          { email: candidate?.email },
-        ],
-      }
-
-      const response = await insertEvent(event)
-
       mutate({
         candidateId,
         body: {
-          eventId: response?.result.id,
-          title: response?.result.summary,
-          attendees: values.interviewers,
+          title: values.summary,
+          attendees: [...values.interviewers, candidate?.email],
           startTime,
           endTime,
         },
