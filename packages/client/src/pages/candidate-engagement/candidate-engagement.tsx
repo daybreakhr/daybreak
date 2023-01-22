@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import dayjs from 'dayjs'
 import { range } from 'lodash'
 import { Button, Empty } from 'antd'
@@ -7,7 +7,6 @@ import { useQueries } from '@tanstack/react-query'
 import { CalendarOutlined } from '@ant-design/icons'
 
 import { Show, Switch } from 'ui-kit'
-import { gapiLoaded } from 'utils/calendar'
 import { fetchMembers } from 'pages/members/queries'
 import ScheduleModal from './components/schedule-modal'
 import { fetchCalendarEvents } from './queries'
@@ -25,10 +24,6 @@ export default function CandidateEngagement() {
       { queryKey: ['members'], queryFn: fetchMembers },
     ],
   })
-
-  useEffect(() => {
-    gapiLoaded()
-  }, [])
 
   function getInterviewerNames(emails: string[]) {
     return emails.map((interviewerMail) => {
