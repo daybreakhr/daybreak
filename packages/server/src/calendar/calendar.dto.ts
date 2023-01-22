@@ -3,14 +3,6 @@ import { IsArray, IsEmail, IsString } from 'class-validator'
 
 export class CreateCalendarDto {
   @ApiProperty({
-    example:
-      'NjVnamFwMzFjZ3NqMmJiMjYxaW02YjlrYzhxbTZiOW9jY282YWI5aWNoaGphb2hpY2hnajRjOXBjNF8yMDIzMDEyNVQxNjMwMDBaIGhpbS5uYWdyYXRoQG0',
-    description: 'EventID from google calendar',
-  })
-  @IsString()
-  eventId: string
-
-  @ApiProperty({
     example: 'Coding round (React Project)',
     description: 'Title of the calendar event',
   })
@@ -46,4 +38,12 @@ export class CalendarDto extends CreateCalendarDto {
     description: 'id from our database',
   })
   id: string
+
+  @ApiProperty({
+    example:
+      'NjVnamFwMzFjZ3NqMmJiMjYxaW02YjlrYzhxbTZiOW9jY282YWI5aWNoaGphb2hpY2hnajRjOXBjNF8yMDIzMDEyNVQxNjMwMDBaIGhpbS5uYWdyYXRoQG0',
+    description: 'EventID from google calendar',
+  })
+  @IsString()
+  eventId: string
 }

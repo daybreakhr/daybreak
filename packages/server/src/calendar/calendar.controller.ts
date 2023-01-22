@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Req,
@@ -54,17 +56,29 @@ export class CalendarController {
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createCalendarEvent(
+    @Req() req: Request,
     @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,
-    @Req() req: Request,
     @Body() calendarBody: CreateCalendarDto,
   ) {
-    const data = await this.calendarService.createCalendarEvent(
-      req.cookies,
-      candidateId,
-      user.uid,
-      calendarBody,
-    )
-    return data
+    const accessToken: string = req.cookies?.access_token
+
+    if (accessToken) {
+      const data = await this.calendarService.createCalendarEvent(
+        accessToken,
+        candidateId,
+        user.uid,
+        calendarBody,
+      )
+      return data
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: 'Unable to get access_token for google authorization',
+        },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
   }
 }

@@ -19,19 +19,27 @@ export class CalendarService {
   }
 
   async createCalendarEvent(
-    cookies: string,
+    accessToken: string,
     candidateId: string,
     createdBy: string,
     calendarBody: CreateCalendarDto,
   ) {
+    const { attendees, title, startTime, endTime } = calendarBody
+    const newAttendees = attendees.map((email) => ({ email }))
+
     const data = await this.googleService.insertCalendarEvent(
-      calendarBody,
-      cookies['access-token'],
+      {
+        summary: title,
+        start: { dateTime: startTime },
+        end: { dateTime: endTime },
+        attendees: newAttendees,
+      },
+      accessToken,
     )
 
     const calendar = await this.prismaService.calendar.create({
       data: {
-        id: data.id,
+        eventId: data.id,
         ...calendarBody,
         Candidate: { connect: { id: candidateId } },
         Member: { connect: { uid: createdBy } },
