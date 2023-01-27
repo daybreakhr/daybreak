@@ -34,7 +34,13 @@ export class WorkspaceService {
 
     const workspace = await this.prismaService.workspace.findUnique({
       where: query,
-      include: { Job: true },
+      include: {
+        Job: {
+          include: {
+            Department: true,
+          },
+        },
+      },
     })
 
     return workspace

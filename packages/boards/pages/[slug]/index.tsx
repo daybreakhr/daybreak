@@ -1,12 +1,11 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Job, Workspace } from '@prisma/client'
+import type { Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import { Show } from 'ui-kit'
 import client from 'utils/client'
-
-type WorkspaceWithJob = Workspace & { Job: Job[] }
+import { getJobsByDepartment, WorkspaceWithJob } from 'utils/utils'
 
 // This function gets called at build time
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -40,6 +39,8 @@ type WorkspaceHomeProps = {
 }
 
 export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
+  const jobsByDepartment = getJobsByDepartment(workspace)
+
   return (
     <>
       <Head>
@@ -69,18 +70,24 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         <div className="mb-4">
           <h3 className="text-lg font-semibold">{workspace.name}</h3>
           <p className="text-justify">{workspace.description}</p>
-          <h4>Current Job Openings</h4>
+          <h4>Current Job Openings:</h4>
         </div>
-
-        {workspace.Job.map((job) => (
-          <Show key={job.id} when={job.isPublished}>
-            <div className="mb-4">
-              <Link href={`/${workspace.slug}/jobs/${job.id}`}>
-                {job.title}
-              </Link>
+        <div className="pt-2 pb-8">
+          {jobsByDepartment.map(({ departmentId, departmentName, jobs }) => (
+            <div key={departmentId}>
+              <p className="font-bold">{departmentName}</p>
+              {jobs.map((job) => (
+                <Show key={job.id} when={job.isPublished}>
+                  <div className="mb-4">
+                    <Link href={`/${workspace.slug}/jobs/${job.id}`}>
+                      {job.title}
+                    </Link>
+                  </div>
+                </Show>
+              ))}
             </div>
-          </Show>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   )
