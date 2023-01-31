@@ -14,8 +14,8 @@ export class ProspectService {
   async getAll(workspaceId: string) {
     const prospects = await this.prismaService.prospect.findMany({
       where: { workspaceId },
+      include: { Jobs: true },
     })
-
     return prospects
   }
 

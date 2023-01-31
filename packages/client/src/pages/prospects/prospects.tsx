@@ -6,29 +6,29 @@ import { useQuery } from '@tanstack/react-query'
 import { SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
-import { fetchCandidates } from 'pages/prospects/queries'
+import { fetchProspects } from 'pages/prospects/queries'
 import { prospectColumns } from 'pages/prospects/constants/prospect-list'
 
 export default function Prospects() {
   const [input, setInput] = useState('')
-  const { data, isLoading } = useQuery(['candidates'], fetchCandidates)
+  const { data, isLoading } = useQuery(['prospects'], fetchProspects)
 
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
   })
 
   const appliedFor = useMemo(() => {
-    if (data) {
-      return data
-        .map(({ Job }) => Job)
-        .filter(
-          (value, index, arr) =>
-            value !== null &&
-            arr.findIndex((val) => val?.id === value.id) === index,
-        ) as Job[]
-    }
+    // if (data) {
+    //   return data
+    //     .map(({ Job }) => Job)
+    //     .filter(
+    //       (value, index, arr) =>
+    //         value !== null &&
+    //         arr.findIndex((val) => val?.id === value.id) === index,
+    //     ) as Job[]
+    // }
     return [] as Job[]
-  }, [data])
+  }, [])
 
   return (
     <>

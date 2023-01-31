@@ -1,11 +1,10 @@
 import dayjs from 'dayjs'
+import type { Job } from '@prisma/client'
 import type { ColumnsType } from 'antd/es/table'
-import { message, Space, Tooltip, Button, Dropdown, MenuProps, Tag } from 'antd'
+import { message, Tooltip, Button, Dropdown, MenuProps, Tag } from 'antd'
 import { AiFillLinkedin, AiOutlineFilePdf, AiOutlineMore } from 'react-icons/ai'
 import { Show } from 'ui-kit'
-
-import type { Job } from '@prisma/client'
-import { Candidate } from 'types/candidate'
+import type { Prospect } from 'types/prospect'
 
 const confirm = () => {
   message.success('Prospect Deleted')
@@ -27,7 +26,7 @@ const items: MenuProps['items'] = [
 export const prospectColumns = (
   appliedFor: Job[],
   locationApplied: Job[],
-): ColumnsType<Candidate> => [
+): ColumnsType<Prospect> => [
   {
     title: 'Name',
     dataIndex: 'firstName',
@@ -51,7 +50,7 @@ export const prospectColumns = (
     key: 'Job',
     render: ({ title }) => <Tag>{title}</Tag>,
     filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
-    onFilter: (value, record) => record.Job?.id === value,
+    onFilter: (value, record) => record.Jobs.some((job) => job.id === value),
   },
   {
     title: 'Added on',
@@ -65,10 +64,9 @@ export const prospectColumns = (
   {
     title: 'Available Links',
     key: 'links',
-    align: 'center',
     width: 150,
     render: (_, record) => (
-      <Space size="middle">
+      <div className="space-x-3">
         <Show when={record.resume}>
           <Tooltip title="View Resume">
             <Button
@@ -89,7 +87,7 @@ export const prospectColumns = (
             />
           </Tooltip>
         </Show>
-      </Space>
+      </div>
     ),
   },
   {
@@ -98,18 +96,9 @@ export const prospectColumns = (
     align: 'center',
     width: 100,
     render: () => (
-      <>
-        <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']}>
-          <Button shape="circle" target="_blank" icon={<AiOutlineMore />} />
-        </Dropdown>
-        {/* <Select value="Add to job">
-          {appliedFor.map(({ id, title }) => (
-            <Select.Option key={id} value={id}>
-              {title}
-            </Select.Option>
-          ))}
-        </Select> */}
-      </>
+      <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']}>
+        <Button shape="circle" target="_blank" icon={<AiOutlineMore />} />
+      </Dropdown>
     ),
   },
 ]
