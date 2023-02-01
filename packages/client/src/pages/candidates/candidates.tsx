@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import { Button, Input, Table } from 'antd'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
-import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { Link, useNavigate } from 'react-router-dom'
 import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
@@ -46,23 +46,20 @@ export default function Candidates() {
         ]}
       />
       <div className="p-4 m-8 bg-white rounded-md shadow-md">
-        <div className="flex items-center mb-4 space-x-4">
+        <div className="flex items-center justify-between mb-4 space-x-4">
           <Input
             value={input}
-            className="mb-4"
             style={{ width: '16rem' }}
             prefix={<SearchOutlined />}
             placeholder="Search by Candidate Name..."
             onChange={(e) => setInput(e.target.value)}
           />
-          <div className="flex-1" />
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => navigate('/candidates/create')}
-          >
-            Add Candidate
-          </Button>
+
+          <Link to="/candidates/create">
+            <Button type="primary" icon={<PlusOutlined />}>
+              Add Candidate
+            </Button>
+          </Link>
         </div>
 
         <Table

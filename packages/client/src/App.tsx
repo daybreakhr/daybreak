@@ -32,6 +32,7 @@ import Integrations from 'pages/integrations'
 import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
+import CreateProspect from 'pages/create-prospect'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -74,7 +75,6 @@ export default function App() {
                     path="candidates/create"
                     element={<CreateCandidate />}
                   />
-                  <Route path="prospects" element={<Prospects />} />
                   <Route path="candidates/:candidateId" element={<Candidate />}>
                     <Route
                       path=""
@@ -88,6 +88,8 @@ export default function App() {
                     />
                     <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
+                  <Route path="prospects" element={<Prospects />} />
+                  <Route path="prospects/create" element={<CreateProspect />} />
                   <Route
                     path="settings"
                     element={<Navigate to="members" replace />}
