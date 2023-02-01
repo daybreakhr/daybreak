@@ -7,6 +7,9 @@ import type { Job, Location, Workspace } from '@prisma/client'
 import { Show, Reader } from 'ui-kit'
 import client from 'utils/client'
 import ApplicationForm from 'components/application-form'
+import PageHeader from 'components/page-header'
+import { WalletOutlined } from '@ant-design/icons'
+import { Button } from 'antd'
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
 
@@ -39,8 +42,7 @@ export default function JobPage({ job }: JobPageProps) {
         <title>Job Application for {job.title}</title>
         <link rel="icon" type="image/svg+xml" href={job.Workspace.logo ?? ''} />
       </Head>
-
-      <div className="w-screen h-screen max-w-3xl py-8 mx-auto">
+      <div className="flex items-center ml-4 align-middle bg-white rounded shadow-md">
         <Show when={job.Workspace.logo}>
           {(logo) => (
             <Image width={48} height={48} alt="Company logo" src={logo} />
@@ -53,37 +55,57 @@ export default function JobPage({ job }: JobPageProps) {
             </p>
           </div>
         </Show>
+        <h3 className="ml-4 text-center">{job.Workspace.name}</h3>
+      </div>
 
-        <div className="mt-2 mb-4 prose prose-stone max-w-none">
-          <h3 className="mb-1 text-xl font-semibold">{job.title}</h3>
-          <p className="mb-0">
-            <span>at </span>
-            <span className="font-medium">{job.Workspace.name} </span>
-            <Link href={`/${job.Workspace.slug}`}>(View all jobs)</Link>
-          </p>
-          <p className="my-0 text-gray-500">
-            <span>{job.Location.name}</span>
-
-            <Show when={job.isRemote}>
-              <span>, Remote</span>
-            </Show>
-          </p>
-
-          <p className="mb-1 text-base font-medium">Who We Are</p>
-          <p className="my-0">{job.Workspace.description}</p>
-
-          <Show when={job?.description}>
-            {(description) => (
-              <Reader initialValue={description as Descendant[]} />
-            )}
-          </Show>
+      <div className="flex bg-gray-100 h-max">
+        <div className="flex items-center justify-center w-1/4 my-5 ml-4 align-middle bg-white border-b border-gray-200 rounded">
+          <h3>Suggestion Cards here</h3>
         </div>
-        <hr />
-        <div className="py-4 max-w-none">
-          <div className="py-4 text-xl font-medium">
-            Submit your Application
+
+        <div className="my-5 ml-4">
+          <PageHeader
+            title={job.title}
+            location={job.Location.name}
+            jobType={job.jobType}
+            experience={job.experience}
+            isLoading={false}
+            breadcrumb={[
+              {
+                label: job.Workspace.name,
+                path: `/${job.Workspace.slug}`,
+                icon: <WalletOutlined />,
+              },
+              {
+                label: 'Jobs',
+                path: `/${job.Workspace.slug}/jobs`,
+              },
+            ]}
+            tabs={[
+              {
+                key: `/${job.Workspace.slug}/jobs/${job.id}`,
+                label: 'Job',
+              },
+              {
+                key: `/${job.Workspace.slug}/jobs/${job.id}/application`,
+                label: 'Application',
+              },
+            ]}
+          />
+          <div className="p-4 mt-4 bg-white border border-gray-200 rounded">
+            <p className="mb-1 text-base font-medium">Who We Are</p>
+            <p className="my-0">{job.Workspace.description}</p>
+            <Show when={job?.description}>
+              {(description) => (
+                <Reader initialValue={description as Descendant[]} />
+              )}
+            </Show>
+            <div className="flex items-center justify-center pt-5">
+              <Button type="primary" size="large">
+                Apply Now
+              </Button>
+            </div>
           </div>
-          <ApplicationForm workspaceId={job.Workspace.id} />
         </div>
       </div>
     </>
