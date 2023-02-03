@@ -1,11 +1,10 @@
-import { ReactNode } from 'react'
-import clsx from 'clsx'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { Breadcrumb, Skeleton, TabsProps } from 'antd'
 import { capitalize, words } from 'lodash'
-import { Show } from 'ui-kit'
+import { Breadcrumb, TabsProps } from 'antd'
+import { JobType } from '@prisma/client'
 import { AiOutlineEnvironment } from 'react-icons/ai'
+import { Show } from 'ui-kit'
 
 type BreadCrumbItem = {
   label: string
@@ -15,10 +14,9 @@ type BreadCrumbItem = {
 
 type PageHeaderProps = {
   title: ReactNode
-  location?: ReactNode
-  jobType?: ReactNode
-  experience?: ReactNode
-  isLoading?: boolean
+  location?: string
+  jobType: JobType | null
+  experience: string | null
   breadcrumb: BreadCrumbItem[]
   tabs?: TabsProps['items']
 }
@@ -28,12 +26,11 @@ export default function PageHeader({
   location,
   jobType,
   experience,
-  isLoading,
   breadcrumb,
 }: PageHeaderProps) {
   return (
-    <div className="w-full pt-4 bg-white border-b border-gray-100 rounded">
-      <div className="pl-8 ">
+    <div className="w-full py-4 bg-white border-b border-gray-100 rounded">
+      <div className="px-8">
         <Breadcrumb className="mb-2">
           {breadcrumb.map((item) => (
             <Breadcrumb.Item key={item.path}>
@@ -46,26 +43,23 @@ export default function PageHeader({
             </Breadcrumb.Item>
           ))}
         </Breadcrumb>
-        <Show
-          when={!isLoading}
-          fallback={<Skeleton active title paragraph={{ rows: 2 }} />}
-        >
-          <p className="font-sans text-lg font-medium">{title}</p>
-          <span className="flex mt-2 text-sm text-gray-500">
-            <Show when={location}>
-              <p>
-                <AiOutlineEnvironment className="mr-1" />
-                {location}
-              </p>
-            </Show>
-            <Show when={jobType}>
-              <p className="ml-4">{capitalize(words(jobType).join(' '))}</p>
-            </Show>
-            <Show when={experience}>
-              <p className="ml-4">{experience} of experience</p>
-            </Show>
-          </span>
-        </Show>
+
+        <p className="mb-2 font-sans text-lg font-medium">{title}</p>
+
+        <p className="flex items-center space-x-4 text-sm text-gray-500">
+          <Show when={location}>
+            <p className="inline-flex items-center space-x-1">
+              <AiOutlineEnvironment />
+              <span>{location}</span>
+            </p>
+          </Show>
+          <Show when={jobType}>
+            <span>{capitalize(words(jobType ?? '').join(' '))}</span>
+          </Show>
+          <Show when={experience}>
+            <span>{experience} of experience</span>
+          </Show>
+        </p>
       </div>
     </div>
   )

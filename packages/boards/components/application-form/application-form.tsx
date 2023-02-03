@@ -93,20 +93,22 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
         </Upload>
       </Form.Item>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between space-x-4">
         <Form.Item
           name="firstName"
           label="First Name"
+          className="flex-1"
           rules={[{ required: true, message: 'Please input your First Name' }]}
         >
           <Input placeholder="First Name..." />
         </Form.Item>
-        <Form.Item name="middleName" label="Midle Name">
+        <Form.Item name="middleName" label="Midle Name" className="flex-1">
           <Input placeholder="Middle Name..." />
         </Form.Item>
         <Form.Item
           name="lastName"
           label="Last Name"
+          className="flex-1"
           rules={[{ required: true, message: 'Please input your Last Name' }]}
         >
           <Input placeholder="Last Name..." />
