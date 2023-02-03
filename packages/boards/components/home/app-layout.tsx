@@ -19,16 +19,16 @@ export default function AppLayout({
         <Show when={workspaceLogo}>
           {(logo) => (
             <Image
-              width={32}
-              height={32}
-              className="rounded-full"
+              width={48}
+              height={48}
+              className="rounded-md"
               alt="Company logo"
               src={logo}
             />
           )}
         </Show>
         <Show when={!workspaceLogo}>
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-500">
+          <div className="flex items-center justify-center w-8 h-12 rounded-md bg-slate-500">
             <p className="text-xl font-medium text-white">
               {workspaceName.charAt(0).toUpperCase()}
             </p>
