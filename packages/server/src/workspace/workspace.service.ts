@@ -38,6 +38,7 @@ export class WorkspaceService {
         Job: {
           include: {
             Department: true,
+            Location: true,
           },
         },
       },
