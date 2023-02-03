@@ -11,7 +11,11 @@ type JobListProps = {
   filters: JobFilterType
 }
 
-const JobList = ({ publishedJobs, workspaceSlug, filters }: JobListProps) => {
+export default function JobList({
+  publishedJobs,
+  workspaceSlug,
+  filters,
+}: JobListProps) {
   const [input, setInput] = useState('')
 
   const filteredArray = getFilteredArray(
@@ -46,5 +50,3 @@ const JobList = ({ publishedJobs, workspaceSlug, filters }: JobListProps) => {
     </div>
   )
 }
-
-export default JobList

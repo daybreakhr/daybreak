@@ -7,7 +7,7 @@ type JobCardProps = {
   workspaceSlug: string
 }
 
-export function JobCard({ job, workspaceSlug }: JobCardProps) {
+export default function JobCard({ job, workspaceSlug }: JobCardProps) {
   return (
     <div
       key={job.id}
@@ -45,5 +45,3 @@ export function JobCard({ job, workspaceSlug }: JobCardProps) {
     </div>
   )
 }
-
-export default JobCard

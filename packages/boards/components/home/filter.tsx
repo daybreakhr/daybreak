@@ -9,7 +9,11 @@ type FilterProps = {
   setFilters: any
 }
 
-const Filter = ({ publishedJobs, filters, setFilters }: FilterProps) => {
+export default function Filter({
+  publishedJobs,
+  filters,
+  setFilters,
+}: FilterProps) {
   const locations = useMemo(() => {
     return _.uniqBy(publishedJobs, 'locationId').map(({ Location }) => ({
       value: Location?.id,
@@ -75,5 +79,3 @@ const Filter = ({ publishedJobs, filters, setFilters }: FilterProps) => {
     </div>
   )
 }
-
-export default Filter
