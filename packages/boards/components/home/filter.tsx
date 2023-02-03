@@ -18,7 +18,7 @@ const Filter = ({ publishedJobs, filters, setFilters }: FilterProps) => {
   }, [publishedJobs])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-6">
       <p className="mt-8 text-lg font-medium">Filters</p>
       <Select
         className="w-full"
@@ -29,7 +29,7 @@ const Filter = ({ publishedJobs, filters, setFilters }: FilterProps) => {
         allowClear
       />
       <hr className="w-full mt-6" />
-      <p className="font-medium ">Job Type</p>
+      <p className="text-lg font-medium">Job Type</p>
       <Checkbox.Group
         defaultValue={[]}
         className="inline-block space-y-2"
@@ -46,7 +46,7 @@ const Filter = ({ publishedJobs, filters, setFilters }: FilterProps) => {
       </Checkbox.Group>
 
       <hr className="w-full mt-6" />
-      <p className="font-medium">Experience</p>
+      <p className="text-lg font-medium">Experience</p>
       <Checkbox.Group
         defaultValue={[]}
         className="inline-block space-y-2"

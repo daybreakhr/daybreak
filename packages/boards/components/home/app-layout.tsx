@@ -15,12 +15,12 @@ export default function AppLayout({
 }: AppLayoutProps) {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
-      <header className="flex items-center px-5 mb-2 space-x-4 bg-white border-b shadow-md">
+      <header className="flex items-center px-6 py-2 mb-2 space-x-4 bg-white border-b shadow-md">
         <Show when={workspaceLogo}>
           {(logo) => (
             <Image
-              width={48}
-              height={48}
+              width={32}
+              height={32}
               className="rounded-md"
               alt="Company logo"
               src={logo}
@@ -28,7 +28,7 @@ export default function AppLayout({
           )}
         </Show>
         <Show when={!workspaceLogo}>
-          <div className="flex items-center justify-center w-8 h-12 rounded-md bg-slate-500">
+          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
             <p className="text-xl font-medium text-white">
               {workspaceName.charAt(0).toUpperCase()}
             </p>

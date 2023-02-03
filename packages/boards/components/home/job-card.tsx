@@ -11,16 +11,16 @@ export function JobCard({ job, workspaceSlug }: JobCardProps) {
   return (
     <div
       key={job.id}
-      className="p-6 my-2 border border-gray-800 rounded-md shadow-md"
+      className="p-6 my-2 border border-gray-300 rounded-md shadow-md"
     >
       <a
-        className="mb-1 text-xl font-semibold"
+        className="text-lg font-medium text-primary-main"
         href={`/${workspaceSlug}/jobs/${job.id}`}
       >
         {job.title}
       </a>
-      <div className="flex flex-wrap items-center py-4">
-        <div className="flex-1 min-w-fit">
+      <div className="flex flex-wrap items-center pt-4">
+        <div className="flex-1 space-y-2 min-w-fit">
           <div className="flex flex-wrap space-x-4">
             <span>Full time</span>
             <div className="pl-2 space-x-2">
@@ -31,11 +31,11 @@ export function JobCard({ job, workspaceSlug }: JobCardProps) {
               </span>
             </div>
           </div>
-          <span>3-5 years of experience</span>
+          <p>3-5 years of experience</p>
         </div>
         <Button
           type="primary"
-          className="self-end m-2"
+          className="self-end my-2"
           ghost
           href={`/${workspaceSlug}/jobs/${job.id}`}
         >

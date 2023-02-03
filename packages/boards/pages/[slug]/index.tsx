@@ -69,9 +69,9 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         workspaceLogo={workspace.logo ?? ''}
       >
         <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
-          <div className="px-12 pt-4 pb-12 bg-white">
-            <p className="text-3xl font-bold">{workspace.name}</p>
-            <p>{workspace.description}</p>
+          <div className="px-12 py-6 bg-white">
+            <h1 className="text-3xl font-bold">{workspace.name}</h1>
+            <p className="py-2">{workspace.description}</p>
           </div>
 
           <Layout className="m-4 space-x-4">

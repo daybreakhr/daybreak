@@ -24,7 +24,7 @@ const JobList = ({ publishedJobs, workspaceSlug, filters }: JobListProps) => {
   )
 
   return (
-    <div className="flex flex-col flex-1 p-6 bg-white rounded-md ">
+    <div className="flex flex-col flex-1 p-6 space-y-6 bg-white rounded-md">
       <Input
         placeholder="Search jobs..."
         prefix={<SearchOutlined />}
@@ -35,7 +35,7 @@ const JobList = ({ publishedJobs, workspaceSlug, filters }: JobListProps) => {
       {jobsByDepartment.map(([departmentId, jobs]) => {
         const { name: departmentName } = jobs[0].Department
         return (
-          <div key={departmentId}>
+          <div key={departmentId} className="mb-4 space-y-4">
             <p className="px-4 text-xl font-medium">{departmentName}</p>
             {jobs.map((job) => (
               <JobCard key={job.id} job={job} workspaceSlug={workspaceSlug} />
