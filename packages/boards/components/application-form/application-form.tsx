@@ -79,7 +79,7 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
   }
 
   return (
-    <Form form={form} className="p-4" layout="vertical" onFinish={handleSubmit}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit}>
       <Form.Item name="affindaId" hidden />
       <Form.Item
         name="file"
@@ -155,16 +155,18 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
         <Input placeholder="https://linkedin.com/in/username" />
       </Form.Item>
 
-      <Form.Item>
-        <Button
-          type="primary"
-          className="w-40"
-          htmlType="submit"
-          loading={isLoading}
-        >
-          Submit
-        </Button>
-      </Form.Item>
+      <div className="flex items-center justify-center">
+        <Form.Item>
+          <Button
+            type="primary"
+            className="w-40"
+            htmlType="submit"
+            loading={isLoading}
+          >
+            Submit
+          </Button>
+        </Form.Item>
+      </div>
     </Form>
   )
 }

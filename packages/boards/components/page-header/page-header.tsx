@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { capitalize, words } from 'lodash'
-import { Breadcrumb, TabsProps } from 'antd'
+import { Breadcrumb, Button, TabsProps } from 'antd'
 import { JobType } from '@prisma/client'
 import { AiOutlineEnvironment } from 'react-icons/ai'
 import { Show } from 'ui-kit'
@@ -19,6 +19,8 @@ type PageHeaderProps = {
   experience: string | null
   breadcrumb: BreadCrumbItem[]
   tabs?: TabsProps['items']
+  disabled?: boolean
+  onApply: () => void
 }
 
 export default function PageHeader({
@@ -27,10 +29,12 @@ export default function PageHeader({
   jobType,
   experience,
   breadcrumb,
+  onApply,
+  disabled,
 }: PageHeaderProps) {
   return (
-    <div className="w-full py-4 bg-white border-b border-gray-100 rounded">
-      <div className="px-8">
+    <div className="flex items-center justify-between w-full px-8 py-4 bg-white border-b border-gray-100 rounded">
+      <div>
         <Breadcrumb className="mb-2">
           {breadcrumb.map((item) => (
             <Breadcrumb.Item key={item.path}>
@@ -61,6 +65,9 @@ export default function PageHeader({
           </Show>
         </p>
       </div>
+      <Button type="primary" disabled={disabled} onClick={onApply}>
+        Apply Now
+      </Button>
     </div>
   )
 }

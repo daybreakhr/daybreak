@@ -78,12 +78,14 @@ export default function JobPage({ job }: JobPageProps) {
           <h3 className="ml-2 font-medium text-center">{job.Workspace.name}</h3>
         </div>
 
-        <div className="flex flex-col flex-1 max-w-6xl p-4 mx-auto space-y-4 overflow-hidden">
+        <div className="flex flex-col flex-1 w-full max-w-6xl p-4 mx-auto space-y-4 overflow-hidden">
           <PageHeader
             title={job.title}
-            location={job.Location.name}
             jobType={job.jobType}
             experience={job.experience}
+            location={job.Location.name}
+            disabled={selectedTab === 'Application'}
+            onApply={() => setSelectedTab('Application')}
             breadcrumb={[
               {
                 label: job.Workspace.name,
