@@ -1,4 +1,4 @@
-import { Image } from 'antd'
+import Image from 'next/image'
 import { ReactElement } from 'react'
 import { Show } from 'ui-kit'
 

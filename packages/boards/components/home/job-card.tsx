@@ -1,6 +1,6 @@
 import { EnvironmentOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
-import { Job } from 'utils/utils'
+import { ExperienceLevel, Job, JobTypes } from 'utils/utils'
 
 type JobCardProps = {
   job: Job
@@ -22,7 +22,7 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
       <div className="flex flex-wrap items-center pt-4">
         <div className="flex-1 space-y-2 min-w-fit">
           <div className="flex flex-wrap space-x-4">
-            <span>Full time</span>
+            <span>{job.jobType && JobTypes[job.jobType]}</span>
             <div className="pl-2 space-x-2">
               <EnvironmentOutlined />
               <span>
@@ -31,7 +31,9 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
               </span>
             </div>
           </div>
-          <p>3-5 years of experience</p>
+          {job.experience && (
+            <p>{`${(ExperienceLevel as any)[job.experience]} of experience`}</p>
+          )}
         </div>
         <Button
           type="primary"

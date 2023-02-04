@@ -1,7 +1,12 @@
 import { Button, Checkbox, Select } from 'antd'
 import _ from 'lodash'
 import { useMemo } from 'react'
-import { ExperienceLevel, Job, JobFilterType, JobTypes } from 'utils/utils'
+import {
+  ExperienceLevelOptions,
+  Job,
+  JobFilterType,
+  JobTypeOptions,
+} from 'utils/utils'
 
 type FilterProps = {
   filters: JobFilterType
@@ -40,7 +45,7 @@ export default function Filter({
         onChange={(val) => setFilters({ ...filters, jobType: val })}
         value={filters.jobType}
       >
-        {JobTypes.map(({ value, label }) => (
+        {JobTypeOptions.map(({ value, label }) => (
           <div key={value}>
             <Checkbox key={value} value={value}>
               {label}
@@ -57,7 +62,7 @@ export default function Filter({
         onChange={(val) => setFilters({ ...filters, experience: val })}
         value={filters.experience}
       >
-        {ExperienceLevel.map(({ value, label }) => (
+        {ExperienceLevelOptions.map(({ value, label }) => (
           <div key={value}>
             <Checkbox key={value} value={value}>
               {label}

@@ -9,47 +9,32 @@ export type JobFilterType = {
   title?: string
 }
 
-export const JobTypes = [
-  {
-    value: 'fullTime',
-    label: 'Full Time',
-  },
-  {
-    value: 'partTime',
-    label: 'Part Time',
-  },
-  {
-    value: 'contract',
-    label: 'Contract',
-  },
-  {
-    value: 'internship',
-    label: 'Internship',
-  },
-]
+export const JobTypes = Object.freeze({
+  fullTime: 'Full Time',
+  partTime: 'Part Time',
+  contract: 'Contract',
+  internship: 'Internship',
+})
 
-export const ExperienceLevel = [
-  {
-    value: '< 3 years',
-    label: 'Less than 3 Years',
-  },
-  {
-    value: '3-5 years',
-    label: '3-5 Years',
-  },
-  {
-    value: '5-7 years',
-    label: '5-7 Years',
-  },
-  {
-    value: '7-10 years',
-    label: '7-10 Years',
-  },
-  {
-    value: '> 10 years',
-    label: 'More than 10 years',
-  },
-]
+export const ExperienceLevel = Object.freeze({
+  '< 3 years': 'Less than 3 Years',
+  '3-5 years': '3-5 Years',
+  '5-7 years': '5-7 Years',
+  '7-10 years': '7-10 Years',
+  '> 10 years': 'More than 10 years',
+})
+
+export const JobTypeOptions = Object.entries(JobTypes).map(([key, data]) => ({
+  value: key,
+  label: data,
+}))
+
+export const ExperienceLevelOptions = Object.entries(ExperienceLevel).map(
+  ([key, data]) => ({
+    value: key,
+    label: data,
+  }),
+)
 
 export const getFilteredArray = (data: Job[], filters: any) => {
   return data.filter((item: any) => {
@@ -61,7 +46,7 @@ export const getFilteredArray = (data: Job[], filters: any) => {
           break
         }
       } else if (
-        !item[key]?.toLowerCase().includes(filters[key]?.toLowerCase())
+        !item[key]?.toLowerCase().includes(filters[key]?.toLowerCase().trim())
       ) {
         match = false
         break

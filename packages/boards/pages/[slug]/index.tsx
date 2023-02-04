@@ -68,7 +68,7 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         workspaceName={workspace?.name}
         workspaceLogo={workspace.logo ?? ''}
       >
-        <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
+        <>
           <div className="px-12 py-6 bg-white">
             <h1 className="text-3xl font-bold">{workspace.name}</h1>
             <p className="py-2">{workspace.description}</p>
@@ -87,13 +87,15 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
                 setFilters={setFilters}
               />
             </Sider>
-            <JobList
-              publishedJobs={publishedJobs}
-              filters={filters}
-              workspaceSlug={workspace.slug}
-            />
+            <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
+              <JobList
+                publishedJobs={publishedJobs}
+                filters={filters}
+                workspaceSlug={workspace.slug}
+              />
+            </Scrollbars>
           </Layout>
-        </Scrollbars>
+        </>
       </AppLayout>
     </>
   )
