@@ -67,7 +67,7 @@ export class EmailController {
       const data = await this.emailService.createEmailEvent(
         accessToken,
         candidateId,
-        user.uid,
+        user,
         emailBody,
       )
       return data

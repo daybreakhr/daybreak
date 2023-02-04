@@ -226,6 +226,7 @@ model Email {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   messageId   String    @unique // id from gmail
   subject     String
+  from        String
   to          String
   body        String
   Candidate   Candidate @relation(fields: [candidateId], references: [id])

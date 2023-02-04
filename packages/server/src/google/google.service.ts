@@ -25,12 +25,12 @@ export class GoogleService {
     clientSecret: this.GOOGLE_CLIENT_SECRET,
   })
 
-  private transporterFn = (accessToken) =>
+  private transporterFn = (from: string, accessToken: string) =>
     Nodemailer.createTransport({
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: this.GOOGLE_CLIENT_EMAIL,
+        user: from,
         accessToken,
         clientId: this.GOOGLE_CLIENT_ID,
         clientSecret: this.GOOGLE_CLIENT_SECRET,
@@ -94,13 +94,18 @@ export class GoogleService {
   }
 
   async insertGmailMessage(
-    { to, subject, body }: { to: string; subject: string; body: string },
+    {
+      from,
+      to,
+      subject,
+      body,
+    }: { from: string; to: string; subject: string; body: string },
     accessToken: string,
   ) {
-    const transporter = this.transporterFn(accessToken)
+    const transporter = this.transporterFn(from, accessToken)
 
     const options = {
-      from: this.GOOGLE_CLIENT_EMAIL,
+      from,
       to,
       subject,
       text: body,

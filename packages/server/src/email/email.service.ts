@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { UserRecord } from 'firebase-admin/auth'
 import { GoogleService } from 'src/google/google.service'
 import { PrismaService } from 'src/prisma.service'
 import { CreateEmailDto } from './email.dto'
@@ -21,14 +22,21 @@ export class EmailService {
   async createEmailEvent(
     accessToken: string,
     candidateId: string,
-    createdBy: string,
+    user: UserRecord,
     emailBody: CreateEmailDto,
   ) {
-    const { body, subject, to } = emailBody
+    const { body, subject } = emailBody
+
+    const receiverDetails = await this.prismaService.candidate.findFirst({
+      where: {
+        id: candidateId,
+      },
+    })
 
     const data = await this.googleService.insertGmailMessage(
       {
-        to,
+        from: user.email,
+        to: receiverDetails.email,
         subject,
         body,
       },
@@ -38,11 +46,12 @@ export class EmailService {
     const email = await this.prismaService.email.create({
       data: {
         messageId: data.messageId,
-        to,
+        from: user.email,
+        to: receiverDetails.email,
         subject,
         body,
         Candidate: { connect: { id: candidateId } },
-        Member: { connect: { uid: createdBy } },
+        Member: { connect: { uid: user.uid } },
       },
     })
     return email
