@@ -1,17 +1,15 @@
 import { useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import { storage } from 'ui-kit'
-import AppCard from './app-card'
 import { fetchGoogleTokens } from '../queries'
+import AppCard from './app-card'
 
-export default function Calendar() {
-  const [isConnected, setIsConnected] = useState(
-    () => !!storage.get('accessToken'),
-  )
+export default function Gmail() {
+  const [isConnected, setIsConnected] = useState(false)
 
   const googleLogin = useGoogleLogin({
-    // Get authorisation token for reading and editing events in google calendar
-    scope: 'https://www.googleapis.com/auth/calendar.events',
+    // Get authorisation token for sending emails via gmail
+    scope: 'https://www.googleapis.com/auth/gmail.send',
     onSuccess: async ({ code }) => {
       const data = await fetchGoogleTokens({ code })
       storage.set('accessToken', data.access_token ?? '')
@@ -22,11 +20,11 @@ export default function Calendar() {
 
   return (
     <AppCard
-      title="Google Calendar"
+      title="Gmail"
       isConnected={isConnected}
       onClick={() => googleLogin()}
-      description="Schedule and manage interviews directly within Daybreak Hire"
-      logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
+      description="Engage with candidates via email and create automated email workflows"
+      logo="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
     />
   )
 }
