@@ -1,12 +1,14 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
-import type { Job, Workspace } from '@prisma/client'
+import type { Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
-import { Show } from 'ui-kit'
 import client from 'utils/client'
+import { WorkspaceWithJob } from 'utils/utils'
+import { Layout } from 'antd'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { useState } from 'react'
+import { AppLayout, Filter, JobList } from 'components/home'
 
-type WorkspaceWithJob = Workspace & { Job: Job[] }
+const { Sider } = Layout
 
 // This function gets called at build time
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -40,6 +42,16 @@ type WorkspaceHomeProps = {
 }
 
 export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
+  const publishedJobs = workspace.Job.filter(
+    ({ departmentId }) => !!departmentId,
+  )
+
+  const [filters, setFilters] = useState({
+    jobType: [],
+    experience: [],
+    locationId: null,
+  })
+
   return (
     <>
       <Head>
@@ -52,36 +64,39 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
           key="description"
         />
       </Head>
-
-      <div className="w-screen h-screen max-w-3xl py-8 mx-auto prose prose-stone">
-        <Show when={workspace.logo}>
-          {(logo) => (
-            <Image width={48} height={48} alt="Company logo" src={logo} />
-          )}
-        </Show>
-        <Show when={!workspace.logo}>
-          <div className="flex items-center justify-center w-12 h-12 rounded-md bg-slate-500">
-            <p className="text-xl font-medium text-white">
-              {workspace.name.charAt(0).toUpperCase()}
-            </p>
+      <AppLayout
+        workspaceName={workspace?.name}
+        workspaceLogo={workspace.logo ?? ''}
+      >
+        <>
+          <div className="px-12 py-6 bg-white">
+            <h1 className="text-3xl font-bold">{workspace.name}</h1>
+            <p className="py-2">{workspace.description}</p>
           </div>
-        </Show>
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">{workspace.name}</h3>
-          <p className="text-justify">{workspace.description}</p>
-          <h4>Current Job Openings</h4>
-        </div>
 
-        {workspace.Job.map((job) => (
-          <Show key={job.id} when={job.isPublished}>
-            <div className="mb-4">
-              <Link href={`/${workspace.slug}/jobs/${job.id}`}>
-                {job.title}
-              </Link>
-            </div>
-          </Show>
-        ))}
-      </div>
+          <Layout className="m-4 space-x-4">
+            <Sider
+              className="p-6 rounded-md h-fit"
+              theme="light"
+              trigger={null}
+              width={300}
+            >
+              <Filter
+                publishedJobs={publishedJobs}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            </Sider>
+            <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
+              <JobList
+                publishedJobs={publishedJobs}
+                filters={filters}
+                workspaceSlug={workspace.slug}
+              />
+            </Scrollbars>
+          </Layout>
+        </>
+      </AppLayout>
     </>
   )
 }
