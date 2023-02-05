@@ -40,7 +40,7 @@ export default function JobList({
         const { name: departmentName } = jobs[0].Department
         return (
           <div key={departmentId} className="mb-4 space-y-4">
-            <p className="px-4 text-xl font-medium">{departmentName}</p>
+            <p className="text-2xl font-medium">{departmentName}</p>
             {jobs.map((job) => (
               <JobCard key={job.id} job={job} workspaceSlug={workspaceSlug} />
             ))}

@@ -50,7 +50,7 @@ export default function PageHeader({
 
         <p className="mb-2 font-sans text-lg font-medium">{title}</p>
 
-        <p className="flex items-center space-x-4 text-sm text-gray-500">
+        <div className="flex items-center space-x-4 text-sm text-gray-500">
           <Show when={location}>
             <p className="inline-flex items-center space-x-1">
               <AiOutlineEnvironment />
@@ -63,7 +63,7 @@ export default function PageHeader({
           <Show when={experience}>
             <span>{experience} of experience</span>
           </Show>
-        </p>
+        </div>
       </div>
       <Button type="primary" disabled={disabled} onClick={onApply}>
         Apply Now
