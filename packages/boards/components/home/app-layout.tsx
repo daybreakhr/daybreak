@@ -14,29 +14,48 @@ export default function AppLayout({
   children,
 }: AppLayoutProps) {
   return (
-    <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
-      <header className="flex items-center px-6 py-2 mb-2 space-x-4 bg-white border-b">
-        <Show when={workspaceLogo}>
-          {(logo) => (
-            <Image
-              width={32}
-              height={32}
-              className="rounded-md"
-              alt="Company logo"
-              src={logo}
-            />
-          )}
-        </Show>
-        <Show when={!workspaceLogo}>
-          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
-            <p className="text-xl font-medium text-white">
-              {workspaceName.charAt(0).toUpperCase()}
-            </p>
-          </div>
-        </Show>
-        <p className="text-xl font-medium ">{workspaceName}</p>
-      </header>
-      {children}
+    <div>
+      <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
+        <header className="flex items-center px-6 py-2 mb-2 space-x-4 bg-white border-b">
+          <Show when={workspaceLogo}>
+            {(logo) => (
+              <Image
+                width={32}
+                height={32}
+                className="rounded-md"
+                alt="Company logo"
+                src={logo}
+              />
+            )}
+          </Show>
+          <Show when={!workspaceLogo}>
+            <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
+              <p className="text-xl font-medium text-white">
+                {workspaceName.charAt(0).toUpperCase()}
+              </p>
+            </div>
+          </Show>
+          <p className="text-xl font-medium ">{workspaceName}</p>
+        </header>
+        {children}
+      </div>
+      {/* Footer */}
+      <div className="w-full overflow-hidden bg-white border-b">
+        <div className="flex items-center justify-center py-4">
+          <p className="text-sm text-gray-500">
+            Copyright © 2023{' '}
+            <a
+              href="https://www.daybreakhire.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-gray-700"
+            >
+              Daybreak Hire{' '}
+            </a>
+            All rights reserved.
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
