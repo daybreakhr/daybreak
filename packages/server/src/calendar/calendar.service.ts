@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { GoogleService } from 'src/google/google.service'
+import { GCalService } from 'src/google/calendar.service'
 import { PrismaService } from 'src/prisma.service'
 import { CreateCalendarDto } from './calendar.dto'
 
@@ -7,7 +7,7 @@ import { CreateCalendarDto } from './calendar.dto'
 export class CalendarService {
   constructor(
     private prismaService: PrismaService,
-    private googleService: GoogleService,
+    private gCalService: GCalService,
   ) {}
 
   async getAll(candidateId: string) {
@@ -27,7 +27,7 @@ export class CalendarService {
     const { attendees, title, startTime, endTime } = calendarBody
     const newAttendees = attendees.map((email) => ({ email }))
 
-    const data = await this.googleService.insertCalendarEvent(
+    const data = await this.gCalService.insertCalendarEvent(
       {
         summary: title,
         start: { dateTime: startTime },

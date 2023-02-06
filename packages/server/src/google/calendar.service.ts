@@ -1,10 +1,9 @@
 import { ConfigService } from '@nestjs/config'
 import { google, calendar_v3 } from 'googleapis'
 import { Injectable } from '@nestjs/common'
-import * as Nodemailer from 'nodemailer'
 
 @Injectable()
-export class GoogleService {
+export class GCalService {
   constructor(private configService: ConfigService) {}
 
   private GOOGLE_CLIENT_ID =
@@ -14,28 +13,12 @@ export class GoogleService {
     'FIREBASE_CLIENT_SECRET',
   )
 
-  private GOOGLE_CLIENT_EMAIL = this.configService.get<string>(
-    'FIREBASE_CLIENT_EMAIL',
-  )
-
   private GOOGLE_CALENDAR_ID = 'primary'
 
   private jwtClient = new google.auth.OAuth2({
     clientId: this.GOOGLE_CLIENT_ID,
     clientSecret: this.GOOGLE_CLIENT_SECRET,
   })
-
-  private transporterFn = (from: string, accessToken: string) =>
-    Nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        type: 'OAuth2',
-        user: from,
-        accessToken,
-        clientId: this.GOOGLE_CLIENT_ID,
-        clientSecret: this.GOOGLE_CLIENT_SECRET,
-      },
-    })
 
   async getCalendarEvent(eventId: string, accessToken: string) {
     this.jwtClient.setCredentials({
@@ -73,45 +56,6 @@ export class GoogleService {
       sendUpdates: 'all', // This flag sends email notification of calendar invite to all attendees
       calendarId: this.GOOGLE_CALENDAR_ID,
     })
-
-    return data
-  }
-
-  async getGmailMessages(accessToken: string) {
-    this.jwtClient.setCredentials({
-      access_token: accessToken,
-    })
-
-    const gmail = google.gmail({
-      version: 'v1',
-    })
-
-    const { data } = await gmail.users.messages.list({
-      userId: 'me',
-    })
-
-    return data
-  }
-
-  async insertGmailMessage(
-    {
-      from,
-      to,
-      subject,
-      body,
-    }: { from: string; to: string; subject: string; body: string },
-    accessToken: string,
-  ) {
-    const transporter = this.transporterFn(from, accessToken)
-
-    const options = {
-      from,
-      to,
-      subject,
-      text: body,
-    }
-
-    const data = await transporter.sendMail(options)
 
     return data
   }
