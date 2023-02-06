@@ -10,6 +10,7 @@ import Home from 'pages/home'
 import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
 import Candidates from 'pages/candidates'
+import Prospects from 'pages/prospects'
 import Members from 'pages/members'
 import Jobs from 'pages/jobs'
 import CreateJob from 'pages/create-job'
@@ -73,7 +74,7 @@ export default function App() {
                     path="candidates/create"
                     element={<CreateCandidate />}
                   />
-
+                  <Route path="prospects" element={<Prospects />} />
                   <Route path="candidates/:candidateId" element={<Candidate />}>
                     <Route
                       path=""

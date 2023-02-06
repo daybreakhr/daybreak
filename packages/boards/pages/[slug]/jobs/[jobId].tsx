@@ -1,12 +1,15 @@
+import { useState } from 'react'
+import { Button, Tabs } from 'antd'
 import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Descendant } from 'slate'
+import { WalletOutlined } from '@ant-design/icons'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import type { Job, Location, Workspace } from '@prisma/client'
 import { Show, Reader } from 'ui-kit'
 import client from 'utils/client'
 import ApplicationForm from 'components/application-form'
+import PageHeader from 'components/page-header'
+import { AppLayout } from 'components/home'
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
 
@@ -33,6 +36,23 @@ type JobPageProps = {
 }
 
 export default function JobPage({ job }: JobPageProps) {
+  const [selectedTab, setSelectedTab] = useState('Overview')
+
+  const handleTabChange = (tab: string) => {
+    setSelectedTab(tab)
+  }
+
+  const tabs = [
+    {
+      key: 'Overview',
+      label: 'Overview',
+    },
+    {
+      key: 'Application',
+      label: 'Application',
+    },
+  ]
+
   return (
     <>
       <Head>
@@ -40,52 +60,70 @@ export default function JobPage({ job }: JobPageProps) {
         <link rel="icon" type="image/svg+xml" href={job.Workspace.logo ?? ''} />
       </Head>
 
-      <div className="w-screen h-screen max-w-3xl py-8 mx-auto">
-        <Show when={job.Workspace.logo}>
-          {(logo) => (
-            <Image width={48} height={48} alt="Company logo" src={logo} />
-          )}
-        </Show>
-        <Show when={!job.Workspace.logo}>
-          <div className="flex items-center justify-center w-12 h-12 rounded-md bg-slate-500">
-            <p className="text-xl font-medium text-white">
-              {job.Workspace.name.charAt(0).toUpperCase()}
-            </p>
+      <AppLayout
+        workspaceName={job.Workspace?.name}
+        workspaceLogo={job.Workspace.logo ?? ''}
+      >
+        <div className="flex flex-col flex-1 w-full max-w-6xl p-4 mx-auto space-y-4 overflow-hidden">
+          <PageHeader
+            title={job.title}
+            jobType={job.jobType}
+            experience={job.experience}
+            location={job.Location.name}
+            disabled={selectedTab === 'Application'}
+            onApply={() => setSelectedTab('Application')}
+            breadcrumb={[
+              {
+                label: job.Workspace.name,
+                path: `/${job.Workspace.slug}`,
+                icon: <WalletOutlined />,
+              },
+              {
+                label: 'Jobs',
+                path: `/${job.Workspace.slug}`,
+              },
+            ]}
+          />
+
+          <div className="flex flex-col flex-1 overflow-hidden bg-white border border-gray-200 rounded">
+            <div className="px-8">
+              <Tabs
+                items={tabs}
+                activeKey={selectedTab}
+                className="header-tabs"
+                onChange={handleTabChange}
+              />
+            </div>
+            <div className="flex-1 px-8 pb-4 overflow-y-auto">
+              <Show when={selectedTab === 'Overview'}>
+                <p className="mb-2 text-base font-medium">Who We Are</p>
+                <p>{job.Workspace.description}</p>
+
+                <div className="prose max-w-none">
+                  <Show when={job?.description}>
+                    {(description) => (
+                      <Reader initialValue={description as Descendant[]} />
+                    )}
+                  </Show>
+                </div>
+
+                <div className="flex items-center justify-center pt-5">
+                  <Button
+                    type="primary"
+                    onClick={() => setSelectedTab('Application')}
+                  >
+                    Apply Now
+                  </Button>
+                </div>
+              </Show>
+
+              <Show when={selectedTab === 'Application'}>
+                <ApplicationForm workspaceId={job.Workspace.id} />
+              </Show>
+            </div>
           </div>
-        </Show>
-
-        <div className="mt-2 mb-4 prose prose-stone max-w-none">
-          <h3 className="mb-1 text-xl font-semibold">{job.title}</h3>
-          <p className="mb-0">
-            <span>at </span>
-            <span className="font-medium">{job.Workspace.name} </span>
-            <Link href={`/${job.Workspace.slug}`}>(View all jobs)</Link>
-          </p>
-          <p className="my-0 text-gray-500">
-            <span>{job.Location.name}</span>
-
-            <Show when={job.isRemote}>
-              <span>, Remote</span>
-            </Show>
-          </p>
-
-          <p className="mb-1 text-base font-medium">Who We Are</p>
-          <p className="my-0">{job.Workspace.description}</p>
-
-          <Show when={job?.description}>
-            {(description) => (
-              <Reader initialValue={description as Descendant[]} />
-            )}
-          </Show>
         </div>
-        <hr />
-        <div className="py-4 max-w-none">
-          <div className="py-4 text-xl font-medium">
-            Submit your Application
-          </div>
-          <ApplicationForm workspaceId={job.Workspace.id} />
-        </div>
-      </div>
+      </AppLayout>
     </>
   )
 }

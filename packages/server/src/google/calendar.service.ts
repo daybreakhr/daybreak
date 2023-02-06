@@ -51,10 +51,23 @@ export class GCalService {
       auth: this.jwtClient,
     })
 
+    const resource: calendar_v3.Schema$Event = {
+      ...body,
+      conferenceData: {
+        createRequest: {
+          requestId: '1234567890',
+          conferenceSolutionKey: {
+            type: 'hangoutsMeet',
+          },
+        },
+      },
+    }
+
     const { data } = await calendar.events.insert({
-      requestBody: body,
       sendUpdates: 'all', // This flag sends email notification of calendar invite to all attendees
+      conferenceDataVersion: 1,
       calendarId: this.GOOGLE_CALENDAR_ID,
+      requestBody: resource,
     })
 
     return data
