@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { union } from 'lodash'
+import { useNavigate } from 'react-router-dom'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message } from 'antd'
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
 
 import { addDepartment, addLocation } from 'pages/organisation/queries'
 
@@ -53,7 +53,7 @@ export default function SetupWorkspace() {
         layout="vertical"
         onFinish={handleSubmit}
         className="grid w-full max-w-4xl grid-cols-3 gap-4"
-        initialValues={{ departments: ['', '', ''], locations: ['', '', ''] }}
+        initialValues={{ departments: [''], locations: [''] }}
       >
         <div>
           <p className="text-lg font-medium text-gray-700">Departments</p>
