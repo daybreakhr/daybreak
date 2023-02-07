@@ -3,7 +3,7 @@ import { google, calendar_v3 } from 'googleapis'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class GoogleService {
+export class GCalService {
   constructor(private configService: ConfigService) {}
 
   private GOOGLE_CLIENT_ID =

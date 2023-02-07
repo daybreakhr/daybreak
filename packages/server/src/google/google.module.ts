@@ -1,10 +1,11 @@
 import { HttpModule } from '@nestjs/axios'
 import { Module } from '@nestjs/common'
-import { GoogleService } from './google.service'
+import { GCalService } from './calendar.service'
+import { GmailService } from './gmail.service'
 
 @Module({
   imports: [HttpModule],
-  providers: [GoogleService],
-  exports: [GoogleService],
+  providers: [GCalService, GmailService],
+  exports: [GCalService, GmailService],
 })
 export class GoogleModule {}
