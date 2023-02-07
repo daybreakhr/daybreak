@@ -4,16 +4,18 @@ import { range } from 'lodash'
 import { Button, Empty } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
-import { CalendarOutlined } from '@ant-design/icons'
+import { CalendarOutlined, MailOutlined } from '@ant-design/icons'
 
 import { Show, Switch } from 'ui-kit'
 import { fetchMembers } from 'pages/members/queries'
 import ScheduleModal from './components/schedule-modal'
 import { fetchCalendarEvents } from './queries'
+import MailModal from './components/mail-modal'
 
 export default function CandidateEngagement() {
   const { candidateId = '' } = useParams()
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
 
   const [{ data, isLoading }, { data: members }] = useQueries({
     queries: [
@@ -36,11 +38,26 @@ export default function CandidateEngagement() {
 
   return (
     <div className="p-4 text-gray-800 bg-white shadow-md rounded-b-md">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center mb-6 space-x-4">
         <p className="text-lg font-semibold">Candidate Engagement</p>
+        <div className="flex-1" />
         <Show when={data && data.length > 0}>
-          <Button onClick={() => setIsCalendarModalOpen(true)}>
+          <Button
+            icon={<CalendarOutlined />}
+            onClick={() => setIsCalendarModalOpen(true)}
+          >
             Schedule Interview
+          </Button>
+        </Show>
+
+        {/* This button is hidden right now because the feature is incomplete */}
+        <Show when={false}>
+          <Button
+            type="primary"
+            icon={<MailOutlined />}
+            onClick={() => setIsMailModalOpen(true)}
+          >
+            Send Mail
           </Button>
         </Show>
       </div>
@@ -94,6 +111,11 @@ export default function CandidateEngagement() {
       <ScheduleModal
         isModalOpen={isCalendarModalOpen}
         onCancel={() => setIsCalendarModalOpen(false)}
+      />
+
+      <MailModal
+        isOpen={isMailModalOpen}
+        onClose={() => setIsMailModalOpen(false)}
       />
     </div>
   )
