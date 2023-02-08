@@ -1,24 +1,29 @@
 import Image from 'next/image'
-import { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { Show } from 'ui-kit'
 
 type AppLayoutProps = {
   children: ReactElement
-  extra: ReactElement
+  extra?: ReactElement
+  workspaceSlug: string
   workspaceName: string
   workspaceLogo: string
 }
 
 export default function AppLayout({
   workspaceName,
+  workspaceSlug,
   workspaceLogo,
   extra,
   children,
 }: AppLayoutProps) {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
-      <header className="flex items-center px-6 py-2 mb-2 space-x-4 bg-white border-b">
-        <div className="flex items-center flex-1">
+      <header className="flex px-6 py-2 mb-2 bg-white border-b">
+        <a
+          href={`/${workspaceSlug}`}
+          className="flex items-center flex-1 space-x-4"
+        >
           <Show when={workspaceLogo}>
             {(logo) => (
               <Image
@@ -37,11 +42,27 @@ export default function AppLayout({
               </p>
             </div>
           </Show>
-          <p className="pl-4 text-xl font-medium">{workspaceName}</p>
-        </div>
+          <p className="text-xl font-medium ">{workspaceName}</p>
+        </a>
         {extra}
       </header>
+
       {children}
+
+      <footer className="flex items-center justify-center w-full py-4 bg-white">
+        <p className="text-sm text-gray-500">
+          <span>Copyright © 2023</span>{' '}
+          <a
+            href="https://www.daybreakhire.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-primary-main"
+          >
+            Daybreak Hire
+          </a>{' '}
+          All rights reserved.
+        </p>
+      </footer>
     </div>
   )
 }

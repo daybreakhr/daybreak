@@ -28,7 +28,7 @@ export default function Filter({
 
   return (
     <div className="flex flex-col space-y-6">
-      <p className="hidden text-lg font-medium md:flex">Filters</p>
+      <p className="text-lg font-medium ">Filters</p>
       <Select
         className="w-full"
         placeholder="Select Location"

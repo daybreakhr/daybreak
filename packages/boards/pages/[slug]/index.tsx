@@ -1,12 +1,12 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import type { Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { AppLayout, Filter, JobList } from 'components/home'
 import client from 'utils/client'
 import { WorkspaceWithJob } from 'utils/utils'
 import { Drawer, Layout } from 'antd'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { useState } from 'react'
-import { AppLayout, Filter, JobList } from 'components/home'
 import { FilterOutlined } from '@ant-design/icons'
 
 const { Sider } = Layout
@@ -66,7 +66,8 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         />
       </Head>
       <AppLayout
-        workspaceName={workspace?.name}
+        workspaceSlug={workspace.slug}
+        workspaceName={workspace.name}
         workspaceLogo={workspace.logo ?? ''}
         extra={
           <FilterOutlined
@@ -83,7 +84,7 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
             </div>
             <Layout className="my-4 md:mx-4">
               <Sider
-                className="hidden p-6 rounded-md md:flex md:visible h-fit md:mr-4"
+                className="hidden p-6 rounded-md md:block h-fit md:mr-4"
                 theme="light"
                 trigger={null}
                 width={300}
