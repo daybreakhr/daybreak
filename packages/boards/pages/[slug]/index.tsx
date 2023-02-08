@@ -1,12 +1,12 @@
+import { useState } from 'react'
 import Head from 'next/head'
+import { Layout } from 'antd'
 import type { Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { AppLayout, Filter, JobList } from 'components/home'
 import client from 'utils/client'
 import { WorkspaceWithJob } from 'utils/utils'
-import { Layout } from 'antd'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { useState } from 'react'
-import { AppLayout, Filter, JobList } from 'components/home'
 
 const { Sider } = Layout
 
