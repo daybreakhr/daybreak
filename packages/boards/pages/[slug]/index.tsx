@@ -3,10 +3,11 @@ import type { Workspace } from '@prisma/client'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import client from 'utils/client'
 import { WorkspaceWithJob } from 'utils/utils'
-import { Layout } from 'antd'
+import { Drawer, Layout } from 'antd'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useState } from 'react'
 import { AppLayout, Filter, JobList } from 'components/home'
+import { FilterOutlined } from '@ant-design/icons'
 
 const { Sider } = Layout
 
@@ -45,7 +46,7 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
   const publishedJobs = workspace.Job.filter(
     ({ departmentId }) => !!departmentId,
   )
-
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [filters, setFilters] = useState({
     jobType: [],
     experience: [],
@@ -67,34 +68,53 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
       <AppLayout
         workspaceName={workspace?.name}
         workspaceLogo={workspace.logo ?? ''}
+        extra={
+          <FilterOutlined
+            onClick={() => setDrawerOpen(true)}
+            className="text-xl md:hidden"
+          />
+        }
       >
         <>
-          <div className="px-12 py-6 bg-white">
-            <h1 className="text-3xl font-bold">{workspace.name}</h1>
-            <p className="py-2">{workspace.description}</p>
-          </div>
-
-          <Layout className="m-4 space-x-4">
-            <Sider
-              className="p-6 rounded-md h-fit"
-              theme="light"
-              trigger={null}
-              width={300}
-            >
-              <Filter
-                publishedJobs={publishedJobs}
-                filters={filters}
-                setFilters={setFilters}
-              />
-            </Sider>
-            <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
-              <JobList
-                publishedJobs={publishedJobs}
-                filters={filters}
-                workspaceSlug={workspace.slug}
-              />
-            </Scrollbars>
-          </Layout>
+          <Scrollbars autoHide>
+            <div className="top-0 z-10 px-12 py-6 bg-white md:sticky">
+              <h1 className="text-3xl font-bold">{workspace.name}</h1>
+              <p className="py-2">{workspace.description}</p>
+            </div>
+            <Layout className="my-4 md:mx-4">
+              <Sider
+                className="hidden p-6 rounded-md md:flex md:visible h-fit md:mr-4"
+                theme="light"
+                trigger={null}
+                width={300}
+              >
+                <Filter
+                  publishedJobs={publishedJobs}
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+              </Sider>
+              <div className="flex flex-col flex-1 bg-gray-100">
+                <JobList
+                  publishedJobs={publishedJobs}
+                  filters={filters}
+                  workspaceSlug={workspace.slug}
+                />
+              </div>
+            </Layout>
+          </Scrollbars>
+          <Drawer
+            title="Filters"
+            placement="right"
+            open={isDrawerOpen}
+            onClose={() => setDrawerOpen(false)}
+          >
+            <Filter
+              publishedJobs={publishedJobs}
+              filters={filters}
+              setFilters={setFilters}
+            />
+          </Drawer>
         </>
       </AppLayout>
     </>

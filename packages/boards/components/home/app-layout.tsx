@@ -4,6 +4,7 @@ import { Show } from 'ui-kit'
 
 type AppLayoutProps = {
   children: ReactElement
+  extra: ReactElement
   workspaceName: string
   workspaceLogo: string
 }
@@ -11,30 +12,34 @@ type AppLayoutProps = {
 export default function AppLayout({
   workspaceName,
   workspaceLogo,
+  extra,
   children,
 }: AppLayoutProps) {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
       <header className="flex items-center px-6 py-2 mb-2 space-x-4 bg-white border-b">
-        <Show when={workspaceLogo}>
-          {(logo) => (
-            <Image
-              width={32}
-              height={32}
-              className="rounded-md"
-              alt="Company logo"
-              src={logo}
-            />
-          )}
-        </Show>
-        <Show when={!workspaceLogo}>
-          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
-            <p className="text-xl font-medium text-white">
-              {workspaceName.charAt(0).toUpperCase()}
-            </p>
-          </div>
-        </Show>
-        <p className="text-xl font-medium ">{workspaceName}</p>
+        <div className="flex items-center flex-1">
+          <Show when={workspaceLogo}>
+            {(logo) => (
+              <Image
+                width={32}
+                height={32}
+                className="rounded-md"
+                alt="Company logo"
+                src={logo}
+              />
+            )}
+          </Show>
+          <Show when={!workspaceLogo}>
+            <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
+              <p className="text-xl font-medium text-white">
+                {workspaceName.charAt(0).toUpperCase()}
+              </p>
+            </div>
+          </Show>
+          <p className="pl-4 text-xl font-medium">{workspaceName}</p>
+        </div>
+        {extra}
       </header>
       {children}
     </div>
