@@ -32,6 +32,7 @@ import Integrations from 'pages/integrations'
 import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
+import AskPsych from 'pages/ask-psych'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -88,6 +89,7 @@ export default function App() {
                     />
                     <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
+                  <Route path="askpsych" element={<AskPsych />} />
                   <Route
                     path="settings"
                     element={<Navigate to="members" replace />}
