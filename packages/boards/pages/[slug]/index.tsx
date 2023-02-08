@@ -65,7 +65,8 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         />
       </Head>
       <AppLayout
-        workspaceName={workspace?.name}
+        workspaceSlug={workspace.slug}
+        workspaceName={workspace.name}
         workspaceLogo={workspace.logo ?? ''}
       >
         <>

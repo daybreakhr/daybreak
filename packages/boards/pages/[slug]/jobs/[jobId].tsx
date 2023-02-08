@@ -61,7 +61,8 @@ export default function JobPage({ job }: JobPageProps) {
       </Head>
 
       <AppLayout
-        workspaceName={job.Workspace?.name}
+        workspaceSlug={job.Workspace.slug}
+        workspaceName={job.Workspace.name}
         workspaceLogo={job.Workspace.logo ?? ''}
       >
         <div className="flex flex-col flex-1 w-full max-w-6xl p-4 mx-auto space-y-4 overflow-hidden">
