@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import { Drawer, Layout } from 'antd'
 import type { Workspace } from '@prisma/client'
-import type { GetStaticPaths, GetStaticProps } from 'next'
+import { FilterOutlined } from '@ant-design/icons'
 import { Scrollbars } from 'react-custom-scrollbars'
+import type { GetStaticPaths, GetStaticProps } from 'next'
 import { AppLayout, Filter, JobList } from 'components/home'
 import client from 'utils/client'
 import { WorkspaceWithJob } from 'utils/utils'
-import { Drawer, Layout } from 'antd'
-import { FilterOutlined } from '@ant-design/icons'
 
 const { Sider } = Layout
 
@@ -76,47 +76,46 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
           />
         }
       >
-        <>
-          <Scrollbars autoHide>
-            <div className="top-0 z-10 px-12 py-6 bg-white md:sticky">
-              <h1 className="text-3xl font-bold">{workspace.name}</h1>
-              <p className="py-2">{workspace.description}</p>
+        <Scrollbars autoHide>
+          <div className="px-12 py-6 bg-white">
+            <h1 className="text-3xl font-bold">{workspace.name}</h1>
+            <p className="py-2">{workspace.description}</p>
+          </div>
+          <Layout className="my-4 md:mx-4">
+            <Sider
+              className="hidden p-6 rounded-md md:block h-fit md:mr-4"
+              theme="light"
+              trigger={null}
+              width={300}
+            >
+              <Filter
+                publishedJobs={publishedJobs}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            </Sider>
+            <div className="flex flex-col flex-1 bg-gray-100">
+              <JobList
+                publishedJobs={publishedJobs}
+                filters={filters}
+                workspaceSlug={workspace.slug}
+              />
             </div>
-            <Layout className="my-4 md:mx-4">
-              <Sider
-                className="hidden p-6 rounded-md md:block h-fit md:mr-4"
-                theme="light"
-                trigger={null}
-                width={300}
-              >
-                <Filter
-                  publishedJobs={publishedJobs}
-                  filters={filters}
-                  setFilters={setFilters}
-                />
-              </Sider>
-              <div className="flex flex-col flex-1 bg-gray-100">
-                <JobList
-                  publishedJobs={publishedJobs}
-                  filters={filters}
-                  workspaceSlug={workspace.slug}
-                />
-              </div>
-            </Layout>
-          </Scrollbars>
-          <Drawer
-            title="Filters"
-            placement="right"
-            open={isDrawerOpen}
-            onClose={() => setDrawerOpen(false)}
-          >
-            <Filter
-              publishedJobs={publishedJobs}
-              filters={filters}
-              setFilters={setFilters}
-            />
-          </Drawer>
-        </>
+          </Layout>
+        </Scrollbars>
+
+        <Drawer
+          title="Filters"
+          placement="right"
+          open={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <Filter
+            publishedJobs={publishedJobs}
+            filters={filters}
+            setFilters={setFilters}
+          />
+        </Drawer>
       </AppLayout>
     </>
   )

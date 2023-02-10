@@ -1,10 +1,10 @@
 import Image from 'next/image'
-import type { ReactElement } from 'react'
+import type { ReactNode } from 'react'
 import { Show } from 'ui-kit'
 
 type AppLayoutProps = {
-  children: ReactElement
-  extra?: ReactElement
+  children: ReactNode
+  extra?: ReactNode
   workspaceSlug: string
   workspaceName: string
   workspaceLogo: string
