@@ -43,3 +43,7 @@ export class MemberDto {
 export class CreateMemberDto extends PartialType(MemberDto) {}
 
 export class UpdateMemberDto extends PartialType(MemberDto) {}
+
+export class AddAppBody {
+  isInstalled: boolean
+}

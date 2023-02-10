@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
 import {
   ApiOkResponse,
   ApiForbiddenResponse,
@@ -8,10 +17,10 @@ import {
   ApiSecurity,
   ApiBody,
 } from '@nestjs/swagger'
-import { Role } from '@prisma/client'
+import { AppName, Role } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
-import { MemberDto, UpdateMemberDto } from './members.dto'
+import { MemberDto, UpdateMemberDto, AddAppBody } from './members.dto'
 import { MembersService } from './members.service'
 
 @ApiSecurity('access-key')
@@ -51,6 +60,25 @@ export class MembersController {
       memberId,
       updateMemberDto,
     )
+    return data
+  }
+
+  @Post(':memberId/apps')
+  @Roles(Role.admin)
+  @ApiOperation({ summary: 'Add App to Member' })
+  @ApiOkResponse({
+    description: 'Added app to member successfully',
+    type: MemberDto,
+  })
+  @ApiBody({ type: AddAppBody })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Member not found' })
+  async addApp(
+    @Param('memberId') memberId: string,
+    @Query('app') app: AppName,
+    @Body() { isInstalled }: AddAppBody,
+  ) {
+    const data = await this.membersService.addApp(memberId, app, isInstalled)
     return data
   }
 }

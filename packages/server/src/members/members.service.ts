@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { AppName } from '@prisma/client'
 import { AuthService } from 'src/auth/auth.service'
 import { PrismaService } from 'src/prisma.service'
 import { MemberDto, UpdateMemberDto } from './members.dto'
@@ -46,5 +47,52 @@ export class MembersService {
       memberId: member.id,
       isSuspended: member.isSuspended,
     }
+  }
+
+  async addApp(memberId: string, app: AppName, isInstalled: boolean) {
+    const { App } = await this.prismaService.member.findFirst({
+      where: {
+        id: memberId,
+      },
+    })
+
+    let member
+
+    if (!App.length) {
+      member = await this.prismaService.member.update({
+        where: { id: memberId },
+        data: {
+          App: {
+            push: {
+              appName: app,
+              isInstalled,
+            },
+          },
+        },
+      })
+    } else {
+      member = await this.prismaService.member.update({
+        where: { id: memberId },
+        data: {
+          App: {
+            set: App.map(({ appName, ...rest }) => {
+              if (app === appName) {
+                return {
+                  appName,
+                  isInstalled,
+                }
+              } else {
+                return {
+                  appName,
+                  ...rest,
+                }
+              }
+            }),
+          },
+        },
+      })
+    }
+
+    return member
   }
 }
