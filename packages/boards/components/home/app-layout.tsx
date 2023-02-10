@@ -19,11 +19,8 @@ export default function AppLayout({
 }: AppLayoutProps) {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
-      <header className="flex px-6 py-2 mb-2 bg-white border-b">
-        <a
-          href={`/${workspaceSlug}`}
-          className="flex items-center flex-1 space-x-4"
-        >
+      <header className="flex items-center justify-between px-6 py-2 mb-2 bg-white border-b">
+        <a href={`/${workspaceSlug}`} className="flex items-center space-x-4">
           <Show when={workspaceLogo}>
             {(logo) => (
               <Image
