@@ -5,7 +5,9 @@ import { fetchGoogleTokens } from '../queries'
 import AppCard from './app-card'
 
 export default function Gmail() {
-  const [isConnected, setIsConnected] = useState(false)
+  const [isConnected, setIsConnected] = useState(
+    () => !!storage.get('accessToken'),
+  )
 
   const googleLogin = useGoogleLogin({
     // Get authorisation token for sending emails via gmail
