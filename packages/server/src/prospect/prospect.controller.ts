@@ -7,7 +7,10 @@ import {
   Patch,
   Post,
   UseGuards,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common'
+import { Express } from 'express'
 import {
   ApiOkResponse,
   ApiForbiddenResponse,
@@ -20,6 +23,7 @@ import {
   ApiSecurity,
 } from '@nestjs/swagger'
 import { AuthGuard } from 'src/auth/auth.guard'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { ProspectService } from './prospect.service'
 import {
   CreateProspectDto,
@@ -64,11 +68,17 @@ export class ProspectController {
   @ApiCreatedResponse({ description: 'Created Succesfully', type: Prospect })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @UseInterceptors(FileInterceptor('file'))
   async createProspect(
     @Param('workspaceId') workspaceId: string,
+    @UploadedFile() file: Express.Multer.File,
     @Body() prospectBody: CreateProspectDto,
   ) {
-    const data = await this.prospectService.create(workspaceId, prospectBody)
+    const data = await this.prospectService.create(
+      workspaceId,
+      file,
+      prospectBody,
+    )
     return data
   }
 
