@@ -33,7 +33,7 @@ export default function PageHeader({
   disabled,
 }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between w-full px-8 py-4 bg-white border-b border-gray-100 rounded">
+    <div className="flex flex-col justify-between w-full px-8 py-4 bg-white border-b border-gray-100 rounded md:items-center md:flex-row">
       <div>
         <Breadcrumb className="mb-2">
           {breadcrumb.map((item) => (
@@ -65,7 +65,12 @@ export default function PageHeader({
           </Show>
         </div>
       </div>
-      <Button type="primary" disabled={disabled} onClick={onApply}>
+      <Button
+        type="primary"
+        disabled={disabled}
+        onClick={onApply}
+        className="self-center mt-4"
+      >
         Apply Now
       </Button>
     </div>

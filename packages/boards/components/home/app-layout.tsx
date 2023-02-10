@@ -1,9 +1,10 @@
 import Image from 'next/image'
-import type { ReactElement } from 'react'
+import type { ReactNode } from 'react'
 import { Show } from 'ui-kit'
 
 type AppLayoutProps = {
-  children: ReactElement
+  children: ReactNode
+  extra?: ReactNode
   workspaceSlug: string
   workspaceName: string
   workspaceLogo: string
@@ -13,11 +14,12 @@ export default function AppLayout({
   workspaceName,
   workspaceSlug,
   workspaceLogo,
+  extra,
   children,
 }: AppLayoutProps) {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden bg-gray-100">
-      <header className="px-6 py-2 mb-2 bg-white border-b">
+      <header className="flex items-center justify-between px-6 py-2 mb-2 bg-white border-b">
         <a href={`/${workspaceSlug}`} className="flex items-center space-x-4">
           <Show when={workspaceLogo}>
             {(logo) => (
@@ -30,7 +32,6 @@ export default function AppLayout({
               />
             )}
           </Show>
-
           <Show when={!workspaceLogo}>
             <div className="flex items-center justify-center w-8 h-8 rounded-md bg-slate-500">
               <p className="text-xl font-medium text-white">
@@ -40,6 +41,7 @@ export default function AppLayout({
           </Show>
           <p className="text-xl font-medium ">{workspaceName}</p>
         </a>
+        {extra}
       </header>
 
       {children}

@@ -11,7 +11,7 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
   return (
     <div
       key={job.id}
-      className="p-6 my-2 border border-gray-300 rounded-md shadow-md"
+      className="p-4 my-2 border border-gray-300 rounded-md shadow-md md:p-6"
     >
       <a
         href={`/${workspaceSlug}/jobs/${job.id}`}
@@ -20,11 +20,11 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
         {job.title}
       </a>
 
-      <div className="flex flex-wrap items-center pt-4">
+      <div className="flex flex-col flex-wrap pt-4 md:flex-row">
         <div className="flex-1 space-y-2">
-          <div className="flex flex-wrap space-x-4">
+          <div className="flex space-x-4 ">
             <span>{job.jobType && JobTypes[job.jobType]}</span>
-            <div className="pl-2 space-x-2">
+            <div className="pr-2 space-x-2">
               <EnvironmentOutlined />
               <span>
                 {job.isRemote ? 'Remote' : 'In-office'}
@@ -36,7 +36,12 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
             <p>{`${(ExperienceLevel as any)[job.experience]} of experience`}</p>
           )}
         </div>
-        <Button ghost type="primary" href={`/${workspaceSlug}/jobs/${job.id}`}>
+        <Button
+          ghost
+          type="primary"
+          href={`/${workspaceSlug}/jobs/${job.id}`}
+          className="self-start mt-4"
+        >
           Apply for this role
         </Button>
       </div>
