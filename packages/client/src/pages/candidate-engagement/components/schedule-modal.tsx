@@ -56,7 +56,7 @@ export default function ScheduleModal({
   )
 
   function handleOk() {
-    form.validateFields().then(async (values: any) => {
+    form.validateFields().then((values: any) => {
       const startTime = values.startTime.format()
       const endTime = values.endTime.format()
 

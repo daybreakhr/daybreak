@@ -50,16 +50,13 @@ export default function CandidateEngagement() {
           </Button>
         </Show>
 
-        {/* This button is hidden right now because the feature is incomplete */}
-        <Show when={false}>
-          <Button
-            type="primary"
-            icon={<MailOutlined />}
-            onClick={() => setIsMailModalOpen(true)}
-          >
-            Send Mail
-          </Button>
-        </Show>
+        <Button
+          type="primary"
+          icon={<MailOutlined />}
+          onClick={() => setIsMailModalOpen(true)}
+        >
+          Send Mail
+        </Button>
       </div>
 
       <Switch>

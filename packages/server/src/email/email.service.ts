@@ -38,7 +38,7 @@ export class EmailService {
 
     const email = await this.prismaService.email.create({
       data: {
-        messageId: data.messageId,
+        messageId: data.id,
         from: user.email,
         to: receiverDetails.email,
         subject,

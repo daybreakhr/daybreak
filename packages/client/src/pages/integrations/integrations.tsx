@@ -1,7 +1,7 @@
 import { SettingOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import Calendar from './components/calendar'
-// import Gmail from './components/gmail'
+import Gmail from './components/gmail'
 
 export default function Integrations() {
   return (
@@ -22,7 +22,7 @@ export default function Integrations() {
         <p className="mb-4 font-sans text-xl font-medium">Available Apps</p>
         <div className="grid grid-cols-4 gap-6">
           <Calendar />
-          {/* <Gmail /> */}
+          <Gmail />
         </div>
       </div>
     </>

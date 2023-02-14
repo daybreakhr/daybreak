@@ -24,11 +24,7 @@ export class GCalService {
     this.jwtClient.setCredentials({
       access_token: accessToken,
     })
-
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: this.jwtClient,
-    })
+    const calendar = google.calendar({ version: 'v3', auth: this.jwtClient })
 
     const { data } = await calendar.events.get({
       eventId,
@@ -42,14 +38,8 @@ export class GCalService {
     body: calendar_v3.Schema$Event,
     accessToken: string,
   ) {
-    this.jwtClient.setCredentials({
-      access_token: accessToken,
-    })
-
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: this.jwtClient,
-    })
+    this.jwtClient.setCredentials({ access_token: accessToken })
+    const calendar = google.calendar({ version: 'v3', auth: this.jwtClient })
 
     const resource: calendar_v3.Schema$Event = {
       ...body,
