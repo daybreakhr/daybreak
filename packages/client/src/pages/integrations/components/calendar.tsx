@@ -1,29 +1,38 @@
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { useGoogleLogin } from '@react-oauth/google'
-import { storage } from 'ui-kit'
+import useAuth from 'hooks/use-auth'
 import AppCard from './app-card'
-import { fetchGoogleTokens } from '../queries'
+import { fetchGoogleTokens, updateAppStatus } from '../queries'
 
 export default function Calendar() {
-  const [isConnected, setIsConnected] = useState(
-    () => !!storage.get('accessToken'),
-  )
+  const { member, setMember } = useAuth()
+  const isInstalled = member?.App.find(
+    (app) => app.appName === 'gcalendar',
+  )?.isInstalled
+
+  const { mutate, isLoading } = useMutation(updateAppStatus, {
+    onSuccess: (member) => setMember(member),
+  })
 
   const googleLogin = useGoogleLogin({
     // Get authorisation token for reading and editing events in google calendar
     scope: 'https://www.googleapis.com/auth/calendar.events',
     onSuccess: async ({ code }) => {
-      const data = await fetchGoogleTokens({ code })
-      storage.set('accessToken', data.access_token ?? '')
-      setIsConnected(true)
+      await fetchGoogleTokens({ code })
+      mutate({
+        appName: 'gcalendar',
+        isInstalled: true,
+        memberId: member?.id ?? '',
+      })
     },
     flow: 'auth-code',
   })
 
   return (
     <AppCard
+      isLoading={isLoading}
       title="Google Calendar"
-      isConnected={isConnected}
+      isConnected={!!isInstalled}
       onClick={() => googleLogin()}
       description="Schedule and manage interviews directly within Daybreak Hire"
       logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"

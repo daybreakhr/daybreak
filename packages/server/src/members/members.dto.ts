@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { Role } from '@prisma/client'
-import { IsOptional } from 'class-validator'
+import { AppName, Role } from '@prisma/client'
+import { IsBoolean, IsEnum, IsOptional } from 'class-validator'
 
 export class MemberDto {
   @ApiProperty({
@@ -43,3 +43,21 @@ export class MemberDto {
 export class CreateMemberDto extends PartialType(MemberDto) {}
 
 export class UpdateMemberDto extends PartialType(MemberDto) {}
+
+export class AddAppBody {
+  @ApiProperty({
+    example: 'gmail',
+    description: 'Name of the app',
+    required: true,
+  })
+  @IsEnum(AppName)
+  appName: AppName
+
+  @ApiProperty({
+    example: 'true',
+    description: 'Boolean value to check if app is installed or not',
+    required: true,
+  })
+  @IsBoolean()
+  isInstalled: boolean
+}

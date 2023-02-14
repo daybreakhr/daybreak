@@ -41,6 +41,9 @@ model Member {
   Feedback    Feedback[]
   Calendar    Calendar[]
   Email       Email[]
+  App         App[]
+
+  @@unique([App.appName])
 }
 
 model Invitees {
@@ -234,4 +237,15 @@ model Email {
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
   createdAt   DateTime  @default(now())
+}
+
+type App {
+  appName     AppName
+  isInstalled Boolean
+  createdAt   DateTime @default(now())
+}
+
+enum AppName {
+  gcalendar
+  gmail
 }
