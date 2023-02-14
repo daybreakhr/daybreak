@@ -14,6 +14,7 @@ export class EmailService {
   async getAll(candidateId: string) {
     const emailEvents = await this.prismaService.email.findMany({
       where: { candidateId },
+      orderBy: { createdAt: 'desc' },
     })
 
     return emailEvents

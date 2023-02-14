@@ -24,6 +24,14 @@ export async function createCalendarEvent({
   return data
 }
 
+export async function fetchEmailEvents(candidateId: string) {
+  const { data } = await client.get<Email[]>(
+    `candidates/${candidateId}/emails`,
+    { withCredentials: true },
+  )
+  return data
+}
+
 export async function createEmailEvent({
   candidateId,
   body,
