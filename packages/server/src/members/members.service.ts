@@ -49,50 +49,31 @@ export class MembersService {
     }
   }
 
-  async addApp(memberId: string, app: AppName, isInstalled: boolean) {
+  async addApp(memberId: string, appName: AppName, isInstalled: boolean) {
     const { App } = await this.prismaService.member.findFirst({
-      where: {
-        id: memberId,
-      },
+      where: { id: memberId },
     })
 
-    let member
+    const isAppExists = App.some((app) => app.appName === appName)
 
-    if (!App.length) {
-      member = await this.prismaService.member.update({
+    if (isAppExists) {
+      const member = await this.prismaService.member.update({
         where: { id: memberId },
         data: {
           App: {
-            push: {
-              appName: app,
-              isInstalled,
-            },
+            set: App.map((app) =>
+              app.appName === appName ? { appName, isInstalled } : app,
+            ),
           },
         },
       })
+      return member
     } else {
-      member = await this.prismaService.member.update({
+      const member = await this.prismaService.member.update({
         where: { id: memberId },
-        data: {
-          App: {
-            set: App.map(({ appName, ...rest }) => {
-              if (app === appName) {
-                return {
-                  appName,
-                  isInstalled,
-                }
-              } else {
-                return {
-                  appName,
-                  ...rest,
-                }
-              }
-            }),
-          },
-        },
+        data: { App: { push: { appName, isInstalled } } },
       })
+      return member
     }
-
-    return member
   }
 }

@@ -5,7 +5,6 @@ import {
   Post,
   Param,
   Patch,
-  Query,
   UseGuards,
 } from '@nestjs/common'
 import {
@@ -17,7 +16,7 @@ import {
   ApiSecurity,
   ApiBody,
 } from '@nestjs/swagger'
-import { AppName, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
 import { MemberDto, UpdateMemberDto, AddAppBody } from './members.dto'
@@ -75,10 +74,13 @@ export class MembersController {
   @ApiNotFoundResponse({ description: 'Member not found' })
   async addApp(
     @Param('memberId') memberId: string,
-    @Query('app') app: AppName,
-    @Body() { isInstalled }: AddAppBody,
+    @Body() { appName, isInstalled }: AddAppBody,
   ) {
-    const data = await this.membersService.addApp(memberId, app, isInstalled)
+    const data = await this.membersService.addApp(
+      memberId,
+      appName,
+      isInstalled,
+    )
     return data
   }
 }
