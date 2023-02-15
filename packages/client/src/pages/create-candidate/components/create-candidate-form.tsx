@@ -7,8 +7,8 @@ import { Button, Form, Input, message, Select } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { InboxOutlined } from '@ant-design/icons'
 import Dragger from 'antd/es/upload/Dragger'
+import type { RcFile } from 'antd/es/upload'
 import { fetchJobs } from 'pages/jobs/queries'
-import { RcFile } from 'antd/es/upload'
 import { candidateStatusOptions } from 'utils/utils'
 import { createCandidate } from '../queries'
 
@@ -17,11 +17,11 @@ dayjs.extend(localeData)
 
 export default function CandidateForm() {
   const [form] = Form.useForm()
-
   const navigate = useNavigate()
 
-  const queryClient = useQueryClient()
+  const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
+  const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(createCandidate, {
     onSuccess: ({ id }) => {
       form.resetFields()
@@ -35,8 +35,6 @@ export default function CandidateForm() {
       }
     },
   })
-
-  const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
   function handleSubmit(values: any) {
     const formData = new FormData()
@@ -89,11 +87,10 @@ export default function CandidateForm() {
       className="mx-64"
     >
       <Form.Item name="affindaId" hidden />
-      <p className="mb-2 font-medium">Upload Resume</p>
       <Form.Item
         name="file"
         valuePropName="file"
-        className="max-w-2xl mx-auto"
+        label="Upload Resume"
         rules={[{ required: true, message: 'Please upload your resume!' }]}
       >
         <Dragger {...uploadProps}>
@@ -106,6 +103,7 @@ export default function CandidateForm() {
           <p className="ant-upload-hint">PDF, Word or Rich Text only</p>
         </Dragger>
       </Form.Item>
+
       <div className="flex items-center space-x-4">
         <Form.Item
           label="Job"
@@ -133,7 +131,9 @@ export default function CandidateForm() {
           />
         </Form.Item>
       </div>
-      <p className="mb-2 font-medium">Info</p>
+
+      <hr className="mt-2 mb-6" />
+
       <div className="flex justify-between space-x-4">
         <Form.Item
           name="firstName"
@@ -156,29 +156,36 @@ export default function CandidateForm() {
         </Form.Item>
       </div>
 
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          { type: 'email', message: 'The input is not valid E-mail!' },
-          { required: true, message: 'Please input your E-mail!' },
-        ]}
-      >
-        <Input placeholder="Enter your Email..." />
-      </Form.Item>
-      <Form.Item
-        name="phone"
-        label="Phone Number"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
-        required
-      >
-        <Input placeholder="Enter your Phone Number..." />
-      </Form.Item>
+      <div className="flex items-center space-x-4">
+        <Form.Item
+          name="email"
+          label="E-mail"
+          className="flex-1"
+          rules={[
+            { type: 'email', message: 'The input is not valid E-mail!' },
+            { required: true, message: 'Please input your E-mail!' },
+          ]}
+        >
+          <Input placeholder="Enter your Email..." />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          className="flex-1"
+          label="Phone Number"
+          rules={[
+            { required: true, message: 'Please input your phone number!' },
+          ]}
+        >
+          <Input placeholder="Enter your Phone Number..." />
+        </Form.Item>
+      </div>
 
       <Form.Item
         name="location"
         label="City / Country"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        rules={[
+          { required: true, message: 'Please input candidate location!' },
+        ]}
         required
       >
         <Input placeholder="Enter your current location..." />
@@ -194,6 +201,7 @@ export default function CandidateForm() {
       >
         <Input placeholder="https://linkedin.com/in/username" />
       </Form.Item>
+
       <div className="flex items-center justify-end space-x-3">
         <Button htmlType="button" onClick={() => navigate(-1)}>
           Cancel

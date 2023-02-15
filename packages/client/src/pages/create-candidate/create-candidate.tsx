@@ -1,4 +1,4 @@
-import { WalletOutlined } from '@ant-design/icons'
+import { TeamOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import CandidateForm from './components/create-candidate-form'
 
@@ -6,10 +6,14 @@ export default function CreateCandidate() {
   return (
     <>
       <PageHeader
-        title={'Add Candidate'}
+        title="Add Candidate"
         breadcrumb={[
-          { label: 'Candidate List', path: '/jobs', icon: <WalletOutlined /> },
-          { label: 'Candidate', path: '/jobs' },
+          {
+            label: 'Candidate List',
+            path: '/candidates',
+            icon: <TeamOutlined />,
+          },
+          { label: 'New Candidate', path: '/candidates/create' },
         ]}
       />
 
