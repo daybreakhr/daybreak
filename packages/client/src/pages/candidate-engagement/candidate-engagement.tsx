@@ -1,47 +1,58 @@
-import { useState } from 'react'
-import dayjs from 'dayjs'
+import { useMemo, useState } from 'react'
+import { Empty } from 'antd'
 import { range } from 'lodash'
-import { Button, Empty } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
-import { CalendarOutlined } from '@ant-design/icons'
+import type { Calendar, Email } from '@prisma/client'
 
 import { Show, Switch } from 'ui-kit'
-import { fetchMembers } from 'pages/members/queries'
+import MailEvent from './components/mail-event'
+import MailModal from './components/mail-modal'
+import MailButton from './components/mail-button'
 import ScheduleModal from './components/schedule-modal'
-import { fetchCalendarEvents } from './queries'
+import CalendarEvent from './components/calendar-event'
+import CalendarButton from './components/calendar-button'
+import { fetchCalendarEvents, fetchEmailEvents } from './queries'
 
 export default function CandidateEngagement() {
   const { candidateId = '' } = useParams()
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
 
-  const [{ data, isLoading }, { data: members }] = useQueries({
+  const [{ data: calendars, isLoading }, { data: emails }] = useQueries({
     queries: [
       {
         queryKey: ['calendars', candidateId],
         queryFn: () => fetchCalendarEvents(candidateId),
       },
-      { queryKey: ['members'], queryFn: fetchMembers },
+      {
+        queryKey: ['emails', candidateId],
+        queryFn: () => fetchEmailEvents(candidateId),
+      },
     ],
   })
 
-  function getInterviewerNames(emails: string[]) {
-    return emails.map((interviewerMail) => {
-      const interviewerObj = members?.find(
-        ({ email }) => email === interviewerMail,
-      )
-      return interviewerObj?.displayName ?? interviewerObj?.email
-    })
-  }
+  const mergeData = useMemo(() => {
+    const mergedData: Array<Calendar & { type: 'calendar' }> =
+      calendars?.map((calendar) => ({ ...calendar, type: 'calendar' })) ?? []
+
+    const emailData: Array<Email & { type: 'email' }> =
+      emails?.map((email) => ({ ...email, type: 'email' })) ?? []
+
+    return [...mergedData, ...emailData].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+  }, [calendars, emails])
 
   return (
     <div className="p-4 text-gray-800 bg-white shadow-md rounded-b-md">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center mb-6 space-x-4">
         <p className="text-lg font-semibold">Candidate Engagement</p>
-        <Show when={data && data.length > 0}>
-          <Button onClick={() => setIsCalendarModalOpen(true)}>
-            Schedule Interview
-          </Button>
+        <div className="flex-1" />
+        <Show when={mergeData.length > 0}>
+          <CalendarButton onClick={() => setIsCalendarModalOpen(true)} />
+          <MailButton onClick={() => setIsMailModalOpen(true)} />
         </Show>
       </div>
 
@@ -57,34 +68,29 @@ export default function CandidateEngagement() {
           </div>
         </Switch.Match>
 
-        <Switch.Match when={data?.length === 0}>
+        <Switch.Match when={mergeData.length === 0}>
           <div className="flex items-center justify-center h-80">
             <Empty description="There is no engagement history with the candidate yet...">
-              <Button onClick={() => setIsCalendarModalOpen(true)}>
-                Schedule Interview
-              </Button>
+              <div className="flex items-center justify-center space-x-3">
+                <CalendarButton onClick={() => setIsCalendarModalOpen(true)} />
+                <MailButton onClick={() => setIsMailModalOpen(true)} />
+              </div>
             </Empty>
           </div>
         </Switch.Match>
 
-        <Switch.Match when={data}>
+        <Switch.Match when={mergeData}>
           {(data) => (
             <div className="space-y-6">
-              {data.map(({ id, title, startTime, endTime, attendees }) => (
-                <div className="flex items-center" key={id}>
-                  <div className="flex items-center justify-center p-3 mr-4 rounded-full shadow bg-secondary-main">
-                    <CalendarOutlined />
-                  </div>
-                  <p>
-                    <b>{title}</b> interview round scheduled on{' '}
-                    <i>
-                      {dayjs(startTime).format('DD MMM')} from{' '}
-                      {dayjs(startTime).format('hh:mm A')} -{' '}
-                      {dayjs(endTime).format('hh:mm A')}
-                    </i>{' '}
-                    with {getInterviewerNames(attendees).join(', ')}
-                  </p>
-                </div>
+              {data.map(({ type, ...rest }) => (
+                <Switch key={rest.id}>
+                  <Switch.Match when={type === 'calendar'}>
+                    <CalendarEvent {...(rest as Calendar)} key={rest.id} />
+                  </Switch.Match>
+                  <Switch.Match when={type === 'email'}>
+                    <MailEvent {...(rest as Email)} />
+                  </Switch.Match>
+                </Switch>
               ))}
             </div>
           )}
@@ -94,6 +100,11 @@ export default function CandidateEngagement() {
       <ScheduleModal
         isModalOpen={isCalendarModalOpen}
         onCancel={() => setIsCalendarModalOpen(false)}
+      />
+
+      <MailModal
+        isOpen={isMailModalOpen}
+        onClose={() => setIsMailModalOpen(false)}
       />
     </div>
   )

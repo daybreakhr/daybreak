@@ -3,7 +3,7 @@ import { google, calendar_v3 } from 'googleapis'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class GoogleService {
+export class GCalService {
   constructor(private configService: ConfigService) {}
 
   private GOOGLE_CLIENT_ID =
@@ -24,11 +24,7 @@ export class GoogleService {
     this.jwtClient.setCredentials({
       access_token: accessToken,
     })
-
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: this.jwtClient,
-    })
+    const calendar = google.calendar({ version: 'v3', auth: this.jwtClient })
 
     const { data } = await calendar.events.get({
       eventId,
@@ -42,14 +38,8 @@ export class GoogleService {
     body: calendar_v3.Schema$Event,
     accessToken: string,
   ) {
-    this.jwtClient.setCredentials({
-      access_token: accessToken,
-    })
-
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: this.jwtClient,
-    })
+    this.jwtClient.setCredentials({ access_token: accessToken })
+    const calendar = google.calendar({ version: 'v3', auth: this.jwtClient })
 
     const resource: calendar_v3.Schema$Event = {
       ...body,

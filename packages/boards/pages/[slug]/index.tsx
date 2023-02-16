@@ -1,12 +1,13 @@
+import { useState } from 'react'
 import Head from 'next/head'
+import { Drawer, Layout } from 'antd'
 import type { Workspace } from '@prisma/client'
+import { FilterOutlined } from '@ant-design/icons'
+import { Scrollbars } from 'react-custom-scrollbars'
 import type { GetStaticPaths, GetStaticProps } from 'next'
+import { AppLayout, Filter, JobList } from 'components/home'
 import client from 'utils/client'
 import { WorkspaceWithJob } from 'utils/utils'
-import { Layout } from 'antd'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { useState } from 'react'
-import { AppLayout, Filter, JobList } from 'components/home'
 
 const { Sider } = Layout
 
@@ -45,7 +46,7 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
   const publishedJobs = workspace.Job.filter(
     ({ departmentId }) => !!departmentId,
   )
-
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [filters, setFilters] = useState({
     jobType: [],
     experience: [],
@@ -65,18 +66,24 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
         />
       </Head>
       <AppLayout
-        workspaceName={workspace?.name}
+        workspaceSlug={workspace.slug}
+        workspaceName={workspace.name}
         workspaceLogo={workspace.logo ?? ''}
+        extra={
+          <FilterOutlined
+            onClick={() => setDrawerOpen(true)}
+            className="text-xl md:hidden"
+          />
+        }
       >
-        <>
+        <Scrollbars autoHide>
           <div className="px-12 py-6 bg-white">
             <h1 className="text-3xl font-bold">{workspace.name}</h1>
             <p className="py-2">{workspace.description}</p>
           </div>
-
-          <Layout className="m-4 space-x-4">
+          <Layout className="my-4 md:mx-4">
             <Sider
-              className="p-6 rounded-md h-fit"
+              className="hidden p-6 rounded-md md:block h-fit md:mr-4"
               theme="light"
               trigger={null}
               width={300}
@@ -87,15 +94,28 @@ export default function WorkspaceHome({ workspace }: WorkspaceHomeProps) {
                 setFilters={setFilters}
               />
             </Sider>
-            <Scrollbars autoHide className="flex flex-col flex-1 bg-gray-100">
+            <div className="flex flex-col flex-1 bg-gray-100">
               <JobList
                 publishedJobs={publishedJobs}
                 filters={filters}
                 workspaceSlug={workspace.slug}
               />
-            </Scrollbars>
+            </div>
           </Layout>
-        </>
+        </Scrollbars>
+
+        <Drawer
+          title="Filters"
+          placement="right"
+          open={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <Filter
+            publishedJobs={publishedJobs}
+            filters={filters}
+            setFilters={setFilters}
+          />
+        </Drawer>
       </AppLayout>
     </>
   )

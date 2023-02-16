@@ -4,6 +4,7 @@ import { CheckOutlined } from '@ant-design/icons'
 type AppCardProps = {
   logo: string
   title: string
+  isLoading: boolean
   onClick: () => void
   isConnected: boolean
   description: string
@@ -12,6 +13,7 @@ type AppCardProps = {
 export default function AppCard({
   logo,
   title,
+  isLoading,
   isConnected,
   description,
   onClick,
@@ -27,6 +29,7 @@ export default function AppCard({
         <div className="flex-1 w-1" />
         <Button
           onClick={onClick}
+          loading={isLoading}
           disabled={isConnected}
           type={isConnected ? 'default' : 'primary'}
           icon={isConnected ? <CheckOutlined /> : null}

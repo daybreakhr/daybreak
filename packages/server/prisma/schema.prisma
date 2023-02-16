@@ -40,6 +40,10 @@ model Member {
   Job         Job[]
   Feedback    Feedback[]
   Calendar    Calendar[]
+  Email       Email[]
+  App         App[]
+
+  @@unique([App.appName])
 }
 
 model Invitees {
@@ -167,6 +171,7 @@ model Candidate {
   workspaceId      String          @db.ObjectId
   Feedback         Feedback[]
   Calendar         Calendar[]
+  Email            Email[]
 }
 
 enum CandidateStatus {
@@ -218,4 +223,29 @@ model Calendar {
   Member      Member    @relation(fields: [createdBy], references: [uid])
   createdBy   String
   createdAt   DateTime  @default(now())
+}
+
+model Email {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  messageId   String    @unique // id from gmail
+  subject     String
+  from        String
+  to          String
+  body        String
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String    @db.ObjectId
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+  createdAt   DateTime  @default(now())
+}
+
+type App {
+  appName     AppName
+  isInstalled Boolean
+  createdAt   DateTime @default(now())
+}
+
+enum AppName {
+  gcalendar
+  gmail
 }

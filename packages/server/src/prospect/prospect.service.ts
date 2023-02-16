@@ -2,11 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
 import { AffindaService } from 'src/affinda/affinda.service'
+import { Express } from 'express'
+import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { CreateProspectDto, Prospect } from './prospect.dto'
 
 @Injectable()
 export class ProspectService {
   constructor(
+    private s3Service: AWSS3Service,
     private prismaService: PrismaService,
     private affindaService: AffindaService,
   ) {}
@@ -26,8 +29,12 @@ export class ProspectService {
     return prospect
   }
 
-  async create(workspaceId: string, prospectBody: CreateProspectDto) {
-    const prospect = await this.prismaService.prospect.create({
+  async create(
+    workspaceId: string,
+    file: Express.Multer.File,
+    prospectBody: CreateProspectDto,
+  ) {
+    const { id } = await this.prismaService.prospect.create({
       data: {
         ...prospectBody,
         Workspace: { connect: { id: workspaceId } },
@@ -37,6 +44,14 @@ export class ProspectService {
           })),
         },
       },
+    })
+
+    const key = `prospect/${id}/${file.originalname}`
+    const uploadResult = await this.s3Service.uploadS3(file, key)
+
+    const prospect = await this.prismaService.prospect.update({
+      where: { id },
+      data: { resume: uploadResult.Location },
     })
 
     return prospect

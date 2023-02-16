@@ -1,19 +1,29 @@
-import { useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
-import { storage } from 'ui-kit'
-import { fetchGoogleTokens } from '../queries'
+import { useMutation } from '@tanstack/react-query'
+import useAuth from 'hooks/use-auth'
 import AppCard from './app-card'
+import { fetchGoogleTokens, updateAppStatus } from '../queries'
 
 export default function Gmail() {
-  const [isConnected, setIsConnected] = useState(false)
+  const { member, setMember } = useAuth()
+  const isInstalled = member?.App.find(
+    (app) => app.appName === 'gmail',
+  )?.isInstalled
+
+  const { mutate, isLoading } = useMutation(updateAppStatus, {
+    onSuccess: (member) => setMember(member),
+  })
 
   const googleLogin = useGoogleLogin({
     // Get authorisation token for sending emails via gmail
     scope: 'https://www.googleapis.com/auth/gmail.send',
     onSuccess: async ({ code }) => {
-      const data = await fetchGoogleTokens({ code })
-      storage.set('accessToken', data.access_token ?? '')
-      setIsConnected(true)
+      await fetchGoogleTokens({ code })
+      mutate({
+        appName: 'gmail',
+        isInstalled: true,
+        memberId: member?.id ?? '',
+      })
     },
     flow: 'auth-code',
   })
@@ -21,7 +31,8 @@ export default function Gmail() {
   return (
     <AppCard
       title="Gmail"
-      isConnected={isConnected}
+      isLoading={isLoading}
+      isConnected={!!isInstalled}
       onClick={() => googleLogin()}
       description="Engage with candidates via email and create automated email workflows"
       logo="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
