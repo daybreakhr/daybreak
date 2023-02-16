@@ -1,22 +1,23 @@
 import { useMemo, useState } from 'react'
+import { Empty } from 'antd'
 import { range } from 'lodash'
-import { Button, Empty } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import type { Calendar, Email } from '@prisma/client'
-import { CalendarOutlined, MailOutlined } from '@ant-design/icons'
 
 import { Show, Switch } from 'ui-kit'
-import ScheduleModal from './components/schedule-modal'
-import { fetchCalendarEvents, fetchEmailEvents } from './queries'
-import MailModal from './components/mail-modal'
-import CalendarEvent from './components/calendar-event'
 import MailEvent from './components/mail-event'
+import MailModal from './components/mail-modal'
+import MailButton from './components/mail-button'
+import ScheduleModal from './components/schedule-modal'
+import CalendarEvent from './components/calendar-event'
+import CalendarButton from './components/calendar-button'
+import { fetchCalendarEvents, fetchEmailEvents } from './queries'
 
 export default function CandidateEngagement() {
   const { candidateId = '' } = useParams()
-  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
   const [isMailModalOpen, setIsMailModalOpen] = useState(false)
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
 
   const [{ data: calendars, isLoading }, { data: emails }] = useQueries({
     queries: [
@@ -50,21 +51,9 @@ export default function CandidateEngagement() {
         <p className="text-lg font-semibold">Candidate Engagement</p>
         <div className="flex-1" />
         <Show when={mergeData.length > 0}>
-          <Button
-            icon={<CalendarOutlined />}
-            onClick={() => setIsCalendarModalOpen(true)}
-          >
-            Schedule Interview
-          </Button>
+          <CalendarButton onClick={() => setIsCalendarModalOpen(true)} />
+          <MailButton onClick={() => setIsMailModalOpen(true)} />
         </Show>
-
-        <Button
-          type="primary"
-          icon={<MailOutlined />}
-          onClick={() => setIsMailModalOpen(true)}
-        >
-          Send Mail
-        </Button>
       </div>
 
       <Switch>
@@ -82,9 +71,10 @@ export default function CandidateEngagement() {
         <Switch.Match when={mergeData.length === 0}>
           <div className="flex items-center justify-center h-80">
             <Empty description="There is no engagement history with the candidate yet...">
-              <Button onClick={() => setIsCalendarModalOpen(true)}>
-                Schedule Interview
-              </Button>
+              <div className="flex items-center justify-center space-x-3">
+                <CalendarButton onClick={() => setIsCalendarModalOpen(true)} />
+                <MailButton onClick={() => setIsMailModalOpen(true)} />
+              </div>
             </Empty>
           </div>
         </Switch.Match>
