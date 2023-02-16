@@ -133,12 +133,7 @@ export default function JobForm() {
           name="hiringManager"
           className="w-64"
           label="Hiring Manager"
-          rules={[
-            {
-              required: true,
-              message: 'Please select a hiring manager for this job',
-            },
-          ]}
+          rules={[{ required: true, message: 'Please select Hiring Manager' }]}
         >
           <Select
             showSearch
@@ -240,10 +235,7 @@ export default function JobForm() {
           name="experience"
           className="flex-1"
           rules={[
-            {
-              required: true,
-              message: 'Please choose required experience',
-            },
+            { required: true, message: 'Please choose required experience' },
           ]}
         >
           <Select
@@ -303,8 +295,10 @@ export default function JobForm() {
           type="primary"
           htmlType="button"
           onClick={() => {
-            form.submit()
-            navigate(`/jobs/${jobId}/publish`)
+            form.validateFields().then((values) => {
+              handleSubmit(values)
+              navigate(`/jobs/${jobId}/publish`)
+            })
           }}
         >
           Continue
