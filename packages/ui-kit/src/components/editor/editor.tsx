@@ -31,9 +31,11 @@ type EditorProps = {
   initialValue?: Descendant[] | null
   onChange: (value: Descendant[]) => void
   templates: Template[]
+  extra?: React.ReactNode
 }
 
 export default function Editor({
+  extra = null,
   initialValue,
   onChange,
   templates,
@@ -129,9 +131,11 @@ export default function Editor({
 
         <div className="flex-1" />
 
+        {extra}
+
         <Dropdown menu={menuProps}>
           <Button>
-            Autofill using job template
+            Select from template
             <DownOutlined />
           </Button>
         </Dropdown>

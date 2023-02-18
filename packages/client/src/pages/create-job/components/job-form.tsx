@@ -4,6 +4,7 @@ import { debounce } from 'lodash'
 import type { Descendant } from 'slate'
 import weekday from 'dayjs/plugin/weekday'
 import localeData from 'dayjs/plugin/localeData'
+import { HiOutlineSparkles } from 'react-icons/hi'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   Avatar,
@@ -19,7 +20,7 @@ import {
 } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
-import { Editor } from 'ui-kit'
+import { Editor, Show } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
 import { fetchMembers } from 'pages/members/queries'
 import {
@@ -207,6 +208,13 @@ export default function JobForm() {
 
       <p className="mb-2">Job Description</p>
       <Editor
+        extra={
+          <Show when={false}>
+            <Button icon={<HiOutlineSparkles className="anticon" />}>
+              Generate from Psych AI
+            </Button>
+          </Show>
+        }
         templates={templates ?? []}
         initialValue={job?.description as Descendant[]}
         onChange={debounce(

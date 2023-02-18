@@ -15,4 +15,5 @@ interface ImportMetaEnv {
   VITE_AFFINDA_API_BASE_URL: string
   VITE_AFFINDA_TOKEN: string
   VITE_BOARDS_APP_URL: string
+  VITE_OPEN_AI_API_KEY: string
 }
