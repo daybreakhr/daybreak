@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { union } from 'lodash'
 import { useNavigate } from 'react-router-dom'
-import { RightOutlined } from '@ant-design/icons'
+import {
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
 import { Button, Form, Input, message } from 'antd'
 import { useMutation } from '@tanstack/react-query'
 
@@ -82,14 +86,18 @@ export default function SetupWorkspace() {
                     <Form.Item>
                       <Button
                         danger
+                        type="text"
+                        icon={<MinusCircleOutlined />}
                         onClick={() => remove(name)}
                         disabled={fields.length === 1}
-                      >
-                        Remove
-                      </Button>
+                      />
                     </Form.Item>
                     <Form.Item>
-                      <Button onClick={add}>Add</Button>
+                      <Button
+                        type="text"
+                        icon={<PlusCircleOutlined />}
+                        onClick={add}
+                      />
                     </Form.Item>
                   </div>
                 ))}
@@ -127,14 +135,18 @@ export default function SetupWorkspace() {
                     <Form.Item>
                       <Button
                         danger
+                        type="text"
+                        icon={<MinusCircleOutlined />}
                         onClick={() => remove(name)}
                         disabled={fields.length === 1}
-                      >
-                        Remove
-                      </Button>
+                      />
                     </Form.Item>
                     <Form.Item>
-                      <Button onClick={add}>Add</Button>
+                      <Button
+                        type="text"
+                        onClick={add}
+                        icon={<PlusCircleOutlined />}
+                      />
                     </Form.Item>
                   </div>
                 ))}
