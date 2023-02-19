@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import {
   ApiCreatedResponse,
@@ -8,7 +16,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { UserRecord } from 'firebase-admin/auth'
 import { MemberDto } from 'src/members/members.dto'
 import { AuthGuard } from './auth.guard'
@@ -43,15 +51,13 @@ export class AuthController {
     description: 'Received tokens successfully',
   })
   async getGoogleCredentials(
+    @Req() req: Request,
     @Body() code: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const data = await this.authService.getGoogleCredentials(code)
+    const data = await this.authService.getGoogleCredentials(req, code)
     response.cookie('access_token', data.access_token, {
       expires: new Date(data.expiry_date - 5000),
-      domain: this.configService.get<string>('COOKIE_DOMAIN'),
-    })
-    response.cookie('refresh_token', data.refresh_token, {
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
     })
     return data
@@ -62,8 +68,8 @@ export class AuthController {
   @ApiCreatedResponse({
     description: 'Received tokens successfully',
   })
-  async getRefreshAccessToken(@Body() refreshToken: string) {
-    const data = await this.authService.getRefreshAccessToken(refreshToken)
+  async getRefreshAccessToken(@Req() req: Request) {
+    const data = await this.authService.getRefreshAccessToken(req)
     return data
   }
 }

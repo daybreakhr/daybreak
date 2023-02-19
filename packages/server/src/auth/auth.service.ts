@@ -1,3 +1,4 @@
+import { encrypt, decrypt } from 'src/utils/encrypt'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Member } from '@prisma/client'
@@ -66,7 +67,7 @@ export class AuthService {
     }
   }
 
-  async getGoogleCredentials(code: string) {
+  async getGoogleCredentials(request: any, code: string) {
     const oAuth2Client = new OAuth2Client(
       this.configService.get<string>('FIREBASE_CLIENT_ID'),
       this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
@@ -74,14 +75,50 @@ export class AuthService {
     )
 
     const { tokens } = await oAuth2Client.getToken(code)
+    const memberId = request.user.uid
+
+    const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
+    const ivByteSize = this.configService.get<number>(
+      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
+    )
+
+    const encryptedToken = await encrypt(
+      tokens.refresh_token,
+      password,
+      ivByteSize,
+    )
+
+    await this.prismaService.member.update({
+      where: { id: memberId },
+      data: {
+        googleRefreshToken: encryptedToken,
+        googleTokenExpiryTime: tokens.expiry_date,
+      },
+    })
     return tokens
   }
 
-  async getRefreshAccessToken(refreshToken: string) {
+  async getRefreshAccessToken(request: any) {
+    const memberId = request.user.uid
+    const { googleRefreshToken } = await this.prismaService.member.findFirst({
+      where: { id: memberId },
+    })
+
+    const ivByteSize = this.configService.get<number>(
+      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
+    )
+    const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
+
+    const decryptedToken = await decrypt(
+      googleRefreshToken,
+      password,
+      ivByteSize,
+    )
+
     const user = new UserRefreshClient(
       this.configService.get<string>('FIREBASE_CLIENT_ID'),
       this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
-      refreshToken,
+      decryptedToken,
     )
 
     const { credentials } = await user.refreshAccessToken()
