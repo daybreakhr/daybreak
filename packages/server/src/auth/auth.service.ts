@@ -9,11 +9,21 @@ import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class AuthService {
+  private readonly googleEncryptToken: string
+  private readonly googleEncryptTokenByteSize: number
+
   constructor(
     private readonly configService: ConfigService,
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
-  ) {}
+  ) {
+    this.googleEncryptToken = this.configService.get<string>(
+      'GOOGLE_ENCRYPT_TOKEN',
+    )
+    this.googleEncryptTokenByteSize = this.configService.get<number>(
+      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
+    )
+  }
 
   async verifyIdToken(idToken: string): Promise<UserRecord> {
     try {
@@ -76,15 +86,10 @@ export class AuthService {
 
     const { tokens } = await oAuth2Client.getToken(code)
 
-    const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
-    const ivByteSize = this.configService.get<number>(
-      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
-    )
-
     const encryptedToken = await encrypt(
       tokens.refresh_token,
-      password,
-      ivByteSize,
+      this.googleEncryptToken,
+      this.googleEncryptTokenByteSize,
     )
 
     await this.prismaService.member.update({
@@ -102,15 +107,10 @@ export class AuthService {
       where: { uid },
     })
 
-    const ivByteSize = this.configService.get<number>(
-      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
-    )
-    const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
-
     const decryptedToken = await decrypt(
       googleRefreshToken,
-      password,
-      ivByteSize,
+      this.googleEncryptToken,
+      this.googleEncryptTokenByteSize,
     )
 
     const user = new UserRefreshClient(

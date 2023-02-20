@@ -46,7 +46,7 @@ model Member {
   Email                 Email[]
   App                   App[]
   Interview             Interview[]
-  // Pipeline              Pipeline[]
+  Pipeline              Pipeline[]
 
   @@unique([App.appName])
 }
@@ -89,8 +89,8 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  // Pipeline      Pipeline    @relation(fields: [pipelineId], references: [id])
-  // pipelineId    String      @db.ObjectId
+  Pipeline      Pipeline?   @relation(fields: [pipelineId], references: [id])
+  pipelineId    String      @db.ObjectId
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])
@@ -238,10 +238,10 @@ model Pipeline {
   isSaved     Boolean     @default(false)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  // Member      Member      @relation(fields: [createdBy], references: [uid])
+  Member      Member      @relation(fields: [createdBy], references: [uid])
   createdBy   String
   Interview   Interview[]
-  // Job         Job[]
+  Job         Job[]
   Workspace   Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId String      @db.ObjectId
 }
