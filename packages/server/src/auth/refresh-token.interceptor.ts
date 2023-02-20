@@ -53,7 +53,6 @@ export class RefreshTokenInterceptor implements NestInterceptor {
         where: { uid: request.user.uid },
         data: {
           googleRefreshToken: encryptedToken,
-          googleTokenExpiryTime: newCredentials.expiry_date,
         },
       })
     }

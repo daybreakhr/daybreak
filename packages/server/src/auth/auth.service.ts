@@ -96,7 +96,6 @@ export class AuthService {
       where: { uid },
       data: {
         googleRefreshToken: encryptedToken,
-        googleTokenExpiryTime: tokens.expiry_date,
       },
     })
     return tokens

@@ -29,24 +29,23 @@ model Workspace {
 }
 
 model Member {
-  id                    String       @id @default(auto()) @map("_id") @db.ObjectId
-  uid                   String       @unique // unique id provided firebase authentication
-  role                  Role
-  googleRefreshToken    String?
-  googleTokenExpiryTime Int?
-  invites               Invitees[]
-  Workspace             Workspace    @relation(fields: [workspaceId], references: [id])
-  workspaceId           String       @db.ObjectId
-  isSuspended           Boolean      @default(false)
-  Department            Department[]
-  Location              Location[]
-  Job                   Job[]
-  Feedback              Feedback[]
-  Calendar              Calendar[]
-  Email                 Email[]
-  App                   App[]
-  Interview             Interview[]
-  Pipeline              Pipeline[]
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  uid                String       @unique // unique id provided firebase authentication
+  role               Role
+  googleRefreshToken String?
+  invites            Invitees[]
+  Workspace          Workspace    @relation(fields: [workspaceId], references: [id])
+  workspaceId        String       @db.ObjectId
+  isSuspended        Boolean      @default(false)
+  Department         Department[]
+  Location           Location[]
+  Job                Job[]
+  Feedback           Feedback[]
+  Calendar           Calendar[]
+  Email              Email[]
+  App                App[]
+  Interview          Interview[]
+  Pipeline           Pipeline[]
 
   @@unique([App.appName])
 }
