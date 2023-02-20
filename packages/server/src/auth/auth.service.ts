@@ -67,7 +67,7 @@ export class AuthService {
     }
   }
 
-  async getGoogleCredentials(request: any, code: string) {
+  async getGoogleCredentials(code: string, uid: string) {
     const oAuth2Client = new OAuth2Client(
       this.configService.get<string>('FIREBASE_CLIENT_ID'),
       this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
@@ -75,7 +75,6 @@ export class AuthService {
     )
 
     const { tokens } = await oAuth2Client.getToken(code)
-    const memberId = request.user.uid
 
     const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
     const ivByteSize = this.configService.get<number>(
@@ -89,7 +88,7 @@ export class AuthService {
     )
 
     await this.prismaService.member.update({
-      where: { id: memberId },
+      where: { uid },
       data: {
         googleRefreshToken: encryptedToken,
         googleTokenExpiryTime: tokens.expiry_date,
@@ -98,10 +97,9 @@ export class AuthService {
     return tokens
   }
 
-  async getRefreshAccessToken(request: any) {
-    const memberId = request.user.uid
+  async getRefreshAccessToken(uid: string) {
     const { googleRefreshToken } = await this.prismaService.member.findFirst({
-      where: { id: memberId },
+      where: { uid },
     })
 
     const ivByteSize = this.configService.get<number>(

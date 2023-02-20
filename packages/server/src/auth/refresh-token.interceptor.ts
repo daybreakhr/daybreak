@@ -26,12 +26,6 @@ export class RefreshTokenInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest()
     const response = context.switchToHttp().getResponse()
 
-    const memberId = request.user.uid
-
-    const { googleRefreshToken } = await this.prismaService.member.findFirst({
-      where: { id: memberId },
-    })
-
     const accessToken = request.cookies?.access_token
 
     let newCredentials: Credentials | undefined
@@ -39,7 +33,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
     // Update access token if it is expired
     if (!accessToken) {
       newCredentials = await this.authService.getRefreshAccessToken(
-        googleRefreshToken,
+        request.user.uid,
       )
       // set new access token in the cookie
       request.cookies.access_token = newCredentials.access_token
@@ -56,7 +50,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
       )
 
       await this.prismaService.member.update({
-        where: { id: memberId },
+        where: { uid: request.user.uid },
         data: {
           googleRefreshToken: encryptedToken,
           googleTokenExpiryTime: newCredentials.expiry_date,
