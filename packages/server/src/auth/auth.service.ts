@@ -17,10 +17,9 @@ export class AuthService {
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
   ) {
-    this.googleEncryptToken = this.configService.get<string>(
-      'GOOGLE_ENCRYPT_TOKEN',
-    )
-    this.googleEncryptTokenByteSize = this.configService.get<number>(
+    this.googleEncryptToken = configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
+
+    this.googleEncryptTokenByteSize = configService.get<number>(
       'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
     )
   }
@@ -94,31 +93,33 @@ export class AuthService {
 
     await this.prismaService.member.update({
       where: { uid },
-      data: {
-        googleRefreshToken: encryptedToken,
-      },
+      data: { googleRefreshToken: encryptedToken },
     })
     return tokens
   }
 
   async getRefreshAccessToken(uid: string) {
-    const { googleRefreshToken } = await this.prismaService.member.findFirst({
+    const { googleRefreshToken } = await this.prismaService.member.findUnique({
       where: { uid },
     })
 
-    const decryptedToken = await decrypt(
-      googleRefreshToken,
-      this.googleEncryptToken,
-      this.googleEncryptTokenByteSize,
-    )
+    if (googleRefreshToken) {
+      const decryptedToken = await decrypt(
+        googleRefreshToken,
+        this.googleEncryptToken,
+        this.googleEncryptTokenByteSize,
+      )
 
-    const user = new UserRefreshClient(
-      this.configService.get<string>('FIREBASE_CLIENT_ID'),
-      this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
-      decryptedToken,
-    )
+      const user = new UserRefreshClient(
+        this.configService.get<string>('FIREBASE_CLIENT_ID'),
+        this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
+        decryptedToken,
+      )
 
-    const { credentials } = await user.refreshAccessToken()
-    return credentials
+      const { credentials } = await user.refreshAccessToken()
+      return credentials
+    } else {
+      return null
+    }
   }
 }

@@ -89,7 +89,7 @@ model Job {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   Pipeline      Pipeline?   @relation(fields: [pipelineId], references: [id])
-  pipelineId    String      @db.ObjectId
+  pipelineId    String?     @db.ObjectId
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])

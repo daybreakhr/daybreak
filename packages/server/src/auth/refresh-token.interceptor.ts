@@ -1,4 +1,3 @@
-import { encrypt } from 'src/utils/encrypt'
 import {
   CallHandler,
   ExecutionContext,
@@ -26,35 +25,17 @@ export class RefreshTokenInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest()
     const response = context.switchToHttp().getResponse()
 
+    const uid = request.user.uid
     const accessToken = request.cookies?.access_token
 
     let newCredentials: Credentials | undefined
-
     // Update access token if it is expired
     if (!accessToken) {
-      newCredentials = await this.authService.getRefreshAccessToken(
-        request.user.uid,
-      )
-      // set new access token in the cookie
-      request.cookies.access_token = newCredentials.access_token
-
-      const ivByteSize = this.configService.get<number>(
-        'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
-      )
-      const password = this.configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
-
-      const encryptedToken = await encrypt(
-        newCredentials.refresh_token,
-        password,
-        ivByteSize,
-      )
-
-      await this.prismaService.member.update({
-        where: { uid: request.user.uid },
-        data: {
-          googleRefreshToken: encryptedToken,
-        },
-      })
+      newCredentials = await this.authService.getRefreshAccessToken(uid)
+      if (newCredentials) {
+        // set new access token in the cookie
+        request.cookies.access_token = newCredentials.access_token
+      }
     }
 
     return next.handle().pipe(
