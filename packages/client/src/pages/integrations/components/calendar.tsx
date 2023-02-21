@@ -6,9 +6,7 @@ import { fetchGoogleTokens, updateAppStatus } from '../queries'
 
 export default function Calendar() {
   const { member, setMember } = useAuth()
-  const isInstalled = member?.App.find(
-    (app) => app.appName === 'gcalendar',
-  )?.isInstalled
+  const isInstalled = member?.Integration?.gcal?.isInstalled
 
   const { mutate, isLoading } = useMutation(updateAppStatus, {
     onSuccess: (member) => setMember(member),
@@ -20,7 +18,7 @@ export default function Calendar() {
     onSuccess: async ({ code }) => {
       await fetchGoogleTokens({ code })
       mutate({
-        appName: 'gcalendar',
+        appName: 'gcal',
         isInstalled: true,
         memberId: member?.id ?? '',
       })
