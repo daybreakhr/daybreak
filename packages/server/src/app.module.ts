@@ -41,6 +41,7 @@ import { EmailModule } from './email/email.module'
         FIREBASE_CLIENT_ID: Joi.string(),
         FIREBASE_CLIENT_SECRET: Joi.string(),
         COOKIE_DOMAIN: Joi.string(),
+        GOOGLE_ENCRYPT_TOKEN: Joi.string(),
       }),
       envFilePath: ['.env'],
       isGlobal: true,

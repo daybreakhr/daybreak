@@ -29,22 +29,23 @@ model Workspace {
 }
 
 model Member {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  uid         String       @unique // unique id provided firebase authentication
-  role        Role
-  invites     Invitees[]
-  Workspace   Workspace    @relation(fields: [workspaceId], references: [id])
-  workspaceId String       @db.ObjectId
-  isSuspended Boolean      @default(false)
-  Department  Department[]
-  Location    Location[]
-  Job         Job[]
-  Feedback    Feedback[]
-  Calendar    Calendar[]
-  Email       Email[]
-  App         App[]
-  Interview   Interview[]
-  Pipeline    Pipeline[]
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  uid                String       @unique // unique id provided firebase authentication
+  role               Role
+  googleRefreshToken String?
+  invites            Invitees[]
+  Workspace          Workspace    @relation(fields: [workspaceId], references: [id])
+  workspaceId        String       @db.ObjectId
+  isSuspended        Boolean      @default(false)
+  Department         Department[]
+  Location           Location[]
+  Job                Job[]
+  Feedback           Feedback[]
+  Calendar           Calendar[]
+  Email              Email[]
+  App                App[]
+  Interview          Interview[]
+  Pipeline           Pipeline[]
 
   @@unique([App.appName])
 }
@@ -87,8 +88,8 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  Pipeline      Pipeline    @relation(fields: [pipelineId], references: [id])
-  pipelineId    String      @db.ObjectId
+  Pipeline      Pipeline?   @relation(fields: [pipelineId], references: [id])
+  pipelineId    String?     @db.ObjectId
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])

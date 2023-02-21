@@ -43,27 +43,15 @@ export class AuthController {
     description: 'Received tokens successfully',
   })
   async getGoogleCredentials(
+    @GetUser() user: UserRecord,
     @Body() code: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const data = await this.authService.getGoogleCredentials(code)
+    const data = await this.authService.getGoogleCredentials(code, user.uid)
     response.cookie('access_token', data.access_token, {
       expires: new Date(data.expiry_date - 5000),
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
     })
-    response.cookie('refresh_token', data.refresh_token, {
-      domain: this.configService.get<string>('COOKIE_DOMAIN'),
-    })
-    return data
-  }
-
-  @Post('google/refresh-token')
-  @ApiOperation({ summary: 'Get access token using refresh token' })
-  @ApiCreatedResponse({
-    description: 'Received tokens successfully',
-  })
-  async getRefreshAccessToken(@Body() refreshToken: string) {
-    const data = await this.authService.getRefreshAccessToken(refreshToken)
     return data
   }
 }
