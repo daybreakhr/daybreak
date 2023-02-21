@@ -6,7 +6,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Roboto', defaultTheme.fontFamily.sans],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          defaultTheme.fontFamily.sans,
+        ],
         mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
       },
       colors: {
