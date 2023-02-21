@@ -1,14 +1,57 @@
 import Dragger from 'antd/es/upload/Dragger'
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { Button, Form, Input, Select } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, Form, Input, message, Select, UploadProps } from 'antd'
 import { InboxOutlined, TeamOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import { fetchJobs } from 'pages/jobs/queries'
 
+import { RcFile } from 'antd/es/upload'
+import { createProspect } from './queries'
+
 export default function CreateProspect() {
+  const [form] = Form.useForm()
   const navigate = useNavigate()
+
   const { data: jobs } = useQuery(['jobs'], fetchJobs)
+
+  const queryClient = useQueryClient()
+
+  const { mutateAsync, isLoading } = useMutation(createProspect, {
+    onSuccess: () => {
+      form.resetFields()
+      queryClient.invalidateQueries(['prospects'])
+      navigate('/prospects')
+    },
+    onError: (error: any) => {
+      const errMsg = error?.response?.data?.error
+      if (errMsg) {
+        message.error(errMsg)
+      }
+    },
+  })
+
+  function handleSubmit(values: any) {
+    const formData = new FormData()
+    const { file, jobIds, ...restValues } = values
+
+    Object.keys(restValues).forEach((key) => {
+      const value = restValues[key as keyof typeof restValues]
+      if (value) {
+        formData.append(key, value)
+      }
+    })
+
+    formData.append('file', file.file as RcFile)
+    jobIds.forEach((item: string) => formData.append('jobIds[]', item))
+
+    mutateAsync(formData)
+  }
+
+  const uploadProps: UploadProps = {
+    maxCount: 1,
+    beforeUpload: () => false,
+  }
 
   return (
     <>
@@ -22,7 +65,12 @@ export default function CreateProspect() {
 
       <div className="flex flex-col flex-1 px-8 pt-4 pb-8">
         <div className="p-6 bg-white rounded-md shadow-md">
-          <Form layout="vertical" className="mx-64">
+          <Form
+            layout="vertical"
+            className="mx-64"
+            form={form}
+            onFinish={handleSubmit}
+          >
             <Form.Item
               name="file"
               valuePropName="file"
@@ -31,7 +79,7 @@ export default function CreateProspect() {
                 { required: true, message: 'Please upload your resume!' },
               ]}
             >
-              <Dragger>
+              <Dragger {...uploadProps}>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
@@ -43,12 +91,14 @@ export default function CreateProspect() {
             </Form.Item>
 
             <Form.Item
-              name="jobId"
+              name="jobIds"
               label="Jobs"
               className="flex-1"
               rules={[{ required: true, message: 'Please select a Job' }]}
             >
               <Select
+                mode="multiple"
+                allowClear
                 placeholder="Select all the suitable Jobs..."
                 options={jobs?.map(({ id, title }) => {
                   return { label: title, value: id }
@@ -132,7 +182,7 @@ export default function CreateProspect() {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={isLoading}>
                 Submit
               </Button>
             </div>

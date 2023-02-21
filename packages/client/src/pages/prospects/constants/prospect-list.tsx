@@ -46,9 +46,15 @@ export const prospectColumns = (
   },
   {
     title: 'Applied For',
-    dataIndex: 'Job',
-    key: 'Job',
-    render: ({ title }) => <Tag>{title}</Tag>,
+    dataIndex: 'Jobs',
+    key: 'Jobs',
+    width: '20%',
+    render: (jobs) =>
+      jobs.map(({ id, title }: { id: string; title: string }) => (
+        <Tag key={id} className="mb-1">
+          {title}
+        </Tag>
+      )),
     filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
     onFilter: (value, record) => record.Jobs.some((job) => job.id === value),
   },

@@ -9,27 +9,29 @@ import PageHeader from 'components/page-header'
 import { fetchProspects } from 'pages/prospects/queries'
 import { prospectColumns } from 'pages/prospects/constants/prospect-list'
 import { Link } from 'react-router-dom'
+import { fetchJobs } from 'pages/jobs/queries'
 
 export default function Prospects() {
   const [input, setInput] = useState('')
   const { data, isLoading } = useQuery(['prospects'], fetchProspects)
+  const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
   })
 
   const appliedFor = useMemo(() => {
-    // if (data) {
-    //   return data
-    //     .map(({ Job }) => Job)
-    //     .filter(
-    //       (value, index, arr) =>
-    //         value !== null &&
-    //         arr.findIndex((val) => val?.id === value.id) === index,
-    //     ) as Job[]
-    // }
+    if (jobs) {
+      return (jobs || [])
+        .map((job) => job)
+        .filter(
+          (value, index, arr) =>
+            value !== null &&
+            arr.findIndex((val) => val?.id === value.id) === index,
+        ) as Job[]
+    }
     return [] as Job[]
-  }, [])
+  }, [jobs])
 
   return (
     <>
