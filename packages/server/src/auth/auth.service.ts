@@ -1,5 +1,5 @@
 import { encrypt, decrypt } from 'src/utils/encrypt'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Member } from '@prisma/client'
 import { UserRecord } from 'firebase-admin/auth'
@@ -9,20 +9,13 @@ import { PrismaService } from 'src/prisma.service'
 
 @Injectable()
 export class AuthService {
-  private readonly googleEncryptToken: string
-  private readonly googleEncryptTokenByteSize: number
+  private logger = new Logger('HTTP')
 
   constructor(
     private readonly configService: ConfigService,
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
-  ) {
-    this.googleEncryptToken = configService.get<string>('GOOGLE_ENCRYPT_TOKEN')
-
-    this.googleEncryptTokenByteSize = configService.get<number>(
-      'GOOGLE_ENCRYPT_TOKEN_BYTE_SIZE',
-    )
-  }
+  ) {}
 
   async verifyIdToken(idToken: string): Promise<UserRecord> {
     try {
@@ -85,11 +78,7 @@ export class AuthService {
 
     const { tokens } = await oAuth2Client.getToken(code)
 
-    const encryptedToken = await encrypt(
-      tokens.refresh_token,
-      this.googleEncryptToken,
-      this.googleEncryptTokenByteSize,
-    )
+    const encryptedToken = await encrypt(tokens.refresh_token)
 
     await this.prismaService.member.update({
       where: { uid },
@@ -103,23 +92,29 @@ export class AuthService {
       where: { uid },
     })
 
-    if (googleRefreshToken) {
-      const decryptedToken = await decrypt(
-        googleRefreshToken,
-        this.googleEncryptToken,
-        this.googleEncryptTokenByteSize,
-      )
+    try {
+      if (googleRefreshToken) {
+        const decryptedToken = await decrypt(googleRefreshToken)
 
-      const user = new UserRefreshClient(
-        this.configService.get<string>('FIREBASE_CLIENT_ID'),
-        this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
-        decryptedToken,
-      )
+        const user = new UserRefreshClient(
+          this.configService.get<string>('FIREBASE_CLIENT_ID'),
+          this.configService.get<string>('FIREBASE_CLIENT_SECRET'),
+          decryptedToken,
+        )
 
-      const { credentials } = await user.refreshAccessToken()
-      return credentials
-    } else {
-      return null
+        const { credentials } = await user.refreshAccessToken()
+        return credentials
+      }
+    } catch (error) {
+      // If the refresh token has expired, delete it from the database
+      if (error.code === 401) {
+        this.logger.error(error)
+        await this.prismaService.member.update({
+          where: { uid },
+          data: { googleRefreshToken: null },
+        })
+        throw new UnauthorizedException('Invalid google refresh token')
+      }
     }
   }
 }
