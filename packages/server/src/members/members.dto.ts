@@ -1,6 +1,6 @@
+import { Role } from '@prisma/client'
 import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { AppName, Role } from '@prisma/client'
-import { IsBoolean, IsEnum, IsOptional } from 'class-validator'
+import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
 export class MemberDto {
   @ApiProperty({
@@ -50,8 +50,8 @@ export class AddAppBody {
     description: 'Name of the app',
     required: true,
   })
-  @IsEnum(AppName)
-  appName: AppName
+  @IsString({ groups: ['gmail', 'gcal'] })
+  appName: 'gmail' | 'gcal'
 
   @ApiProperty({
     example: 'true',

@@ -43,11 +43,9 @@ model Member {
   Feedback           Feedback[]
   Calendar           Calendar[]
   Email              Email[]
-  App                App[]
+  Integration        Integration?
   Interview          Interview[]
   Pipeline           Pipeline[]
-
-  @@unique([App.appName])
 }
 
 model Invitees {
@@ -273,13 +271,12 @@ model Email {
   createdAt   DateTime  @default(now())
 }
 
-type App {
-  appName     AppName
-  isInstalled Boolean
-  createdAt   DateTime @default(now())
+type Integration {
+  gcal  App?
+  gmail App?
 }
 
-enum AppName {
-  gcalendar
-  gmail
+type App {
+  isInstalled Boolean
+  createdAt   DateTime @default(now())
 }

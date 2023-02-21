@@ -1,4 +1,4 @@
-import { AppName, Member } from '@prisma/client'
+import { Member } from '@prisma/client'
 import { Credentials } from 'google-auth-library'
 import { storage } from 'ui-kit'
 import client from 'utils/client'
@@ -17,7 +17,7 @@ export async function updateAppStatus({
   memberId,
   isInstalled,
 }: {
-  appName: AppName
+  appName: 'gmail' | 'gcal'
   memberId: string
   isInstalled: boolean
 }) {

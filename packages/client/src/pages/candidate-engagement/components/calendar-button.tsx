@@ -9,9 +9,7 @@ type CalendarButtonProps = {
 export default function CalendarButton({ onClick }: CalendarButtonProps) {
   const { member } = useAuth()
 
-  const isCalendarConnected = member?.App.some(
-    (app) => app.appName === 'gcalendar' && app.isInstalled,
-  )
+  const isCalendarConnected = member?.Integration?.gcal?.isInstalled
 
   return (
     <Button
