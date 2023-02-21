@@ -33,6 +33,7 @@ import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import CreateProspect from 'pages/create-prospect'
+import CreatePipeline from 'pages/create-pipeline'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -103,6 +104,7 @@ export default function App() {
                     path="settings/integrations"
                     element={<Integrations />}
                   />
+                  <Route path="test/pipeline" element={<CreatePipeline />} />
                 </Route>
               </Routes>
               {import.meta.env.PROD && <Logrocket />}
