@@ -1,15 +1,15 @@
 import { useMemo, useState } from 'react'
-import { Button, Input, Table } from 'antd'
+import { Link } from 'react-router-dom'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
+import { Button, Input, Table } from 'antd'
+import { uniq, uniqBy, flatMap } from 'lodash'
 import { useQuery } from '@tanstack/react-query'
 import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
 import { fetchProspects } from 'pages/prospects/queries'
 import { prospectColumns } from 'pages/prospects/constants/prospect-list'
-import { Link } from 'react-router-dom'
-import _ from 'lodash'
 
 export default function Prospects() {
   const [input, setInput] = useState('')
@@ -21,8 +21,8 @@ export default function Prospects() {
 
   const appliedFor = useMemo(() => {
     if (data) {
-      return _.uniqBy(
-        _.flatMap(data, (prospect) => prospect.Jobs),
+      return uniqBy(
+        flatMap(data, (prospect) => prospect.Jobs),
         (job) => job.id,
       )
     }
@@ -31,7 +31,7 @@ export default function Prospects() {
 
   const locationApplied = useMemo(() => {
     if (data) {
-      return _.uniq(data.map((prospect) => prospect.location))
+      return uniq(data.map((prospect) => prospect.location))
     }
     return []
   }, [data])

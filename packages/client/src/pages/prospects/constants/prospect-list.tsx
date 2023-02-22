@@ -43,6 +43,7 @@ export const prospectColumns = (
       value: location,
       text: location,
     })),
+    onFilter: (value, record) => record.location === value,
   },
   {
     title: 'Applied For',

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { uniqBy, flatMap } from 'lodash'
 import { Button, Input, Table } from 'antd'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
@@ -9,7 +10,6 @@ import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { candidateColumns } from 'pages/candidates/constants/candidate-list'
-import _ from 'lodash'
 
 export default function Candidates() {
   const navigate = useNavigate()
@@ -23,8 +23,8 @@ export default function Candidates() {
 
   const appliedFor = useMemo(() => {
     if (data) {
-      return _.uniqBy(
-        _.flatMap(data, (prospect) => prospect.Job),
+      return uniqBy(
+        flatMap(data, (prospect) => prospect.Job),
         (job) => job.id,
       )
     }
