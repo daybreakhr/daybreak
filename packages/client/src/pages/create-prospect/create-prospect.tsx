@@ -15,6 +15,8 @@ export default function CreateProspect() {
 
   const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
+  const publishedJobs = jobs?.filter(({ departmentId }) => !!departmentId)
+
   const queryClient = useQueryClient()
 
   const { mutateAsync, isLoading } = useMutation(createProspect, {
@@ -100,7 +102,7 @@ export default function CreateProspect() {
                 mode="multiple"
                 allowClear
                 placeholder="Select all the suitable Jobs..."
-                options={jobs?.map(({ id, title }) => {
+                options={publishedJobs?.map(({ id, title }) => {
                   return { label: title, value: id }
                 })}
               />

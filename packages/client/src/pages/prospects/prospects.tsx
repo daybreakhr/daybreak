@@ -9,29 +9,32 @@ import PageHeader from 'components/page-header'
 import { fetchProspects } from 'pages/prospects/queries'
 import { prospectColumns } from 'pages/prospects/constants/prospect-list'
 import { Link } from 'react-router-dom'
-import { fetchJobs } from 'pages/jobs/queries'
+import _ from 'lodash'
 
 export default function Prospects() {
   const [input, setInput] = useState('')
   const { data, isLoading } = useQuery(['prospects'], fetchProspects)
-  const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
   const filteredData = matchSorter(data ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
   })
 
   const appliedFor = useMemo(() => {
-    if (jobs) {
-      return (jobs || [])
-        .map((job) => job)
-        .filter(
-          (value, index, arr) =>
-            value !== null &&
-            arr.findIndex((val) => val?.id === value.id) === index,
-        ) as Job[]
+    if (data) {
+      return _.uniqBy(
+        _.flatMap(data, (prospect) => prospect.Jobs),
+        (job) => job.id,
+      )
     }
     return [] as Job[]
-  }, [jobs])
+  }, [data])
+
+  const locationApplied = useMemo(() => {
+    if (data) {
+      return _.uniq(data.map((prospect) => prospect.location))
+    }
+    return []
+  }, [data])
 
   return (
     <>
@@ -68,7 +71,7 @@ export default function Prospects() {
             loading={isLoading}
             dataSource={filteredData}
             rowKey={(record) => record.id}
-            columns={prospectColumns(appliedFor, [])}
+            columns={prospectColumns(appliedFor, locationApplied)}
           />
         </div>
       </div>

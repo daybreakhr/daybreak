@@ -25,7 +25,7 @@ const items: MenuProps['items'] = [
 
 export const prospectColumns = (
   appliedFor: Job[],
-  locationApplied: Job[],
+  locationApplied: string[],
 ): ColumnsType<Prospect> => [
   {
     title: 'Name',
@@ -39,9 +39,9 @@ export const prospectColumns = (
     title: 'Location',
     dataIndex: 'location',
     key: 'location',
-    filters: locationApplied.map(({ id, title }) => ({
-      value: id,
-      text: title,
+    filters: locationApplied.map((location) => ({
+      value: location,
+      text: location,
     })),
   },
   {

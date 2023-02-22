@@ -9,6 +9,7 @@ import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import { fetchCandidates } from 'pages/candidates/queries'
 import { candidateColumns } from 'pages/candidates/constants/candidate-list'
+import _ from 'lodash'
 
 export default function Candidates() {
   const navigate = useNavigate()
@@ -22,13 +23,10 @@ export default function Candidates() {
 
   const appliedFor = useMemo(() => {
     if (data) {
-      return data
-        .map(({ Job }) => Job)
-        .filter(
-          (value, index, arr) =>
-            value !== null &&
-            arr.findIndex((val) => val?.id === value.id) === index,
-        ) as Job[]
+      return _.uniqBy(
+        _.flatMap(data, (prospect) => prospect.Job),
+        (job) => job.id,
+      )
     }
     return [] as Job[]
   }, [data])
