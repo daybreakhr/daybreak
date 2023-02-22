@@ -9,9 +9,8 @@ type MailButtonProps = {
 export default function MailButton({ onClick }: MailButtonProps) {
   const { member } = useAuth()
 
-  const isGmailConnected = member?.App.some(
-    (app) => app.appName === 'gmail' && app.isInstalled,
-  )
+  const isGmailConnected = member?.Integration?.gmail?.isInstalled
+
   return (
     <Button
       type="primary"

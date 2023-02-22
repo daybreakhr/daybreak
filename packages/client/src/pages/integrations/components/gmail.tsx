@@ -6,9 +6,7 @@ import { fetchGoogleTokens, updateAppStatus } from '../queries'
 
 export default function Gmail() {
   const { member, setMember } = useAuth()
-  const isInstalled = member?.App.find(
-    (app) => app.appName === 'gmail',
-  )?.isInstalled
+  const isInstalled = member?.Integration?.gmail?.isInstalled
 
   const { mutate, isLoading } = useMutation(updateAppStatus, {
     onSuccess: (member) => setMember(member),
