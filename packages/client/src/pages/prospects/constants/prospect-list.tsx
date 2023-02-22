@@ -49,8 +49,8 @@ export const prospectColumns = (
     dataIndex: 'Jobs',
     key: 'Jobs',
     width: '20%',
-    render: (jobs) =>
-      jobs.map(({ id, title }: { id: string; title: string }) => (
+    render: (jobs: Job[]) =>
+      jobs.map(({ id, title }) => (
         <Tag key={id} className="mb-1">
           {title}
         </Tag>

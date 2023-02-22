@@ -39,9 +39,7 @@ export class ProspectService {
         ...prospectBody,
         Workspace: { connect: { id: workspaceId } },
         Jobs: {
-          connect: prospectBody.jobIds.map((jobId) => ({
-            id: jobId,
-          })),
+          connect: prospectBody.jobIds?.map((jobId) => ({ id: jobId })) ?? [],
         },
       },
     })

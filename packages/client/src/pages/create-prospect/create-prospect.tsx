@@ -92,15 +92,10 @@ export default function CreateProspect() {
               </Dragger>
             </Form.Item>
 
-            <Form.Item
-              name="jobIds"
-              label="Jobs"
-              className="flex-1"
-              rules={[{ required: true, message: 'Please select a Job' }]}
-            >
+            <Form.Item name="jobIds" label="Jobs" className="flex-1">
               <Select
-                mode="multiple"
                 allowClear
+                mode="multiple"
                 placeholder="Select all the suitable Jobs..."
                 options={publishedJobs?.map(({ id, title }) => {
                   return { label: title, value: id }
