@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator'
+import { IsString, IsOptional, IsArray } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { string } from 'joi'
 
@@ -52,7 +52,9 @@ export class CreateProspectDto {
     description: "Array of Job ID's",
     example: ['63a18917706dfc29c7bdc207', '63a18917706dfc29c7bdc209'],
   })
-  jobIds: string[]
+  @IsOptional()
+  @IsArray()
+  jobIds?: string[]
 
   @ApiProperty({
     example: 'ramesh.chadha@gmail.com',
