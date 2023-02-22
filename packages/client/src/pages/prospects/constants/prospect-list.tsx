@@ -25,7 +25,7 @@ const items: MenuProps['items'] = [
 
 export const prospectColumns = (
   appliedFor: Job[],
-  locationApplied: Job[],
+  locationApplied: string[],
 ): ColumnsType<Prospect> => [
   {
     title: 'Name',
@@ -39,17 +39,23 @@ export const prospectColumns = (
     title: 'Location',
     dataIndex: 'location',
     key: 'location',
-    filters: locationApplied.map(({ id, title }) => ({
-      value: id,
-      text: title,
+    filters: locationApplied.map((location) => ({
+      value: location,
+      text: location,
     })),
+    onFilter: (value, record) => record.location === value,
   },
   {
     title: 'Applied For',
-    dataIndex: 'Job',
-    key: 'Job',
-    render: (row: Prospect) =>
-      row?.Jobs.map(({ title, id }) => <Tag key={id}>{title}</Tag>),
+    dataIndex: 'Jobs',
+    key: 'Jobs',
+    width: '20%',
+    render: (jobs: Job[]) =>
+      jobs.map(({ id, title }) => (
+        <Tag key={id} className="mb-1">
+          {title}
+        </Tag>
+      )),
     filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
     onFilter: (value, record) => record.Jobs.some((job) => job.id === value),
   },

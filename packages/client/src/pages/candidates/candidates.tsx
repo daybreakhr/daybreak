@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { uniqBy, flatMap } from 'lodash'
 import { Button, Input, Table } from 'antd'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
@@ -22,13 +23,10 @@ export default function Candidates() {
 
   const appliedFor = useMemo(() => {
     if (data) {
-      return data
-        .map(({ Job }) => Job)
-        .filter(
-          (value, index, arr) =>
-            value !== null &&
-            arr.findIndex((val) => val?.id === value.id) === index,
-        ) as Job[]
+      return uniqBy(
+        flatMap(data, (prospect) => prospect.Job),
+        (job) => job.id,
+      )
     }
     return [] as Job[]
   }, [data])
