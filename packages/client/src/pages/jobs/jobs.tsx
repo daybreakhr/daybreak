@@ -21,7 +21,7 @@ export default function Jobs() {
 
   const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
     onSuccess: ({ id }) => {
-      navigate(`/jobs/${id}/create`)
+      navigate(`/jobs/${id}/create/1`)
     },
   })
 

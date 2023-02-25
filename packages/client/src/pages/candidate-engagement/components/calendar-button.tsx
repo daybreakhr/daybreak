@@ -13,6 +13,7 @@ export default function CalendarButton({ onClick }: CalendarButtonProps) {
 
   return (
     <Button
+      type="primary"
       onClick={onClick}
       icon={<CalendarOutlined />}
       disabled={!isCalendarConnected}

@@ -140,12 +140,12 @@ export default function Editor({
           </Button>
         </Dropdown>
       </div>
-      <div className="prose max-w-none">
+      <div className="flex-1 prose max-w-none">
         <Editable
           spellCheck
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          className="p-4 mb-4 border-b rounded-b border-x"
+          className="h-full p-4 mb-4 border-b rounded-b border-x"
           style={{
             borderRightWidth: '1px',
             borderLeftWidth: '1px',

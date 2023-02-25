@@ -34,6 +34,7 @@ import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import CreateProspect from 'pages/create-prospect'
 import CreatePipeline from 'pages/create-pipeline'
+import JobLayout from 'components/job-layout'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -68,9 +69,16 @@ export default function App() {
                     <Route path="pipeline" element={<JobPipeline />} />
                     <Route path="*" element={<Navigate to="overview" />} />
                   </Route>
-                  <Route path="jobs/:jobId/create" element={<CreateJob />} />
-                  <Route path="jobs/:jobId/edit" element={<CreateJob />} />
-                  <Route path="jobs/:jobId/publish" element={<PublishJob />} />
+                  <Route path="jobs/:jobId/create" element={<JobLayout />}>
+                    <Route path="1" element={<CreateJob />} />
+                    <Route path="2" element={<CreatePipeline />} />
+                    <Route path="3" element={<PublishJob />} />
+                  </Route>
+                  <Route path="jobs/:jobId/edit" element={<JobLayout />}>
+                    <Route path="1" element={<CreateJob />} />
+                    <Route path="2" element={<CreatePipeline />} />
+                    <Route path="3" element={<PublishJob />} />
+                  </Route>
                   <Route path="candidates" element={<Candidates />} />
                   <Route
                     path="candidates/create"
@@ -104,7 +112,6 @@ export default function App() {
                     path="settings/integrations"
                     element={<Integrations />}
                   />
-                  <Route path="test/pipeline" element={<CreatePipeline />} />
                 </Route>
               </Routes>
               {import.meta.env.PROD && <Logrocket />}

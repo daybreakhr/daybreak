@@ -50,7 +50,7 @@ export default function JobSummary({ data, isLoading }: JobSummaryProps) {
       <div className="flex items-center justify-between mb-4">
         <p className="font-sans text-xl font-medium">Job Details</p>
         <Show when={member?.role === 'admin'}>
-          <Link to={`/jobs/${jobId}/edit`}>
+          <Link to={`/jobs/${jobId}/edit/1`}>
             <Button type="primary" icon={<EditOutlined />}>
               Edit
             </Button>
