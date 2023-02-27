@@ -11,6 +11,8 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@react-oauth/google": "^0.5.1",
+    "@remirror/pm": "^2.0.3",
+    "@remirror/react": "^2.0.25",
     "@tanstack/react-query": "^4.14.5",
     "@tanstack/react-query-devtools": "^4.14.5",
     "antd": "^5.2.2",
@@ -29,6 +31,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "recharts": "^2.2.0",
+    "remirror": "^2.0.24",
     "slate": "^0.87.0",
     "slate-history": "^0.86.0",
     "slate-react": "^0.87.1",
