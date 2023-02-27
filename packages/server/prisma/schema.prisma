@@ -29,14 +29,14 @@ model Workspace {
 }
 
 model Member {
-  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
-  uid                String       @unique // unique id provided firebase authentication
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  uid                String         @unique // unique id provided firebase authentication
   role               Role
-  googleRefreshToken String?
+  googleRefreshToken EncryptedData?
   invites            Invitees[]
-  Workspace          Workspace    @relation(fields: [workspaceId], references: [id])
-  workspaceId        String       @db.ObjectId
-  isSuspended        Boolean      @default(false)
+  Workspace          Workspace      @relation(fields: [workspaceId], references: [id])
+  workspaceId        String         @db.ObjectId
+  isSuspended        Boolean        @default(false)
   Department         Department[]
   Location           Location[]
   Job                Job[]
@@ -46,6 +46,11 @@ model Member {
   Integration        Integration?
   Interview          Interview[]
   Pipeline           Pipeline[]
+}
+
+type EncryptedData {
+  iv   String
+  text String
 }
 
 model Invitees {
