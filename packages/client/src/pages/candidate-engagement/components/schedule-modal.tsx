@@ -175,12 +175,13 @@ export default function ScheduleModal({
               {
                 required: true,
                 message: 'Please select end time',
-                validator: () =>
-                  dayjs(endTime).isAfter(startTime)
+                validator: () => {
+                  return endTime > startTime
                     ? Promise.resolve()
                     : Promise.reject(
                         new Error('End date should be after start date.'),
-                      ),
+                      )
+                },
               },
             ]}
           >
