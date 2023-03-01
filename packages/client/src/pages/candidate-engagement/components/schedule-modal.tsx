@@ -93,8 +93,12 @@ export default function ScheduleModal({
 
   function handleOk() {
     form.validateFields().then((values: any) => {
-      const startTime = values.startTime.format()
-      const endTime = values.endTime.format()
+      const sTime = values.startTime.format('HH:mm:ss')
+      const eTime = values.endTime.format('HH:mm:ss')
+      const date = values.date.format('YYYY-MM-DD')
+
+      const startTime = dayjs(`${date} ${sTime}`).toDate()
+      const endTime = dayjs(`${date} ${eTime}`).toDate()
 
       mutate({
         candidateId,
@@ -139,7 +143,9 @@ export default function ScheduleModal({
             <DatePicker
               className="w-full"
               value={dayjs(selectedDate)}
-              onChange={(_, dateString) => setSelectedDate(dateString)}
+              onChange={(_, dateString) => {
+                setSelectedDate(dateString)
+              }}
               disabledDate={(current) =>
                 current.isBefore(dayjs().subtract(1, 'day'))
               }
@@ -165,7 +171,18 @@ export default function ScheduleModal({
             name="endTime"
             label="End Time"
             className="flex-1"
-            rules={[{ required: true, message: 'Please select end time' }]}
+            rules={[
+              {
+                required: true,
+                message: 'Please select end time',
+                validator: () =>
+                  dayjs(endTime).isAfter(startTime)
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error('End date should be after start date.'),
+                      ),
+              },
+            ]}
           >
             <TimePicker
               format="HH:mm"
