@@ -1,5 +1,5 @@
 const path = require('path')
-require('dotenv').config({ path: path.join(__dirname, '../.env') })
+require('dotenv').config({ path: path.join(__dirname, './.env') })
 
 // In this file you can configure migrate-mongo
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
   },
 
   // The migrations dir, can be an relative or absolute path. Only edit this when really necessary.
-  migrationsDir: './',
+  migrationsDir: 'migrations',
 
   // The mongodb collection where the applied changes are stored. Only edit this when really necessary.
   changelogCollectionName: 'changelog',
@@ -27,4 +27,6 @@ module.exports = {
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
   useFileHash: false,
+
+  moduleSystem: 'commonjs',
 }
