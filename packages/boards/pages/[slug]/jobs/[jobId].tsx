@@ -1,15 +1,20 @@
 import { useState } from 'react'
-import { Button, Tabs } from 'antd'
 import Head from 'next/head'
-import { Descendant } from 'slate'
+import dynamic from 'next/dynamic'
+import { Button, Tabs } from 'antd'
 import { WalletOutlined } from '@ant-design/icons'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import type { Job, Location, Workspace } from '@prisma/client'
-import { Show, Reader } from 'ui-kit'
+import { Show } from 'ui-kit'
 import client from 'utils/client'
 import ApplicationForm from 'components/application-form'
 import PageHeader from 'components/page-header'
 import { AppLayout } from 'components/home'
+
+const RemirrorReader = dynamic(
+  () => import('ui-kit/src/components/remirror-editor/reader'),
+  { ssr: false },
+)
 
 type JobWithWorkspace = Job & { Workspace: Workspace; Location: Location }
 
@@ -101,10 +106,8 @@ export default function JobPage({ job }: JobPageProps) {
                 <p>{job.Workspace.description}</p>
 
                 <div className="prose max-w-none">
-                  <Show when={job?.description}>
-                    {(description) => (
-                      <Reader initialValue={description as Descendant[]} />
-                    )}
+                  <Show when={job?.newDescription}>
+                    {(data) => <RemirrorReader html={data} />}
                   </Show>
                 </div>
 

@@ -1,8 +1,7 @@
-import { Descendant } from 'slate'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton, Tag, Typography } from 'antd'
-import { Reader, Show } from 'ui-kit'
+import { RemirrorReader, Show } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
 import JobSummary from './components/job-summary'
 
@@ -32,10 +31,10 @@ export default function JobOverview() {
               </Tag>
             ))}
           </Show>
-          <Show when={data?.description}>
-            {(description) => (
+          <Show when={data?.newDescription}>
+            {(data) => (
               <div className="prose max-w-none">
-                <Reader initialValue={description as Descendant[]} />
+                <RemirrorReader html={data} />
               </div>
             )}
           </Show>
