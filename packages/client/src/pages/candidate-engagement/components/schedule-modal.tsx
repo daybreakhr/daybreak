@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import {
@@ -27,9 +27,6 @@ export default function ScheduleModal({
 }: ScheduleModalProps) {
   const [form] = Form.useForm()
   const { candidateId = '' } = useParams()
-  const [selectedDate, setSelectedDate] = useState('')
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
 
   const [{ data: members }, { data: candidate }] = useQueries({
     queries: [
@@ -67,28 +64,25 @@ export default function ScheduleModal({
     [members],
   )
 
-  const disabledHours = () => {
-    if (selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day')) {
-      const hours = []
-      for (let i = 0; i < dayjs().hour(); i++) {
-        hours.push(i)
-      }
-      return hours
-    }
-    return []
-  }
+  const disabledTime = () => {
+    const selectedDate = form.getFieldValue('date')
+    const isToday = selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day')
 
-  const disabledMinutes = (time: any) => {
-    if (selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day')) {
-      const minutes = []
-      if (time === dayjs().hour()) {
-        for (let i = 0; i < dayjs().minute(); i++) {
-          minutes.push(i)
-        }
+    const range = (start: number, end: number) => {
+      const result = []
+      for (let i = start; i < end; i++) {
+        result.push(i)
       }
-      return minutes
+      return result
     }
-    return []
+
+    return {
+      disabledHours: () => (isToday ? range(0, dayjs().hour()) : []),
+      disabledMinutes: (selectedHour: number) =>
+        isToday && selectedHour === dayjs().hour()
+          ? range(0, dayjs().minute())
+          : [],
+    }
   }
 
   function handleOk() {
@@ -142,10 +136,6 @@ export default function ScheduleModal({
           >
             <DatePicker
               className="w-full"
-              value={dayjs(selectedDate)}
-              onChange={(_, dateString) => {
-                setSelectedDate(dateString)
-              }}
               disabledDate={(current) =>
                 current.isBefore(dayjs().subtract(1, 'day'))
               }
@@ -159,11 +149,11 @@ export default function ScheduleModal({
           >
             <TimePicker
               format="HH:mm"
-              disabledHours={() => disabledHours()}
-              disabledMinutes={(time) => disabledMinutes(time)}
-              value={dayjs(startTime)}
-              onChange={(_, timeString) => setStartTime(timeString)}
+              disabledTime={disabledTime}
               className="w-full"
+              onChange={(val) =>
+                val && form.setFieldValue('endTime', val.add(1, 'hours'))
+              }
             />
           </Form.Item>
 
@@ -175,22 +165,12 @@ export default function ScheduleModal({
               {
                 required: true,
                 message: 'Please select end time',
-                validator: () => {
-                  return endTime > startTime
-                    ? Promise.resolve()
-                    : Promise.reject(
-                        new Error('End date should be after start date.'),
-                      )
-                },
               },
             ]}
           >
             <TimePicker
               format="HH:mm"
-              disabledHours={() => disabledHours()}
-              disabledMinutes={(time) => disabledMinutes(time)}
-              value={dayjs(endTime)}
-              onChange={(_, timeString) => setEndTime(timeString)}
+              disabledTime={disabledTime}
               className="w-full"
             />
           </Form.Item>
