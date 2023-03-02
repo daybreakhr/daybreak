@@ -34,13 +34,13 @@ export class ProspectService {
     file: Express.Multer.File,
     prospectBody: CreateProspectDto,
   ) {
+    const { jobIds, ...restProspectBody } = prospectBody
+
     const { id } = await this.prismaService.prospect.create({
       data: {
-        ...prospectBody,
+        ...restProspectBody,
         Workspace: { connect: { id: workspaceId } },
-        Jobs: {
-          connect: prospectBody.jobIds?.map((jobId) => ({ id: jobId })) ?? [],
-        },
+        Jobs: { connect: jobIds?.map((id) => ({ id })) },
       },
     })
 
