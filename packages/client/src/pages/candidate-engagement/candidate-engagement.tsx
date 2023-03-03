@@ -63,8 +63,8 @@ export default function CandidateEngagement() {
           <div className="space-y-4">
             {range(5).map((val) => (
               <div key={val} className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
-                <div className="flex-1 h-6 bg-gray-100 rounded-md animate-pulse" />
+                <div className="w-16 h-16 bg-gray-100 rounded-md animate-pulse" />
+                <div className="flex-1 h-6 bg-gray-100 rounded animate-pulse" />
               </div>
             ))}
           </div>
