@@ -1,8 +1,9 @@
-import { CalendarOutlined } from '@ant-design/icons'
+import { ScheduleOutlined } from '@ant-design/icons'
 import { Calendar } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { fetchMembers } from 'pages/members/queries'
+import Event from './event'
 
 export default function CalendarEvent({
   title,
@@ -14,34 +15,36 @@ export default function CalendarEvent({
   const { data: members } = useQuery(['members'], fetchMembers)
 
   function getInterviewerNames(emails: string[]) {
-    return emails.map((interviewerMail) => {
-      const interviewerObj = members?.find(
-        ({ email }) => email === interviewerMail,
-      )
-      return interviewerObj?.displayName ?? interviewerObj?.email
-    })
+    const nameArray = emails
+      .map((interviewerMail) => {
+        const interviewerObj = members?.find(
+          ({ email }) => email === interviewerMail,
+        )
+        return interviewerObj?.displayName ?? interviewerObj?.email
+      })
+      .filter((val) => val)
+    return nameArray.slice(0, -1).join(',') + ' and ' + nameArray.slice(-1)
   }
 
   return (
-    <div className="flex items-center space-x-4">
-      <div className="flex items-center justify-center p-3 rounded-full shadow bg-secondary-main">
-        <CalendarOutlined />
-      </div>
-      <div>
-        <p className="text-sm font-semibold">
-          {dayjs(createdAt).format('DD MMM')}
+    <Event
+      createdAt={createdAt}
+      scheduledAt={startTime}
+      title={title}
+      icon={
+        <ScheduleOutlined className="text-xl " style={{ color: '#FF781F' }} />
+      }
+      details={
+        <p>
+          Interview round scheduled on{' '}
+          <i>
+            {dayjs(startTime).format('DD MMM')} from{' '}
+            {dayjs(startTime).format('hh:mm A')} -{' '}
+            {dayjs(endTime).format('hh:mm A')}
+          </i>{' '}
+          with {getInterviewerNames(attendees)}
         </p>
-        <p className="text-xs">{dayjs(createdAt).format('HH:mm A')}</p>
-      </div>
-      <p>
-        <b>{title}</b> interview round scheduled on{' '}
-        <i>
-          {dayjs(startTime).format('DD MMM')} from{' '}
-          {dayjs(startTime).format('hh:mm A')} -{' '}
-          {dayjs(endTime).format('hh:mm A')}
-        </i>{' '}
-        with {getInterviewerNames(attendees).join(', ')}
-      </p>
-    </div>
+      }
+    />
   )
 }

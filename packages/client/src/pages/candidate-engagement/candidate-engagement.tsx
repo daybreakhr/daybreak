@@ -6,6 +6,7 @@ import { useQueries } from '@tanstack/react-query'
 import type { Calendar, Email } from '@prisma/client'
 
 import { Show, Switch } from 'ui-kit'
+import { InteractionOutlined } from '@ant-design/icons'
 import MailEvent from './components/mail-event'
 import MailModal from './components/mail-modal'
 import MailButton from './components/mail-button'
@@ -46,8 +47,9 @@ export default function CandidateEngagement() {
   }, [calendars, emails])
 
   return (
-    <div className="p-4 text-gray-800 bg-white shadow-md rounded-b-md">
+    <div className="p-8 text-gray-800 bg-white shadow-md rounded-b-md">
       <div className="flex items-center mb-6 space-x-4">
+        <InteractionOutlined className="text-2xl text-primary-main" />
         <p className="text-lg font-semibold">Candidate Engagement</p>
         <div className="flex-1" />
         <Show when={mergeData.length > 0}>
@@ -61,8 +63,8 @@ export default function CandidateEngagement() {
           <div className="space-y-4">
             {range(5).map((val) => (
               <div key={val} className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
-                <div className="flex-1 h-6 bg-gray-100 rounded-md animate-pulse" />
+                <div className="w-16 h-16 bg-gray-100 rounded-md animate-pulse" />
+                <div className="flex-1 h-6 bg-gray-100 rounded animate-pulse" />
               </div>
             ))}
           </div>
