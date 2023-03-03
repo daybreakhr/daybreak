@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {
+  FloatingToolbar,
   ThemeProvider,
   Remirror,
   RemirrorProps,
@@ -43,6 +44,7 @@ export default function RemirrorEditor({
         classNames={['prose', 'h-full', 'border', 'max-w-none']}
       >
         <RemirrorToolbar />
+        <FloatingToolbar />
       </Remirror>
     </ThemeProvider>
   )
