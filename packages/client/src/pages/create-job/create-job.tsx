@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
-import type { Descendant } from 'slate'
 import weekday from 'dayjs/plugin/weekday'
 import localeData from 'dayjs/plugin/localeData'
 import { RightOutlined } from '@ant-design/icons'
-import { HiOutlineSparkles } from 'react-icons/hi'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   Avatar,
@@ -21,15 +19,10 @@ import {
 } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
-import { Editor, Show } from 'ui-kit'
+import { RemirrorEditor } from 'ui-kit'
 import { fetchJob } from 'pages/job/queries'
 import { fetchMembers } from 'pages/members/queries'
-import {
-  fetchDepartments,
-  fetchJobTemplates,
-  fetchLocations,
-  updateJobById,
-} from './queries'
+import { fetchDepartments, fetchLocations, updateJobById } from './queries'
 import {
   jobTypeOptions,
   experienceOptions,
@@ -49,14 +42,12 @@ export default function JobForm() {
   const titlePrefix = pathname.split('/')[3]
 
   const [
-    { data: templates, isLoading: isTemplatesLoading },
     { data: locations, isLoading: isLocationsLoading },
     { data: departments, isLoading: isDepartmentsLoading },
     { data: job, isLoading: isJobLoading },
     { data: members, isLoading: isMembersLoading },
   ] = useQueries({
     queries: [
-      { queryKey: ['templates'], queryFn: fetchJobTemplates },
       { queryKey: ['locations'], queryFn: fetchLocations },
       { queryKey: ['departments'], queryFn: fetchDepartments },
       {
@@ -111,7 +102,6 @@ export default function JobForm() {
     isDepartmentsLoading ||
     isJobLoading ||
     isLocationsLoading ||
-    isTemplatesLoading ||
     isMembersLoading
   ) {
     return (
@@ -211,19 +201,11 @@ export default function JobForm() {
 
       <p className="mb-2">Job Description</p>
       <div className="flex flex-col flex-1 mb-4">
-        <Editor
-          extra={
-            <Show when={false}>
-              <Button icon={<HiOutlineSparkles className="anticon" />}>
-                Generate from Psych AI
-              </Button>
-            </Show>
-          }
-          templates={templates ?? []}
-          initialValue={job?.description as Descendant[]}
-          onChange={debounce(
-            (description) =>
-              updateJob({ jobId, updateJobDto: { description } }),
+        <RemirrorEditor
+          initialContent={job?.newDescription ?? ''}
+          handleChange={debounce(
+            (newDescription) =>
+              updateJob({ jobId, updateJobDto: { newDescription } }),
             2000,
           )}
         />

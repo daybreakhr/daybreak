@@ -32,9 +32,6 @@
     "react-router-dom": "^6.3.0",
     "recharts": "^2.2.0",
     "remirror": "^2.0.24",
-    "slate": "^0.87.0",
-    "slate-history": "^0.86.0",
-    "slate-react": "^0.87.1",
     "use-clipboard-copy": "^0.2.0"
   },
   "devDependencies": {
