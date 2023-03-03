@@ -1,10 +1,19 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { Avatar, DatePicker, Form, Input, Modal, Select } from 'antd'
+import {
+  Avatar,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  TimePicker,
+} from 'antd'
 
 import { fetchMembers } from 'pages/members/queries'
 import { fetchCandidate } from 'pages/candidate/queries'
+import dayjs from 'dayjs'
 import { createCalendarEvent } from '../queries'
 
 type ScheduleModalProps = {
@@ -55,10 +64,35 @@ export default function ScheduleModal({
     [members],
   )
 
+  const disabledTime = () => {
+    const selectedDate = form.getFieldValue('date')
+    const isToday = selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day')
+
+    const range = (start: number, end: number) => {
+      const result = []
+      for (let i = start; i < end; i++) {
+        result.push(i)
+      }
+      return result
+    }
+
+    return {
+      disabledHours: () => (isToday ? range(0, dayjs().hour()) : []),
+      disabledMinutes: (selectedHour: number) =>
+        isToday && selectedHour === dayjs().hour()
+          ? range(0, dayjs().minute())
+          : [],
+    }
+  }
+
   function handleOk() {
     form.validateFields().then((values: any) => {
-      const startTime = values.startTime.format()
-      const endTime = values.endTime.format()
+      const sTime = values.startTime.format('HH:mm:ss')
+      const eTime = values.endTime.format('HH:mm:ss')
+      const date = values.date.format('YYYY-MM-DD')
+
+      const startTime = dayjs(`${date} ${sTime}`).toDate()
+      const endTime = dayjs(`${date} ${eTime}`).toDate()
 
       mutate({
         candidateId,
@@ -74,6 +108,7 @@ export default function ScheduleModal({
 
   return (
     <Modal
+      width={720}
       onOk={handleOk}
       open={isModalOpen}
       onCancel={onCancel}
@@ -94,21 +129,51 @@ export default function ScheduleModal({
 
         <div className="flex items-center w-full space-x-2">
           <Form.Item
-            label="Start Time"
-            name="startTime"
+            label="Interview Date"
+            name="date"
             className="flex-1"
             rules={[{ required: true, message: 'Please select date' }]}
           >
-            <DatePicker showTime={{ format: 'HH:mm' }} className="w-full" />
+            <DatePicker
+              format="DD-MM-YYYY"
+              className="w-full"
+              disabledDate={(current) =>
+                current.isBefore(dayjs().subtract(1, 'day'))
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Start Time"
+            name="startTime"
+            className="flex-1"
+            rules={[{ required: true, message: 'Please select start time' }]}
+          >
+            <TimePicker
+              format="HH:mm"
+              disabledTime={disabledTime}
+              className="w-full"
+              onChange={(val) =>
+                val && form.setFieldValue('endTime', val.add(1, 'hours'))
+              }
+            />
           </Form.Item>
 
           <Form.Item
             name="endTime"
             label="End Time"
             className="flex-1"
-            rules={[{ required: true, message: 'Please select end time' }]}
+            rules={[
+              {
+                required: true,
+                message: 'Please select end time',
+              },
+            ]}
           >
-            <DatePicker showTime={{ format: 'HH:mm' }} className="w-full" />
+            <TimePicker
+              format="HH:mm"
+              disabledTime={disabledTime}
+              className="w-full"
+            />
           </Form.Item>
         </div>
 
