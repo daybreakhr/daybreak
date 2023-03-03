@@ -30,8 +30,3 @@ export async function updateJobById({
   )
   return data
 }
-
-export async function fetchJobTemplates() {
-  const { data } = await client.get('/templates')
-  return data
-}

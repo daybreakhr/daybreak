@@ -13,6 +13,14 @@ body {
   @apply text-sm;
 }
 
+.remirror-theme .ProseMirror {
+  @apply shadow-none;
+}
+
+.remirror-theme .ProseMirror:focus {
+  @apply shadow-none;
+}
+
 .ant-btn {
   @apply inline-flex items-center justify-center;
 }
