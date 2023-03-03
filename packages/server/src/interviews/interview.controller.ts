@@ -6,6 +6,7 @@ import {
   Post,
   Body,
   Patch,
+  Delete,
 } from '@nestjs/common'
 import {
   ApiOkResponse,
@@ -84,6 +85,16 @@ export class InterviewController {
       id,
       updateInteriewBody,
     )
+    return data
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete interview' })
+  @ApiOkResponse({ description: 'interview deleted successfully' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'interview not found' })
+  async deleteInterview(@Param('id') id: string): Promise<Interview> {
+    const data = await this.interviewService.deleteInterview(id)
     return data
   }
 }

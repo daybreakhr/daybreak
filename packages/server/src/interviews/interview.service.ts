@@ -42,4 +42,11 @@ export class InterviewService {
 
     return interview
   }
+
+  async deleteInterview(interviewId: string): Promise<Interview> {
+    const interview = await this.prismaService.interview.delete({
+      where: { id: interviewId },
+    })
+    return interview
+  }
 }
