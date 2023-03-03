@@ -135,6 +135,7 @@ export default function ScheduleModal({
             rules={[{ required: true, message: 'Please select date' }]}
           >
             <DatePicker
+              format="DD-MM-YYYY"
               className="w-full"
               disabledDate={(current) =>
                 current.isBefore(dayjs().subtract(1, 'day'))
