@@ -106,7 +106,7 @@ export default function JobPage({ job }: JobPageProps) {
                 <p>{job.Workspace.description}</p>
 
                 <div className="prose max-w-none">
-                  <Show when={job?.newDescription}>
+                  <Show when={job?.description}>
                     {(data) => <RemirrorReader html={data} />}
                   </Show>
                 </div>

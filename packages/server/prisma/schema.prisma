@@ -71,36 +71,35 @@ enum Role {
 }
 
 model Job {
-  id             String      @id @default(auto()) @map("_id") @db.ObjectId
-  title          String?
-  priority       Priority    @default(medium)
-  Department     Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  departmentId   String?     @db.ObjectId
-  jobType        JobType?
-  Location       Location?   @relation(fields: [locationId], references: [id])
-  locationId     String?     @db.ObjectId
-  isRemote       Boolean     @default(false)
-  hiringManager  String? // uid of user
-  hireBy         DateTime?
-  description    Json?
-  newDescription String?
-  skills         String[]
-  experience     String?
-  currency       Currency?
-  minSalary      Int?
-  maxSalary      Int?
-  isPublished    Boolean     @default(false)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  Pipeline       Pipeline?   @relation(fields: [pipelineId], references: [id])
-  pipelineId     String?     @db.ObjectId
-  Workspace      Workspace   @relation(fields: [workspaceId], references: [id])
-  workspaceId    String      @db.ObjectId
-  Member         Member      @relation(fields: [createdBy], references: [uid])
-  createdBy      String
-  Candidate      Candidate[]
-  Prospects      Prospect[]  @relation(fields: [prospectIds], references: [id])
-  prospectIds    String[]    @db.ObjectId
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  title         String?
+  priority      Priority    @default(medium)
+  Department    Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  departmentId  String?     @db.ObjectId
+  jobType       JobType?
+  Location      Location?   @relation(fields: [locationId], references: [id])
+  locationId    String?     @db.ObjectId
+  isRemote      Boolean     @default(false)
+  hiringManager String? // uid of user
+  hireBy        DateTime?
+  description   String?
+  skills        String[]
+  experience    String?
+  currency      Currency?
+  minSalary     Int?
+  maxSalary     Int?
+  isPublished   Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  Pipeline      Pipeline?   @relation(fields: [pipelineId], references: [id])
+  pipelineId    String?     @db.ObjectId
+  Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
+  workspaceId   String      @db.ObjectId
+  Member        Member      @relation(fields: [createdBy], references: [uid])
+  createdBy     String
+  Candidate     Candidate[]
+  Prospects     Prospect[]  @relation(fields: [prospectIds], references: [id])
+  prospectIds   String[]    @db.ObjectId
 }
 
 enum Priority {

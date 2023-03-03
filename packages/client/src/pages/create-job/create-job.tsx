@@ -202,10 +202,10 @@ export default function JobForm() {
       <p className="mb-2">Job Description</p>
       <div className="flex flex-col flex-1 mb-4">
         <RemirrorEditor
-          initialContent={job?.newDescription ?? ''}
+          initialContent={job?.description ?? ''}
           handleChange={debounce(
-            (newDescription) =>
-              updateJob({ jobId, updateJobDto: { newDescription } }),
+            (description) =>
+              updateJob({ jobId, updateJobDto: { description } }),
             2000,
           )}
         />
