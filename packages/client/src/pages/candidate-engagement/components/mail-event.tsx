@@ -2,23 +2,21 @@ import dayjs from 'dayjs'
 import { Email } from '@prisma/client'
 import { MailOutlined } from '@ant-design/icons'
 
-export default function MailEvent({ subject, createdAt }: Email) {
+import Event from './event'
+
+export default function MailEvent(props: Email) {
+  const { createdAt, subject, from } = props
   return (
-    <div className="flex items-center space-x-4">
-      <div className="flex items-center justify-center p-3 text-white rounded-full shadow bg-primary-main">
-        <MailOutlined />
-      </div>
-
-      <div>
-        <p className="text-sm font-semibold">
-          {dayjs(createdAt).format('DD MMM')}
+    <Event
+      createdAt={createdAt}
+      scheduledAt={createdAt}
+      title={subject}
+      icon={<MailOutlined className="text-xl " style={{ color: '#FF781F' }} />}
+      details={
+        <p>
+          Email sent by <b>{from}</b> at {dayjs(createdAt).format('HH:mm')}
         </p>
-        <p className="text-xs">{dayjs(createdAt).format('HH:mm A')}</p>
-      </div>
-
-      <p>
-        Sent email with subject <b>{subject}</b>
-      </p>
-    </div>
+      }
+    />
   )
 }
