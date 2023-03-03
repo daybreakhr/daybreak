@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { Job } from './jobs.dto'
 import { PrismaService } from 'src/prisma.service'
+import { Job } from '@prisma/client'
 
 @Injectable()
 export class JobsService {

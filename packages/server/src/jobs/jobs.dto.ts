@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { Currency, JobType, Priority, Prisma } from '@prisma/client'
+import { Currency, JobType, Priority } from '@prisma/client'
 import { IsOptional } from 'class-validator'
 
 export class Job {
@@ -57,7 +57,7 @@ export class Job {
     required: false,
   })
   @IsOptional()
-  description: Prisma.JsonValue
+  description: string
 
   @ApiProperty({
     example: ['java', 'aws'],
