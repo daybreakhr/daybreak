@@ -225,12 +225,12 @@ model Interview {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   title      String
   order      Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
   Member     Member   @relation(fields: [createdBy], references: [uid])
   createdBy  String
   Pipeline   Pipeline @relation(fields: [pipelineId], references: [id])
   pipelineId String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 // Collection of Interviews is a Pipeline. A Saved Pipeline can be used with multiple Jobs
