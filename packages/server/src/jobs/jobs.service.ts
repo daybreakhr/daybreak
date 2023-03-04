@@ -1,9 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { Job } from '@prisma/client'
+import openai from 'src/utils/openai'
 
 @Injectable()
 export class JobsService {
+  private logger = new Logger('JOBS')
   constructor(private prismaService: PrismaService) {}
 
   async getAllJobs() {
@@ -38,6 +40,23 @@ export class JobsService {
       },
     })
     return job
+  }
+
+  async generateJobDescription(title: string) {
+    const prompt = `Generate a job description for "${title}" in the HTML format`
+
+    try {
+      const completion = await openai.createCompletion({
+        prompt,
+        model: 'text-davinci-003',
+        max_tokens: 1000,
+      })
+
+      return completion.data.choices[0].text
+    } catch (e) {
+      this.logger.error(e)
+      throw new HttpException({ error: e }, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 
   async update(jobId: string, updateJobDto: Partial<Job>) {

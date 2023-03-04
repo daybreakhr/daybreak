@@ -85,6 +85,21 @@ export class JobsController {
     return data
   }
 
+  @Post(':workspaceId/jobs/:id/generate')
+  @UseGuards(AuthGuard)
+  @Roles('admin')
+  @ApiSecurity('access-key')
+  @ApiOperation({ summary: 'Generate job description for a job' })
+  @ApiCreatedResponse({
+    description: 'Created job description succesfully',
+    type: String,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async generateDescription(@Body() { jobTitle }: { jobTitle: string }) {
+    const data = await this.jobsService.generateJobDescription(jobTitle)
+    return data
+  }
+
   @Patch(':workspaceId/jobs/:id')
   @UseGuards(AuthGuard)
   @Roles('admin')
