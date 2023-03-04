@@ -30,3 +30,18 @@ export async function updateJobById({
   )
   return data
 }
+
+export async function generateJD({
+  jobId,
+  jobTitle,
+}: {
+  jobId: string
+  jobTitle: string
+}) {
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<string>(
+    `${workspaceId}/jobs/${jobId}/generate`,
+    { jobTitle },
+  )
+  return data
+}

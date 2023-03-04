@@ -30,12 +30,14 @@ import {
   currency_list,
   jobPriority,
 } from './constants/create-job-values'
+import GenerateDescription from './components/generate-description'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
 export default function JobForm() {
   const [form] = Form.useForm()
+  const jobTitle = Form.useWatch('title', form)
   const navigate = useNavigate()
   const { jobId = '' } = useParams()
   const { pathname } = useLocation()
@@ -203,6 +205,7 @@ export default function JobForm() {
       <div className="flex flex-col flex-1 mb-4">
         <RemirrorEditor
           initialContent={job?.description ?? ''}
+          toolbarExtra={<GenerateDescription {...jobTitle} />}
           handleChange={debounce(
             (description) =>
               updateJob({ jobId, updateJobDto: { description } }),

@@ -31,7 +31,7 @@ export default function JobOverview() {
               </Tag>
             ))}
           </Show>
-          <Show when={data?.newDescription}>
+          <Show when={data?.description}>
             {(data) => (
               <div className="prose max-w-none">
                 <RemirrorReader html={data} />

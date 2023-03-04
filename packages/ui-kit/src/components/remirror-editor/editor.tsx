@@ -13,11 +13,13 @@ import RemirrorToolbar from './toolbar'
 type RemirrorEditorProps = Omit<RemirrorProps, 'manager' | 'state'> & {
   initialContent?: string
   handleChange?: (content: string) => void
+  toolbarExtra?: React.ReactNode
 }
 
 export default function RemirrorEditor({
   initialContent,
   handleChange,
+  toolbarExtra,
   ...rest
 }: RemirrorEditorProps) {
   const { manager, state, onChange } = useRemirror({
@@ -43,7 +45,10 @@ export default function RemirrorEditor({
         }}
         classNames={['prose', 'h-full', 'border', 'max-w-none']}
       >
-        <RemirrorToolbar />
+        <div className="flex items-center justify-between">
+          <RemirrorToolbar />
+          {toolbarExtra}
+        </div>
         <FloatingToolbar />
       </Remirror>
     </ThemeProvider>
