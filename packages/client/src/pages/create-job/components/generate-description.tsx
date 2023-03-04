@@ -31,6 +31,7 @@ export default function GenerateDescription({
   return (
     <Button
       loading={isLoading}
+      disabled={!jobTitle}
       onClick={() => mutate({ jobId, jobTitle })}
       icon={<HiOutlineSparkles className="anticon" />}
     >

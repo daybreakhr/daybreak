@@ -205,7 +205,7 @@ export default function JobForm() {
       <div className="flex flex-col flex-1 mb-4">
         <RemirrorEditor
           initialContent={job?.description ?? ''}
-          toolbarExtra={<GenerateDescription {...jobTitle} />}
+          toolbarExtra={<GenerateDescription jobTitle={jobTitle} />}
           handleChange={debounce(
             (description) =>
               updateJob({ jobId, updateJobDto: { description } }),
