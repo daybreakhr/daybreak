@@ -22,6 +22,8 @@ import { AffindaModule } from './affinda/affinda.module'
 import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 import { EmailModule } from './email/email.module'
+import { InterviewModule } from './interviews/interview.module'
+import { PipelineModule } from './pipelines/pipeline.module'
 
 @Module({
   imports: [
@@ -62,6 +64,8 @@ import { EmailModule } from './email/email.module'
     ProspectModule,
     CalendarModule,
     EmailModule,
+    InterviewModule,
+    PipelineModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

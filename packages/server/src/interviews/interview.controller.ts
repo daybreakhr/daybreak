@@ -76,7 +76,6 @@ export class InterviewController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Interview not found' })
   @ApiBody({ type: CreateInterview })
-  @UseGuards(AuthGuard)
   async updateInterview(
     @Param('id') id: string,
     @Body() updateInteriewBody: CreateInterview,

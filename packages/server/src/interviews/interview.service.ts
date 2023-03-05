@@ -7,13 +7,13 @@ export class InterviewService {
   constructor(private prismaService: PrismaService) {}
 
   async getAllInterviews(pipelineId: string) {
-    const templates = await this.prismaService.interview.findMany({
+    const interviews = await this.prismaService.interview.findMany({
       where: {
         pipelineId,
       },
     })
 
-    return templates
+    return interviews
   }
 
   async createInterview(
