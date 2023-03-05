@@ -227,7 +227,7 @@ model Interview {
   order      Int
   Member     Member   @relation(fields: [createdBy], references: [uid])
   createdBy  String
-  Pipeline   Pipeline @relation(fields: [pipelineId], references: [id])
+  Pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
   pipelineId String   @db.ObjectId
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
