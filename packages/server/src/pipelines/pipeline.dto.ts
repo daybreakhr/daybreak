@@ -2,6 +2,14 @@ import { ApiProperty, PartialType } from '@nestjs/swagger'
 
 export class Pipeline {
   @ApiProperty({
+    example: '5acd273847438a2373',
+    description: 'id of Pipeline',
+    required: true,
+    readOnly: true,
+  })
+  id: string
+
+  @ApiProperty({
     example: 'Pipeline 1',
     description: 'title of Pipeline',
     required: true,
@@ -11,7 +19,7 @@ export class Pipeline {
   @ApiProperty({
     example: true,
     description: 'whether the pipeline is saved or not',
-    required: true,
+    required: false,
   })
   isSaved: boolean
 }

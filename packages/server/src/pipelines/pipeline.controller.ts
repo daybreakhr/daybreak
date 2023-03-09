@@ -46,7 +46,33 @@ export class PipelineController {
     return data
   }
 
-  @Post('')
+  @Get(':id')
+  @ApiOperation({ summary: 'Get pipeline' })
+  @ApiOkResponse({
+    description: 'pipeline returned successfully',
+    type: Pipeline,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Pipeline not found' })
+  async getPipeline(@Param('id') id: string): Promise<Pipeline> {
+    const data = await this.pipelineService.getPipeline(id)
+    return data
+  }
+
+  @Get('jobs/:jobId')
+  @ApiOperation({ summary: 'Get pipeline By Job' })
+  @ApiOkResponse({
+    description: 'pipeline returned successfully',
+    type: Pipeline,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Pipeline not found' })
+  async getPipelineByJob(@Param('jobId') jobId: string): Promise<Pipeline> {
+    const data = await this.pipelineService.getPipelineByJob(jobId)
+    return data
+  }
+
+  @Post('jobs/:jobId')
   @ApiOperation({ summary: 'Create an Pipeline' })
   @ApiCreatedResponse({
     description: 'Created Successfully',
@@ -56,6 +82,7 @@ export class PipelineController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createPipeline(
     @Param('workspaceId') workspaceId: string,
+    @Param('jobId') jobId: string,
     @GetUser() user: UserRecord,
     @Body() pipelineBody: Pipeline,
   ) {
@@ -63,6 +90,7 @@ export class PipelineController {
       pipelineBody,
       user.uid,
       workspaceId,
+      jobId,
     )
     return data
   }

@@ -243,9 +243,9 @@ model Pipeline {
   Member      Member      @relation(fields: [createdBy], references: [uid])
   createdBy   String
   Interview   Interview[]
-  Job         Job[]
   Workspace   Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId String      @db.ObjectId
+  Job         Job[]
 }
 
 model Calendar {

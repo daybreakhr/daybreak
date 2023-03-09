@@ -16,16 +16,41 @@ export class PipelineService {
     return pipelines
   }
 
+  async getPipeline(pipelineId: string) {
+    const pipeline = await this.prismaService.pipeline.findUnique({
+      where: {
+        id: pipelineId,
+      },
+    })
+
+    return pipeline
+  }
+
+  async getPipelineByJob(jobId: string) {
+    const job = await this.prismaService.job.findUnique({
+      where: {
+        id: jobId,
+      },
+      include: {
+        Pipeline: true,
+      },
+    })
+
+    return job.Pipeline
+  }
+
   async createPipeline(
     pipelineBody: Pipeline,
     userId: string,
     workspaceId: string,
+    jobId: string,
   ) {
     const pipeline = await this.prismaService.pipeline.create({
       data: {
         ...pipelineBody,
         Member: { connect: { uid: userId } },
         Workspace: { connect: { id: workspaceId } },
+        Job: { connect: { id: jobId } },
       },
     })
 
