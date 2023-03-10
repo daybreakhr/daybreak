@@ -26,12 +26,12 @@ import { Job, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
 
 @ApiTags('Job')
-@Controller('')
+@Controller('jobs')
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
-  @Get('jobs')
-  @ApiOperation({ summary: 'Get all Jobs' })
+  @Get('')
+  @ApiOperation({ operationId: 'GetAllJobs', summary: 'Get all Jobs' })
   @ApiOkResponse({
     description: 'Jobs were returned successfully',
     type: [Job],
@@ -41,24 +41,8 @@ export class JobsController {
     return data
   }
 
-  @Get(':workspaceId/jobs')
-  @UseGuards(AuthGuard)
-  @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Get all Jobs By Workspace' })
-  @ApiOkResponse({
-    description: 'Jobs were returned successfully',
-    type: [Job],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAllByWorkspaceId(
-    @Param('workspaceId') workspaceId: string,
-  ): Promise<Job[]> {
-    const data = await this.jobsService.getAllByWorkspaceId(workspaceId)
-    return data
-  }
-
-  @Get('jobs/:id')
-  @ApiOperation({ summary: 'Get Job' })
+  @Get(':id')
+  @ApiOperation({ operationId: 'GetJobById', summary: 'Get a Job by jobId' })
   @ApiOkResponse({
     description: 'job returned successfully',
     type: Job,
@@ -69,11 +53,25 @@ export class JobsController {
     return data
   }
 
-  @Post(':workspaceId/jobs')
+  @Get(':id/pipeline')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetPipelineByJobId',
+    summary: 'Get Pipeline for a job',
+  })
+  @ApiOkResponse({ description: 'pipeline returned successfully' }) // @rahulmathews - add type for pipeline
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getPipelineByJobId(@Param('id') jobId: string) {
+    const data = await this.jobsService.getPipelineByJobId(jobId)
+    return data
+  }
+
+  @Post('')
   @UseGuards(AuthGuard)
   @Roles('admin')
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Create a job' })
+  @ApiOperation({ operationId: 'CreateJob', summary: 'Create a job' })
   @ApiCreatedResponse({ description: 'Created Succesfully', type: Job })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
@@ -85,11 +83,14 @@ export class JobsController {
     return data
   }
 
-  @Post(':workspaceId/jobs/:id/generate')
+  @Post(':id/generate')
   @UseGuards(AuthGuard)
   @Roles('admin')
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Generate job description for a job' })
+  @ApiOperation({
+    operationId: 'GenerateJdByJobId',
+    summary: 'Generate job description for a job',
+  })
   @ApiCreatedResponse({
     description: 'Created job description succesfully',
     type: String,
@@ -100,11 +101,11 @@ export class JobsController {
     return data
   }
 
-  @Patch(':workspaceId/jobs/:id')
+  @Patch(':id')
   @UseGuards(AuthGuard)
   @Roles('admin')
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Update job' })
+  @ApiOperation({ operationId: 'UpdateJob', summary: 'Update job' })
   @ApiOkResponse({
     description: 'job updated successfully',
     type: Job,

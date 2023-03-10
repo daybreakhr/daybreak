@@ -16,12 +16,11 @@ export class JobsService {
     return jobs
   }
 
-  async getAllByWorkspaceId(workspaceId: string) {
-    const jobs = await this.prismaService.job.findMany({
-      where: { workspaceId },
-      include: { Location: true, Department: true },
+  async getPipelineByJobId(jobId: string) {
+    const pipeline = await this.prismaService.pipeline.findMany({
+      where: { jobId },
     })
-    return jobs
+    return pipeline
   }
 
   async getById(id: string) {
