@@ -12,11 +12,16 @@ export async function createWorkspace({
 }: {
   createWorkspaceDto: CreateWorkspaceDto
 }) {
-  const { data } = await client.post<Workspace>('workspace', createWorkspaceDto)
+  const { data } = await client.post<Workspace>(
+    'workspaces',
+    createWorkspaceDto,
+  )
   return data
 }
 
 export async function verifySlug({ slug }: { slug: string }) {
-  const { data } = await client.post<boolean>('workspace/verify-slug', { slug })
+  const { data } = await client.post<boolean>('workspaces/verify-slug', {
+    slug,
+  })
   return data
 }

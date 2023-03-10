@@ -23,11 +23,7 @@ export async function updateJobById({
   jobId: string
   updateJobDto: Partial<Job>
 }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.patch<Location>(
-    `${workspaceId}/jobs/${jobId}`,
-    updateJobDto,
-  )
+  const { data } = await client.patch<Location>(`jobs/${jobId}`, updateJobDto)
   return data
 }
 
@@ -38,10 +34,8 @@ export async function generateJD({
   jobId: string
   jobTitle: string
 }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.post<string>(
-    `${workspaceId}/jobs/${jobId}/generate`,
-    { jobTitle },
-  )
+  const { data } = await client.post<string>(`jobs/${jobId}/generate`, {
+    jobTitle,
+  })
   return data
 }
