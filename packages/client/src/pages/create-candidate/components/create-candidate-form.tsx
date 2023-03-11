@@ -1,15 +1,16 @@
 import dayjs from 'dayjs'
-import type { UploadProps } from 'antd'
 import weekday from 'dayjs/plugin/weekday'
-import localeData from 'dayjs/plugin/localeData'
-import { useNavigate } from 'react-router-dom'
-import { Button, Form, Input, message, Select } from 'antd'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { InboxOutlined } from '@ant-design/icons'
 import Dragger from 'antd/es/upload/Dragger'
+import { useNavigate } from 'react-router-dom'
+import localeData from 'dayjs/plugin/localeData'
+import { InboxOutlined } from '@ant-design/icons'
+import { Button, Form, Input, message, Select, UploadProps } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { storage } from 'ui-kit'
 import type { RcFile } from 'antd/es/upload'
 import { fetchJobs } from 'pages/jobs/queries'
 import { candidateStatusOptions } from 'utils/utils'
+import { WORKSPACE_ID } from 'utils/constants'
 import { createCandidate } from '../queries'
 
 dayjs.extend(weekday)
@@ -39,8 +40,10 @@ export default function CandidateForm() {
   function handleSubmit(values: any) {
     const formData = new FormData()
     const { file, ...restValues } = values
+    const workspaceId = storage.get(WORKSPACE_ID) ?? ''
 
     formData.append('file', file.file.originFileObj as RcFile)
+    formData.append('workspaceId', workspaceId)
 
     Object.keys(restValues).forEach((key) => {
       const value = restValues[key as keyof typeof restValues]

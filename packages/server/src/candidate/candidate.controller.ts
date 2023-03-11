@@ -25,31 +25,25 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
-import { CandidateDto, CreateCandidateDto } from './candidate.dto'
+import {
+  CandidateDto,
+  CreateCandidateDto,
+  UpdateCandidateDto,
+} from './candidate.dto'
 import { CandidateService } from './candidate.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Candidate')
-@Controller(':workspaceId/candidates')
+@Controller('candidates')
 export class CandidateController {
   constructor(private readonly candidateService: CandidateService) {}
 
-  @Get('')
-  @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Get all Candidates' })
-  @ApiOkResponse({
-    description: 'Candidates were returned successfully',
-    type: [CandidateDto],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('workspaceId') workspaceId: string) {
-    const data = await this.candidateService.getAll(workspaceId)
-    return data
-  }
-
   @Get(':id')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Get Candidate' })
+  @ApiOperation({
+    operationId: 'GetCandidateById',
+    summary: 'Get a candidate by id',
+  })
   @ApiOkResponse({
     description: 'Candidates were returned successfully',
     type: CandidateDto,
@@ -61,7 +55,10 @@ export class CandidateController {
   }
 
   @Post('')
-  @ApiOperation({ summary: 'Create a Candidate' })
+  @ApiOperation({
+    operationId: 'CreateCandidate',
+    summary: 'Create new candidate',
+  })
   @ApiCreatedResponse({
     description: 'Created Succesfully',
     type: CandidateDto,
@@ -70,32 +67,30 @@ export class CandidateController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @UseInterceptors(FileInterceptor('file'))
   async create(
-    @Param('workspaceId') workspaceId: string,
     @UploadedFile() file: Express.Multer.File,
     @Body() createCandidateDto: CreateCandidateDto,
-  ): Promise<CandidateDto> {
-    const data = await this.candidateService.create(
-      workspaceId,
-      file,
-      createCandidateDto,
-    )
+  ) {
+    const data = await this.candidateService.create(file, createCandidateDto)
     return data
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update Candidate' })
+  @ApiOperation({
+    operationId: 'UpdateCandidate',
+    summary: 'Update a candidate',
+  })
   @ApiOkResponse({
     description: 'candidate updated successfully',
     type: CandidateDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Candidate not found' })
-  @ApiBody({ type: CreateCandidateDto })
+  @ApiBody({ type: UpdateCandidateDto })
   @UseGuards(AuthGuard)
   @Roles('admin')
   async update(
     @Param('id') id: string,
-    @Body() updateCandidateDto: Partial<CreateCandidateDto>,
+    @Body() updateCandidateDto: UpdateCandidateDto,
   ) {
     const data = await this.candidateService.update(id, updateCandidateDto)
     return data
@@ -103,6 +98,15 @@ export class CandidateController {
 
   @Delete(':id')
   @Roles('admin')
+  @ApiOperation({
+    operationId: 'DeleteCandidate',
+    summary: 'Delete a candidate',
+  })
+  @ApiOkResponse({
+    description: 'candidate deleted successfully',
+    type: CandidateDto,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async delete(@Param('id') candidateId: string) {
     const data = await this.candidateService.delete(candidateId)
     return data

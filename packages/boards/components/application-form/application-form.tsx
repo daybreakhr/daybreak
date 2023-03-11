@@ -67,6 +67,7 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
     const { file, ...restValues } = values
     formData.append('file', file.file.originFileObj as RcFile)
     formData.append('jobId', (query.jobId as string) ?? '')
+    formData.append('workspaceId', workspaceId)
 
     Object.keys(restValues).forEach((key) => {
       const value = restValues[key as keyof typeof restValues]
@@ -75,7 +76,7 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       }
     })
 
-    mutate({ workspaceId, body: formData })
+    mutate({ body: formData })
   }
 
   return (

@@ -1,11 +1,10 @@
-import { Candidate } from '@prisma/client'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Express } from 'express'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { NotificationService } from 'src/notification/notification.service'
-import { CreateCandidateDto } from './candidate.dto'
+import { CreateCandidateDto, UpdateCandidateDto } from './candidate.dto'
 
 @Injectable()
 export class CandidateService {
@@ -14,15 +13,6 @@ export class CandidateService {
     private notificationService: NotificationService,
     private prismaService: PrismaService,
   ) {}
-
-  async getAll(workspaceId: string) {
-    const candidates = await this.prismaService.candidate.findMany({
-      where: { workspaceId },
-      include: { Job: true, Feedback: true },
-    })
-
-    return candidates
-  }
 
   async getById(id: string) {
     const candidate = await this.prismaService.candidate.findUnique({
@@ -33,11 +23,10 @@ export class CandidateService {
   }
 
   async create(
-    workspaceId: string,
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,
   ) {
-    const { jobId, ...restParams } = createCandidateDto
+    const { jobId, workspaceId, ...restParams } = createCandidateDto
 
     const isApplied = await this.prismaService.candidate.findFirst({
       where: {
@@ -78,7 +67,7 @@ export class CandidateService {
     return candidate
   }
 
-  async update(candidateId: string, updateCandidateDto: Partial<Candidate>) {
+  async update(candidateId: string, updateCandidateDto: UpdateCandidateDto) {
     const candidate = this.prismaService.candidate.update({
       where: { id: candidateId },
       data: { ...updateCandidateDto },

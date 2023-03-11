@@ -13,16 +13,7 @@ export type CreateCandidateBody = {
   jobId: string
 }
 
-export async function createCandidate({
-  workspaceId,
-  body,
-}: {
-  workspaceId: string
-  body: FormData
-}) {
-  const { data } = await client.post<Candidate>(
-    `${workspaceId}/candidates`,
-    body,
-  )
+export async function createCandidate({ body }: { body: FormData }) {
+  const { data } = await client.post<Candidate>('candidates', body)
   return data
 }
