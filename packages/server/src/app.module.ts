@@ -22,6 +22,8 @@ import { AffindaModule } from './affinda/affinda.module'
 import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 import { EmailModule } from './email/email.module'
+import { InterviewModule } from './interviews/interview.module'
+import { PipelineModule } from './pipelines/pipeline.module'
 
 @Module({
   imports: [
@@ -46,22 +48,24 @@ import { EmailModule } from './email/email.module'
       envFilePath: ['.env'],
       isGlobal: true,
     }),
-    AuthModule,
-    MembersModule,
-    DepartmentModule,
-    LocationModule,
-    JobsModule,
-    WorkspaceModule,
-    CandidateModule,
-    AWSModule,
-    FeedbackModule,
-    InvitesModule,
-    TemplatesModule,
-    NotificationModule,
     AffindaModule,
-    ProspectModule,
+    AuthModule,
+    AWSModule,
     CalendarModule,
+    CandidateModule,
+    DepartmentModule,
     EmailModule,
+    FeedbackModule,
+    InterviewModule,
+    InvitesModule,
+    JobsModule,
+    LocationModule,
+    MembersModule,
+    NotificationModule,
+    PipelineModule,
+    ProspectModule,
+    TemplatesModule,
+    WorkspaceModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
 })

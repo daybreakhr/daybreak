@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common'
 import { AuthService } from 'src/auth/auth.service'
 import { FirebaseModule } from 'src/firebase/firebase.module'
 import { PrismaService } from 'src/prisma.service'
-import { InterviewController } from './interview.controller'
-import { InterviewService } from './interview.service'
+import { PipelineController } from './pipeline.controller'
+import { PipelineService } from './pipeline.service'
 
 @Module({
   imports: [FirebaseModule],
-  controllers: [InterviewController],
-  providers: [InterviewService, PrismaService, AuthService],
+  controllers: [PipelineController],
+  providers: [PipelineService, PrismaService, AuthService],
 })
-export class InterviewModule {}
+export class PipelineModule {}

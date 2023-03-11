@@ -1,6 +1,5 @@
 import { Role } from '@prisma/client'
-import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger'
 
 export class MemberDto {
   @ApiProperty({
@@ -24,12 +23,11 @@ export class MemberDto {
   })
   workspaceId: string
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: false,
     description: 'Whether this member is suspended or not',
     required: false,
   })
-  @IsOptional()
   isSuspended: boolean
 
   @ApiProperty({
@@ -50,7 +48,6 @@ export class AddAppBody {
     description: 'Name of the app',
     required: true,
   })
-  @IsString({ groups: ['gmail', 'gcal'] })
   appName: 'gmail' | 'gcal'
 
   @ApiProperty({
@@ -58,6 +55,5 @@ export class AddAppBody {
     description: 'Boolean value to check if app is installed or not',
     required: true,
   })
-  @IsBoolean()
   isInstalled: boolean
 }

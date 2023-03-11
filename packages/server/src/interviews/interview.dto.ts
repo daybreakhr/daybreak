@@ -1,19 +1,16 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
 
-export class Interview {
-  @ApiProperty({
-    example: 'Interview Stage 1',
-    description: 'title of Interview stage',
-    required: true,
-  })
+export class CreateInterviewDto {
   title: string
-
-  @ApiProperty({
-    example: '1',
-    description: 'Order of this stage',
-    required: true,
-  })
   order: number
+  pipelineId: string
 }
 
-export class CreateInterview extends PartialType(Interview) {}
+export class InterviewDto extends CreateInterviewDto {
+  id: string
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+export class UpdateInterviewDto extends PartialType(CreateInterviewDto) {}

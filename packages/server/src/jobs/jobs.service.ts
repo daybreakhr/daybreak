@@ -17,7 +17,7 @@ export class JobsService {
   }
 
   async getPipelineByJobId(jobId: string) {
-    const pipeline = await this.prismaService.pipeline.findMany({
+    const pipeline = await this.prismaService.pipeline.findUnique({
       where: { jobId },
     })
     return pipeline

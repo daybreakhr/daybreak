@@ -91,7 +91,7 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  pipeline      Pipeline?
+  Pipeline      Pipeline?
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])
@@ -180,6 +180,8 @@ model Candidate {
   Feedback         Feedback[]
   Calendar         Calendar[]
   Email            Email[]
+  Interview        Interview?      @relation(fields: [interviewId], references: [id])
+  interviewId      String?         @db.ObjectId
 }
 
 enum CandidateStatus {
@@ -221,15 +223,16 @@ model Feedback {
 
 // Details of interview round with candidate
 model Interview {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
   title      String
   order      Int
-  Member     Member   @relation(fields: [createdBy], references: [uid])
+  Member     Member      @relation(fields: [createdBy], references: [uid])
   createdBy  String
-  Pipeline   Pipeline @relation(fields: [pipelineId], references: [id])
-  pipelineId String   @db.ObjectId
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  Pipeline   Pipeline    @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  pipelineId String      @db.ObjectId
+  Candidate  Candidate[]
 }
 
 // Collection of Interviews is a Pipeline. A Saved Pipeline can be used with multiple Jobs
