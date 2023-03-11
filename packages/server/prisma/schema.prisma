@@ -91,8 +91,7 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  Pipeline      Pipeline?   @relation(fields: [pipelineId], references: [id])
-  pipelineId    String?     @db.ObjectId
+  pipeline      Pipeline?
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])
@@ -243,9 +242,10 @@ model Pipeline {
   Member      Member      @relation(fields: [createdBy], references: [uid])
   createdBy   String
   Interview   Interview[]
+  Job         Job         @relation(fields: [jobId], references: [id])
+  jobId       String      @unique @db.ObjectId
   Workspace   Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId String      @db.ObjectId
-  Job         Job[]
 }
 
 model Calendar {

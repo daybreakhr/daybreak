@@ -5,12 +5,11 @@ import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchJobs() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<Job[]>(`${workspaceId}/jobs`)
+  const { data } = await client.get<Job[]>(`workspaces/${workspaceId}/jobs`)
   return data
 }
 
 export async function createJob() {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.post<Job>(`${workspaceId}/jobs`)
+  const { data } = await client.post<Job>('jobs')
   return data
 }

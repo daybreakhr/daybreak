@@ -47,6 +47,14 @@ export class WorkspaceService {
     return workspace
   }
 
+  async getJobsForWorkspace(workspaceId: string) {
+    const jobs = await this.prismaService.job.findMany({
+      where: { workspaceId },
+      include: { Location: true, Department: true },
+    })
+    return jobs
+  }
+
   async verifySlug(slug: string) {
     const slugExists = await exists(this.prismaService.workspace, {
       where: { slug },

@@ -14,7 +14,7 @@ const { Sider } = Layout
 // This function gets called at build time
 export const getStaticPaths: GetStaticPaths = async () => {
   // Call the workspace GET request to fetch all workspaces
-  const { data } = await client.get<Workspace[]>('workspace')
+  const { data } = await client.get<Workspace[]>('workspaces')
 
   // Get the paths we want to pre-render based on workspace slugs
   const paths = data.map((workspace) => ({
@@ -31,7 +31,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // params contains the workspace `slug`
   // If the route iis like /daybreak_hr, then params.slug is daybreak_hr
   const { data } = await client.get<WorkspaceWithJob>(
-    `workspace?slug=${params?.slug}`,
+    `workspaces?slug=${params?.slug}`,
   )
 
   // Pass workspace data to the page via props

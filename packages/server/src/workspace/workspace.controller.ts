@@ -28,17 +28,19 @@ import { Role, Workspace } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
 import { GetUser } from 'src/auth/get-user.decorator'
+import { Job } from 'src/jobs/jobs.dto'
 import { UserRecord } from 'firebase-admin/auth'
 import { WorkspaceService } from './workspace.service'
 import { CreateWorkspaceDto } from './workspace.dto'
 
 @ApiTags('Workspace')
-@Controller('workspace')
+@Controller('workspaces')
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get('')
   @ApiOperation({
+    operationId: 'GetAllWorkspaces',
     summary: 'Get all workspaces',
     description:
       'Get list of all workspaces. You can also fetch a workspace by id or slug using search params',
@@ -55,8 +57,26 @@ export class WorkspaceController {
     return data
   }
 
+  @Get(':workspaceId/jobs')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetJobsForWorkspace',
+    summary: 'Get all jobs for a workspace',
+  })
+  @ApiOkResponse({
+    description: 'Fetched jobs successfully',
+    type: [Job],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getJobsForWorkspace(@Param('workspaceId') workspaceId: string) {
+    const data = await this.workspaceService.getJobsForWorkspace(workspaceId)
+    return data
+  }
+
   @Post('/verify-slug')
   @ApiOperation({
+    operationId: 'VerifySlug',
     summary: 'Verify slugs exits or not',
     description:
       'Returns a boolean value based on whether the slug exists or not',
@@ -72,7 +92,10 @@ export class WorkspaceController {
   @Post('')
   @UseGuards(AuthGuard)
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Create a Workspace' })
+  @ApiOperation({
+    operationId: 'CreateWorkspace',
+    summary: 'Create a Workspace',
+  })
   @ApiCreatedResponse({
     description: 'Created Succesfully',
     type: CreateWorkspaceDto,
@@ -95,7 +118,10 @@ export class WorkspaceController {
   @Roles(Role.admin)
   @UseInterceptors(FileInterceptor('file'))
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Upload logo for workspace' })
+  @ApiOperation({
+    operationId: 'UploadWorkspaceLogo',
+    summary: 'Upload logo for workspace',
+  })
   @ApiCreatedResponse({
     description: 'Logo uploaded succesfully',
     type: CreateWorkspaceDto,
@@ -119,7 +145,7 @@ export class WorkspaceController {
   @UseGuards(AuthGuard)
   @Roles(Role.admin)
   @ApiSecurity('access-key')
-  @ApiOperation({ summary: 'Update workspace' })
+  @ApiOperation({ operationId: 'UpdateWorkspace', summary: 'Update workspace' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Location not found' })
   async updateWorkspace(
