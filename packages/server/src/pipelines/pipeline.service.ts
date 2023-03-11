@@ -1,53 +1,31 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
-import { CreatePipeline, Pipeline } from './pipeline.dto'
+import { CreatePipelineDto, UpdatePipelineDto } from './pipeline.dto'
 
 @Injectable()
 export class PipelineService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAllPipelines(workspaceId: string) {
-    const pipelines = await this.prismaService.pipeline.findMany({
-      where: {
-        workspaceId,
-      },
-    })
-
-    return pipelines
-  }
-
   async getPipeline(pipelineId: string) {
     const pipeline = await this.prismaService.pipeline.findUnique({
-      where: {
-        id: pipelineId,
-      },
+      where: { id: pipelineId },
     })
-
     return pipeline
   }
 
-  async getPipelineByJob(jobId: string) {
-    const job = await this.prismaService.job.findUnique({
-      where: {
-        id: jobId,
-      },
-      include: {
-        Pipeline: true,
-      },
+  async getInterviewsByPipelineId(pipelineId: string) {
+    const interviews = await this.prismaService.interview.findMany({
+      where: { pipelineId },
     })
-
-    return job.Pipeline
+    return interviews
   }
 
-  async createPipeline(
-    pipelineBody: Pipeline,
-    userId: string,
-    workspaceId: string,
-    jobId: string,
-  ) {
+  async createPipeline(pipelineBody: CreatePipelineDto, userId: string) {
+    const { workspaceId, jobId, ...restBody } = pipelineBody
+
     const pipeline = await this.prismaService.pipeline.create({
       data: {
-        ...pipelineBody,
+        ...restBody,
         Member: { connect: { uid: userId } },
         Workspace: { connect: { id: workspaceId } },
         Job: { connect: { id: jobId } },
@@ -57,18 +35,16 @@ export class PipelineService {
     return pipeline
   }
 
-  async updatePipeline(pipelineId: string, pipelineBody: CreatePipeline) {
+  async updatePipeline(pipelineId: string, pipelineBody: UpdatePipelineDto) {
     const pipeline = await this.prismaService.pipeline.update({
       where: { id: pipelineId },
-      data: {
-        ...pipelineBody,
-      },
+      data: pipelineBody,
     })
 
     return pipeline
   }
 
-  async deletePipeline(pipelineId: string): Promise<Pipeline> {
+  async deletePipeline(pipelineId: string) {
     const pipeline = await this.prismaService.pipeline.delete({
       where: { id: pipelineId },
     })

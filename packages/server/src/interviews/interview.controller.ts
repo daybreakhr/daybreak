@@ -22,63 +22,67 @@ import {
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
-import { CreateInterview, Interview } from './interview.dto'
+import {
+  CreateInterviewDto,
+  InterviewDto,
+  UpdateInterviewDto,
+} from './interview.dto'
 import { InterviewService } from './interview.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Interview')
-@Controller('/pipelines/:pipelineId/interviews')
+@Controller('interviews')
 @UseGuards(AuthGuard)
 export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
 
-  @Get('')
-  @ApiOperation({ summary: 'Get all Interviews for a pipeline' })
+  @Get(':id')
+  @ApiOperation({ operationId: 'GetInterviewById', summary: 'Get interview' })
   @ApiOkResponse({
-    description: 'Interviews were returned successfully',
-    type: [Interview],
+    description: 'interview returned successfully',
+    type: InterviewDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAllInterviews(
-    @Param('pipelineId') pipelineId: string,
-  ): Promise<Interview[]> {
-    const data = await this.interviewService.getAllInterviews(pipelineId)
+  @ApiNotFoundResponse({ description: 'Interview not found' })
+  async getInterview(@Param('id') id: string) {
+    const data = await this.interviewService.getInterview(id)
     return data
   }
 
   @Post('')
-  @ApiOperation({ summary: 'Create an interview' })
+  @ApiOperation({
+    operationId: 'CreateInterview',
+    summary: 'Create an interview',
+  })
   @ApiCreatedResponse({
     description: 'Created Successfully',
-    type: Interview,
+    type: InterviewDto,
   })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createInterview(
-    @Param('pipelineId') pipelineId: string,
     @GetUser() user: UserRecord,
-    @Body() interviewBody: Interview,
+    @Body() interviewBody: CreateInterviewDto,
   ) {
     const data = await this.interviewService.createInterview(
       interviewBody,
       user.uid,
-      pipelineId,
     )
     return data
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update Interview' })
+  @ApiOperation({ operationId: 'UpdateInterview', summary: 'Update Interview' })
   @ApiOkResponse({
     description: 'interview updated successfully',
-    type: Interview,
+    type: InterviewDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Interview not found' })
-  @ApiBody({ type: CreateInterview })
+  @ApiBody({ type: UpdateInterviewDto })
   async updateInterview(
     @Param('id') id: string,
-    @Body() updateInteriewBody: CreateInterview,
+    @Body() updateInteriewBody: UpdateInterviewDto,
   ) {
     const data = await this.interviewService.updateInterview(
       id,
@@ -88,11 +92,11 @@ export class InterviewController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete interview' })
+  @ApiOperation({ operationId: 'DeleteInterview', summary: 'Delete interview' })
   @ApiOkResponse({ description: 'interview deleted successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'interview not found' })
-  async deleteInterview(@Param('id') id: string): Promise<Interview> {
+  async deleteInterview(@Param('id') id: string) {
     const data = await this.interviewService.deleteInterview(id)
     return data
   }

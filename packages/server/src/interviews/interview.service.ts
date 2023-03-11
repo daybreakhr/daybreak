@@ -1,29 +1,23 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
-import { CreateInterview, Interview } from './interview.dto'
+import { CreateInterviewDto, UpdateInterviewDto } from './interview.dto'
 
 @Injectable()
 export class InterviewService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAllInterviews(pipelineId: string) {
-    const interviews = await this.prismaService.interview.findMany({
-      where: {
-        pipelineId,
-      },
+  async getInterview(interviewId: string) {
+    const interview = await this.prismaService.interview.findUnique({
+      where: { id: interviewId },
     })
-
-    return interviews
+    return interview
   }
 
-  async createInterview(
-    interviewBody: Interview,
-    userId: string,
-    pipelineId: string,
-  ) {
+  async createInterview(interviewBody: CreateInterviewDto, userId: string) {
+    const { pipelineId, ...restBody } = interviewBody
     const interview = await this.prismaService.interview.create({
       data: {
-        ...interviewBody,
+        ...restBody,
         Member: { connect: { uid: userId } },
         Pipeline: { connect: { id: pipelineId } },
       },
@@ -32,18 +26,19 @@ export class InterviewService {
     return interview
   }
 
-  async updateInterview(interviewId: string, interviewBody: CreateInterview) {
+  async updateInterview(
+    interviewId: string,
+    interviewBody: UpdateInterviewDto,
+  ) {
     const interview = await this.prismaService.interview.update({
       where: { id: interviewId },
-      data: {
-        ...interviewBody,
-      },
+      data: interviewBody,
     })
 
     return interview
   }
 
-  async deleteInterview(interviewId: string): Promise<Interview> {
+  async deleteInterview(interviewId: string) {
     const interview = await this.prismaService.interview.delete({
       where: { id: interviewId },
     })

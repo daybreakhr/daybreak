@@ -22,91 +22,84 @@ import {
 import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
-import { CreatePipeline, Pipeline } from './pipeline.dto'
+import { InterviewDto } from 'src/interviews/interview.dto'
+import {
+  CreatePipelineDto,
+  PipelineDto,
+  UpdatePipelineDto,
+} from './pipeline.dto'
 import { PipelineService } from './pipeline.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Pipeline')
-@Controller(':workspaceId/pipelines')
+@Controller('pipelines')
 @UseGuards(AuthGuard)
 export class PipelineController {
   constructor(private readonly pipelineService: PipelineService) {}
 
-  @Get('')
-  @ApiOperation({ summary: 'Get all pipelines in a workspace' })
-  @ApiOkResponse({
-    description: 'Pipelines were returned successfully',
-    type: [Pipeline],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAllPipelines(
-    @Param('workspaceId') workspaceId: string,
-  ): Promise<Pipeline[]> {
-    const data = await this.pipelineService.getAllPipelines(workspaceId)
-    return data
-  }
-
   @Get(':id')
-  @ApiOperation({ summary: 'Get pipeline' })
+  @ApiOperation({ operationId: 'GetPipelineById', summary: 'Get pipeline' })
   @ApiOkResponse({
     description: 'pipeline returned successfully',
-    type: Pipeline,
+    type: PipelineDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Pipeline not found' })
-  async getPipeline(@Param('id') id: string): Promise<Pipeline> {
+  async getPipeline(@Param('id') id: string) {
     const data = await this.pipelineService.getPipeline(id)
     return data
   }
 
-  @Get('jobs/:jobId')
-  @ApiOperation({ summary: 'Get pipeline By Job' })
+  @Get(':id/interviews')
+  @ApiOperation({
+    operationId: 'GetInterviewsByPipelineId',
+    summary: 'Get interviews by pipeline id',
+  })
   @ApiOkResponse({
-    description: 'pipeline returned successfully',
-    type: Pipeline,
+    description: 'interviews returned successfully',
+    type: [InterviewDto],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Pipeline not found' })
-  async getPipelineByJob(@Param('jobId') jobId: string): Promise<Pipeline> {
-    const data = await this.pipelineService.getPipelineByJob(jobId)
+  async getInterviewsByPipelineId(@Param('id') id: string) {
+    const data = await this.pipelineService.getInterviewsByPipelineId(id)
     return data
   }
 
-  @Post('jobs/:jobId')
-  @ApiOperation({ summary: 'Create an Pipeline' })
+  @Post('')
+  @ApiOperation({
+    operationId: 'CreatePipeline',
+    summary: 'Create an Pipeline',
+  })
   @ApiCreatedResponse({
     description: 'Created Successfully',
-    type: Pipeline,
+    type: PipelineDto,
   })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createPipeline(
-    @Param('workspaceId') workspaceId: string,
-    @Param('jobId') jobId: string,
     @GetUser() user: UserRecord,
-    @Body() pipelineBody: Pipeline,
+    @Body() pipelineBody: CreatePipelineDto,
   ) {
     const data = await this.pipelineService.createPipeline(
       pipelineBody,
       user.uid,
-      workspaceId,
-      jobId,
     )
     return data
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update Pipeline' })
+  @ApiOperation({ operationId: 'UpdatePipeline', summary: 'Update Pipeline' })
   @ApiOkResponse({
     description: 'pipeline updated successfully',
-    type: Pipeline,
+    type: PipelineDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Pipeline not found' })
-  @ApiBody({ type: CreatePipeline })
+  @ApiBody({ type: UpdatePipelineDto })
   async updatePipeline(
     @Param('id') id: string,
-    @Body() updatePipelineBody: CreatePipeline,
+    @Body() updatePipelineBody: UpdatePipelineDto,
   ) {
     const data = await this.pipelineService.updatePipeline(
       id,
@@ -120,7 +113,7 @@ export class PipelineController {
   @ApiOkResponse({ description: 'pipeline deleted successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'pipeline not found' })
-  async deletePipeline(@Param('id') id: string): Promise<Pipeline> {
+  async deletePipeline(@Param('id') id: string) {
     const data = await this.pipelineService.deletePipeline(id)
     return data
   }
