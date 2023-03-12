@@ -5,7 +5,7 @@ import type { Department, Location, Workspace } from '@prisma/client'
 
 export async function fetchOrganisation() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<Workspace>(`workspace?id=${workspaceId}`)
+  const { data } = await client.get<Workspace>(`workspaces?id=${workspaceId}`)
   return data
 }
 

@@ -10,6 +10,7 @@ export async function fetchJobs() {
 }
 
 export async function createJob() {
-  const { data } = await client.post<Job>('jobs')
+  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+  const { data } = await client.post<Job>('jobs', { workspaceId })
   return data
 }

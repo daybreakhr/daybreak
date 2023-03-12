@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { Job } from '@prisma/client'
 import openai from 'src/utils/openai'
+import { CreateJobDto } from './jobs.dto'
 
 @Injectable()
 export class JobsService {
@@ -31,7 +32,8 @@ export class JobsService {
     return job
   }
 
-  async create(workspaceId: string, uid: string) {
+  async create(createJobDto: CreateJobDto, uid: string) {
+    const { workspaceId } = createJobDto
     const job = await this.prismaService.job.create({
       data: {
         Workspace: { connect: { id: workspaceId } },

@@ -23,7 +23,7 @@ import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
 import { PipelineDto } from 'src/pipelines/pipeline.dto'
-import { Job, UpdateJob } from './jobs.dto'
+import { CreateJobDto, Job, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
 
 @ApiTags('Job')
@@ -75,15 +75,16 @@ export class JobsController {
   @UseGuards(AuthGuard)
   @Roles('admin')
   @ApiSecurity('access-key')
+  @ApiBody({ type: CreateJobDto })
   @ApiOperation({ operationId: 'CreateJob', summary: 'Create a job' })
   @ApiCreatedResponse({ description: 'Created Succesfully', type: Job })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async create(
-    @Param('workspaceId') workspaceId: string,
+    @Body() createJobDto: CreateJobDto,
     @GetUser() user: UserRecord,
-  ): Promise<Job> {
-    const data = await this.jobsService.create(workspaceId, user.uid)
+  ) {
+    const data = await this.jobsService.create(createJobDto, user.uid)
     return data
   }
 
@@ -117,10 +118,7 @@ export class JobsController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Job not found' })
   @ApiBody({ type: UpdateJob })
-  async update(
-    @Param('id') id: string,
-    @Body() updateJobDto: UpdateJob,
-  ): Promise<Job> {
+  async update(@Param('id') id: string, @Body() updateJobDto: UpdateJob) {
     const data = await this.jobsService.update(id, updateJobDto)
     return data
   }

@@ -1,6 +1,11 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger'
 import { Currency, JobType, Priority } from '@prisma/client'
-import { IsOptional } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
+
+export class CreateJobDto {
+  @IsString()
+  workspaceId: string
+}
 
 export class Job {
   @ApiProperty({
