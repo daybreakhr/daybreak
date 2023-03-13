@@ -1,34 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
 export class CreateEmailDto {
-  @ApiProperty({
-    example: 'Sample subject for the gmail',
-    description: 'Subject of Gmail message',
-  })
+  /**
+   * Subject of Gmail message
+   * @example 'Sample subject for the gmail'
+   */
   @IsString()
   subject: string
 
-  @ApiProperty({
-    example: 'message body',
-    description: 'Message body',
-  })
+  /**
+   * Message body
+   * @example 'message body'
+   */
   @IsString()
   body: string
 }
 
 export class EmailDto extends CreateEmailDto {
-  @ApiProperty({
-    example: '632af2f17685417736bc0606',
-    description: 'id from our database',
-  })
+  /**
+   * Id of email from Db
+   * @example '632af2f17685417736bc0606'
+   * @readonly
+   */
   id: string
 
-  @ApiProperty({
-    example:
-      'NjVnamFwMzFjZ3NqMmJiMjYxaW02YjlrYzhxbTZiOW9jY282YWI5aWNoaGphb2hpY2hnajRjOXBjNF8yMDIzMDEyNVQxNjMwMDBaIGhpbS5uYWdyYXRoQG0',
-    description: 'Message ID from gmail',
-  })
+  /**
+   * Message ID from gmail
+   * @example 'NjVnamFwMzFjZ3NqMmJiMjYxaW02YjlrYzhxbTZiOW9jY282YWI5aWNoaGphb2hpY2hnajRjOXBjNF8yMDIzMDEyNVQxNjMwMDBaIGhpbS5uYWdyYXRoQG0'
+   */
   @IsString()
   messageId: string
 }

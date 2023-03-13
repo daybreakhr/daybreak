@@ -1,65 +1,56 @@
-import { IsNumber, IsString, IsOptional } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
+import { IsNumber, IsString, IsOptional, IsInt } from 'class-validator'
 
 export class CreateFeedbackDto {
-  @ApiProperty({
-    example: 'Phone Screen',
-    description: 'title of feedback',
-  })
+  /**
+   * title of feedback
+   * @example 'Feedback 1'
+   */
   @IsString()
   title: string
 
-  @ApiProperty({
-    example:
-      'candidate has very good understanding of aws and cloud technologies',
-    description: 'feedback notes',
-  })
+  /**
+   * feedback notes
+   * @example 'candidate has very good understanding of aws and cloud technologies'
+   */
   @IsString()
   notes: string
 
-  @ApiProperty({
-    example: '4.5',
-    description: 'feedback score',
-  })
+  /**
+   * feedback score
+   * @example 4.5
+   */
   @IsNumber()
   score: number
 }
 
 export class Feedback {
-  @ApiProperty({
-    example: 'Phone Screen',
-    description: 'title of feedback',
-  })
+  /**
+   * title of feedback
+   * @example 'Feedback 1'
+   */
+  @IsString()
   title: string
 
-  @ApiProperty({
-    example:
-      'candidate has very good understanding of aws and cloud technolgies',
-    description: 'feedback notes',
-  })
+  /**
+   * feedback notes
+   * @example 'candidate has very good understanding of aws and cloud technolgies'
+   */
+  @IsString()
   notes: string
 
-  @ApiProperty({
-    example: '4.5',
-    description: 'feedback score',
-  })
+  /**
+   * feedback score
+   * @example 4.5
+   */
+  @IsInt()
   score: number
 
-  @ApiProperty({
-    example: '44738-hsdhd-8rudhd-82929',
-    description: 'uid of feedback giver',
-    required: false,
-    readOnly: true,
-  })
+  /**
+   * Id of candidate
+   * @example '83382e7332fac263632'
+   * @readonly
+   */
   @IsOptional()
-  createdBy: string
-
-  @ApiProperty({
-    example: '83382e7332fac263632',
-    description: 'id of candidate',
-    required: false,
-    readOnly: true,
-  })
-  @IsOptional()
-  candidateId: string
+  @IsString()
+  candidateId?: string
 }

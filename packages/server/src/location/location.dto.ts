@@ -1,18 +1,19 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
+import { IsString } from 'class-validator'
 
 export class Location {
-  @ApiProperty({
-    example: 'Hyderabad',
-    description: 'Name of the location',
-    required: true,
-  })
+  /**
+   * Name of the location
+   * @example 'Hyderabad'
+   */
+  @IsString()
   name: string
 
-  @ApiProperty({
-    example: '9a3382e7332fac263632',
-    description: 'id of workspace',
-    required: true,
-  })
+  /**
+   * Id of workspace
+   * @example '9a3382e7332fac263632'
+   */
+  @IsString()
   workspaceId: string
 }
 

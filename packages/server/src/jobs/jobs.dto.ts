@@ -1,121 +1,129 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
 import { Currency, JobType, Priority } from '@prisma/client'
-import { IsOptional, IsString } from 'class-validator'
+import {
+  IsOptional,
+  IsString,
+  IsEnum,
+  IsBoolean,
+  IsArray,
+  IsInt,
+} from 'class-validator'
 
 export class CreateJobDto {
+  /**
+   * Id of workspace
+   * @example '56acb2435353355a'
+   */
   @IsString()
   workspaceId: string
 }
 
 export class Job {
-  @ApiProperty({
-    example: 'Software Engineer',
-    description: 'title of Job',
-    required: false,
-  })
+  /**
+   * title of Job
+   * @example 'Software Engineer'
+   */
   @IsOptional()
-  title: string
+  @IsString()
+  title?: string
 
-  @ApiProperty({
-    example: 'Software Engineer',
-    description: 'title of Job',
-    required: true,
-    enum: Priority,
-  })
+  /**
+   * priority of job
+   * @example 'high'
+   */
+  @IsEnum(Priority)
   priority: Priority
 
-  @ApiProperty({
-    example: '9a3382e7332fac263632',
-    description: 'id of department',
-    required: false,
-  })
+  /**
+   * Id of department
+   * @example '9a3382e7332fac263632'
+   */
   @IsOptional()
-  departmentId: string
+  @IsString()
+  departmentId?: string
 
-  @ApiProperty({
-    example: 'fullTime',
-    description: 'type of Job',
-    required: false,
-    enum: JobType,
-  })
+  /**
+   * Type of job
+   * @example 'fullTime'
+   */
   @IsOptional()
-  jobType: JobType
+  @IsEnum(JobType)
+  jobType?: JobType
 
-  @ApiProperty({
-    example: '9a3382e7332fac263632',
-    description: 'id of location',
-    required: false,
-  })
+  /**
+   * Id of Location
+   * @example '9a3382e7332fac263632'
+   */
   @IsOptional()
-  locationId: string
+  @IsString()
+  locationId?: string
 
-  @ApiProperty({
-    example: true,
-    description: 'Whether a Job is remote or not',
-    required: true,
-  })
+  /**
+   * Whether a Job is remote or not
+   * @example true
+   */
+  @IsBoolean()
   isRemote: boolean
 
-  @ApiProperty({
-    example: '<p>Editor output</p>',
-    description: 'Editor output of description',
-    required: false,
-  })
+  /**
+   * Editor output of description
+   * @example '<p>Editor output</p>'
+   */
   @IsOptional()
-  description: string
+  @IsString()
+  description?: string
 
-  @ApiProperty({
-    example: ['java', 'aws'],
-    description: 'skills required for a job',
-    required: true,
-  })
+  /**
+   * skills required for a job
+   * @example ['java', 'aws']
+   */
+  @IsArray()
   skills: string[]
 
-  @ApiProperty({
-    example: '4',
-    description: 'experience required for a job',
-    required: false,
-  })
+  /**
+   * experience required for a job
+   * @example '4'
+   */
   @IsOptional()
-  experience: string
+  @IsString()
+  experience?: string
 
-  @ApiProperty({
-    example: 'usd',
-    description: 'currency of job paycheck',
-    required: false,
-    enum: Currency,
-  })
+  /**
+   * currency of job paycheck
+   * @example 'usd'
+   */
   @IsOptional()
-  currency: Currency
+  @IsEnum(Currency)
+  currency?: Currency
 
-  @ApiProperty({
-    example: 50000,
-    description: 'min salary of a job',
-    required: false,
-  })
+  /**
+   * min salary of a job
+   * @example 50000
+   */
   @IsOptional()
-  minSalary: number
+  @IsInt()
+  minSalary?: number
 
-  @ApiProperty({
-    example: 80000,
-    description: 'max salary of a job',
-    required: false,
-  })
+  /**
+   * max salary of a job
+   * @example 80000
+   */
   @IsOptional()
-  maxSalary: number
+  @IsInt()
+  maxSalary?: number
 
-  @ApiProperty({
-    example: true,
-    description: 'Whether a job is published',
-    required: true,
-  })
+  /**
+   * Whether a job is published
+   * @example true
+   */
+  @IsBoolean()
   isPublished: boolean
 
-  @ApiProperty({
-    example: '9a3382e7332fac263632',
-    description: 'id of workspace',
-    required: true,
-  })
+  /**
+   * Id of workspace
+   * @example '9a3382e7332fac263632'
+   */
+  @IsString()
   workspaceId: string
 }
 

@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { IsString } from 'class-validator'
 
 export class DepartmentDto {
-  @ApiProperty({
-    example: 'Engineering',
-    description: 'Name for a department',
-    required: true,
-  })
+  /**
+   * Name for a department
+   * @example 'Engineering'
+   */
+  @IsString()
   name: string
 
-  @ApiProperty({
-    example: '6317158147089f094cd4598e',
-    description: 'id of workspace',
-    required: true,
-  })
+  /**
+   * Id of workspace
+   * @example '6317158147089f094cd4598e'
+   */
+  @IsString()
   workspaceId: string
 }

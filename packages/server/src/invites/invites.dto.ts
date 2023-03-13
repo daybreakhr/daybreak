@@ -1,22 +1,19 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
 import { IsEmail, IsEnum } from 'class-validator'
 
 export class Invite {
-  @ApiProperty({
-    example: 'xyz@gmail.com',
-    description: 'Email of the receiver',
-    required: true,
-  })
+  /**
+   * Email of the receiver
+   * @example 'xyz@gmail.com'
+   */
   @IsEmail()
   email: string
 
-  @ApiProperty({
-    example: 'member',
-    description: 'role of the invitee',
-    required: true,
-    enum: Role,
-  })
+  /**
+   * role of the invitee
+   * @example 'member'
+   */
   @IsEnum(Role)
   role: Role
 }
