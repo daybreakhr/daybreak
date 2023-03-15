@@ -14,12 +14,10 @@ export class InterviewService {
   }
 
   async createInterview(interviewBody: CreateInterviewDto, userId: string) {
-    const { pipelineId, ...restBody } = interviewBody
     const interview = await this.prismaService.interview.create({
       data: {
-        ...restBody,
+        ...interviewBody,
         Member: { connect: { uid: userId } },
-        Pipeline: { connect: { id: pipelineId } },
       },
     })
 

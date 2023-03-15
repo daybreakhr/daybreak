@@ -22,7 +22,7 @@ import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
-import { PipelineDto } from 'src/pipelines/pipeline.dto'
+import { InterviewDto } from 'src/interviews/interview.dto'
 import { CreateJobDto, Job, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
 
@@ -54,20 +54,20 @@ export class JobsController {
     return data
   }
 
-  @Get(':id/pipeline')
+  @Get(':id/interviews')
   @UseGuards(AuthGuard)
   @ApiSecurity('access-key')
   @ApiOperation({
-    operationId: 'GetPipelineByJobId',
-    summary: 'Get Pipeline for a job',
+    operationId: 'GetInterviewsByJobId',
+    summary: 'Get Interviews for a job',
   })
   @ApiOkResponse({
-    description: 'pipeline returned successfully',
-    type: PipelineDto,
+    description: 'interviews returned successfully',
+    type: [InterviewDto],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getPipelineByJobId(@Param('id') jobId: string) {
-    const data = await this.jobsService.getPipelineByJobId(jobId)
+    const data = await this.jobsService.getInterviewsByJobId(jobId)
     return data
   }
 

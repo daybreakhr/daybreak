@@ -25,7 +25,6 @@ model Workspace {
   Job         Job[]
   Candidate   Candidate[]
   Prospect    Prospect[]
-  Pipeline    Pipeline[]
 }
 
 model Member {
@@ -45,7 +44,6 @@ model Member {
   Email              Email[]
   Integration        Integration?
   Interview          Interview[]
-  Pipeline           Pipeline[]
 }
 
 type EncryptedData {
@@ -91,7 +89,7 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  Pipeline      Pipeline?
+  Interview     Interview[]
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId
   Member        Member      @relation(fields: [createdBy], references: [uid])
@@ -223,32 +221,16 @@ model Feedback {
 
 // Details of interview round with candidate
 model Interview {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  order      Int
-  Member     Member      @relation(fields: [createdBy], references: [uid])
-  createdBy  String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  Pipeline   Pipeline    @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
-  pipelineId String      @db.ObjectId
-  Candidate  Candidate[]
-}
-
-// Collection of Interviews is a Pipeline. A Saved Pipeline can be used with multiple Jobs
-model Pipeline {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  title       String?
-  isSaved     Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  Member      Member      @relation(fields: [createdBy], references: [uid])
-  createdBy   String
-  Interview   Interview[]
-  Job         Job         @relation(fields: [jobId], references: [id])
-  jobId       String      @unique @db.ObjectId
-  Workspace   Workspace   @relation(fields: [workspaceId], references: [id])
-  workspaceId String      @db.ObjectId
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  order     Int
+  Member    Member      @relation(fields: [createdBy], references: [uid])
+  createdBy String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Candidate Candidate[]
+  Job       Job?        @relation(fields: [jobId], references: [id])
+  jobId     String?     @db.ObjectId
 }
 
 model Calendar {
