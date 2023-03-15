@@ -229,8 +229,8 @@ model Interview {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   Candidate Candidate[]
-  Job       Job?        @relation(fields: [jobId], references: [id])
-  jobId     String?     @db.ObjectId
+  Job       Job         @relation(fields: [jobId], references: [id])
+  jobId     String      @db.ObjectId
 }
 
 model Calendar {
