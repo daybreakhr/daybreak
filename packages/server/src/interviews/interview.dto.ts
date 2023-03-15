@@ -3,7 +3,7 @@ import { PartialType } from '@nestjs/swagger'
 export class CreateInterviewDto {
   title: string
   order: number
-  pipelineId: string
+  jobId: string
 }
 
 export class InterviewDto extends CreateInterviewDto {

@@ -17,19 +17,19 @@ export class JobsService {
     return jobs
   }
 
-  async getPipelineByJobId(jobId: string) {
-    const pipeline = await this.prismaService.pipeline.findUnique({
-      where: { jobId },
-    })
-    return pipeline
-  }
-
   async getById(id: string) {
     const job = await this.prismaService.job.findUnique({
       where: { id },
       include: { Location: true, Workspace: true },
     })
     return job
+  }
+
+  async getInterviewsByJobId(id: string) {
+    const interviews = await this.prismaService.interview.findMany({
+      where: { jobId: id },
+    })
+    return interviews
   }
 
   async create(createJobDto: CreateJobDto, uid: string) {

@@ -23,7 +23,6 @@ import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 import { EmailModule } from './email/email.module'
 import { InterviewModule } from './interviews/interview.module'
-import { PipelineModule } from './pipelines/pipeline.module'
 
 @Module({
   imports: [
@@ -62,7 +61,6 @@ import { PipelineModule } from './pipelines/pipeline.module'
     LocationModule,
     MembersModule,
     NotificationModule,
-    PipelineModule,
     ProspectModule,
     TemplatesModule,
     WorkspaceModule,
