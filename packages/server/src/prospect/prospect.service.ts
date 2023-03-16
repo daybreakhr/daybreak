@@ -45,7 +45,11 @@ export class ProspectService {
     })
 
     const key = `prospect/${id}/${file.originalname}`
-    const uploadResult = await this.s3Service.uploadS3(file, key)
+    const uploadResult = await this.s3Service.uploadS3({
+      file: file.buffer,
+      key,
+      mimetype: file.mimetype,
+    })
 
     const prospect = await this.prismaService.prospect.update({
       where: { id },
