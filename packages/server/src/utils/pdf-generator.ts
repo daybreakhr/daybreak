@@ -10,7 +10,7 @@ type TemplateArgs = {
   skills: string[]
 }
 
-async function printPdf(values: TemplateArgs) {
+export default async function generatePdf(values: TemplateArgs) {
   const { title, description, experience, location, skills } = values
   // Create a browser instance
   const browser = await puppeteer.launch()
@@ -19,7 +19,10 @@ async function printPdf(values: TemplateArgs) {
   const page = await browser.newPage()
 
   // Get HTML content from HTML
-  const html = fs.readFileSync(path.join(__dirname, 'sample.html'), 'utf8')
+  const html = fs.readFileSync(
+    path.join(__dirname, '../../assets/sample.html'),
+    'utf8',
+  )
   await page.setContent(html, { waitUntil: 'domcontentloaded' })
 
   // To reflect CSS used for screens instead of print
@@ -56,8 +59,7 @@ async function printPdf(values: TemplateArgs) {
   )
 
   // Download the PDF
-  await page.pdf({
-    path: 'result.pdf',
+  const pdf = await page.pdf({
     margin: { top: '50px', right: '50px', bottom: '50px', left: '50px' },
     printBackground: true,
     format: 'A4',
@@ -65,13 +67,6 @@ async function printPdf(values: TemplateArgs) {
 
   // Close the browser instance
   await browser.close()
-}
 
-printPdf({
-  title: 'Software Engineer - Full Stack',
-  description:
-    "<p><strong>WHAT YOU WILL DO</strong></p><p></p><p>As a full-stack engineer at Daybreak, you will,</p><ul><li><p><strong>Own and build the product: </strong>You will take ownership of key parts of the product and drive it end-to-end with a customer-driven focus.</p></li><li><p><strong>Collaborate with a world-class team: </strong>We have an all-star engineering team out of organizations like Rubrik, Samsara and Apple; who believe that collaboration and open feedback are key to building excellent technical solutions to challenging problems.</p></li><li><p><strong>Build team and culture: </strong>At Daybreak, we believe that culture is the secret sauce to building a great engineering team. You will build and embody this culture - and set the bar high as we build the company</p></li></ul><p>Here are some of the components you will work on as we take the product to market.</p><ul><li><p><strong>Insurance Product: </strong>Build a state-machine-driven system that can support complex insurance workflows involving multiple parties such as customers, agents, underwriters, etc. Learn to manage complexity as we add new products to our portfolio and directly impact the company’s top line.</p></li><li><p><strong>Risk and Underwriting Engine: </strong>Build a data-driven risk engine to dynamically price premiums based on heterogeneous data types. Build a Domain Specific Language (DSL) to allow underwriters and actuaries to create and rapidly iterate on models. Use cutting-edge explainable ML to improve model performance and mine predictive signals.</p></li><li><p><strong>Safety First Insurance Platform: </strong>Build the industry’s first consumer quality insurance platform focused on safety. Help prevent accidents by engaging customers and actively supporting them on their safety journey. Bring a product-focused approach and consumer-grade tech to a big legacy market.</p></li></ul><p><strong>ABOUT YOU</strong></p><ul><li><p><strong>You are an owner. </strong>You are comfortable owning large parts of our product and driving the development and roadmap.</p></li><li><p><strong>You ship. </strong>You get satisfaction from getting your features into customers' hands in a short period of time. You take accountability for the end-to-end product experience of your features, warts and all.</p></li><li><p><strong>You believe in your craft</strong>. You care deeply about delivering high-quality experiences and approach development with a high degree of craft. You are passionate about tooling and developer productivity.</p></li><li><p><strong>You like simplicity</strong>. You often find the simplest way of achieving something. You care about the long-term readability and maintainability of your codebase.</p></li><li><p><strong>You are a lifelong learner</strong>. You learn quickly and can operate independently. You're not afraid to take something on just because you don’t know how to do it yet.</p></li><li><p><strong>You value clear, open communication. </strong>You not only have the ability or skill to communicate effectively but also have the willingness to be open and honest in your communication. You demonstrate these abilities through thoughtful code reviews, honest and kind feedback, and documentation.</p></li></ul><p><strong>YOUR BACKGROUND</strong></p><ul><li><p>You have 3-5 years of experience in end-to-end development of modern web applications.</p></li><li><p>You have experience in writing performant javascript as well as HTML/CSS code that works across web and mobile browsers. Experience with javascript frameworks such as reactjs, CSS frameworks such as tailwind, material etc. is a plus.</p></li><li><p>You have experience in writing backend services in any programming language or framework with a good understanding of database modeling, authorization, browser caching, cookies etc.</p></li><li><p>You like being a generalist. If we do our jobs well, you will spend more of your time building systems than fighting fires, so you should enjoy wearing many hats and working on many parts of the system.</p></li><li><p>You can break up a complex system into clean reusable components, and design interfaces and abstractions given the way you expect internal and external users to consume them.</p></li><li><p>Apart from a deep understanding of the web stack, you understand how everything fits together (such as databases, caching, load balancers, networking, etc.) to debug for performance and reliability issues.</p></li><li><p>You have excellent communication skills and work well within the team as well as with stakeholders from other areas such as product and business</p></li></ul><p><strong>BENEFITS</strong></p><ul><li><p>Competitive compensation &amp; meaningful equity</p></li><li><p>Health insurance for you and your family</p></li><li><p>Monthly wellness stipend&nbsp;</p></li><li><p>Remote equal culture and reimbursement for home office equipment</p></li><li><p>A flexible vacation policy and a team that understands building a company is a marathon, not a sprint</p></li><li><p>Support for ongoing development outside of work</p></li><li><p>A culture that gives you the autonomy you need to do great work, and the transparency you need to make good decisions</p></li></ul>",
-  experience: '5-7 years',
-  location: 'San Francisco, CA',
-  skills: ['JavaScript', 'React', 'Node.js'],
-})
+  return pdf
+}
