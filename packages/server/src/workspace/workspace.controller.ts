@@ -25,7 +25,7 @@ import {
 import { Express } from 'express'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Role, Workspace } from '@prisma/client'
-import { Job } from 'src/jobs/jobs.dto'
+import { JobDto } from 'src/jobs/jobs.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
 import { GetUser } from 'src/auth/get-user.decorator'
@@ -67,7 +67,7 @@ export class WorkspaceController {
   })
   @ApiOkResponse({
     description: 'Fetched jobs successfully',
-    type: [Job],
+    type: [JobDto],
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getJobsForWorkspace(@Param('workspaceId') workspaceId: string) {

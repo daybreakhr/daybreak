@@ -102,7 +102,11 @@ export class WorkspaceService {
 
   async uploadLogo(workspaceId: string, file: Express.Multer.File) {
     const key = `organisation/${workspaceId}/${file.originalname}`
-    const uploadResult = await this.s3Service.uploadS3(file, key)
+    const uploadResult = await this.s3Service.uploadS3({
+      file: file.buffer,
+      key,
+      mimetype: file.mimetype,
+    })
     const workspace = await this.prismaService.workspace.update({
       where: { id: workspaceId },
       data: { logo: uploadResult.Location },

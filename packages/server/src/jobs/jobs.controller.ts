@@ -23,7 +23,7 @@ import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
 import { InterviewDto } from 'src/interviews/interview.dto'
-import { CreateJobDto, Job, UpdateJob } from './jobs.dto'
+import { CreateJobDto, JobDto, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
 
 @ApiTags('Job')
@@ -35,9 +35,9 @@ export class JobsController {
   @ApiOperation({ operationId: 'GetAllJobs', summary: 'Get all Jobs' })
   @ApiOkResponse({
     description: 'Jobs were returned successfully',
-    type: [Job],
+    type: [JobDto],
   })
-  async getAllJobs(): Promise<Job[]> {
+  async getAllJobs() {
     const data = await this.jobsService.getAllJobs()
     return data
   }
@@ -46,10 +46,10 @@ export class JobsController {
   @ApiOperation({ operationId: 'GetJobById', summary: 'Get a Job by jobId' })
   @ApiOkResponse({
     description: 'job returned successfully',
-    type: Job,
+    type: JobDto,
   })
   @ApiNotFoundResponse({ description: 'Job not found' })
-  async getById(@Param('id') id: string): Promise<Job> {
+  async getById(@Param('id') id: string) {
     const data = await this.jobsService.getById(id)
     return data
   }
@@ -77,7 +77,7 @@ export class JobsController {
   @ApiSecurity('access-key')
   @ApiBody({ type: CreateJobDto })
   @ApiOperation({ operationId: 'CreateJob', summary: 'Create a job' })
-  @ApiCreatedResponse({ description: 'Created Succesfully', type: Job })
+  @ApiCreatedResponse({ description: 'Created Succesfully', type: JobDto })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async create(
@@ -106,6 +106,24 @@ export class JobsController {
     return data
   }
 
+  @Post(':id/parse')
+  @UseGuards(AuthGuard)
+  @Roles('admin')
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'ParseJdByJobId',
+    summary: 'Parse job using affinda',
+  })
+  @ApiCreatedResponse({
+    type: JobDto,
+    description: 'Created job description succesfully',
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async parseDescription(@Param('id') jobId: string) {
+    const data = await this.jobsService.parseJobDescription(jobId)
+    return data
+  }
+
   @Patch(':id')
   @UseGuards(AuthGuard)
   @Roles('admin')
@@ -113,7 +131,7 @@ export class JobsController {
   @ApiOperation({ operationId: 'UpdateJob', summary: 'Update job' })
   @ApiOkResponse({
     description: 'job updated successfully',
-    type: Job,
+    type: JobDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Job not found' })
