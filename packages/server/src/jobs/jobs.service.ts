@@ -1,13 +1,19 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
+import { AffindaService } from 'src/affinda/affinda.service'
+import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { PrismaService } from 'src/prisma.service'
-import { Job } from '@prisma/client'
 import openai from 'src/utils/openai'
-import { CreateJobDto } from './jobs.dto'
+import generatePdf from 'src/utils/pdf-generator'
+import { CreateJobDto, UpdateJob } from './jobs.dto'
 
 @Injectable()
 export class JobsService {
   private logger = new Logger('JOBS')
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private affindaService: AffindaService,
+    private prismaService: PrismaService,
+    private s3Service: AWSS3Service,
+  ) {}
 
   async getAllJobs() {
     const jobs = await this.prismaService.job.findMany({
@@ -60,7 +66,48 @@ export class JobsService {
     }
   }
 
-  async update(jobId: string, updateJobDto: Partial<Job>) {
+  async parseJobDescription(jobId: string) {
+    // Get job using id from DB
+    const job = await this.prismaService.job.findUnique({
+      where: { id: jobId },
+      include: { Location: true },
+    })
+
+    // Generate pdf using puppeteer and html template
+    const pdf = await generatePdf({
+      title: job.title,
+      location: job.Location.name,
+      experience: job.experience,
+      skills: job.skills,
+      description: job.description,
+    })
+
+    // Upload pdf to S3
+    const key = `jobs/${jobId}/${job.title}.pdf`
+    const uploadResult = await this.s3Service.uploadS3({
+      file: pdf,
+      key,
+      mimetype: 'application/pdf',
+    })
+
+    // Upload pdf url to affinda for document parsing
+    const affindaId = await this.affindaService.uploadJobDescription(
+      uploadResult.Location,
+    )
+
+    // Update job with pdf url and affindaId
+    const updateJob = await this.prismaService.job.update({
+      where: { id: jobId },
+      data: {
+        affindaId,
+        jdPdfUrl: uploadResult.Location,
+      },
+    })
+
+    return updateJob
+  }
+
+  async update(jobId: string, updateJobDto: UpdateJob) {
     if (updateJobDto) {
       const job = await this.prismaService.job.update({
         where: { id: jobId },

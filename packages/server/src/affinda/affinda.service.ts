@@ -1,28 +1,28 @@
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
-import type { Resume } from '@affinda/affinda'
+import type { Resume, JobDescription } from '@affinda/affinda'
 import { catchError, firstValueFrom } from 'rxjs'
 import { Injectable, Logger } from '@nestjs/common'
 
 @Injectable()
 export class AffindaService {
-  private logger = new Logger('HTTP')
+  private logger = new Logger('AFFINDA')
 
   constructor(
     private configService: ConfigService,
     private httpService: HttpService,
   ) {}
 
-  async getParsedResume(affindaId: string) {
-    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
-    const AFFINDA_URL = this.configService.get<string>('AFFINDA_URL')
+  private affindaToken = this.configService.get<string>('AFFINDA_TOKEN')
+  private affindaUrl = this.configService.get<string>('AFFINDA_URL')
 
-    const url = `${AFFINDA_URL}/resumes/${affindaId}`
+  async getParsedResume(affindaId: string) {
+    const url = `${this.affindaUrl}/resumes/${affindaId}`
 
     const { data } = await firstValueFrom(
       this.httpService
         .get<Resume>(url, {
-          headers: { Authorization: `Bearer ${AFFINDA_TOKEN}` },
+          headers: { Authorization: `Bearer ${this.affindaToken}` },
         })
         .pipe(
           catchError((error) => {
@@ -36,19 +36,36 @@ export class AffindaService {
   }
 
   async uploadResume(resumeUrl: string) {
-    const AFFINDA_TOKEN = this.configService.get<string>('AFFINDA_TOKEN')
-    const AFFINDA_URL = this.configService.get<string>('AFFINDA_URL')
-
-    const url = `${AFFINDA_URL}/resumes`
+    const url = `${this.affindaUrl}/resumes`
 
     const { data } = await firstValueFrom(
       this.httpService
-        .post<Resume>(url, null, {
-          headers: { Authorization: `Bearer ${AFFINDA_TOKEN}` },
-          data: {
-            url: resumeUrl,
-          },
-        })
+        .post<Resume>(
+          url,
+          { url: resumeUrl },
+          { headers: { Authorization: `Bearer ${this.affindaToken}` } },
+        )
+        .pipe(
+          catchError((error) => {
+            this.logger.error(error.response.data)
+            throw error
+          }),
+        ),
+    )
+
+    return data.meta.identifier
+  }
+
+  async uploadJobDescription(jdPdfUrl: string) {
+    const url = `${this.affindaUrl}/job_descriptions`
+
+    const { data } = await firstValueFrom(
+      this.httpService
+        .post<JobDescription>(
+          url,
+          { url: jdPdfUrl },
+          { headers: { Authorization: `Bearer ${this.affindaToken}` } },
+        )
         .pipe(
           catchError((error) => {
             this.logger.error(error.response.data)

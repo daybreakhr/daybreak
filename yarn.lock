@@ -15,10 +15,10 @@
     form-data "^4.0.0"
     tslib "^2.2.0"
 
-"@affinda/affinda@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@affinda/affinda/-/affinda-4.3.0.tgz#394ed6a6cbd87cadfae2d61a53d1090572bad0ce"
-  integrity sha512-FQg27HXGBU2uuIOKQhIQ6g1zixfB6hlcnRL4C/PX0ylHy1LhCsqOsMdTZijq7HaDf/C3zkbk32OEUJEvoWAnkA==
+"@affinda/affinda@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@affinda/affinda/-/affinda-5.3.0.tgz#bfbae6e833d39fc4522f3397c2c1be5a8098e8b1"
+  integrity sha512-g9JbFc0wUGShJA01X1Z94D4ohhCqM3uJa9GU5hB8UyKXVb1vMmq3IBfNOVRotUx2tgVO2U2TyPoXy7ZB//skFA==
   dependencies:
     "@azure/core-auth" "^1.3.0"
     "@azure/core-client" "^1.2.2"

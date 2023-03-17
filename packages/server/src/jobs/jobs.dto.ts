@@ -7,7 +7,7 @@ export class CreateJobDto {
   workspaceId: string
 }
 
-export class Job {
+export class JobDto {
   @ApiProperty({
     example: 'Software Engineer',
     description: 'title of Job',
@@ -119,4 +119,4 @@ export class Job {
   workspaceId: string
 }
 
-export class UpdateJob extends PartialType(Job) {}
+export class UpdateJob extends PartialType(JobDto) {}
