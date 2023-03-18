@@ -2,8 +2,11 @@ import { Button } from 'antd'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { LeftOutlined, RocketOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { updateJobById } from 'pages/create-job/queries'
+
 import Card from './components/card'
+import { parseJob } from './queries'
 import { publishers } from './constants/publishers'
 
 export default function PublishJob() {
@@ -13,10 +16,13 @@ export default function PublishJob() {
   const titlePrefix = pathname.split('/')[3]
 
   const queryClient = useQueryClient()
+  const { mutate: triggerJobParsing } = useMutation(parseJob)
+
   const { mutate, isLoading } = useMutation(updateJobById, {
     onSuccess: () => {
       queryClient.invalidateQueries(['jobs'])
       navigate('/jobs')
+      triggerJobParsing({ jobId })
     },
   })
 
