@@ -46,14 +46,16 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
     title: 'Match Score',
     dataIndex: 'matchScore',
     key: 'matchScore',
+    align: 'center',
     render: (value?: number) => (
-      <Show when={value} fallback="N/A">
+      <Show when={value} fallback={<span className="text-gray-500">-</span>}>
         {(value) => (
           <Progress
-            size={[20, 20]}
+            size={30}
+            type="circle"
             percent={value}
-            strokeColor={getScoreColor(value)}
             format={(value) => value}
+            strokeColor={getScoreColor(value)}
           />
         )}
       </Show>
