@@ -3,12 +3,14 @@ import { Express } from 'express'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
+import { AffindaService } from 'src/affinda/affinda.service'
 import { NotificationService } from 'src/notification/notification.service'
 import { CreateCandidateDto, UpdateCandidateDto } from './candidate.dto'
 
 @Injectable()
 export class CandidateService {
   constructor(
+    private affindaService: AffindaService,
     private s3Service: AWSS3Service,
     private notificationService: NotificationService,
     private prismaService: PrismaService,

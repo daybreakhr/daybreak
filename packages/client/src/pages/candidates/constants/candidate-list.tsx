@@ -1,9 +1,10 @@
 import dayjs from 'dayjs'
-import { Tag } from 'antd'
+import { Progress, Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
 import type { CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
+import { Show } from 'ui-kit'
 
 export const statusColor: Record<CandidateStatus, string> = {
   applied: 'cyan',
@@ -11,6 +12,17 @@ export const statusColor: Record<CandidateStatus, string> = {
   offered: 'gold',
   accepted: 'green',
   rejected: 'red',
+}
+
+function getScoreColor(value: number) {
+  switch (true) {
+    case value > 75:
+      return 'green'
+    case value > 25:
+      return 'orange'
+    default:
+      return 'red'
+  }
 }
 
 export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
@@ -29,6 +41,23 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
     render: ({ title }) => title,
     filters: appliedFor.map(({ id, title }) => ({ value: id, text: title })),
     onFilter: (value, record) => record.Job?.id === value,
+  },
+  {
+    title: 'Match Score',
+    dataIndex: 'matchScore',
+    key: 'matchScore',
+    render: (value?: number) => (
+      <Show when={value} fallback="N/A">
+        {(value) => (
+          <Progress
+            size={[20, 20]}
+            percent={value}
+            strokeColor={getScoreColor(value)}
+            format={(value) => value}
+          />
+        )}
+      </Show>
+    ),
   },
   {
     title: 'Application Date',
