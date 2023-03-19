@@ -170,6 +170,7 @@ model Candidate {
   resume           String?
   affindaId        String          @unique
   linkedInUrl      String
+  matchScore       Int?
   status           CandidateStatus @default(applied)
   rejectionMessage String?
   createdAt        DateTime        @default(now())
