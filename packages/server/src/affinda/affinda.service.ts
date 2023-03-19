@@ -1,6 +1,10 @@
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
-import type { Resume, JobDescription } from '@affinda/affinda'
+import type {
+  JobDescription,
+  Resume,
+  ResumeSearchMatch,
+} from '@affinda/affinda'
 import { catchError, firstValueFrom } from 'rxjs'
 import { Injectable, Logger } from '@nestjs/common'
 
@@ -75,5 +79,30 @@ export class AffindaService {
     )
 
     return data.meta.identifier
+  }
+
+  /**
+   *
+   * @param resumeId : Affinda ID of the candidate resume
+   * @param jobId: Affinda ID of the job description
+   * @returns
+   */
+  async matchResumeAgainstJobDescription(resumeId: string, jobId: string) {
+    const url = `${this.affindaUrl}/resume_search/match?resume=${resumeId}&job_description=${jobId}`
+
+    const { data } = await firstValueFrom(
+      this.httpService
+        .get<ResumeSearchMatch>(url, {
+          headers: { Authorization: `Bearer ${this.affindaToken}` },
+        })
+        .pipe(
+          catchError((error) => {
+            this.logger.error(error.response.data)
+            throw error
+          }),
+        ),
+    )
+
+    return data
   }
 }
