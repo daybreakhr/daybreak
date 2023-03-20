@@ -25,12 +25,15 @@ import {
 import { Express } from 'express'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Role, Workspace } from '@prisma/client'
+
 import { JobDto } from 'src/jobs/jobs.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
+import { UserRecord } from 'firebase-admin/auth'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { CandidateDto } from 'src/candidate/candidate.dto'
-import { UserRecord } from 'firebase-admin/auth'
+import { DepartmentDto } from 'src/department/department.dto'
+
 import { WorkspaceService } from './workspace.service'
 import { CreateWorkspaceDto } from './workspace.dto'
 
@@ -89,6 +92,25 @@ export class WorkspaceController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getCandidatesForWorkspace(@Param('workspaceId') workspaceId: string) {
     const data = await this.workspaceService.getCandidatesForWorkspace(
+      workspaceId,
+    )
+    return data
+  }
+
+  @Get(':workspaceId/departments')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetDepartmentsForWorkspace',
+    summary: 'Get all departments for a workspace',
+  })
+  @ApiOkResponse({
+    description: 'Fetched departments successfully',
+    type: [DepartmentDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getDepartmentsForWorkspace(@Param('workspaceId') workspaceId: string) {
+    const data = await this.workspaceService.getDepartmentsForWorkspace(
       workspaceId,
     )
     return data

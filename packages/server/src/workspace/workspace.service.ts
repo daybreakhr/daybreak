@@ -63,6 +63,13 @@ export class WorkspaceService {
     return candidates
   }
 
+  async getDepartmentsForWorkspace(workspaceId: string) {
+    const departments = await this.prismaService.department.findMany({
+      where: { workspaceId },
+    })
+    return departments
+  }
+
   async verifySlug(slug: string) {
     const slugExists = await exists(this.prismaService.workspace, {
       where: { slug },

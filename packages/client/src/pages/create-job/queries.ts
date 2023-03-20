@@ -6,7 +6,9 @@ import { WORKSPACE_ID } from 'utils/constants'
 
 export async function fetchDepartments() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<Department[]>(`${workspaceId}/department`)
+  const { data } = await client.get<Department[]>(
+    `workspaces/${workspaceId}/departments`,
+  )
   return data
 }
 

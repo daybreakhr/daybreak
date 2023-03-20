@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Patch,
   Post,
@@ -24,27 +23,15 @@ import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
-import { DepartmentDto } from './department.dto'
+import { CreateDepartmentDto, DepartmentDto } from './department.dto'
 import { DepartmentService } from './department.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Department')
-@Controller(':workspaceId/department')
+@Controller('departments')
 @UseGuards(AuthGuard)
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
-
-  @Get('')
-  @ApiOperation({ summary: 'Get all Departments by Workspace' })
-  @ApiOkResponse({
-    description: 'Departments were returned successfully',
-    type: [DepartmentDto],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('workspaceId') workspaceId: string) {
-    const data = await this.departmentService.getAll(workspaceId)
-    return data
-  }
 
   @Post('')
   @Roles(Role.admin)
@@ -56,12 +43,10 @@ export class DepartmentController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   async create(
-    @Param('workspaceId') workspaceId: string,
-    @Body() createDepartmentDto: { name: string },
+    @Body() createDepartmentDto: CreateDepartmentDto,
     @GetUser() user: UserRecord,
   ) {
     const data = await this.departmentService.create(
-      workspaceId,
       createDepartmentDto,
       user.uid,
     )

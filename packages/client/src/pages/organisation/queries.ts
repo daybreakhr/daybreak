@@ -24,8 +24,9 @@ export async function updateOrganisation({
 
 export async function addDepartment({ name }: { name: string }) {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.post<Department>(`${workspaceId}/department`, {
+  const { data } = await client.post<Department>('departments', {
     name,
+    workspaceId,
   })
   return data
 }
@@ -37,19 +38,12 @@ export async function updateDepartment({
   id: string
   name: string
 }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.patch<Department>(
-    `${workspaceId}/department/${id}`,
-    { name },
-  )
+  const { data } = await client.patch<Department>(`departments/${id}`, { name })
   return data
 }
 
 export async function deleteDepartment({ id }: { id: string }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.delete<Department>(
-    `${workspaceId}/department/${id}`,
-  )
+  const { data } = await client.delete<Department>(`departments/${id}`)
   return data
 }
 

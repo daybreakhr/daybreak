@@ -1,26 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import type { Department } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
+import { CreateDepartmentDto } from './department.dto'
 
 @Injectable()
 export class DepartmentService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAll(workspaceId: string) {
-    const departments = await this.prismaService.department.findMany({
-      where: { workspaceId },
-    })
-    return departments
-  }
-
-  async create(
-    workspaceId: string,
-    createDepartmentDto: { name: string },
-    uid: string,
-  ) {
+  async create(createDepartmentDto: CreateDepartmentDto, uid: string) {
+    const { workspaceId, ...restPayload } = createDepartmentDto
     const department = await this.prismaService.department.create({
       data: {
-        name: createDepartmentDto.name,
+        ...restPayload,
         Workspace: { connect: { id: workspaceId } },
         Member: { connect: { uid } },
       },
