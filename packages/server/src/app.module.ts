@@ -16,7 +16,6 @@ import { AppLoggerMiddleware } from './logger.middleware'
 import { AWSModule } from './aws/aws.module'
 import { FeedbackModule } from './feedback/feedback.module'
 import { InvitesModule } from './invites/invites.module'
-import { TemplatesModule } from './templates/templates.module'
 import { NotificationModule } from './notification/notification.module'
 import { AffindaModule } from './affinda/affinda.module'
 import { ProspectModule } from './prospect/prospect.module'
@@ -62,7 +61,6 @@ import { InterviewModule } from './interviews/interview.module'
     MembersModule,
     NotificationModule,
     ProspectModule,
-    TemplatesModule,
     WorkspaceModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
