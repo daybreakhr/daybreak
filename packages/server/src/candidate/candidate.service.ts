@@ -48,12 +48,13 @@ export class CandidateService {
       )
     }
 
-    const { id } = await this.prismaService.candidate.create({
+    const { id, affindaId, Job } = await this.prismaService.candidate.create({
       data: {
         ...restParams,
         Workspace: { connect: { id: workspaceId } },
         Job: { connect: { id: jobId } },
       },
+      include: { Job: true },
     })
 
     const key = `candidate/${id}/${file.originalname}`
@@ -63,9 +64,24 @@ export class CandidateService {
       mimetype: file.mimetype,
     })
 
+    let matchScore: number
+
+    if (affindaId && Job.affindaId) {
+      const { score } =
+        await this.affindaService.matchResumeAgainstJobDescription(
+          affindaId,
+          Job.affindaId,
+        )
+
+      matchScore = score
+    }
+
     const candidate = await this.prismaService.candidate.update({
       where: { id },
-      data: { resume: uploadResult.Location },
+      data: {
+        resume: uploadResult.Location,
+        matchScore: +(matchScore * 100).toFixed(0),
+      },
     })
 
     this.notificationService.candidateAppliedNotification(jobId, candidate)
