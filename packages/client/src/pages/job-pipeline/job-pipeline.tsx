@@ -2,7 +2,7 @@ import { groupBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
-import { Show } from 'ui-kit'
+import { CandidateStatus } from '@prisma/client'
 import StatusList from './components/status-list'
 import { fetchCandidatesByJob } from './queries'
 
@@ -13,27 +13,41 @@ export default function JobPipeline() {
     fetchCandidatesByJob(jobId),
   )
 
-  const { data: interviews, isLoading: isLoadingInterviews } = useQuery(
-    ['interviews', jobId],
-    () => fetchInterviews(jobId),
-  )
-
   fetchInterviews
   const groupByStatus = groupBy(data ?? [], (candidate) => candidate.status)
 
   return (
     <div className="flex flex-1 gap-6 p-8 overflow-x-auto">
-      <Show when={!isLoadingInterviews}>
-        {interviews?.map(({ title, id }) => (
-          <StatusList
-            key={id}
-            title={title}
-            className="border-t-amber-500"
-            isLoading={isLoading}
-            candidates={groupByStatus[title]}
-          />
-        ))}
-      </Show>
+      <StatusList
+        title="Applied"
+        isLoading={isLoading}
+        className="border-t-amber-500"
+        candidates={groupByStatus[CandidateStatus.applied]}
+      />
+      <StatusList
+        title="Interviewing"
+        isLoading={isLoading}
+        className="border-t-lime-500"
+        candidates={groupByStatus[CandidateStatus.interview]}
+      />
+      <StatusList
+        title="Offer Extended"
+        isLoading={isLoading}
+        className="border-t-indigo-500"
+        candidates={groupByStatus[CandidateStatus.offered]}
+      />
+      <StatusList
+        title="Accepted"
+        isLoading={isLoading}
+        className="border-t-green-500"
+        candidates={groupByStatus[CandidateStatus.accepted]}
+      />
+      <StatusList
+        title="Rejected"
+        isLoading={isLoading}
+        className="border-t-red-500"
+        candidates={groupByStatus[CandidateStatus.rejected]}
+      />
     </div>
   )
 }
