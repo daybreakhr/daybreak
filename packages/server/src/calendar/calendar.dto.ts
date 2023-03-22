@@ -30,6 +30,9 @@ export class CreateCalendarDto {
   @IsArray()
   @IsEmail({}, { each: true })
   attendees: string[]
+
+  @IsString()
+  candidateId: string
 }
 
 export class CalendarDto extends CreateCalendarDto {

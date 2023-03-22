@@ -95,13 +95,11 @@ export default function ScheduleModal({
       const endTime = dayjs(`${date} ${eTime}`).toDate()
 
       mutate({
+        title: values.summary,
+        attendees: [...values.interviewers, candidate?.email],
+        startTime,
+        endTime,
         candidateId,
-        body: {
-          title: values.summary,
-          attendees: [...values.interviewers, candidate?.email],
-          startTime,
-          endTime,
-        },
       })
     })
   }

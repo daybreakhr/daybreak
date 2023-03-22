@@ -9,18 +9,10 @@ export async function fetchCalendarEvents(candidateId: string) {
   return data
 }
 
-export async function createCalendarEvent({
-  candidateId,
-  body,
-}: {
-  candidateId: string
-  body: Partial<Calendar>
-}) {
-  const { data } = await client.post<Calendar>(
-    `candidates/${candidateId}/calendars`,
-    body,
-    { withCredentials: true },
-  )
+export async function createCalendarEvent(body: Partial<Calendar>) {
+  const { data } = await client.post<Calendar>('calendars', body, {
+    withCredentials: true,
+  })
   return data
 }
 

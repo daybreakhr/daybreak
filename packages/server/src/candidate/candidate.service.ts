@@ -24,6 +24,15 @@ export class CandidateService {
     return candidate
   }
 
+  async getCalendarEventsForCandidate(candidateId: string) {
+    const calendarEvents = await this.prismaService.calendar.findMany({
+      where: { candidateId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return calendarEvents
+  }
+
   async create(
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,

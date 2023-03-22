@@ -21,7 +21,6 @@ export class CalendarService {
 
   async createCalendarEvent(
     accessToken: string,
-    candidateId: string,
     createdBy: string,
     calendarBody: CreateCalendarDto,
   ) {
@@ -38,10 +37,11 @@ export class CalendarService {
       accessToken,
     )
 
+    const { candidateId, ...restBody } = calendarBody
     const calendar = await this.prismaService.calendar.create({
       data: {
         eventId: data.id,
-        ...calendarBody,
+        ...restBody,
         Candidate: { connect: { id: candidateId } },
         Member: { connect: { uid: createdBy } },
       },

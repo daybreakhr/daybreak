@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  Get,
   HttpException,
   HttpStatus,
-  Param,
   Post,
   Req,
   UseGuards,
@@ -13,7 +11,6 @@ import {
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
@@ -29,23 +26,11 @@ import { CalendarService } from './calendar.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Calendar')
-@Controller('candidates/:candidateId/calendars')
+@Controller('calendars')
 @UseGuards(AuthGuard)
 @UseInterceptors(RefreshTokenInterceptor)
 export class CalendarController {
   constructor(private readonly calendarService: CalendarService) {}
-
-  @Get('')
-  @ApiOperation({ summary: 'Get all Calendar Events for a candidate' })
-  @ApiOkResponse({
-    description: 'Calendar events were returned successfully',
-    type: [CalendarDto],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('candidateId') candidateId: string) {
-    const data = await this.calendarService.getAll(candidateId)
-    return data
-  }
 
   @Post('')
   @ApiOperation({ summary: 'Create a calendar event' })
@@ -57,7 +42,6 @@ export class CalendarController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createCalendarEvent(
     @Req() req: Request,
-    @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,
     @Body() calendarBody: CreateCalendarDto,
   ) {
@@ -66,7 +50,6 @@ export class CalendarController {
     if (accessToken) {
       const data = await this.calendarService.createCalendarEvent(
         accessToken,
-        candidateId,
         user.uid,
         calendarBody,
       )
