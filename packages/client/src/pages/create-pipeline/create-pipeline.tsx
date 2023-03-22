@@ -1,16 +1,41 @@
 import { useState } from 'react'
 import { Button } from 'antd'
-import { range } from 'lodash'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
+import { Show } from 'ui-kit'
+import { range } from 'lodash'
 import Stage from './components/stage'
 import EditableStage from './components/editable-stage'
+import { fetchInterviews } from './queries'
+
+type NewStage = {
+  id: string
+  title: string
+}
 
 export default function CreatePipeline() {
   const { jobId = '' } = useParams()
   const { pathname } = useLocation()
-  const [newStage, setNewStage] = useState(0)
+  const [newStages, setNewStages] = useState<NewStage[]>([])
   const titlePrefix = pathname.split('/')[3]
+  const navigate = useNavigate()
+
+  const { data: interviews, isLoading } = useQuery(['interviews', jobId], () =>
+    fetchInterviews(jobId),
+  )
+
+  const addNewStage = () => {
+    const id = new Date().toISOString()
+    const stage = { id, title: '' }
+    newStages.push(stage)
+    setNewStages([...newStages])
+  }
+
+  const onRemoveStage = (stageId: string) => {
+    const stages = newStages.filter(({ id }) => id !== stageId)
+    setNewStages([...stages])
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -25,27 +50,36 @@ export default function CreatePipeline() {
       </div>
 
       <div className="space-y-4">
-        <Stage title="Phone Screen" color="red" />
-        <Stage title="On-site Coding" color="blue" />
-        <Stage
-          title="Bug Bash"
-          description="Fix issues in an open source react project"
-          color="green"
-        />
-        <Stage title="Hiring Manager" color="indigo" />
-
-        {range(newStage).map((val) => (
-          <EditableStage
-            key={val}
-            onClose={() => setNewStage((prev) => prev - 1)}
-          />
-        ))}
-
-        <Button
-          type="link"
-          icon={<PlusOutlined />}
-          onClick={() => setNewStage((prev) => prev + 1)}
+        <Show
+          when={!isLoading}
+          fallback={
+            <div className="space-y-4">
+              {range(5).map((val) => (
+                <div
+                  key={val}
+                  className="flex-1 h-10 bg-gray-100 rounded animate-pulse"
+                />
+              ))}
+            </div>
+          }
         >
+          {(interviews || []).map((item) => (
+            <Stage
+              key={item.id}
+              title={item.title}
+              id={item.id}
+              jobId={jobId}
+            />
+          ))}
+          {newStages.map(({ id }) => (
+            <EditableStage
+              jobId={jobId}
+              key={id}
+              onClose={() => onRemoveStage(id)}
+            />
+          ))}
+        </Show>
+        <Button type="link" icon={<PlusOutlined />} onClick={addNewStage}>
           Add New Pipeline Stage
         </Button>
       </div>
@@ -58,7 +92,10 @@ export default function CreatePipeline() {
         </Link>
 
         <Link to={`/jobs/${jobId}/${titlePrefix}/3`}>
-          <Button type="primary">
+          <Button
+            type="primary"
+            onClick={() => navigate(`/jobs/${jobId}/${titlePrefix}/3`)}
+          >
             Continue
             <RightOutlined />
           </Button>
