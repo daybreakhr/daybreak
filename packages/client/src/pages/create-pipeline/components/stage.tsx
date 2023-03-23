@@ -1,35 +1,62 @@
 import { useState } from 'react'
 import { Button } from 'antd'
+import { useParams } from 'react-router-dom'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { Show } from 'ui-kit'
 import EditableStage from './editable-stage'
+import { deletePipelineStep, updatePipelineStep } from '../queries'
 
 type StageProps = {
+  id: string
   title: string
   color: string
-  description?: string
 }
 
-export default function Stage({ title, description, color }: StageProps) {
+export default function Stage({ id, title, color }: StageProps) {
+  const { jobId = '' } = useParams()
   const [isEditing, setIsEditing] = useState(false)
 
-  function onClose() {
-    setIsEditing(false)
-  }
+  const queryClient = useQueryClient()
 
-  const initialValues = { title, description }
+  const { mutate: updateInterview, isLoading: isUpdatingInterview } =
+    useMutation(updatePipelineStep, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interviews', jobId])
+        setIsEditing(false)
+      },
+    })
+
+  const { mutate: deleteInterview, isLoading: isDeletingInterview } =
+    useMutation(deletePipelineStep, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interviews', jobId])
+      },
+    })
+
+  function handleUpdateInterview(values: {
+    title: string
+    description?: string
+  }) {
+    updateInterview({ id, payload: { ...values } })
+  }
 
   return (
     <Show
       when={!isEditing}
       fallback={
-        <EditableStage initialValues={initialValues} onClose={onClose} />
+        <EditableStage
+          initialValues={{ title }}
+          onSave={handleUpdateInterview}
+          isUpdating={isUpdatingInterview}
+          onClose={() => setIsEditing(false)}
+        />
       }
     >
       <div className="flex items-center px-4 py-3 border rounded-md">
         <div className="w-4 h-4 mr-4" style={{ backgroundColor: color }} />
         <p className="mr-4 font-medium text-gray-700">{title}</p>
-        <p className="mr-4 text-gray-500 truncate">{description}</p>
 
         <div className="flex-1" />
 
@@ -40,7 +67,13 @@ export default function Stage({ title, description, color }: StageProps) {
             onClick={() => setIsEditing(true)}
           />
 
-          <Button danger type="text" icon={<DeleteOutlined />} />
+          <Button
+            danger
+            type="text"
+            icon={<DeleteOutlined />}
+            loading={isDeletingInterview}
+            onClick={() => deleteInterview({ id })}
+          />
         </div>
       </div>
     </Show>

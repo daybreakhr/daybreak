@@ -1,27 +1,32 @@
 import { Button, Form, Input } from 'antd'
 
+export type InterviewData = {
+  title: string
+}
+
 type EditableStageProps = {
-  initialValues?: any
+  isUpdating: boolean
+  initialValues?: InterviewData
   onClose: () => void
+  onSave: (values: InterviewData) => void
 }
 
 export default function EditableStage({
+  isUpdating,
   initialValues,
   onClose,
+  onSave,
 }: EditableStageProps) {
   return (
     <Form
       layout="inline"
+      onFinish={onSave}
       initialValues={initialValues}
       className="flex items-center px-4 py-3 border rounded"
     >
       <div className="w-4 h-4 mr-4" style={{ backgroundColor: 'red' }} />
       <Form.Item name="title" className="w-64">
-        <Input placeholder="Stage Name..." />
-      </Form.Item>
-
-      <Form.Item name="description" className="w-96">
-        <Input placeholder="Description.." />
+        <Input autoFocus placeholder="Stage Name..." />
       </Form.Item>
 
       <div className="flex-1" />
@@ -30,7 +35,7 @@ export default function EditableStage({
         Cancel
       </Button>
 
-      <Button type="primary" htmlType="submit">
+      <Button type="primary" htmlType="submit" loading={isUpdating}>
         Save
       </Button>
     </Form>
