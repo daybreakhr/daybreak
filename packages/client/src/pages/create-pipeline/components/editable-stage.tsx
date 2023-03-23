@@ -7,19 +7,22 @@ type EditableStageProps = {
   onClose: () => void
   onSave?: () => void
   jobId: string
+  order?: number
 }
 
 export default function EditableStage({
   initialValues,
   onClose,
   jobId,
+  order,
 }: EditableStageProps) {
   const [form] = Form.useForm()
   const queryClient = useQueryClient()
 
   const onSuccess = () => {
-    form.resetFields()
     queryClient.invalidateQueries(['interviews'])
+    form.resetFields()
+    onClose()
   }
   const onError = (error: any) => {
     const errMsg = error?.response?.data?.error
@@ -28,14 +31,14 @@ export default function EditableStage({
     }
   }
 
-  const { mutateAsync: create, isLoading: isLoadingCreate } = useMutation(
+  const { mutate: create, isLoading: isLoadingCreate } = useMutation(
     createInterview,
     {
       onSuccess,
       onError,
     },
   )
-  const { mutateAsync: update, isLoading: isLoadingUpdate } = useMutation(
+  const { mutate: update, isLoading: isLoadingUpdate } = useMutation(
     updateInterview,
     {
       onSuccess,
@@ -46,18 +49,15 @@ export default function EditableStage({
   const handleSubmit = () => {
     form.validateFields().then(async (values: any) => {
       if (initialValues?.id) {
-        await update({
+        update({
           title: values.title,
           jobId,
 
           id: initialValues.id,
         })
       } else {
-        await create({ title: values.title, jobId })
+        create({ title: values.title, jobId, order })
       }
-
-      form.resetFields()
-      onClose()
     })
   }
 

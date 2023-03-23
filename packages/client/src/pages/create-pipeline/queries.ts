@@ -9,14 +9,16 @@ export async function fetchInterviews(jobId: string) {
 export async function createInterview({
   title,
   jobId,
+  order,
 }: {
   title: string
   jobId: string
+  order?: number
 }) {
   const { data } = await client.post<Interview>('interviews', {
     title,
     jobId,
-    order: 1,
+    order,
   })
 
   return data

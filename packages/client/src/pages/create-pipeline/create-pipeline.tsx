@@ -9,33 +9,16 @@ import Stage from './components/stage'
 import EditableStage from './components/editable-stage'
 import { fetchInterviews } from './queries'
 
-type NewStage = {
-  id: string
-  title: string
-}
-
 export default function CreatePipeline() {
   const { jobId = '' } = useParams()
   const { pathname } = useLocation()
-  const [newStages, setNewStages] = useState<NewStage[]>([])
+  const [newStage, setNewStage] = useState(false)
   const titlePrefix = pathname.split('/')[3]
   const navigate = useNavigate()
 
   const { data: interviews, isLoading } = useQuery(['interviews', jobId], () =>
     fetchInterviews(jobId),
   )
-
-  const addNewStage = () => {
-    const id = new Date().toISOString()
-    const stage = { id, title: '' }
-    newStages.push(stage)
-    setNewStages([...newStages])
-  }
-
-  const onRemoveStage = (stageId: string) => {
-    const stages = newStages.filter(({ id }) => id !== stageId)
-    setNewStages([...stages])
-  }
 
   return (
     <div className="flex flex-col h-full">
@@ -71,21 +54,26 @@ export default function CreatePipeline() {
               jobId={jobId}
             />
           ))}
-          {newStages.map(({ id }) => (
+          <Show when={newStage}>
             <EditableStage
+              onClose={() => setNewStage(false)}
               jobId={jobId}
-              key={id}
-              onClose={() => onRemoveStage(id)}
+              order={(interviews || []).length + 1}
             />
-          ))}
+          </Show>
         </Show>
-        <Button type="link" icon={<PlusOutlined />} onClick={addNewStage}>
-          Add New Pipeline Stage
-        </Button>
+        <Show when={!newStage}>
+          <Button
+            type="link"
+            icon={<PlusOutlined />}
+            onClick={() => setNewStage(true)}
+          >
+            Add New Pipeline Stage
+          </Button>
+        </Show>
       </div>
 
       <div className="flex-1" />
-
       <div className="flex items-center justify-end space-x-4">
         <Link to={`/jobs/${jobId}/${titlePrefix}/1`}>
           <Button icon={<LeftOutlined />}>Back</Button>

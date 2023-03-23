@@ -1,7 +1,6 @@
 import { groupBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { CandidateStatus } from '@prisma/client'
 import StatusList from './components/status-list'
 import { fetchCandidatesByJob } from './queries'
@@ -13,7 +12,6 @@ export default function JobPipeline() {
     fetchCandidatesByJob(jobId),
   )
 
-  fetchInterviews
   const groupByStatus = groupBy(data ?? [], (candidate) => candidate.status)
 
   return (
