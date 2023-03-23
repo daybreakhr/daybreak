@@ -90,19 +90,22 @@ export class AffindaService {
   async matchResumeAgainstJobDescription(resumeId: string, jobId: string) {
     const url = `${this.affindaUrl}/resume_search/match?resume=${resumeId}&job_description=${jobId}`
 
-    const { data } = await firstValueFrom(
-      this.httpService
-        .get<ResumeSearchMatch>(url, {
-          headers: { Authorization: `Bearer ${this.affindaToken}` },
-        })
-        .pipe(
-          catchError((error) => {
-            this.logger.error(error.response.data)
-            throw error
-          }),
-        ),
-    )
-
-    return data
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService
+          .get<ResumeSearchMatch>(url, {
+            headers: { Authorization: `Bearer ${this.affindaToken}` },
+          })
+          .pipe(
+            catchError((error) => {
+              this.logger.error(error.response.data)
+              throw error
+            }),
+          ),
+      )
+      return data
+    } catch (e) {
+      this.logger.error('Error in matching resume against job description', e)
+    }
   }
 }

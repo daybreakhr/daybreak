@@ -21,6 +21,28 @@ export class CandidateService {
       where: { id },
       include: { Job: true },
     })
+    const {
+      affindaId,
+      matchScore,
+      Job: { affindaId: jobAffindaId },
+    } = candidate
+
+    if (affindaId && jobAffindaId && !matchScore) {
+      const data = await this.affindaService.matchResumeAgainstJobDescription(
+        affindaId,
+        jobAffindaId,
+      )
+      const score = data?.score
+      const updatedCandidate = await this.prismaService.candidate.update({
+        where: { id },
+        data: {
+          matchScore: score ? +(score * 100).toFixed(0) : undefined,
+        },
+        include: { Job: true },
+      })
+      return updatedCandidate
+    }
+
     return candidate
   }
 
@@ -89,7 +111,7 @@ export class CandidateService {
       where: { id },
       data: {
         resume: uploadResult.Location,
-        matchScore: +(matchScore * 100).toFixed(0),
+        matchScore: matchScore ? +(matchScore * 100).toFixed(0) : undefined,
       },
     })
 
