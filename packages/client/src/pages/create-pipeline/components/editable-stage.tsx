@@ -2,6 +2,7 @@ import { Button, Form, Input } from 'antd'
 
 export type InterviewData = {
   title: string
+  identifier: string
 }
 
 type EditableStageProps = {
@@ -24,6 +25,7 @@ export default function EditableStage({
       initialValues={initialValues}
       className="flex items-center px-4 py-3 border rounded"
     >
+      {/* @Todo: Add form field to select color */}
       <div className="w-4 h-4 mr-4" style={{ backgroundColor: 'red' }} />
       <Form.Item name="title" className="w-64">
         <Input autoFocus placeholder="Stage Name..." />

@@ -5,6 +5,8 @@ export type CreateInterviewDto = {
   title: string
   order: number
   jobId: string
+  identifier: string
+  description?: string
 }
 
 export async function fetchInterviews(jobId: string) {

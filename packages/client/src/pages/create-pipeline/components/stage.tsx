@@ -11,10 +11,10 @@ import { deletePipelineStep, updatePipelineStep } from '../queries'
 type StageProps = {
   id: string
   title: string
-  color: string
+  identifier: string
 }
 
-export default function Stage({ id, title, color }: StageProps) {
+export default function Stage({ id, title, identifier }: StageProps) {
   const { jobId = '' } = useParams()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -47,7 +47,7 @@ export default function Stage({ id, title, color }: StageProps) {
       when={!isEditing}
       fallback={
         <EditableStage
-          initialValues={{ title }}
+          initialValues={{ title, identifier }}
           onSave={handleUpdateInterview}
           isUpdating={isUpdatingInterview}
           onClose={() => setIsEditing(false)}
@@ -55,7 +55,7 @@ export default function Stage({ id, title, color }: StageProps) {
       }
     >
       <div className="flex items-center px-4 py-3 border rounded-md">
-        <div className="w-4 h-4 mr-4" style={{ backgroundColor: color }} />
+        <div className="w-4 h-4 mr-4" style={{ backgroundColor: identifier }} />
         <p className="mr-4 font-medium text-gray-700">{title}</p>
 
         <div className="flex-1" />

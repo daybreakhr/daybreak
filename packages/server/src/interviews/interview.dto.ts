@@ -4,6 +4,7 @@ export class CreateInterviewDto {
   title: string
   order: number
   jobId: string
+  identifier: string
 }
 
 export class InterviewDto extends CreateInterviewDto {

@@ -56,8 +56,8 @@ export default function CreatePipeline() {
           <Switch.Match when={data}>
             {(data) => (
               <>
-                {data.map(({ id, title }) => (
-                  <Stage id={id} key={id} title={title} color="red" />
+                {data.map((interview) => (
+                  <Stage key={interview.id} {...interview} />
                 ))}
 
                 <Show

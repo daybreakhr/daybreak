@@ -143,22 +143,6 @@ model Location {
   Job         Job[]
 }
 
-model Template {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description Json
-  category    Category
-}
-
-enum Category {
-  engineering
-  marketing
-  sales
-  it
-  hr
-  accounts
-}
-
 model Candidate {
   id               String          @id @default(auto()) @map("_id") @db.ObjectId
   firstName        String
@@ -224,16 +208,17 @@ model Feedback {
 
 // Details of interview round with candidate
 model Interview {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  order     Int
-  Member    Member      @relation(fields: [createdBy], references: [uid])
-  createdBy String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  Candidate Candidate[]
-  Job       Job         @relation(fields: [jobId], references: [id])
-  jobId     String      @db.ObjectId
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  order      Int
+  identifier String // color hex code
+  Member     Member      @relation(fields: [createdBy], references: [uid])
+  createdBy  String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  Candidate  Candidate[]
+  Job        Job         @relation(fields: [jobId], references: [id])
+  jobId      String      @db.ObjectId
 }
 
 model Calendar {
