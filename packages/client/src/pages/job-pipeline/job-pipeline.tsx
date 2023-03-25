@@ -1,47 +1,71 @@
 import { groupBy } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { CandidateStatus } from '@prisma/client'
+import { useQueries } from '@tanstack/react-query'
+
+import { fetchInterviews } from 'pages/create-pipeline/queries'
+
 import StatusList from './components/status-list'
 import { fetchCandidatesByJob } from './queries'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
 
-  const { data, isLoading } = useQuery(['candidates', jobId], () =>
-    fetchCandidatesByJob(jobId),
+  const [
+    { data: candidates = [], isLoading: isCandidatesLoading },
+    { data: interviews = [], isLoading: isInterviewsLoading },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ['candidates', jobId],
+        queryFn: () => fetchCandidatesByJob(jobId),
+      },
+      {
+        queryKey: ['interviews', jobId],
+        queryFn: () => fetchInterviews(jobId),
+      },
+    ],
+  })
+
+  const groupByStatus = groupBy(candidates, (candidate) => candidate.status)
+
+  const groupByInterview = groupBy(
+    candidates,
+    (candidate) => candidate.interviewId,
   )
-  const groupByStatus = groupBy(data ?? [], (candidate) => candidate.status)
 
   return (
-    <div className="flex flex-1 gap-6 p-8 overflow-x-auto">
+    <div className="flex flex-1 gap-3 px-6 pt-4 overflow-x-auto">
       <StatusList
         title="Applied"
-        isLoading={isLoading}
+        isLoading={isCandidatesLoading}
         className="border-t-amber-500"
         candidates={groupByStatus[CandidateStatus.applied]}
       />
-      <StatusList
-        title="Interviewing"
-        isLoading={isLoading}
-        className="border-t-lime-500"
-        candidates={groupByStatus[CandidateStatus.interview]}
-      />
+      {interviews.map(({ id, title }) => (
+        <StatusList
+          key={id}
+          title={title}
+          isLoading={isInterviewsLoading}
+          className="border-t-lime-500"
+          candidates={groupByInterview[id]}
+        />
+      ))}
       <StatusList
         title="Offer Extended"
-        isLoading={isLoading}
+        isLoading={isCandidatesLoading}
         className="border-t-indigo-500"
         candidates={groupByStatus[CandidateStatus.offered]}
       />
       <StatusList
         title="Accepted"
-        isLoading={isLoading}
+        isLoading={isCandidatesLoading}
         className="border-t-green-500"
         candidates={groupByStatus[CandidateStatus.accepted]}
       />
       <StatusList
         title="Rejected"
-        isLoading={isLoading}
+        isLoading={isCandidatesLoading}
         className="border-t-red-500"
         candidates={groupByStatus[CandidateStatus.rejected]}
       />
