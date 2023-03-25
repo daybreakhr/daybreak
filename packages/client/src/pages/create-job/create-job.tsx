@@ -20,6 +20,8 @@ import {
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
 import { RemirrorEditor } from 'ui-kit'
+
+import { Member } from 'types/member'
 import { fetchJob } from 'pages/job/queries'
 import { fetchMembers } from 'pages/members/queries'
 import { fetchDepartments, fetchLocations, updateJobById } from './queries'
@@ -31,6 +33,7 @@ import {
   jobPriority,
 } from './constants/create-job-values'
 import GenerateDescription from './components/generate-description'
+import DepartmentSelect from './components/department-select'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -140,7 +143,9 @@ export default function JobForm() {
             showSearch
             options={membersList}
             filterOption={(input, option) => {
-              const member = members?.find(({ uid }) => uid === option?.value)
+              const member: Member | undefined = members?.find(
+                ({ uid }) => uid === option?.value,
+              )
               if (member) {
                 return !!member.displayName
                   ?.toLowerCase()
@@ -165,9 +170,9 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please select department' }]}
         >
-          <Select
-            placeholder="Select Department..."
-            options={departments?.map(({ name, id }) => {
+          <DepartmentSelect
+            form={form}
+            initialOptions={departments?.map(({ name, id }) => {
               return { label: name, value: id }
             })}
           />

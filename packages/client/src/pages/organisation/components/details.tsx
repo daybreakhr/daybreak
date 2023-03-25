@@ -86,8 +86,8 @@ export default function OrgDetails() {
 
         <Switch.Match when={data}>
           {({ logo, name, slug, description }) => (
-            <div className="space-y-4">
-              <img width={80} src={logo ?? ''} className="mx-4" />
+            <>
+              <img width={80} src={logo ?? ''} className="mx-4 mb-4" />
 
               <div className="grid grid-cols-12 p-4 bg-gray-50">
                 <p className="col-span-2 text-gray-500">Company Name</p>
@@ -103,7 +103,7 @@ export default function OrgDetails() {
                 <p className="col-span-2 text-gray-500">Company Description</p>
                 <p className="col-span-10">{description}</p>
               </div>
-            </div>
+            </>
           )}
         </Switch.Match>
       </Switch>

@@ -42,8 +42,10 @@ export default function Organisation() {
         ]}
       />
       <OrgDetails />
-      <Departments />
-      <Locations />
+      <div className="grid grid-cols-2 gap-4 px-8 pb-8">
+        <Departments />
+        <Locations />
+      </div>
     </>
   )
 }
