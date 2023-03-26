@@ -55,6 +55,15 @@ export class CandidateService {
     return calendarEvents
   }
 
+  async getEmailsForCandidate(candidateId: string) {
+    const emailEvents = await this.prismaService.email.findMany({
+      where: { candidateId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return emailEvents
+  }
+
   async create(
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,

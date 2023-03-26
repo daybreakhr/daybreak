@@ -26,6 +26,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
 import { CalendarDto } from 'src/calendar/calendar.dto'
+import { EmailDto } from 'src/email/email.dto'
 import {
   CandidateDto,
   CreateCandidateDto,
@@ -70,6 +71,23 @@ export class CandidateController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getCalendarEventsForCandidate(@Param('id') id: string) {
     const data = await this.candidateService.getCalendarEventsForCandidate(id)
+    return data
+  }
+
+  @Get(':id/emails')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    operationId: 'GetEmailsForCandidate',
+    summary: 'Get all emails for a candidate',
+  })
+  @ApiOkResponse({
+    description: 'Emails were returned successfully',
+    type: [EmailDto],
+  })
+  @ApiNotFoundResponse({ description: 'Candidate not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getEmailsForCandidate(@Param('id') id: string) {
+    const data = await this.candidateService.getEmailsForCandidate(id)
     return data
   }
 

@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  Get,
   HttpException,
   HttpStatus,
-  Param,
   Post,
   Req,
   UseGuards,
@@ -13,7 +11,6 @@ import {
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
@@ -29,23 +26,11 @@ import { EmailService } from './email.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Email')
-@Controller('candidates/:candidateId/emails')
+@Controller('emails')
 @UseGuards(AuthGuard)
 @UseInterceptors(RefreshTokenInterceptor)
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
-
-  @Get('')
-  @ApiOperation({ summary: 'Get all Emails for a candidate' })
-  @ApiOkResponse({
-    description: 'Emails were returned successfully',
-    type: [EmailDto],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('candidateId') candidateId: string) {
-    const data = await this.emailService.getAll(candidateId)
-    return data
-  }
 
   @Post('')
   @ApiOperation({ summary: 'Create an email event' })
@@ -57,7 +42,6 @@ export class EmailController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createEmail(
     @Req() req: Request,
-    @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,
     @Body() emailBody: CreateEmailDto,
   ) {
@@ -66,7 +50,6 @@ export class EmailController {
     if (accessToken) {
       const data = await this.emailService.createEmailEvent(
         accessToken,
-        candidateId,
         user,
         emailBody,
       )

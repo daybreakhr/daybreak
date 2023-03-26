@@ -25,15 +25,13 @@ export async function fetchEmailEvents(candidateId: string) {
 }
 
 export async function createEmailEvent({
-  candidateId,
+  subject,
   body,
-}: {
-  candidateId: string
-  body: Partial<Email>
-}) {
+  candidateId,
+}: Partial<Email>) {
   const { data } = await client.post<Email>(
-    `candidates/${candidateId}/emails`,
-    body,
+    'emails',
+    { subject, body, candidateId },
     { withCredentials: true },
   )
   return data

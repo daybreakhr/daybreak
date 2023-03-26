@@ -64,10 +64,11 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
   })
 
   function handleOk() {
-    form.validateFields().then((values: any) => {
+    form.validateFields().then(({ subject }: { subject: string }) => {
       mutate({
+        subject,
         candidateId,
-        body: { ...values, body: prosemirrorNodeToHtml(state.doc) },
+        body: prosemirrorNodeToHtml(state.doc),
       })
     })
   }

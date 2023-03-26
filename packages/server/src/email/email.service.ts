@@ -11,24 +11,15 @@ export class EmailService {
     private gmailService: GmailService,
   ) {}
 
-  async getAll(candidateId: string) {
-    const emailEvents = await this.prismaService.email.findMany({
-      where: { candidateId },
-      orderBy: { createdAt: 'desc' },
-    })
-
-    return emailEvents
-  }
-
   async createEmailEvent(
     accessToken: string,
-    candidateId: string,
+
     user: UserRecord,
     emailBody: CreateEmailDto,
   ) {
-    const { body, subject } = emailBody
+    const { body, subject, candidateId } = emailBody
 
-    const receiverDetails = await this.prismaService.candidate.findFirst({
+    const receiverDetails = await this.prismaService.candidate.findUnique({
       where: { id: candidateId },
     })
 

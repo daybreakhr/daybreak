@@ -15,20 +15,11 @@ export class CreateEmailDto {
   })
   @IsString()
   body: string
+
+  candidateId: string
 }
 
 export class EmailDto extends CreateEmailDto {
-  @ApiProperty({
-    example: '632af2f17685417736bc0606',
-    description: 'id from our database',
-  })
   id: string
-
-  @ApiProperty({
-    example:
-      'NjVnamFwMzFjZ3NqMmJiMjYxaW02YjlrYzhxbTZiOW9jY282YWI5aWNoaGphb2hpY2hnajRjOXBjNF8yMDIzMDEyNVQxNjMwMDBaIGhpbS5uYWdyYXRoQG0',
-    description: 'Message ID from gmail',
-  })
-  @IsString()
   messageId: string
 }
