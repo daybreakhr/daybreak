@@ -72,7 +72,7 @@ model Job {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   title         String?
   priority      Priority    @default(medium)
-  affindaId     String?     @unique
+  affindaId     String?
   jdPdfUrl      String?
   Department    Department? @relation(fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   departmentId  String?     @db.ObjectId

@@ -98,13 +98,12 @@ export class CandidateService {
     let matchScore: number
 
     if (affindaId && Job.affindaId) {
-      const { score } =
-        await this.affindaService.matchResumeAgainstJobDescription(
-          affindaId,
-          Job.affindaId,
-        )
+      const data = await this.affindaService.matchResumeAgainstJobDescription(
+        affindaId,
+        Job.affindaId,
+      )
 
-      matchScore = score
+      matchScore = data?.score
     }
 
     const candidate = await this.prismaService.candidate.update({
