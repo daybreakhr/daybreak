@@ -19,7 +19,7 @@ export class CandidateService {
   async getById(id: string) {
     const candidate = await this.prismaService.candidate.findUnique({
       where: { id },
-      include: { Job: true },
+      include: { Job: { include: { Interview: true } } },
     })
     const {
       affindaId,
@@ -38,7 +38,7 @@ export class CandidateService {
         data: {
           matchScore: score ? +(score * 100).toFixed(0) : undefined,
         },
-        include: { Job: true },
+        include: { Job: { include: { Interview: true } } },
       })
       return updatedCandidate
     }
