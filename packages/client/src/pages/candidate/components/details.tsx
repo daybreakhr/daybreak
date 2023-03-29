@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
 import { useClipboard } from 'use-clipboard-copy'
@@ -11,8 +11,8 @@ import {
   AiOutlinePhone,
   AiOutlineUser,
 } from 'react-icons/ai'
-import { Candidate } from 'types/candidate'
 import { Show } from 'ui-kit'
+import { Candidate } from 'types/candidate'
 import { candidateStatusOptions, getJobType } from 'utils/utils'
 import { updateCandidate } from '../queries'
 import CandidateRejectForm from './candidate-reject-form'
@@ -47,6 +47,30 @@ export default function Details({ data }: DetailsProps) {
   const { copy: copyPhone, copied: isPhoneCopied } = useClipboard({
     copiedTimeout: 3000,
   })
+
+  const options = useMemo(() => {
+    return [
+      candidateStatusOptions[0],
+      ...(data?.Job.Interview.map(({ id, title }) => {
+        return { label: title, value: id }
+      }) ?? []),
+      ...candidateStatusOptions.slice(2),
+    ]
+  }, [data])
+
+  function handleStatusChange(value: string) {
+    if (CandidateStatus[value as keyof typeof CandidateStatus]) {
+      mutate({
+        candidateId,
+        body: { status: value as CandidateStatus, interviewId: null },
+      })
+    } else {
+      mutate({
+        candidateId,
+        body: { status: CandidateStatus.interview, interviewId: value },
+      })
+    }
+  }
 
   return (
     <div className="flex flex-col items-center flex-none py-6 bg-white rounded-md shadow-md w-80 h-fit">
@@ -133,12 +157,10 @@ export default function Details({ data }: DetailsProps) {
           />
 
           <Select
-            value={data?.status}
-            style={{ width: 120 }}
-            options={candidateStatusOptions}
-            onChange={(val) =>
-              mutate({ candidateId, body: { status: CandidateStatus[val] } })
-            }
+            options={options}
+            value={data?.interviewId || data?.status}
+            style={{ width: 180 }}
+            onChange={handleStatusChange}
           />
         </div>
       </Show>
