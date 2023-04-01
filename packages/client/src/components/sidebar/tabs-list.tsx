@@ -1,5 +1,6 @@
 import {
   AiOutlineHome,
+  AiOutlineFire,
   AiOutlineSetting,
   AiOutlineTeam,
   AiOutlineWallet,
@@ -17,6 +18,11 @@ const tabs = [
     key: 'candidates',
     label: <Link to="/candidates">Candidates</Link>,
     icon: <AiOutlineTeam />,
+  },
+  {
+    key: 'referrals',
+    label: <Link to="/referrals/jobList">Referrals</Link>,
+    icon: <AiOutlineFire />,
   },
   {
     key: 'settings',

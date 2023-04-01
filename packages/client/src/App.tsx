@@ -35,6 +35,7 @@ import PrivacyPolicy from 'pages/privacy-policy'
 import CreateProspect from 'pages/create-prospect'
 import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
+import Referrals from 'pages/referrals'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -103,6 +104,7 @@ export default function App() {
                     path="settings"
                     element={<Navigate to="members" replace />}
                   />
+                  <Route path="referrals/jobList" element={<Referrals />} />
                   <Route
                     path="settings/organisation"
                     element={<Organisation />}
