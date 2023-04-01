@@ -14,7 +14,9 @@ export async function fetchDepartments() {
 
 export async function fetchLocations() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<Location[]>(`${workspaceId}/location`)
+  const { data } = await client.get<Location[]>(
+    `workspaces/${workspaceId}/locations`,
+  )
   return data
 }
 

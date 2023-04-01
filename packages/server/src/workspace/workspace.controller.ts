@@ -33,6 +33,7 @@ import { UserRecord } from 'firebase-admin/auth'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { CandidateDto } from 'src/candidate/candidate.dto'
 import { DepartmentDto } from 'src/department/department.dto'
+import { LocationDto } from 'src/location/location.dto'
 
 import { WorkspaceService } from './workspace.service'
 import { CreateWorkspaceDto } from './workspace.dto'
@@ -58,23 +59,6 @@ export class WorkspaceController {
     @Query('id') id?: string,
   ) {
     const data = await this.workspaceService.getBySlugOrId(slug, id)
-    return data
-  }
-
-  @Get(':workspaceId/jobs')
-  @UseGuards(AuthGuard)
-  @ApiSecurity('access-key')
-  @ApiOperation({
-    operationId: 'GetJobsForWorkspace',
-    summary: 'Get all jobs for a workspace',
-  })
-  @ApiOkResponse({
-    description: 'Fetched jobs successfully',
-    type: [JobDto],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getJobsForWorkspace(@Param('workspaceId') workspaceId: string) {
-    const data = await this.workspaceService.getJobsForWorkspace(workspaceId)
     return data
   }
 
@@ -111,6 +95,42 @@ export class WorkspaceController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getDepartmentsForWorkspace(@Param('workspaceId') workspaceId: string) {
     const data = await this.workspaceService.getDepartmentsForWorkspace(
+      workspaceId,
+    )
+    return data
+  }
+
+  @Get(':workspaceId/jobs')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetJobsForWorkspace',
+    summary: 'Get all jobs for a workspace',
+  })
+  @ApiOkResponse({
+    description: 'Fetched jobs successfully',
+    type: [JobDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getJobsForWorkspace(@Param('workspaceId') workspaceId: string) {
+    const data = await this.workspaceService.getJobsForWorkspace(workspaceId)
+    return data
+  }
+
+  @Get(':workspaceId/locations')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetLocationsForWorkspace',
+    summary: 'Get all locations for a workspace',
+  })
+  @ApiOkResponse({
+    description: 'Fetched locations successfully',
+    type: [LocationDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getLocationsForWorkspace(@Param('workspaceId') workspaceId: string) {
+    const data = await this.workspaceService.getLocationsForWorkspace(
       workspaceId,
     )
     return data

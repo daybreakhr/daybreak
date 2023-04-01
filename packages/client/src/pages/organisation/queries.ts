@@ -49,8 +49,9 @@ export async function deleteDepartment({ id }: { id: string }) {
 
 export async function addLocation({ name }: { name: string }) {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.post<Location>(`${workspaceId}/location`, {
+  const { data } = await client.post<Location>('locations', {
     name,
+    workspaceId,
   })
   return data
 }
@@ -62,18 +63,11 @@ export async function updateLocation({
   id: string
   name: string
 }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.patch<Location>(
-    `${workspaceId}/location/${id}`,
-    { name },
-  )
+  const { data } = await client.patch<Location>(`locations/${id}`, { name })
   return data
 }
 
 export async function deleteLocation({ id }: { id: string }) {
-  const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.delete<Location>(
-    `${workspaceId}/location/${id}`,
-  )
+  const { data } = await client.delete<Location>(`locations/${id}`)
   return data
 }

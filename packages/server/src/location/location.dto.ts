@@ -1,21 +1,15 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
 
-export class Location {
-  @ApiProperty({
-    example: 'Hyderabad',
-    description: 'Name of the location',
-    required: true,
-  })
+export class CreateLocationDto {
   name: string
-
-  @ApiProperty({
-    example: '9a3382e7332fac263632',
-    description: 'id of workspace',
-    required: true,
-  })
   workspaceId: string
 }
 
-export class CreateLocation extends Location {}
+export class LocationDto extends CreateLocationDto {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  createdBy: string
+}
 
-export class UpdateLocation extends PartialType(Location) {}
+export class UpdateLocationDto extends PartialType(LocationDto) {}

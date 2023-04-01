@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Patch,
   Post,
@@ -24,44 +23,31 @@ import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { GetUser } from 'src/auth/get-user.decorator'
 import { Roles } from 'src/auth/roles.decorator'
-import { CreateLocation, Location, UpdateLocation } from './location.dto'
+import {
+  CreateLocationDto,
+  LocationDto,
+  UpdateLocationDto,
+} from './location.dto'
 import { LocationService } from './location.service'
 
 @ApiSecurity('access-key')
 @ApiTags('Location')
-@Controller(':workspaceId/location')
+@Controller('locations')
 @UseGuards(AuthGuard)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
-  @Get('')
-  @ApiOperation({ summary: 'Get all Locations for a workspace' })
-  @ApiOkResponse({
-    description: 'Locations were returned successfully',
-    type: [Location],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('workspaceId') workspaceId: string): Promise<Location[]> {
-    const data = await this.locationService.getAll(workspaceId)
-    return data
-  }
-
   @Post('')
   @Roles(Role.admin)
   @ApiOperation({ summary: 'Create a Location' })
-  @ApiCreatedResponse({ description: 'Created Succesfully', type: Location })
+  @ApiCreatedResponse({ description: 'Created Succesfully', type: LocationDto })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async create(
-    @Param('workspaceId') workspaceId: string,
-    @Body() createLocationDto: CreateLocation,
+    @Body() createLocationDto: CreateLocationDto,
     @GetUser() user: UserRecord,
-  ): Promise<Location> {
-    const data = await this.locationService.create(
-      workspaceId,
-      createLocationDto,
-      user.uid,
-    )
+  ) {
+    const data = await this.locationService.create(createLocationDto, user.uid)
     return data
   }
 
@@ -70,15 +56,15 @@ export class LocationController {
   @ApiOperation({ summary: 'Update location' })
   @ApiOkResponse({
     description: 'location updated successfully',
-    type: Location,
+    type: LocationDto,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Location not found' })
-  @ApiBody({ type: UpdateLocation })
+  @ApiBody({ type: UpdateLocationDto })
   async update(
     @Param('id') locationId: string,
-    @Body() updateLocationDto: UpdateLocation,
-  ): Promise<Location> {
+    @Body() updateLocationDto: UpdateLocationDto,
+  ) {
     const data = await this.locationService.update(
       locationId,
       updateLocationDto,
@@ -92,7 +78,7 @@ export class LocationController {
   @ApiOkResponse({ description: 'location deleted successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'location not found' })
-  async delete(@Param('id') locationId: string): Promise<Location> {
+  async delete(@Param('id') locationId: string) {
     const data = await this.locationService.delete(locationId)
     return data
   }

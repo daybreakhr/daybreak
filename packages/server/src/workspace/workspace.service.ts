@@ -47,14 +47,6 @@ export class WorkspaceService {
     return workspace
   }
 
-  async getJobsForWorkspace(workspaceId: string) {
-    const jobs = await this.prismaService.job.findMany({
-      where: { workspaceId },
-      include: { Location: true, Department: true },
-    })
-    return jobs
-  }
-
   async getCandidatesForWorkspace(workspaceId: string) {
     const candidates = await this.prismaService.candidate.findMany({
       where: { workspaceId },
@@ -68,6 +60,21 @@ export class WorkspaceService {
       where: { workspaceId },
     })
     return departments
+  }
+
+  async getJobsForWorkspace(workspaceId: string) {
+    const jobs = await this.prismaService.job.findMany({
+      where: { workspaceId },
+      include: { Location: true, Department: true },
+    })
+    return jobs
+  }
+
+  async getLocationsForWorkspace(workspaceId: string) {
+    const locations = await this.prismaService.location.findMany({
+      where: { workspaceId },
+    })
+    return locations
   }
 
   async verifySlug(slug: string) {
