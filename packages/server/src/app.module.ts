@@ -22,6 +22,7 @@ import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 import { EmailModule } from './email/email.module'
 import { InterviewModule } from './interviews/interview.module'
+import { SlackModule } from './slack/slack.module'
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { InterviewModule } from './interviews/interview.module'
     MembersModule,
     NotificationModule,
     ProspectModule,
+    SlackModule,
     WorkspaceModule,
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
