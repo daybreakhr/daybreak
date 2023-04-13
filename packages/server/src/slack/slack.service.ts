@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { stringify } from 'qs'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 
 const view = (user: string) => {
   const blocks = [
@@ -123,6 +123,8 @@ const view = (user: string) => {
 
 @Injectable()
 export class SlackService {
+  private logger = new Logger('SLACK')
+
   verifyUrl(body: any) {
     return body.challenge
   }
@@ -137,7 +139,11 @@ export class SlackService {
         view: view(body.event.user),
       }
 
-      await axios.post('https://slack.com/api/views.publish', stringify(args))
+      const { data } = await axios.post(
+        'https://slack.com/api/views.publish',
+        stringify(args),
+      )
+      this.logger.log(data)
     }
   }
 }
