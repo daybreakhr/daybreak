@@ -14,4 +14,9 @@ export class SlackController {
         return this.slackService.handleEvent(body)
     }
   }
+
+  @Post('actions')
+  async slackActions(@Body() body: any) {
+    return this.slackService.handleAction(body)
+  }
 }
