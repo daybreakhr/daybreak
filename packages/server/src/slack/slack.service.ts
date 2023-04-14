@@ -1,12 +1,18 @@
 import axios from 'axios'
 import { stringify } from 'qs'
 import { Injectable, Logger } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
 import { SlackViews } from './slack.views'
+
+const WORKSPACE_ID = '6317158147089f094cd4598e'
 
 @Injectable()
 export class SlackService {
   private logger = new Logger('SLACK')
-  constructor(private slackViews: SlackViews) {}
+  constructor(
+    private prismaService: PrismaService,
+    private slackViews: SlackViews,
+  ) {}
 
   verifyUrl(body: any) {
     return body.challenge
@@ -16,10 +22,17 @@ export class SlackService {
     const { type } = body.event
 
     if (type === 'app_home_opened') {
+      const jobs = await this.prismaService.job.findMany({
+        where: {
+          workspaceId: WORKSPACE_ID,
+          isPublished: true,
+        },
+      })
+
       const args = {
         user_id: body.event.user,
         token: process.env.SLACK_BOT_TOKEN,
-        view: this.slackViews.homeView(body.event.user),
+        view: this.slackViews.homeView(body.event.user, jobs),
       }
 
       const { data } = await axios.post(

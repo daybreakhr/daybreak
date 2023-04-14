@@ -1,8 +1,26 @@
 import { Injectable } from '@nestjs/common'
+import { Job } from '@prisma/client'
 
 @Injectable()
 export class SlackViews {
-  homeView(user: string) {
+  homeView(user: string, jobs: Job[]) {
+    const jobsList = jobs.map(({ title }) => ({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `*${title}*`,
+      },
+      accessory: {
+        type: 'button',
+        action_id: 'button_click',
+        text: {
+          type: 'plain_text',
+          text: 'Refer',
+          emoji: true,
+        },
+      },
+    }))
+
     const blocks = [
       {
         type: 'section',
@@ -54,60 +72,7 @@ export class SlackViews {
           },
         ],
       },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*Software Engineer Backend*\n\n Opened on: 3rd April, 2023 | Recruiter: Sangam Sharma',
-        },
-        accessory: {
-          type: 'button',
-          action_id: 'button_click',
-          text: {
-            type: 'plain_text',
-            text: 'Refer',
-            emoji: true,
-          },
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*Senior Software Engineer - Fullstack*\n\n Opened on: 3rd April, 2023 | Recruiter: Sangam Sharma',
-        },
-        accessory: {
-          type: 'button',
-          action_id: 'button_click',
-          text: {
-            type: 'plain_text',
-            text: 'Refer',
-            emoji: true,
-          },
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*Tech Lead Manager*\n\n Opened on: 3rd April, 2023 | Recruiter: Divyanka Jaiswal',
-        },
-        accessory: {
-          type: 'button',
-          action_id: 'button_click',
-          text: {
-            type: 'plain_text',
-            text: 'Refer',
-            emoji: true,
-          },
-        },
-      },
+      ...jobsList,
     ]
 
     return JSON.stringify({
