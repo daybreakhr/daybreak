@@ -27,6 +27,9 @@ export class SlackService {
           workspaceId: WORKSPACE_ID,
           isPublished: true,
         },
+        include: {
+          Workspace: true,
+        },
       })
 
       const args = {

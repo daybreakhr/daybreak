@@ -1,25 +1,37 @@
 import { Injectable } from '@nestjs/common'
-import { Job } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
+import { Job, Workspace } from '@prisma/client'
 
 @Injectable()
 export class SlackViews {
-  homeView(user: string, jobs: Job[]) {
-    const jobsList = jobs.map(({ title }) => ({
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*${title}*`,
-      },
-      accessory: {
-        type: 'button',
-        action_id: 'button_click',
-        text: {
-          type: 'plain_text',
-          text: 'Refer',
-          emoji: true,
+  constructor(private configService: ConfigService) {}
+
+  homeView(user: string, jobs: (Job & { Workspace: Workspace })[]) {
+    const jobsList = jobs
+      .map(({ title, id, Workspace }) => [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `*${title}*\n <${this.configService.get('BOARDS_URL')}/${
+              Workspace.slug
+            }/jobs/${id}|View Details>`,
+          },
+          accessory: {
+            type: 'button',
+            action_id: 'button_click',
+            text: {
+              type: 'plain_text',
+              text: 'Refer',
+              emoji: true,
+            },
+          },
         },
-      },
-    }))
+        {
+          type: 'divider',
+        },
+      ])
+      .flat()
 
     const blocks = [
       {
