@@ -19,7 +19,7 @@ export class SlackViews {
           },
           accessory: {
             type: 'button',
-            action_id: 'button_click',
+            action_id: `refer_${id}`,
             text: {
               type: 'plain_text',
               text: 'Refer',
@@ -98,9 +98,9 @@ export class SlackViews {
     })
   }
 
-  referModal(user: string) {
+  referModal(user: string, jobId: string) {
     return {
-      callback_id: 'modal_view',
+      callback_id: jobId,
       title: {
         type: 'plain_text',
         text: 'Refer Someone!',
@@ -130,9 +130,10 @@ export class SlackViews {
         },
         {
           type: 'input',
+          block_id: 'referalName',
           element: {
+            action_id: 'fullName',
             type: 'plain_text_input',
-            action_id: 'plain_text_input-action',
           },
           label: {
             type: 'plain_text',
@@ -142,9 +143,10 @@ export class SlackViews {
         },
         {
           type: 'input',
+          block_id: 'referalEmail',
           element: {
+            action_id: 'email',
             type: 'email_text_input',
-            action_id: 'email_text_input-action',
           },
           label: {
             type: 'plain_text',
@@ -154,10 +156,11 @@ export class SlackViews {
         },
         {
           type: 'input',
+          block_id: 'referalPhone',
           element: {
             type: 'number_input',
             is_decimal_allowed: false,
-            action_id: 'number_input-action',
+            action_id: 'phoneNumber',
           },
           label: {
             type: 'plain_text',
@@ -167,9 +170,10 @@ export class SlackViews {
         },
         {
           type: 'input',
+          block_id: 'referalLinkedIn',
           element: {
             type: 'url_text_input',
-            action_id: 'url_text_input-action',
+            action_id: 'linkedInUrl',
           },
           label: {
             type: 'plain_text',
