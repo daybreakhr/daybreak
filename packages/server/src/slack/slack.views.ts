@@ -122,7 +122,7 @@ export class SlackViews {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `:wave: Hi <@${user}>, \n\n Fill out the following form fields below to refer someone you know from your network.`,
+            text: `Hi <@${user}>, \n\n Fill out the following details of the candidate you want to refer.`,
           },
         },
         {
@@ -130,14 +130,27 @@ export class SlackViews {
         },
         {
           type: 'input',
-          block_id: 'referalName',
+          block_id: 'referalFirstName',
           element: {
-            action_id: 'fullName',
+            action_id: 'firstName',
             type: 'plain_text_input',
           },
           label: {
             type: 'plain_text',
-            text: 'Full Name',
+            text: 'First Name',
+            emoji: true,
+          },
+        },
+        {
+          type: 'input',
+          block_id: 'referalLastName',
+          element: {
+            action_id: 'lastName',
+            type: 'plain_text_input',
+          },
+          label: {
+            type: 'plain_text',
+            text: 'Last Name',
             emoji: true,
           },
         },
@@ -160,7 +173,7 @@ export class SlackViews {
           element: {
             type: 'number_input',
             is_decimal_allowed: false,
-            action_id: 'phoneNumber',
+            action_id: 'phone',
           },
           label: {
             type: 'plain_text',

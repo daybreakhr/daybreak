@@ -2,6 +2,7 @@ import axios from 'axios'
 import { stringify } from 'qs'
 import { Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
+import { ReferralService } from 'src/referral/referral.service'
 import { SlackViews } from './slack.views'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
@@ -11,6 +12,7 @@ export class SlackService {
   private logger = new Logger('SLACK')
   constructor(
     private prismaService: PrismaService,
+    private referralService: ReferralService,
     private slackViews: SlackViews,
   ) {}
 
@@ -54,18 +56,29 @@ export class SlackService {
     } else if (type === 'view_submission') {
       const { view } = JSON.parse(body.payload)
       const jobId = view.callback_id
-      const name = view.state.values.referalName.fullName.value
-      // const email = view.state.values.referalEmail.email.value
-      // const phoneNumber = view.state.values.referalPhone.phoneNumber.value
-      // const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
+      const firstName = view.state.values.referalFirstName.firstName.value
+      const lastName = view.state.values.referalLastName.lastName.value
+      const email = view.state.values.referalEmail.email.value
+      const phone = view.state.values.referalPhone.phone.value
+      const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
 
       const { title } = await this.prismaService.job.findUnique({
         where: { id: jobId },
       })
 
+      await this.referralService.createReferral({
+        firstName,
+        lastName,
+        email,
+        phone,
+        linkedInUrl,
+        jobId,
+        slackUserId: user.id,
+      })
+
       await this.sendMessage(
         user.id,
-        `You have referred *${name}* for the job *${title}*`,
+        `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
       )
     }
   }

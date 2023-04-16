@@ -99,6 +99,7 @@ model Job {
   Candidate     Candidate[]
   Prospects     Prospect[]  @relation(fields: [prospectIds], references: [id])
   prospectIds   String[]    @db.ObjectId
+  Referral      Referral[]
 }
 
 enum Priority {
@@ -117,6 +118,20 @@ enum JobType {
 enum Currency {
   inr
   usd
+}
+
+// Intermediate step to create Referral
+model Referral {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  lastName    String
+  email       String
+  phone       String
+  linkedInUrl String
+  createdAt   DateTime @default(now())
+  Job         Job      @relation(fields: [jobId], references: [id])
+  jobId       String   @db.ObjectId
+  slackUserId String?
 }
 
 model Department {
