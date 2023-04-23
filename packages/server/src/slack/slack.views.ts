@@ -197,4 +197,29 @@ export class SlackViews {
       ],
     }
   }
+
+  emptyResumeModal() {
+    return {
+      type: 'modal',
+      title: {
+        type: 'plain_text',
+        text: 'Add Resume',
+        emoji: true,
+      },
+      close: {
+        type: 'plain_text',
+        text: 'Close',
+        emoji: true,
+      },
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: ":rotating_light:  This message doesn't have any files that can be added as resume. Send message to <@daybreak_hire> with your referral's resume and use Add resume message action again.",
+          },
+        },
+      ],
+    }
+  }
 }

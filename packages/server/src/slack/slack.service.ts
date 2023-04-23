@@ -35,24 +35,10 @@ export class SlackService {
   }
 
   async handleAction(body: any) {
-    const { actions, trigger_id, user, type } = JSON.parse(body.payload)
+    const { actions, user, type, callback_id } = JSON.parse(body.payload)
 
     if (actions && actions[0].action_id.match(/refer_/)) {
-      const jobId = actions[0].action_id.split('_')[1]
-      const modal = this.slackViews.referModal(user.id, jobId)
-
-      const args = {
-        token: process.env.SLACK_BOT_TOKEN,
-        trigger_id,
-        view: JSON.stringify(modal),
-      }
-
-      const { data } = await axios.post(
-        'https://slack.com/api/views.open',
-        stringify(args),
-      )
-
-      this.logger.log(data, 'Refer Modal')
+      await this.handleReferralModal(JSON.parse(body.payload))
     } else if (type === 'view_submission') {
       const { view } = JSON.parse(body.payload)
       const jobId = view.callback_id
@@ -80,6 +66,43 @@ export class SlackService {
         user.id,
         `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
       )
+    } else if (callback_id === 'tag_resume') {
+      this.handleResumeUpload(JSON.parse(body.payload))
+    }
+  }
+
+  async handleReferralModal(payload: any) {
+    const { actions, trigger_id, user } = payload
+    const jobId = actions[0].action_id.split('_')[1]
+    const modal = this.slackViews.referModal(user.id, jobId)
+
+    const args = {
+      token: process.env.SLACK_BOT_TOKEN,
+      trigger_id,
+      view: JSON.stringify(modal),
+    }
+
+    await axios.post('https://slack.com/api/views.open', stringify(args))
+
+    this.logger.log('Open Refer Modal')
+  }
+
+  async handleResumeUpload(payload: any) {
+    const { message, trigger_id } = payload
+
+    if (message.files) {
+      // @Todo: open modal to upload resume
+    } else {
+      const modal = this.slackViews.emptyResumeModal()
+      const args = {
+        token: process.env.SLACK_BOT_TOKEN,
+        trigger_id,
+        view: JSON.stringify(modal),
+      }
+
+      await axios.post('https://slack.com/api/views.open', stringify(args))
+
+      this.logger.log('Open Empty Resume Modal')
     }
   }
 
