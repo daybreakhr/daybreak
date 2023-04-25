@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Job, Workspace } from '@prisma/client'
+import { Job, Referral, Workspace } from '@prisma/client'
 
 @Injectable()
 export class SlackViews {
@@ -217,6 +217,55 @@ export class SlackViews {
           text: {
             type: 'mrkdwn',
             text: ":rotating_light:  This message doesn't have any files that can be added as resume. Send message to <@daybreak_hire> with your referral's resume and use Add resume message action again.",
+          },
+        },
+      ],
+    }
+  }
+
+  attachResumeModal(referrals: (Referral & { Job: Job })[]) {
+    return {
+      type: 'modal',
+      callback_id: 'attach_resume',
+      title: {
+        type: 'plain_text',
+        text: 'Add resume',
+        emoji: true,
+      },
+      submit: {
+        type: 'plain_text',
+        text: 'Submit',
+        emoji: true,
+      },
+      close: {
+        type: 'plain_text',
+        text: 'Cancel',
+        emoji: true,
+      },
+      blocks: [
+        {
+          type: 'input',
+          element: {
+            type: 'static_select',
+            placeholder: {
+              type: 'plain_text',
+              text: 'Select candidate',
+              emoji: true,
+            },
+            options: referrals.map(({ id, firstName, lastName }) => ({
+              text: {
+                type: 'plain_text',
+                text: `${firstName} ${lastName}`,
+                emoji: true,
+              },
+              value: id,
+            })),
+            action_id: 'static_select-action',
+          },
+          label: {
+            type: 'plain_text',
+            text: ':paperclip: Attach resume to candidate',
+            emoji: true,
           },
         },
       ],

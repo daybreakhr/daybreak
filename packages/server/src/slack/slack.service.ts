@@ -41,31 +41,35 @@ export class SlackService {
       await this.handleReferralModal(JSON.parse(body.payload))
     } else if (type === 'view_submission') {
       const { view } = JSON.parse(body.payload)
-      const jobId = view.callback_id
-      const firstName = view.state.values.referalFirstName.firstName.value
-      const lastName = view.state.values.referalLastName.lastName.value
-      const email = view.state.values.referalEmail.email.value
-      const phone = view.state.values.referalPhone.phone.value
-      const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
+      if (view.callback_id === 'attach_resume') {
+        // @Todo: Handle resume upload
+      } else {
+        const jobId = view.callback_id
+        const firstName = view.state.values.referalFirstName.firstName.value
+        const lastName = view.state.values.referalLastName.lastName.value
+        const email = view.state.values.referalEmail.email.value
+        const phone = view.state.values.referalPhone.phone.value
+        const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
 
-      const { title } = await this.prismaService.job.findUnique({
-        where: { id: jobId },
-      })
+        const { title } = await this.prismaService.job.findUnique({
+          where: { id: jobId },
+        })
 
-      await this.referralService.createReferral({
-        firstName,
-        lastName,
-        email,
-        phone,
-        linkedInUrl,
-        jobId,
-        slackUserId: user.id,
-      })
+        await this.referralService.createReferral({
+          firstName,
+          lastName,
+          email,
+          phone,
+          linkedInUrl,
+          jobId,
+          slackUserId: user.id,
+        })
 
-      await this.sendMessage(
-        user.id,
-        `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
-      )
+        await this.sendMessage(
+          user.id,
+          `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
+        )
+      }
     } else if (callback_id === 'tag_resume') {
       this.handleResumeUpload(JSON.parse(body.payload))
     }
@@ -88,22 +92,29 @@ export class SlackService {
   }
 
   async handleResumeUpload(payload: any) {
-    const { message, trigger_id } = payload
+    const { message, trigger_id, user } = payload
+    let modal
 
     if (message.files) {
-      // @Todo: open modal to upload resume
+      const referrals = await this.prismaService.referral.findMany({
+        where: { slackUserId: user.id },
+        include: { Job: true },
+      })
+
+      modal = this.slackViews.attachResumeModal(referrals)
+      this.logger.log('Open Attach Resume Modal')
     } else {
-      const modal = this.slackViews.emptyResumeModal()
-      const args = {
-        token: process.env.SLACK_BOT_TOKEN,
-        trigger_id,
-        view: JSON.stringify(modal),
-      }
-
-      await axios.post('https://slack.com/api/views.open', stringify(args))
-
+      modal = this.slackViews.emptyResumeModal()
       this.logger.log('Open Empty Resume Modal')
     }
+
+    const args = {
+      token: process.env.SLACK_BOT_TOKEN,
+      trigger_id,
+      view: JSON.stringify(modal),
+    }
+
+    await axios.post('https://slack.com/api/views.open', stringify(args))
   }
 
   async sendMessage(channel: string, text: string) {
