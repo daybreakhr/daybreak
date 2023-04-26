@@ -44,46 +44,6 @@ export class SlackViews {
       {
         type: 'divider',
       },
-      {
-        type: 'actions',
-        elements: [
-          {
-            type: 'static_select',
-            placeholder: {
-              type: 'plain_text',
-              text: 'Select an item',
-              emoji: true,
-            },
-            options: [
-              {
-                text: {
-                  type: 'plain_text',
-                  text: 'Engineering',
-                  emoji: true,
-                },
-                value: 'value-0',
-              },
-              {
-                text: {
-                  type: 'plain_text',
-                  text: 'Product',
-                  emoji: true,
-                },
-                value: 'value-1',
-              },
-              {
-                text: {
-                  type: 'plain_text',
-                  text: 'Marketing',
-                  emoji: true,
-                },
-                value: 'value-2',
-              },
-            ],
-            action_id: 'actionId-3',
-          },
-        ],
-      },
       ...jobsList,
     ]
 
@@ -223,7 +183,13 @@ export class SlackViews {
     }
   }
 
-  attachResumeModal(referrals: (Referral & { Job: Job })[]) {
+  attachResumeModal(referrals: Referral[], fileId: string, fileName: string) {
+    const bucketName = this.configService.get<string>('AWS_S3_BUCKET')
+    const s3Url = `https://${bucketName}.s3.us-east-1.amazonaws.com`
+
+    const fileUrl = `${s3Url}/slack/referrals/${fileId}/${fileName}`
+    const thumbnailUrl = `${s3Url}/slack/referrals/${fileId}/thumbnail.png`
+
     return {
       type: 'modal',
       callback_id: 'attach_resume',
@@ -267,6 +233,34 @@ export class SlackViews {
             text: ':paperclip: Attach resume to candidate',
             emoji: true,
           },
+        },
+        {
+          type: 'header',
+          text: {
+            type: 'plain_text',
+            text: ':page_with_curl: Resume',
+            emoji: true,
+          },
+        },
+        {
+          type: 'image',
+          image_url: thumbnailUrl,
+          alt_text: 'resume_preview',
+        },
+        {
+          type: 'context',
+          elements: [
+            {
+              type: 'plain_text',
+              text: fileName,
+              emoji: true,
+            },
+            {
+              type: 'mrkdwn',
+              text: `<${fileUrl}|:arrow_down:  Download>`,
+              verbatim: false,
+            },
+          ],
         },
       ],
     }

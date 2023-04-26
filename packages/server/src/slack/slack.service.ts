@@ -1,11 +1,15 @@
 import axios from 'axios'
 import { stringify } from 'qs'
 import { Injectable, Logger } from '@nestjs/common'
+
 import { PrismaService } from 'src/prisma.service'
+import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { ReferralService } from 'src/referral/referral.service'
+
 import { SlackViews } from './slack.views'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
+const slackApi = 'https://slack.com/api'
 
 @Injectable()
 export class SlackService {
@@ -14,6 +18,7 @@ export class SlackService {
     private prismaService: PrismaService,
     private referralService: ReferralService,
     private slackViews: SlackViews,
+    private s3Service: AWSS3Service,
   ) {}
 
   verifyUrl(body: any) {
@@ -31,6 +36,38 @@ export class SlackService {
 
       const view = this.slackViews.homeView(body.event.user, jobs)
       await this.publishHomeView(body.event.user, view)
+    } else if (type === 'file_shared') {
+      const fileId = body.event.file_id
+      // Get file details using file.info method
+      const { data } = await axios.get(
+        `${slackApi}/files.info?file=${fileId}`,
+        { headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` } },
+      )
+      const { url_private_download, name, mimetype, thumb_pdf } = data.file
+
+      // download the resume from the private url
+      const { data: file } = await axios.get<Buffer>(url_private_download, {
+        headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` },
+        responseType: 'arraybuffer',
+      })
+
+      const fileKey = `slack/referrals/${fileId}/${name}`
+      await this.s3Service.uploadS3({ file, key: fileKey, mimetype })
+
+      if (thumb_pdf) {
+        // download the thumbnail from the private url
+        const { data: thumbnail } = await axios.get<Buffer>(thumb_pdf, {
+          headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` },
+          responseType: 'arraybuffer',
+        })
+
+        const thumbnailKey = `slack/referrals/${fileId}/thumbnail.png`
+        await this.s3Service.uploadS3({
+          file: thumbnail,
+          key: thumbnailKey,
+          mimetype: 'image/png',
+        })
+      }
     }
   }
 
@@ -86,7 +123,7 @@ export class SlackService {
       view: JSON.stringify(modal),
     }
 
-    await axios.post('https://slack.com/api/views.open', stringify(args))
+    await axios.post(`${slackApi}/views.open`, stringify(args))
 
     this.logger.log('Open Refer Modal')
   }
@@ -96,12 +133,12 @@ export class SlackService {
     let modal
 
     if (message.files) {
+      const { id: fileId, name } = message.files[0]
       const referrals = await this.prismaService.referral.findMany({
         where: { slackUserId: user.id },
-        include: { Job: true },
       })
 
-      modal = this.slackViews.attachResumeModal(referrals)
+      modal = this.slackViews.attachResumeModal(referrals, fileId, name)
       this.logger.log('Open Attach Resume Modal')
     } else {
       modal = this.slackViews.emptyResumeModal()
@@ -114,18 +151,18 @@ export class SlackService {
       view: JSON.stringify(modal),
     }
 
-    await axios.post('https://slack.com/api/views.open', stringify(args))
+    await axios.post(`${slackApi}/views.open`, stringify(args))
   }
 
   async sendMessage(channel: string, text: string) {
     const args = { token: process.env.SLACK_BOT_TOKEN, channel, text }
 
-    await axios.post('https://slack.com/api/chat.postMessage', stringify(args))
+    await axios.post(`${slackApi}/chat.postMessage`, stringify(args))
   }
 
   async publishHomeView(user: string, view: string) {
     const args = { user_id: user, token: process.env.SLACK_BOT_TOKEN, view }
 
-    await axios.post('https://slack.com/api/views.publish', stringify(args))
+    await axios.post(`${slackApi}/views.publish`, stringify(args))
   }
 }
