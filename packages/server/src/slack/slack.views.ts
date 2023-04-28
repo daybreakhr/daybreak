@@ -211,6 +211,7 @@ export class SlackViews {
       blocks: [
         {
           type: 'input',
+          block_id: 'candidate',
           element: {
             type: 'static_select',
             placeholder: {
@@ -226,7 +227,7 @@ export class SlackViews {
               },
               value: id,
             })),
-            action_id: 'static_select-action',
+            action_id: 'selectCandidate',
           },
           label: {
             type: 'plain_text',
@@ -249,6 +250,7 @@ export class SlackViews {
         },
         {
           type: 'context',
+          block_id: 'resumeData',
           elements: [
             {
               type: 'plain_text',

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
 import { Button, Input, Table } from 'antd'
-import { uniq, uniqBy, flatMap } from 'lodash'
+import { uniqBy, flatMap } from 'lodash'
 import { useQuery } from '@tanstack/react-query'
 import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
@@ -27,13 +27,6 @@ export default function Prospects() {
       )
     }
     return [] as Job[]
-  }, [data])
-
-  const locationApplied = useMemo(() => {
-    if (data) {
-      return uniq(data.map((prospect) => prospect.location))
-    }
-    return []
   }, [data])
 
   return (
@@ -71,7 +64,7 @@ export default function Prospects() {
             loading={isLoading}
             dataSource={filteredData}
             rowKey={(record) => record.id}
-            columns={prospectColumns(appliedFor, locationApplied)}
+            columns={prospectColumns(appliedFor)}
           />
         </div>
       </div>

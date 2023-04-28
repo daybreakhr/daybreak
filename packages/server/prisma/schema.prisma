@@ -181,8 +181,9 @@ model Candidate {
   lastName         String
   email            String
   phone            String
-  location         String
+  location         String?
   resume           String?
+  source           CandidateSource @default(jobBoard)
   affindaId        String          @unique
   linkedInUrl      String
   matchScore       Int?
@@ -198,6 +199,13 @@ model Candidate {
   Email            Email[]
   Interview        Interview?      @relation(fields: [interviewId], references: [id])
   interviewId      String?         @db.ObjectId
+}
+
+enum CandidateSource {
+  referral
+  jobBoard
+  linkedIn
+  other
 }
 
 enum CandidateStatus {

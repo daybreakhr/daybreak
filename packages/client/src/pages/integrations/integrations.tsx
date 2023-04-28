@@ -20,7 +20,7 @@ export default function Integrations() {
 
       <div className="p-4 m-8 bg-white rounded-md shadow-md h-fit">
         <p className="mb-4 font-sans text-xl font-medium">Available Apps</p>
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-3 gap-6 2xl:grid-cols-4">
           <Calendar />
           <Gmail />
         </div>

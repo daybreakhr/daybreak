@@ -4,9 +4,11 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
+import { AffindaService } from 'src/affinda/affinda.service'
 import { ReferralService } from 'src/referral/referral.service'
 
 import { SlackViews } from './slack.views'
+import { CandidateSource } from '@prisma/client'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
 const slackApi = 'https://slack.com/api'
@@ -15,6 +17,7 @@ const slackApi = 'https://slack.com/api'
 export class SlackService {
   private logger = new Logger('SLACK')
   constructor(
+    private affindaService: AffindaService,
     private prismaService: PrismaService,
     private referralService: ReferralService,
     private slackViews: SlackViews,
@@ -79,37 +82,99 @@ export class SlackService {
     } else if (type === 'view_submission') {
       const { view } = JSON.parse(body.payload)
       if (view.callback_id === 'attach_resume') {
-        // @Todo: Handle resume upload
+        this.createReferralCandidate(view, user.id)
       } else {
-        const jobId = view.callback_id
-        const firstName = view.state.values.referalFirstName.firstName.value
-        const lastName = view.state.values.referalLastName.lastName.value
-        const email = view.state.values.referalEmail.email.value
-        const phone = view.state.values.referalPhone.phone.value
-        const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
-
-        const { title } = await this.prismaService.job.findUnique({
-          where: { id: jobId },
-        })
-
-        await this.referralService.createReferral({
-          firstName,
-          lastName,
-          email,
-          phone,
-          linkedInUrl,
-          jobId,
-          slackUserId: user.id,
-        })
-
-        await this.sendMessage(
-          user.id,
-          `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
-        )
+        await this.createReferral(view, user.id)
       }
     } else if (callback_id === 'tag_resume') {
-      this.handleResumeUpload(JSON.parse(body.payload))
+      this.handleAttachResume(JSON.parse(body.payload))
     }
+  }
+
+  async createReferralCandidate(view: any, userId: string) {
+    const referralId =
+      view.state.values.candidate.selectCandidate.selected_option.value
+    const resumeElement = view.blocks[view.blocks.length - 1].elements[1].text
+    const resumeUrl = encodeURI(resumeElement.replace('<', '').split('|')[0])
+
+    // Parse resume using Affinda
+    const affindaId = await this.affindaService.uploadResume(resumeUrl)
+
+    // Fetch details of the referral from the 1st step of the modal
+    const referral = await this.prismaService.referral.findUnique({
+      where: { id: referralId },
+    })
+    const { firstName, lastName, jobId, email, phone, linkedInUrl } = referral
+
+    // Create candidate in the database
+    const candidate = await this.prismaService.candidate.create({
+      data: {
+        affindaId,
+        firstName,
+        lastName,
+        email,
+        phone,
+        source: CandidateSource.referral,
+        linkedInUrl,
+        Job: { connect: { id: jobId } },
+        Workspace: { connect: { id: WORKSPACE_ID } },
+      },
+    })
+
+    // download the resume from s3 and upload to candidate directory in s3
+    const { data: file } = await axios.get<Buffer>(resumeUrl, {
+      responseType: 'arraybuffer',
+    })
+
+    const key = `candidate/${candidate.id}/${resumeUrl.split('/').pop()}`
+    const uploadResult = await this.s3Service.uploadS3({
+      file,
+      key,
+      mimetype: 'application/pdf',
+    })
+
+    // Add resumeUrl to candidate model
+    this.prismaService.candidate.update({
+      where: { id: candidate.id },
+      data: { resume: uploadResult.Location },
+    })
+
+    // Delete the referral from the database
+    this.prismaService.referral.delete({ where: { id: referralId } })
+
+    // send notification to the user on slack
+    await this.sendMessage(
+      userId,
+      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate here: ${process.env.FRONTEND_URL}/candidate/${candidate.id}`,
+    )
+  }
+
+  async createReferral(view: any, userId: string) {
+    const jobId = view.callback_id
+    const firstName = view.state.values.referalFirstName.firstName.value
+    const lastName = view.state.values.referalLastName.lastName.value
+    const email = view.state.values.referalEmail.email.value
+    const phone = view.state.values.referalPhone.phone.value
+    const linkedInUrl = view.state.values.referalLinkedIn.linkedInUrl.value
+
+    const { title } = await this.prismaService.job.findUnique({
+      where: { id: jobId },
+    })
+
+    await this.referralService.createReferral({
+      firstName,
+      lastName,
+      email,
+      phone,
+      linkedInUrl,
+      jobId,
+      slackUserId: userId,
+    })
+
+    await this.sendMessage(
+      userId,
+      `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
+    )
   }
 
   async handleReferralModal(payload: any) {
@@ -128,7 +193,7 @@ export class SlackService {
     this.logger.log('Open Refer Modal')
   }
 
-  async handleResumeUpload(payload: any) {
+  async handleAttachResume(payload: any) {
     const { message, trigger_id, user } = payload
     let modal
 
