@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { stringify } from 'qs'
+import { CandidateSource } from '@prisma/client'
 import { Injectable, Logger } from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
@@ -8,7 +9,6 @@ import { AffindaService } from 'src/affinda/affinda.service'
 import { ReferralService } from 'src/referral/referral.service'
 
 import { SlackViews } from './slack.views'
-import { CandidateSource } from '@prisma/client'
 
 const WORKSPACE_ID = '6317158147089f094cd4598e'
 const slackApi = 'https://slack.com/api'
@@ -145,7 +145,7 @@ export class SlackService {
     // send notification to the user on slack
     await this.sendMessage(
       userId,
-      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate here: ${process.env.FRONTEND_URL}/candidate/${candidate.id}`,
+      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate profile at <${process.env.FRONTEND_URL}/candidates/${candidate.id}/profile|Daybreak App>. We will keep you posted on the update of this candidate's hiring process.`,
     )
   }
 
