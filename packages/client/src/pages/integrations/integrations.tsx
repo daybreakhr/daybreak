@@ -2,6 +2,7 @@ import { SettingOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
 import Calendar from './components/calendar'
 import Gmail from './components/gmail'
+import Slack from './components/slack'
 
 export default function Integrations() {
   return (
@@ -23,6 +24,7 @@ export default function Integrations() {
         <div className="grid grid-cols-3 gap-6 2xl:grid-cols-4">
           <Calendar />
           <Gmail />
+          <Slack />
         </div>
       </div>
     </>
