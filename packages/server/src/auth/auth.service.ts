@@ -1,20 +1,24 @@
-import { encrypt, decrypt } from 'src/utils/encrypt'
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { HttpService } from '@nestjs/axios'
 import type { Member } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
 import { UserRecord } from 'firebase-admin/auth'
 import { OAuth2Client, UserRefreshClient } from 'google-auth-library'
-import { FirebaseService } from 'src/firebase/firebase.service'
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
+
 import { PrismaService } from 'src/prisma.service'
+import { encrypt, decrypt } from 'src/utils/encrypt'
+import { FirebaseService } from 'src/firebase/firebase.service'
+import { catchError, firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class AuthService {
-  private logger = new Logger('HTTP')
+  private logger = new Logger('AUTH')
 
   constructor(
     private readonly configService: ConfigService,
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
+    private readonly httpService: HttpService,
   ) {}
 
   async verifyIdToken(idToken: string): Promise<UserRecord> {
@@ -116,5 +120,19 @@ export class AuthService {
         throw new UnauthorizedException('Invalid google refresh token')
       }
     }
+  }
+
+  async getSlackCredentials(code: string, uid: string) {
+    const slackOauthUrl = 'https://slack.com/api/oauth.v2.access'
+    const { data } = await firstValueFrom(
+      this.httpService.post(slackOauthUrl, { code }).pipe(
+        catchError((error) => {
+          this.logger.error(error.response.data)
+          throw error
+        }),
+      ),
+    )
+    this.logger.log(data)
+    return data
   }
 }
