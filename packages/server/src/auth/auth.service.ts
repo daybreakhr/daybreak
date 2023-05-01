@@ -122,7 +122,7 @@ export class AuthService {
     }
   }
 
-  async getSlackCredentials(code: string, uid: string) {
+  async getSlackCredentials(code: string) {
     const slackOauthUrl = 'https://slack.com/api/oauth.v2.access'
     const { data } = await firstValueFrom(
       this.httpService.post(slackOauthUrl, { code }).pipe(

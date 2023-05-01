@@ -35,10 +35,9 @@ import PrivacyPolicy from 'pages/privacy-policy'
 import CreateProspect from 'pages/create-prospect'
 import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
+import ConnectSlack from 'pages/connect-slack'
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false } },
-})
+const queryClient = new QueryClient()
 
 export default function App() {
   return (
@@ -57,6 +56,10 @@ export default function App() {
                   <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
+                <Route
+                  path="/slack/connect"
+                  element={<AuthLayout component={ConnectSlack} />}
+                />
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
                   <Route path="home" element={<Home />} />
                   <Route path="jobs" element={<Jobs />} />
