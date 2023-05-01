@@ -134,15 +134,18 @@ export default function Details({ data }: DetailsProps) {
           />
         </Tooltip>
 
-        <Tooltip title="Visit LinkedIn Profile">
-          <Button
-            shape="circle"
-            target="_blank"
-            href={data?.linkedInUrl}
-            icon={<AiFillLinkedin />}
-            disabled={!data?.linkedInUrl}
-          />
-        </Tooltip>
+        <Show when={data?.linkedInUrl}>
+          {(link) => (
+            <Tooltip title="Visit LinkedIn Profile">
+              <Button
+                href={link}
+                shape="circle"
+                target="_blank"
+                icon={<AiFillLinkedin />}
+              />
+            </Tooltip>
+          )}
+        </Show>
       </div>
 
       <hr className="w-full my-4 border-gray-300" />

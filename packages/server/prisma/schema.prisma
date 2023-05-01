@@ -185,7 +185,7 @@ model Candidate {
   resume           String?
   source           CandidateSource @default(jobBoard)
   affindaId        String          @unique
-  linkedInUrl      String
+  linkedInUrl      String?
   matchScore       Int?
   status           CandidateStatus @default(applied)
   rejectionMessage String?
