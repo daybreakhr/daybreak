@@ -1,3 +1,4 @@
+import { stringify } from 'qs'
 import { HttpService } from '@nestjs/axios'
 import type { Member } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
@@ -124,8 +125,14 @@ export class AuthService {
 
   async getSlackCredentials(code: string) {
     const slackOauthUrl = 'https://slack.com/api/oauth.v2.access'
+    const payload = {
+      code,
+      client_id: this.configService.get<string>('SLACK_APP_CLIENT_ID'),
+      client_secret: this.configService.get<string>('SLACK_APP_CLIENT_SECRET'),
+    }
+
     const { data } = await firstValueFrom(
-      this.httpService.post(slackOauthUrl, { code }).pipe(
+      this.httpService.post(slackOauthUrl, stringify(payload)).pipe(
         catchError((error) => {
           this.logger.error(error.response.data)
           throw error
