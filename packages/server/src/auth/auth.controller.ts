@@ -54,4 +54,15 @@ export class AuthController {
     })
     return data
   }
+
+  @Post('slack')
+  @ApiOperation({ summary: 'Get access token for slack using code' })
+  @ApiCreatedResponse({ description: 'Received token successfully' })
+  async getSlackCredentials(
+    @GetUser() user: UserRecord,
+    @Body() { code }: { code: string },
+  ) {
+    const data = await this.authService.getSlackCredentials(code, user.uid)
+    return data
+  }
 }

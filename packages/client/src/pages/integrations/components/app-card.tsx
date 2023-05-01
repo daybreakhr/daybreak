@@ -20,7 +20,7 @@ export default function AppCard({
 }: AppCardProps) {
   return (
     <div className="flex p-4 space-x-4 border rounded-md shadow">
-      <img src={logo} className="w-16 h-16" />
+      <img src={logo} className="w-12 h-12" />
 
       <div className="flex flex-col flex-1">
         <h3 className="text-lg font-semibold text-gray-700 mb-0.5">{title}</h3>

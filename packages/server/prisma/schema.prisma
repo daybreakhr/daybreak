@@ -32,6 +32,7 @@ model Member {
   uid                String         @unique // unique id provided firebase authentication
   role               Role
   googleRefreshToken EncryptedData?
+  slackBotToken      EncryptedData?
   invites            Invitees[]
   Workspace          Workspace      @relation(fields: [workspaceId], references: [id])
   workspaceId        String         @db.ObjectId
@@ -290,9 +291,11 @@ model Email {
 type Integration {
   gcal  App?
   gmail App?
+  slack App?
 }
 
 type App {
   isInstalled Boolean
   createdAt   DateTime @default(now())
+  meta        Json?
 }
