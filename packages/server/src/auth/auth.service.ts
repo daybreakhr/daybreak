@@ -123,7 +123,7 @@ export class AuthService {
     }
   }
 
-  async getSlackCredentials(code: string) {
+  async getSlackCredentials(code: string, uid: string) {
     const slackOauthUrl = 'https://slack.com/api/oauth.v2.access'
     const payload = {
       code,
@@ -139,7 +139,33 @@ export class AuthService {
         }),
       ),
     )
-    this.logger.log(data)
-    return data
+
+    this.logger.log(data, 'Slack credentials')
+
+    if (data.ok) {
+      const encryptedToken = await encrypt(data.access_token)
+
+      const { Integration } = await this.prismaService.member.update({
+        where: { uid },
+        data: { slackBotToken: encryptedToken },
+      })
+
+      let slackIntegrationData = {
+        slack: {
+          isInstalled: true,
+          meta: { userId: data.authed_user.id, botUserId: data.bot_user_id },
+        },
+      }
+      if (Integration) {
+        slackIntegrationData = { ...Integration, ...slackIntegrationData }
+      }
+
+      const member = await this.prismaService.member.update({
+        where: { uid },
+        data: { Integration: slackIntegrationData },
+      })
+
+      return member
+    }
   }
 }

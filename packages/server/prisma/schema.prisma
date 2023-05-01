@@ -297,4 +297,5 @@ type Integration {
 type App {
   isInstalled Boolean
   createdAt   DateTime @default(now())
+  meta        Json?
 }

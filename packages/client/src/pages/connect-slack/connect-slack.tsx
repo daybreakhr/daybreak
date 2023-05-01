@@ -7,7 +7,9 @@ export default function ConnectSlack() {
   const code = searchParams.get('code') ?? ''
 
   useQuery(['slack', code], () => fetchSlackTokens({ code }), {
-    onSuccess: () => {},
+    onSuccess: () => {
+      window.close()
+    },
   })
 
   return null

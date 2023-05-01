@@ -1,10 +1,18 @@
+import { useQuery } from '@tanstack/react-query'
 import { SettingOutlined } from '@ant-design/icons'
+
+import useAuth from 'hooks/use-auth'
 import PageHeader from 'components/page-header'
+import { fetchMe } from 'components/auth/queries'
+
 import Calendar from './components/calendar'
 import Gmail from './components/gmail'
 import Slack from './components/slack'
 
 export default function Integrations() {
+  const { setMember } = useAuth()
+  useQuery(['me'], fetchMe, { onSuccess: setMember })
+
   return (
     <>
       <PageHeader
