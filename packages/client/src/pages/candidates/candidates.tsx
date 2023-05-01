@@ -38,10 +38,6 @@ export default function Candidates() {
         breadcrumb={[
           { path: '/candidates', label: 'Candidates', icon: <TeamOutlined /> },
         ]}
-        tabs={[
-          { label: 'Candidates', key: '/candidates' },
-          { label: 'Prospects', key: '/prospects/' },
-        ]}
       />
       <div className="p-4 m-8 bg-white rounded-md shadow-md">
         <div className="flex items-center justify-between mb-4 space-x-4">

@@ -159,22 +159,6 @@ model Location {
   Job         Job[]
 }
 
-model Template {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description Json
-  category    Category
-}
-
-enum Category {
-  engineering
-  marketing
-  sales
-  it
-  hr
-  accounts
-}
-
 model Candidate {
   id               String          @id @default(auto()) @map("_id") @db.ObjectId
   firstName        String
