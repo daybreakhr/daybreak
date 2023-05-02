@@ -11,7 +11,11 @@ import Slack from './components/slack'
 
 export default function Integrations() {
   const { setMember } = useAuth()
-  useQuery(['me'], fetchMe, { onSuccess: setMember })
+
+  useQuery(['me'], fetchMe, {
+    onSuccess: setMember,
+    refetchOnWindowFocus: true,
+  })
 
   return (
     <>

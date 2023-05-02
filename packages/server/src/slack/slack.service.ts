@@ -11,7 +11,6 @@ import { ReferralService } from 'src/referral/referral.service'
 
 import { SlackViews } from './slack.views'
 
-const WORKSPACE_ID = '6317158147089f094cd4598e'
 const slackApi = 'https://slack.com/api'
 
 @Injectable()
@@ -30,42 +29,48 @@ export class SlackService {
   }
 
   async getSlackSecrets(userId: string) {
-    const { slackBotToken, slackBotUserId } =
+    const { slackBotToken, slackBotUserId, workspaceId } =
       await this.prismaService.member.findFirst({
         where: { slackUserId: userId },
       })
     if (slackBotToken) {
       const decryptedToken = await decrypt(slackBotToken)
-      return { token: decryptedToken, userId, botUserId: slackBotUserId }
+      return {
+        token: decryptedToken,
+        userId,
+        botUserId: slackBotUserId,
+        workspaceId,
+      }
     } else {
-      return { token: null, userId, botUserId: null }
+      return { token: null, userId, botUserId: null, workspaceId }
     }
   }
 
   async handleEvent(body: any) {
     const { type } = body.event
-    this.logger.log(body)
 
     if (type === 'app_home_opened') {
+      const { workspaceId } = await this.getSlackSecrets(body.event.user)
       const jobs = await this.prismaService.job.findMany({
-        where: { workspaceId: WORKSPACE_ID, isPublished: true },
+        where: { workspaceId, isPublished: true },
         include: { Workspace: true },
       })
 
       const view = this.slackViews.homeView(body.event.user, jobs)
       await this.publishHomeView(body.event.user, view)
     } else if (type === 'file_shared') {
+      const { token } = await this.getSlackSecrets(body.event.user_id)
       const fileId = body.event.file_id
       // Get file details using file.info method
       const { data } = await axios.get(
         `${slackApi}/files.info?file=${fileId}`,
-        { headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` } },
+        { headers: { Authorization: `Bearer ${token}` } },
       )
       const { url_private_download, name, mimetype, thumb_pdf } = data.file
 
       // download the resume from the private url
       const { data: file } = await axios.get<Buffer>(url_private_download, {
-        headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` },
+        headers: { Authorization: `Bearer ${token}` },
         responseType: 'arraybuffer',
       })
 
@@ -75,7 +80,7 @@ export class SlackService {
       if (thumb_pdf) {
         // download the thumbnail from the private url
         const { data: thumbnail } = await axios.get<Buffer>(thumb_pdf, {
-          headers: { Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}` },
+          headers: { Authorization: `Bearer ${token}` },
           responseType: 'arraybuffer',
         })
 
@@ -107,6 +112,8 @@ export class SlackService {
   }
 
   async createReferralCandidate(view: any, userId: string) {
+    const { workspaceId } = await this.getSlackSecrets(userId)
+
     const referralId =
       view.state.values.candidate.selectCandidate.selected_option.value
     const resumeElement = view.blocks[view.blocks.length - 1].elements[1].text
@@ -132,7 +139,7 @@ export class SlackService {
         source: CandidateSource.referral,
         linkedInUrl,
         Job: { connect: { id: jobId } },
-        Workspace: { connect: { id: WORKSPACE_ID } },
+        Workspace: { connect: { id: workspaceId } },
       },
     })
 
@@ -208,6 +215,8 @@ export class SlackService {
     const { message, trigger_id, user } = payload
     let modal
 
+    const { botUserId } = await this.getSlackSecrets(user.id)
+
     if (message.files) {
       const { id: fileId, name } = message.files[0]
       const referrals = await this.prismaService.referral.findMany({
@@ -217,7 +226,7 @@ export class SlackService {
       modal = this.slackViews.attachResumeModal(referrals, fileId, name)
       this.logger.log('Open Attach Resume Modal')
     } else {
-      modal = this.slackViews.emptyResumeModal()
+      modal = this.slackViews.emptyResumeModal(botUserId)
       this.logger.log('Open Empty Resume Modal')
     }
 
@@ -229,7 +238,8 @@ export class SlackService {
   }
 
   async sendMessage(channel: string, text: string) {
-    const args = { token: process.env.SLACK_BOT_TOKEN, channel, text }
+    const { token } = await this.getSlackSecrets(channel)
+    const args = { token, channel, text }
 
     await axios.post(`${slackApi}/chat.postMessage`, stringify(args))
   }
@@ -238,10 +248,6 @@ export class SlackService {
     const { token } = await this.getSlackSecrets(user)
     const args = { user_id: user, token, view }
 
-    const { data } = await axios.post(
-      `${slackApi}/views.publish`,
-      stringify(args),
-    )
-    this.logger.log(data, 'Publish Home View')
+    await axios.post(`${slackApi}/views.publish`, stringify(args))
   }
 }

@@ -158,7 +158,7 @@ export class SlackViews {
     }
   }
 
-  emptyResumeModal() {
+  emptyResumeModal(botUserId: string) {
     return {
       type: 'modal',
       title: {
@@ -176,7 +176,7 @@ export class SlackViews {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: ":rotating_light:  This message doesn't have any files that can be added as resume. Send message to <@daybreak_hire> with your referral's resume and use Add resume message action again.",
+            text: `:rotating_light:  This message doesn't have any files that can be added as resume. Send message to <@${botUserId}> with your referral's resume and use Add resume message action again.`,
           },
         },
       ],

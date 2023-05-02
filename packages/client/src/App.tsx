@@ -37,7 +37,9 @@ import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+})
 
 export default function App() {
   return (
