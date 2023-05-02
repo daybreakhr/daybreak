@@ -33,6 +33,8 @@ model Member {
   role               Role
   googleRefreshToken EncryptedData?
   slackBotToken      EncryptedData?
+  slackUserId        String?
+  slackBotUserId     String?
   invites            Invitees[]
   Workspace          Workspace      @relation(fields: [workspaceId], references: [id])
   workspaceId        String         @db.ObjectId
@@ -281,5 +283,4 @@ type Integration {
 type App {
   isInstalled Boolean
   createdAt   DateTime @default(now())
-  meta        Json?
 }

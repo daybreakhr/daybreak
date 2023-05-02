@@ -147,15 +147,15 @@ export class AuthService {
 
       const { Integration } = await this.prismaService.member.update({
         where: { uid },
-        data: { slackBotToken: encryptedToken },
+        data: {
+          slackBotToken: encryptedToken,
+          slackUserId: data.authed_user.id,
+          slackBotUserId: data.bot_user_id,
+        },
       })
 
-      let slackIntegrationData = {
-        slack: {
-          isInstalled: true,
-          meta: { userId: data.authed_user.id, botUserId: data.bot_user_id },
-        },
-      }
+      let slackIntegrationData = { slack: { isInstalled: true } }
+
       if (Integration) {
         slackIntegrationData = { ...Integration, ...slackIntegrationData }
       }

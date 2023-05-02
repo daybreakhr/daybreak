@@ -3,6 +3,7 @@ import { stringify } from 'qs'
 import { CandidateSource } from '@prisma/client'
 import { Injectable, Logger } from '@nestjs/common'
 
+import { decrypt } from 'src/utils/encrypt'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
@@ -28,8 +29,22 @@ export class SlackService {
     return body.challenge
   }
 
+  async getSlackSecrets(userId: string) {
+    const { slackBotToken, slackBotUserId } =
+      await this.prismaService.member.findFirst({
+        where: { slackUserId: userId },
+      })
+    if (slackBotToken) {
+      const decryptedToken = await decrypt(slackBotToken)
+      return { token: decryptedToken, userId, botUserId: slackBotUserId }
+    } else {
+      return { token: null, userId, botUserId: null }
+    }
+  }
+
   async handleEvent(body: any) {
     const { type } = body.event
+    this.logger.log(body)
 
     if (type === 'app_home_opened') {
       const jobs = await this.prismaService.job.findMany({
@@ -182,12 +197,8 @@ export class SlackService {
     const jobId = actions[0].action_id.split('_')[1]
     const modal = this.slackViews.referModal(user.id, jobId)
 
-    const args = {
-      token: process.env.SLACK_BOT_TOKEN,
-      trigger_id,
-      view: JSON.stringify(modal),
-    }
-
+    const { token } = await this.getSlackSecrets(user.id)
+    const args = { token, trigger_id, view: JSON.stringify(modal) }
     await axios.post(`${slackApi}/views.open`, stringify(args))
 
     this.logger.log('Open Refer Modal')
@@ -210,11 +221,9 @@ export class SlackService {
       this.logger.log('Open Empty Resume Modal')
     }
 
-    const args = {
-      token: process.env.SLACK_BOT_TOKEN,
-      trigger_id,
-      view: JSON.stringify(modal),
-    }
+    const { token } = await this.getSlackSecrets(user.id)
+
+    const args = { token, trigger_id, view: JSON.stringify(modal) }
 
     await axios.post(`${slackApi}/views.open`, stringify(args))
   }
@@ -226,8 +235,13 @@ export class SlackService {
   }
 
   async publishHomeView(user: string, view: string) {
-    const args = { user_id: user, token: process.env.SLACK_BOT_TOKEN, view }
+    const { token } = await this.getSlackSecrets(user)
+    const args = { user_id: user, token, view }
 
-    await axios.post(`${slackApi}/views.publish`, stringify(args))
+    const { data } = await axios.post(
+      `${slackApi}/views.publish`,
+      stringify(args),
+    )
+    this.logger.log(data, 'Publish Home View')
   }
 }
