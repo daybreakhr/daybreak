@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { ColumnsType } from 'antd/es/table'
-import type { CandidateStatus, Job } from '@prisma/client'
+import { CandidateSource, CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 
 export const statusColor: Record<CandidateStatus, string> = {
@@ -12,6 +12,11 @@ export const statusColor: Record<CandidateStatus, string> = {
   accepted: 'green',
   rejected: 'red',
 }
+
+export const candidateStatusFilters = [
+  { value: CandidateSource.jobBoard, text: 'Portal' },
+  { value: CandidateSource.referral, text: 'Referral' },
+]
 
 export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
   {
@@ -31,7 +36,24 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
     onFilter: (value, record) => record.Job?.id === value,
   },
   {
-    title: 'Application Date',
+    title: 'Source',
+    dataIndex: 'source',
+    key: 'source',
+    render: (source: CandidateSource) => {
+      switch (source) {
+        case 'jobBoard':
+          return <Tag color="purple">Portal</Tag>
+        case 'referral':
+          return <Tag color="gold">Referral</Tag>
+        default:
+          return source
+      }
+    },
+    filters: candidateStatusFilters,
+    onFilter: (value, record) => record.source === value,
+  },
+  {
+    title: 'Date Applied',
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: (date: Date) => dayjs(date).format('DD-MM-YYYY'),
