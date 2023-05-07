@@ -4,6 +4,7 @@ import { Express } from 'express'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
+import { AuthService } from 'src/auth/auth.service'
 import { NotificationService } from 'src/notification/notification.service'
 import { CreateCandidateDto, UpdateCandidateDto } from './candidate.dto'
 
@@ -12,6 +13,7 @@ export class CandidateService {
   constructor(
     private affindaService: AffindaService,
     private s3Service: AWSS3Service,
+    private authService: AuthService,
     private notificationService: NotificationService,
     private prismaService: PrismaService,
   ) {}
@@ -21,29 +23,13 @@ export class CandidateService {
       where: { id },
       include: { Job: { include: { Interview: true } } },
     })
-    const {
-      affindaId,
-      matchScore,
-      Job: { affindaId: jobAffindaId },
-    } = candidate
 
-    if (affindaId && jobAffindaId && !matchScore) {
-      const data = await this.affindaService.matchResumeAgainstJobDescription(
-        affindaId,
-        jobAffindaId,
-      )
-      const score = data?.score
-      const updatedCandidate = await this.prismaService.candidate.update({
-        where: { id },
-        data: {
-          matchScore: score ? +(score * 100).toFixed(0) : undefined,
-        },
-        include: { Job: { include: { Interview: true } } },
-      })
-      return updatedCandidate
+    if (candidate.referredBy) {
+      const user = await this.authService.getUser(candidate.referredBy)
+      return { ...candidate, ReferredBy: user }
     }
 
-    return candidate
+    return { ...candidate, ReferredBy: null }
   }
 
   async getCalendarEventsForCandidate(candidateId: string) {

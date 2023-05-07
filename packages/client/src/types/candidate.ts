@@ -10,6 +10,7 @@ export type Candidate = Omit<PCandidate, 'createdAt'> & {
   createdAt: string
   Job: Job & { Interview: Interview[] }
   Feedback: Feedback[]
+  ReferredBy: User | null
 }
 
 export type Feedback = PFeedback & {

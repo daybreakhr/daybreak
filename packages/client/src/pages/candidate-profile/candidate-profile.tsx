@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Button, Result } from 'antd'
+import { Button, Result, Tag } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import { AiOutlineCloudDownload } from 'react-icons/ai'
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
 
 import { Candidate as TCandidate } from 'types/candidate'
 import { fetchCandidate, fetchParseResume } from 'pages/candidate/queries'
@@ -59,7 +59,16 @@ export default function CandidateProfile() {
           </Switch.Match>
         </Switch>
 
-        <p className="mb-4 text-lg font-semibold">Personal Details</p>
+        <div className="flex items-center mb-4 space-x-3">
+          <p className="text-lg font-semibold">Personal Details</p>
+          <Show when={data?.ReferredBy}>
+            {({ displayName }) => (
+              <Tag color="gold">
+                Referred By <b>{displayName}</b>
+              </Tag>
+            )}
+          </Show>
+        </div>
         <div className="grid grid-cols-3 gap-5 mb-6">
           <div className="col-span-2">
             <div className="grid grid-cols-2 gap-5">
