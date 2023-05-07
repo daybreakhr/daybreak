@@ -5,5 +5,6 @@ export class CreateReferralDto {
   phone: string
   linkedInUrl: string
   jobId: string
+  uid: string
   slackUserId?: string
 }

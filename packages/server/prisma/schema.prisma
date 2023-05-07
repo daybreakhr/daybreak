@@ -47,6 +47,8 @@ model Member {
   Email              Email[]
   Integration        Integration?
   Interview          Interview[]
+  Referrals          Candidate[] // Candidates referred by this member
+  SlackReferral      Referral[] // These are intermediate states required to create a referral using slack
 }
 
 type EncryptedData {
@@ -135,6 +137,8 @@ model Referral {
   Job         Job      @relation(fields: [jobId], references: [id])
   jobId       String   @db.ObjectId
   slackUserId String?
+  Member      Member   @relation(fields: [createdBy], references: [uid])
+  createdBy   String
 }
 
 model Department {
@@ -186,6 +190,8 @@ model Candidate {
   Email            Email[]
   Interview        Interview?      @relation(fields: [interviewId], references: [id])
   interviewId      String?         @db.ObjectId
+  Referral         Member?         @relation(fields: [referredBy], references: [uid])
+  referredBy       String?
 }
 
 enum CandidateSource {

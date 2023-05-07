@@ -7,9 +7,13 @@ export class ReferralService {
   constructor(private prismaService: PrismaService) {}
 
   async createReferral(createReferralDto: CreateReferralDto) {
-    const { jobId, ...rest } = createReferralDto
+    const { jobId, uid, ...rest } = createReferralDto
     const referral = await this.prismaService.referral.create({
-      data: { ...rest, Job: { connect: { id: jobId } } },
+      data: {
+        ...rest,
+        Member: { connect: { uid } },
+        Job: { connect: { id: jobId } },
+      },
     })
 
     return referral

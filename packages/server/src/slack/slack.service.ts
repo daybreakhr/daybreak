@@ -29,7 +29,7 @@ export class SlackService {
   }
 
   async getSlackSecrets(userId: string) {
-    const { slackBotToken, slackBotUserId, workspaceId } =
+    const { slackBotToken, slackBotUserId, workspaceId, uid } =
       await this.prismaService.member.findFirst({
         where: { slackUserId: userId },
       })
@@ -38,11 +38,12 @@ export class SlackService {
       return {
         token: decryptedToken,
         userId,
+        uid,
         botUserId: slackBotUserId,
         workspaceId,
       }
     } else {
-      return { token: null, userId, botUserId: null, workspaceId }
+      return { token: null, userId, botUserId: null, workspaceId, uid }
     }
   }
 
@@ -126,7 +127,8 @@ export class SlackService {
     const referral = await this.prismaService.referral.findUnique({
       where: { id: referralId },
     })
-    const { firstName, lastName, jobId, email, phone, linkedInUrl } = referral
+    const { firstName, lastName, jobId, email, phone, linkedInUrl, createdBy } =
+      referral
 
     // Create candidate in the database
     const candidate = await this.prismaService.candidate.create({
@@ -140,6 +142,7 @@ export class SlackService {
         linkedInUrl,
         Job: { connect: { id: jobId } },
         Workspace: { connect: { id: workspaceId } },
+        Referral: { connect: { uid: createdBy } },
       },
     })
 
@@ -156,13 +159,13 @@ export class SlackService {
     })
 
     // Add resumeUrl to candidate model
-    this.prismaService.candidate.update({
+    await this.prismaService.candidate.update({
       where: { id: candidate.id },
       data: { resume: uploadResult.Location },
     })
 
     // Delete the referral from the database
-    this.prismaService.referral.delete({ where: { id: referralId } })
+    await this.prismaService.referral.delete({ where: { id: referralId } })
 
     // send notification to the user on slack
     await this.sendMessage(
@@ -182,6 +185,7 @@ export class SlackService {
     const { title } = await this.prismaService.job.findUnique({
       where: { id: jobId },
     })
+    const { uid } = await this.getSlackSecrets(userId)
 
     await this.referralService.createReferral({
       firstName,
@@ -190,6 +194,7 @@ export class SlackService {
       phone,
       linkedInUrl,
       jobId,
+      uid,
       slackUserId: userId,
     })
 
