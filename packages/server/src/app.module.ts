@@ -2,6 +2,8 @@ import { APP_GUARD } from '@nestjs/core'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import * as Joi from 'joi'
 import { ConfigModule } from '@nestjs/config'
+import { LoggerModule } from 'nestjs-pino'
+
 import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/auth.middleware'
 import { PrismaService } from './prisma.service'
@@ -12,7 +14,6 @@ import { LocationModule } from './location/location.module'
 import { JobsModule } from './jobs/jobs.module'
 import { WorkspaceModule } from './workspace/workspace.module'
 import { CandidateModule } from './candidate/candidate.module'
-import { AppLoggerMiddleware } from './logger.middleware'
 import { AWSModule } from './aws/aws.module'
 import { FeedbackModule } from './feedback/feedback.module'
 import { InvitesModule } from './invites/invites.module'
@@ -48,6 +49,15 @@ import { ReferralsModule } from './referral/referral.module'
       envFilePath: ['.env'],
       isGlobal: true,
     }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        customProps: () => ({ context: 'HTTP' }),
+        transport: {
+          target: 'pino-pretty',
+          options: { singleLine: true },
+        },
+      },
+    }),
     AffindaModule,
     AuthModule,
     AWSModule,
@@ -71,6 +81,6 @@ import { ReferralsModule } from './referral/referral.module'
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(AuthMiddleware, AppLoggerMiddleware).forRoutes('*')
+    consumer.apply(AuthMiddleware).forRoutes('*')
   }
 }

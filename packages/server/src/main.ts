@@ -5,12 +5,15 @@ import {
   SwaggerCustomOptions,
 } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.use(cookieParser())
+  app.useLogger(app.get(Logger))
+  app.useGlobalInterceptors(new LoggerErrorInterceptor())
 
   app.enableCors({
     credentials: true,
