@@ -143,6 +143,7 @@ export class SlackViews {
         },
         {
           type: 'input',
+          optional: true,
           block_id: 'referalLinkedIn',
           element: {
             type: 'url_text_input',
