@@ -132,7 +132,7 @@ model Referral {
   lastName    String
   email       String
   phone       String
-  linkedInUrl String
+  linkedInUrl String?
   createdAt   DateTime @default(now())
   Job         Job      @relation(fields: [jobId], references: [id])
   jobId       String   @db.ObjectId
