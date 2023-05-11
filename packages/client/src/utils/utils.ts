@@ -5,7 +5,6 @@ export const candidateStatusOptions = [
   { label: 'Interview', value: 'interview' },
   { label: 'Offered', value: 'offered' },
   { label: 'Accepted', value: 'accepted' },
-  { label: 'Rejected', value: 'rejected' },
 ]
 
 export function getJobType(jobType: JobType | null | undefined) {
