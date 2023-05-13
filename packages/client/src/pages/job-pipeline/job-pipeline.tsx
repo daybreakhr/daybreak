@@ -37,6 +37,12 @@ export default function JobPipeline() {
   return (
     <div className="flex flex-1 gap-3 px-6 pt-4 overflow-x-auto">
       <StatusList
+        title="Sourced"
+        isLoading={isCandidatesLoading}
+        className="border-t-amber-500"
+        candidates={groupByStatus[CandidateStatus.sourced]}
+      />
+      <StatusList
         title="Applied"
         isLoading={isCandidatesLoading}
         className="border-t-amber-500"

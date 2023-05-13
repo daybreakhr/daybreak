@@ -50,7 +50,7 @@ export default function Details({ data }: DetailsProps) {
 
   const options = useMemo(() => {
     return [
-      candidateStatusOptions[0],
+      ...candidateStatusOptions.slice(0, 2),
       ...(data?.Job.Interview.map(({ id, title }) => {
         return { label: title, value: id }
       }) ?? []),

@@ -1,10 +1,11 @@
-import { JobType } from '@prisma/client'
+import { JobType, CandidateStatus } from '@prisma/client'
 
 export const candidateStatusOptions = [
-  { label: 'Applied', value: 'applied' },
-  { label: 'Interview', value: 'interview' },
-  { label: 'Offered', value: 'offered' },
-  { label: 'Accepted', value: 'accepted' },
+  { label: 'Sourced', value: CandidateStatus.sourced },
+  { label: 'Applied', value: CandidateStatus.applied },
+  { label: 'Interview', value: CandidateStatus.interview },
+  { label: 'Offered', value: CandidateStatus.offered },
+  { label: 'Accepted', value: CandidateStatus.accepted },
 ]
 
 export function getJobType(jobType: JobType | null | undefined) {

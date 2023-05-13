@@ -202,6 +202,7 @@ enum CandidateSource {
 }
 
 enum CandidateStatus {
+  sourced
   applied
   interview
   offered

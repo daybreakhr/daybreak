@@ -3,13 +3,14 @@ import weekday from 'dayjs/plugin/weekday'
 import Dragger from 'antd/es/upload/Dragger'
 import { useNavigate } from 'react-router-dom'
 import localeData from 'dayjs/plugin/localeData'
+import { CandidateStatus } from '@prisma/client'
 import { InboxOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message, Select, UploadProps } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
 import { storage } from 'ui-kit'
 import type { RcFile } from 'antd/es/upload'
 import { fetchJobs } from 'pages/jobs/queries'
-import { candidateStatusOptions } from 'utils/utils'
 import { WORKSPACE_ID } from 'utils/constants'
 import { createCandidate } from '../queries'
 
@@ -51,7 +52,7 @@ export default function CandidateForm() {
         formData.append(key, value)
       }
     })
-
+    formData.append('status', CandidateStatus.sourced)
     mutate(formData)
   }
 
@@ -75,7 +76,6 @@ export default function CandidateForm() {
           form.setFieldValue('location', data.location?.city)
           form.setFieldValue('linkedInUrl', data.linkedin)
           form.setFieldValue('jobId', data.jobId)
-          form.setFieldValue('status', data.status)
           form.setFieldValue('affindaId', file.response.meta.identifier)
         }
       }
@@ -87,7 +87,7 @@ export default function CandidateForm() {
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      className="mx-64"
+      className="max-w-3xl mx-auto"
     >
       <Form.Item name="affindaId" hidden />
       <Form.Item
@@ -116,13 +116,15 @@ export default function CandidateForm() {
         >
           <Select
             placeholder="Select Job..."
-            options={jobs?.map(({ id, title }) => {
-              return { label: title, value: id }
-            })}
+            options={jobs
+              ?.filter(({ title }) => title)
+              .map(({ id, title }) => {
+                return { label: title, value: id }
+              })}
           />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="Initial Stage"
           name="status"
           className="flex-1"
@@ -132,7 +134,7 @@ export default function CandidateForm() {
             placeholder="Select initial stage..."
             options={candidateStatusOptions}
           />
-        </Form.Item>
+        </Form.Item> */}
       </div>
 
       <hr className="mt-2 mb-6" />

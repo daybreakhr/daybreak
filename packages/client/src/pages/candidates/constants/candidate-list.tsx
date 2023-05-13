@@ -6,6 +6,7 @@ import { CandidateSource, CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 
 export const statusColor: Record<CandidateStatus, string> = {
+  sourced: 'magenta',
   applied: 'cyan',
   interview: 'blue',
   offered: 'gold',
@@ -69,6 +70,7 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
       <Tag color={statusColor[status]}>{capitalize(status)}</Tag>
     ),
     filters: [
+      { text: 'Sourced', value: 'sourced' },
       { text: 'Applied', value: 'applied' },
       { text: 'interview', value: 'interview' },
       { text: 'Offered', value: 'offered' },
@@ -76,6 +78,12 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
       { text: 'Rejected', value: 'rejected' },
     ],
     onFilter: (value, record) => record.status === value,
-    defaultFilteredValue: ['applied', 'interview', 'offered', 'accepted'],
+    defaultFilteredValue: [
+      'sourced',
+      'applied',
+      'interview',
+      'offered',
+      'accepted',
+    ],
   },
 ]
