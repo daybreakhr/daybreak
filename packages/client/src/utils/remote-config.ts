@@ -5,12 +5,15 @@ export const Flags = {
   emailTemplates: 'email_templates',
   testFlag: 'test_flag',
 }
+;(async function initRemoteConfig() {
+  if (remoteConfig) {
+    remoteConfig.settings.minimumFetchIntervalMillis = 0
+    remoteConfig.defaultConfig = {
+      [Flags.emailTemplates]: false,
+    }
 
-remoteConfig.settings.minimumFetchIntervalMillis = 0
-remoteConfig.defaultConfig = {
-  [Flags.emailTemplates]: false,
-}
-
-await fetchAndActivate(remoteConfig)
+    await fetchAndActivate(remoteConfig)
+  }
+})()
 
 export const getFlagValue = (flag: string) => getValue(remoteConfig, flag)
