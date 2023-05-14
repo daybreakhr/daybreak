@@ -7,13 +7,14 @@ import {
   signOut as logOut,
   User,
 } from 'firebase/auth'
+import { setUserProperties } from 'firebase/analytics'
 import { useQueryClient } from '@tanstack/react-query'
 import type { Member } from '@prisma/client'
 import { storage } from 'ui-kit'
 
 import { WORKSPACE_ID } from 'utils/constants'
 import AuthContext from 'contexts/auth-context'
-import { auth } from 'utils/firebase'
+import { analytics, auth } from 'utils/firebase'
 import { fetchMe } from './queries'
 
 type AuthProps = {
@@ -36,6 +37,10 @@ export default function Auth({ children }: AuthProps) {
         }
 
         setUser(authUser)
+        setUserProperties(analytics, {
+          user: authUser.email,
+          WorkspaceID: member?.workspaceId,
+        })
       } else {
         setUser(null)
       }

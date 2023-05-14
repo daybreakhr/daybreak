@@ -1,10 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layout, Menu } from 'antd'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { Flags, getFlagValue } from 'utils/remote-config'
 import tabs from './tabs-list'
 
 export default function Sidebar() {
   const { pathname } = useLocation()
+
+  const emailTemplatesFlag = getFlagValue(Flags.emailTemplates).asBoolean()
+  if (emailTemplatesFlag) {
+    tabs[3].children?.push({
+      key: 'settings/email-templates',
+      label: <Link to="/settings/email-templates">Email Templates</Link>,
+    })
+  }
 
   const allKeys = useMemo(
     () =>
