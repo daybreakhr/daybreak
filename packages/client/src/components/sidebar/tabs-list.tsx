@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import {
   AiOutlineHome,
   AiOutlineSetting,
@@ -6,7 +7,17 @@ import {
 } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
 
-const tabs = [
+type Tab = {
+  key: string
+  label: ReactNode
+  icon: ReactNode
+  children?: {
+    key: string
+    label: ReactNode
+  }[]
+}
+
+const tabs: Tab[] = [
   { key: 'home', label: <Link to="/home">Home</Link>, icon: <AiOutlineHome /> },
   {
     key: 'jobs',

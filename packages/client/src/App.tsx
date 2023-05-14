@@ -36,6 +36,7 @@ import CreateProspect from 'pages/create-prospect'
 import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
+import EmailTemplates from 'pages/email-templates'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -116,6 +117,10 @@ export default function App() {
                   <Route
                     path="settings/integrations"
                     element={<Integrations />}
+                  />
+                  <Route
+                    path="settings/email-templates"
+                    element={<EmailTemplates />}
                   />
                 </Route>
               </Routes>
