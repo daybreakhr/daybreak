@@ -24,7 +24,7 @@ export default function CandidateForm() {
   const { data: jobs } = useQuery(['jobs'], fetchJobs)
 
   const candidateSources = Object.values(CandidateSource).map(
-    (source) => source.charAt(0).toUpperCase() + source.slice(1),
+    (source) => source,
   ) as string[]
 
   const queryClient = useQueryClient()
