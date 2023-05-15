@@ -1,21 +1,11 @@
-import {
-  FileTextOutlined,
-  MailOutlined,
-  PlusOutlined,
-  SettingOutlined,
-} from '@ant-design/icons'
 import { Button } from 'antd'
+import { MailOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
+
 import PageHeader from 'components/page-header'
+import Template from './components/template'
+import mailTemplates from './constants/mail-templates'
 
 export default function EmailTemplates() {
-  const mailTemplates = [
-    'Reject Candidates',
-    'Invite Candidates',
-    'Offer Letter Send',
-    'Bulk Import',
-    'Schedule event',
-  ]
-
   return (
     <>
       <PageHeader
@@ -43,14 +33,8 @@ export default function EmailTemplates() {
         </div>
 
         <div className="space-y-6">
-          {mailTemplates.map((val) => (
-            <div
-              key={val}
-              className="flex items-center justify-between p-4 border rounded shadow"
-            >
-              <p>{val}</p>
-              <Button icon={<FileTextOutlined />}>View & Edit</Button>
-            </div>
+          {mailTemplates.map((template, idx) => (
+            <Template key={idx} {...template} />
           ))}
         </div>
       </div>

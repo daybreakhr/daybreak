@@ -6,24 +6,28 @@ import tabList from './tabs-list'
 
 export default function Sidebar() {
   const { pathname } = useLocation()
-  let tabs = tabList
+  const [tabs, setTabs] = useState(tabList)
 
   const emailTemplatesFlag = getFlagValue(Flags.emailTemplates).asBoolean()
 
-  if (emailTemplatesFlag) {
-    const newTab = {
-      key: 'settings/email-templates',
-      label: <Link to="/settings/email-templates">Email Templates</Link>,
-    }
+  useEffect(() => {
+    if (emailTemplatesFlag) {
+      const newTab = {
+        key: 'settings/email-templates',
+        label: <Link to="/settings/email-templates">Email Templates</Link>,
+      }
 
-    tabs = [
-      ...tabs.slice(0, 3),
-      {
-        ...tabs[3],
-        children: tabs[3].children ? [...tabs[3].children, newTab] : [newTab],
-      },
-    ]
-  }
+      setTabs((prev) => [
+        ...prev.slice(0, 3),
+        {
+          ...prev[3],
+          children: tabList[3].children
+            ? [...tabList[3].children, newTab]
+            : [newTab],
+        },
+      ])
+    }
+  }, [emailTemplatesFlag])
 
   const allKeys = useMemo(
     () =>
