@@ -17,6 +17,11 @@ export const statusColor: Record<CandidateStatus, string> = {
 export const candidateStatusFilters = [
   { value: CandidateSource.jobBoard, text: 'Portal' },
   { value: CandidateSource.referral, text: 'Referral' },
+  { value: CandidateSource.linkedIn, text: 'LinkedIn' },
+  { value: CandidateSource.instahyre, text: 'Instahyre' },
+  { value: CandidateSource.iimjobs, text: 'IIMJobs' },
+  { value: CandidateSource.naukri, text: 'Naukri' },
+  { value: CandidateSource.other, text: 'Other' },
 ]
 
 export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
@@ -46,6 +51,16 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
           return <Tag color="purple">Portal</Tag>
         case 'referral':
           return <Tag color="gold">Referral</Tag>
+        case 'linkedIn':
+          return <Tag color="cyan">LinkedIn</Tag>
+        case 'instahyre':
+          return <Tag color="volcano">Instahyre</Tag>
+        case 'iimjobs':
+          return <Tag color="green">IIMJobs</Tag>
+        case 'naukri':
+          return <Tag color="magenta">Naukri</Tag>
+        case 'other':
+          return <Tag color="black">Other</Tag>
         default:
           return source
       }
