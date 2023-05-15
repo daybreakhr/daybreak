@@ -3,7 +3,7 @@ import weekday from 'dayjs/plugin/weekday'
 import Dragger from 'antd/es/upload/Dragger'
 import { useNavigate } from 'react-router-dom'
 import localeData from 'dayjs/plugin/localeData'
-import { CandidateStatus, CandidateSource } from '@prisma/client'
+import { CandidateStatus } from '@prisma/client'
 import { InboxOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message, Select, UploadProps } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,6 +11,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { storage } from 'ui-kit'
 import type { RcFile } from 'antd/es/upload'
 import { fetchJobs } from 'pages/jobs/queries'
+import { candidateSources } from 'pages/create-candidate/constants/source-list'
 import { WORKSPACE_ID } from 'utils/constants'
 import { createCandidate } from '../queries'
 
@@ -22,10 +23,6 @@ export default function CandidateForm() {
   const navigate = useNavigate()
 
   const { data: jobs } = useQuery(['jobs'], fetchJobs)
-
-  const candidateSources = Object.values(CandidateSource).map(
-    (source) => source,
-  ) as string[]
 
   const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(createCandidate, {
@@ -135,25 +132,13 @@ export default function CandidateForm() {
           rules={[{ required: false, message: 'Please select a source' }]}
         >
           <Select placeholder="Select source...">
-            {candidateSources.map((source: string) => (
-              <option key={source} value={source}>
-                {source}
+            {candidateSources.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
               </option>
             ))}
           </Select>
         </Form.Item>
-
-        {/* <Form.Item
-          label="Initial Stage"
-          name="status"
-          className="flex-1"
-          rules={[{ required: false, message: 'Please select initial stage' }]}
-        >
-          <Select
-            placeholder="Select initial stage..."
-            options={candidateStatusOptions}
-          />
-        </Form.Item> */}
       </div>
 
       <hr className="mt-2 mb-6" />
