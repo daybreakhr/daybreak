@@ -51,7 +51,7 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
         case 'instahyre':
           return <Tag color="volcano">Instahyre</Tag>
         case 'iimjobs':
-          return <Tag color="green">IIMJobs</Tag>
+          return <Tag color="green">IIM-Jobs</Tag>
         case 'naukri':
           return <Tag color="magenta">Naukri</Tag>
         case 'other':
