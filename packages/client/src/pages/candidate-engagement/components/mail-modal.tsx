@@ -1,4 +1,4 @@
-import { Form, Input, Modal } from 'antd'
+import { Form, Input, Modal, Select } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
@@ -26,6 +26,7 @@ import {
   CodeExtension,
 } from 'remirror/extensions'
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from 'remirror'
+import mailTemplates from 'pages/email-templates/constants/mail-templates'
 import { createEmailEvent } from '../queries'
 
 type MailModalProps = {
@@ -49,7 +50,7 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
   const [form] = Form.useForm()
   const { candidateId = '' } = useParams()
 
-  const { manager, state, onChange } = useRemirror({
+  const { manager, state } = useRemirror({
     extensions,
     selection: 'end',
     stringHandler: htmlToProsemirrorNode,
@@ -62,6 +63,14 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
       onClose()
     },
   })
+
+  function handleSelection(value: number) {
+    const template = mailTemplates.find((t) => t.id === value)
+    form.setFieldsValue({ subject: template?.subject ?? '' })
+    manager.view.updateState(
+      manager.createState({ content: template?.body ?? '' }),
+    )
+  }
 
   function handleOk() {
     form.validateFields().then(({ subject }: { subject: string }) => {
@@ -83,6 +92,22 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
       okButtonProps={{ loading: isLoading }}
     >
       <Form layout="vertical" className="py-2" form={form}>
+        <Form.Item label="Template" name="template">
+          <Select
+            showSearch
+            allowClear
+            placeholder="Search for a template..."
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={mailTemplates.map(({ id, title }) => ({
+              label: title,
+              value: id,
+            }))}
+            onChange={handleSelection}
+          />
+        </Form.Item>
+
         <Form.Item
           label="Subject"
           name="subject"
@@ -93,10 +118,9 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
 
         <ThemeProvider>
           <Remirror
-            state={state}
             autoRender="end"
             manager={manager}
-            onChange={onChange}
+            initialContent={state}
             classNames={[
               'h-56',
               'prose',
