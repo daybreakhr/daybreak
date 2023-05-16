@@ -12,7 +12,9 @@ import { storage } from 'ui-kit'
 import type { RcFile } from 'antd/es/upload'
 import { fetchJobs } from 'pages/jobs/queries'
 import { WORKSPACE_ID } from 'utils/constants'
+
 import { createCandidate } from '../queries'
+import { candidateSources } from '../constants/source-list'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -124,17 +126,14 @@ export default function CandidateForm() {
           />
         </Form.Item>
 
-        {/* <Form.Item
-          label="Initial Stage"
-          name="status"
+        <Form.Item
+          name="source"
+          label="Source"
           className="flex-1"
-          rules={[{ required: false, message: 'Please select initial stage' }]}
+          rules={[{ required: false, message: 'Please select a source' }]}
         >
-          <Select
-            placeholder="Select initial stage..."
-            options={candidateStatusOptions}
-          />
-        </Form.Item> */}
+          <Select placeholder="Select source..." options={candidateSources} />
+        </Form.Item>
       </div>
 
       <hr className="mt-2 mb-6" />

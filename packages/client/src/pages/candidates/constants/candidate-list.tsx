@@ -46,6 +46,16 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
           return <Tag color="purple">Portal</Tag>
         case 'referral':
           return <Tag color="gold">Referral</Tag>
+        case 'linkedIn':
+          return <Tag color="cyan">LinkedIn</Tag>
+        case 'instahyre':
+          return <Tag color="volcano">Instahyre</Tag>
+        case 'iimjobs':
+          return <Tag color="green">IIM-Jobs</Tag>
+        case 'naukri':
+          return <Tag color="magenta">Naukri</Tag>
+        case 'other':
+          return <Tag color="blue">Other</Tag>
         default:
           return source
       }
