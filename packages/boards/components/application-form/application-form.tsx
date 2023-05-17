@@ -1,11 +1,11 @@
-import { useState } from 'react'
 import { useRouter } from 'next/router'
 import type { UploadProps } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { InboxOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import type { RcFile, UploadFile } from 'antd/lib/upload'
-import { Button, Form, Input, message, Upload } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { createCandidate, CreateCandidateBody } from 'queries'
+import Dragger from 'antd/lib/upload/Dragger'
 
 type ApplicationFormProps = {
   workspaceId: string
@@ -14,12 +14,10 @@ type ApplicationFormProps = {
 export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
   const { query, push } = useRouter()
   const [form] = Form.useForm()
-  const [disableUpload, setDisableUpload] = useState(false)
 
   const { mutate, isLoading } = useMutation(createCandidate, {
     onSuccess: () => {
       form.resetFields()
-      setDisableUpload(false)
       message.success('Successfully applied for the job!')
       push(`/${query.slug}`)
     },
@@ -38,12 +36,6 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
     },
     // Use data parsed from Affinda API to auto-fill form
     onChange: ({ file }) => {
-      if (file.status !== 'removed') {
-        setDisableUpload(true)
-      } else {
-        setDisableUpload(false)
-      }
-
       if (file.status === 'done') {
         const { data } = file.response
         if (data) {
@@ -85,13 +77,18 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       <Form.Item
         name="file"
         valuePropName="file"
+        label="Upload Resume"
         rules={[{ required: true, message: 'Please upload your resume!' }]}
       >
-        <Upload {...uploadProps}>
-          <Button icon={<UploadOutlined />} disabled={disableUpload}>
-            Upload Resume
-          </Button>
-        </Upload>
+        <Dragger {...uploadProps} accept=".pdf, .doc, .docx, .rtf" maxCount={1}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">PDF, Word or Rich Text only</p>
+        </Dragger>
       </Form.Item>
 
       <div className="flex justify-between space-x-4">
