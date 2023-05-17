@@ -58,6 +58,7 @@ export class FeedbackController {
   }
 
   @Post('')
+  @ApiBody({ type: CreateFeedbackDto })
   @ApiOperation({ summary: 'Create a feedback' })
   @ApiCreatedResponse({ description: 'Created Succesfully', type: Feedback })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })

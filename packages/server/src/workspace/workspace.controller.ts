@@ -100,6 +100,17 @@ export class WorkspaceController {
     return data
   }
 
+  @Get(':workspaceId/email-template')
+  @UseGuards(AuthGuard)
+  async getEmailTemplateForWorkspace(
+    @Param('workspaceId') workspaceId: string,
+  ) {
+    const data = await this.workspaceService.getEmailTemplateForWorkspace(
+      workspaceId,
+    )
+    return data
+  }
+
   @Get(':workspaceId/jobs')
   @UseGuards(AuthGuard)
   @ApiSecurity('access-key')

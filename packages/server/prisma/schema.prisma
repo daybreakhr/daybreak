@@ -11,34 +11,35 @@ datasource db {
 }
 
 model Workspace {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  slug        String       @unique
-  logo        String?
-  description String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  members     Member[]
-  invitees    Invitees[]
-  Department  Department[]
-  Location    Location[]
-  Job         Job[]
-  Candidate   Candidate[]
-  Prospect    Prospect[]
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  slug           String          @unique
+  logo           String?
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  members        Member[]
+  invitees       Invitees[]
+  Department     Department[]
+  Location       Location[]
+  Job            Job[]
+  Candidate      Candidate[]
+  Prospect       Prospect[]
+  EmailTemplates EmailTemplate[]
 }
 
 model Member {
-  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
-  uid                String         @unique // unique id provided firebase authentication
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  uid                String          @unique // unique id provided firebase authentication
   role               Role
   googleRefreshToken EncryptedData?
   slackBotToken      EncryptedData?
   slackUserId        String?
   slackBotUserId     String?
   invites            Invitees[]
-  Workspace          Workspace      @relation(fields: [workspaceId], references: [id])
-  workspaceId        String         @db.ObjectId
-  isSuspended        Boolean        @default(false)
+  Workspace          Workspace       @relation(fields: [workspaceId], references: [id])
+  workspaceId        String          @db.ObjectId
+  isSuspended        Boolean         @default(false)
   Department         Department[]
   Location           Location[]
   Job                Job[]
@@ -49,6 +50,7 @@ model Member {
   Interview          Interview[]
   Referrals          Candidate[] // Candidates referred by this member
   SlackReferral      Referral[] // These are intermediate states required to create a referral using slack
+  EmailTemplates     EmailTemplate[]
 }
 
 type EncryptedData {
@@ -293,4 +295,17 @@ type Integration {
 type App {
   isInstalled Boolean
   createdAt   DateTime @default(now())
+}
+
+model EmailTemplate {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  subject     String
+  body        String
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @db.ObjectId
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

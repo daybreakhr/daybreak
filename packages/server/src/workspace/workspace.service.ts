@@ -62,6 +62,13 @@ export class WorkspaceService {
     return departments
   }
 
+  async getEmailTemplateForWorkspace(workspaceId: string) {
+    const emailTemplates = await this.prismaService.emailTemplate.findMany({
+      where: { workspaceId },
+    })
+    return emailTemplates
+  }
+
   async getJobsForWorkspace(workspaceId: string) {
     const jobs = await this.prismaService.job.findMany({
       where: { workspaceId },
