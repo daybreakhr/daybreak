@@ -83,7 +83,7 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
       mutate({
         subject,
         candidateId,
-        body: prosemirrorNodeToHtml(state.doc),
+        body: prosemirrorNodeToHtml(manager.view.state.doc),
       })
     })
   }

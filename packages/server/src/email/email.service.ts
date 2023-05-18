@@ -13,7 +13,6 @@ export class EmailService {
 
   async createEmailEvent(
     accessToken: string,
-
     user: UserRecord,
     emailBody: CreateEmailDto,
   ) {
