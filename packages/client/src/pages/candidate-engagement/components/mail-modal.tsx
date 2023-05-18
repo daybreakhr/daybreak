@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Select } from 'antd'
 import { useParams } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   HeadingLevelButtonGroup,
   Remirror,
@@ -26,7 +26,8 @@ import {
   CodeExtension,
 } from 'remirror/extensions'
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from 'remirror'
-import mailTemplates from 'pages/email-templates/constants/mail-templates'
+
+import { fetchEmailTemplates } from 'pages/email-templates/queries'
 import { createEmailEvent } from '../queries'
 
 type MailModalProps = {
@@ -56,6 +57,11 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
     stringHandler: htmlToProsemirrorNode,
   })
 
+  const { data: mailTemplates } = useQuery(
+    ['email-templates'],
+    fetchEmailTemplates,
+  )
+
   const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(createEmailEvent, {
     onSuccess: () => {
@@ -64,8 +70,8 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
     },
   })
 
-  function handleSelection(value: number) {
-    const template = mailTemplates.find((t) => t.id === value)
+  function handleSelection(value: string) {
+    const template = mailTemplates?.find((t) => t.id === value)
     form.setFieldsValue({ subject: template?.subject ?? '' })
     manager.view.updateState(
       manager.createState({ content: template?.body ?? '' }),
@@ -100,8 +106,8 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
             filterOption={(input, option) =>
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
-            options={mailTemplates.map(({ id, title }) => ({
-              label: title,
+            options={mailTemplates?.map(({ id, name }) => ({
+              label: name,
               value: id,
             }))}
             onChange={handleSelection}

@@ -100,7 +100,7 @@ export class WorkspaceController {
     return data
   }
 
-  @Get(':workspaceId/email-template')
+  @Get(':workspaceId/email-templates')
   @UseGuards(AuthGuard)
   async getEmailTemplateForWorkspace(
     @Param('workspaceId') workspaceId: string,

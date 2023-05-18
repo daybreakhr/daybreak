@@ -23,14 +23,17 @@ import {
   StrikeExtension,
   CodeExtension,
 } from 'remirror/extensions'
-import { htmlToProsemirrorNode } from 'remirror'
+import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from 'remirror'
+import { CreateTemplateDto } from '../queries'
 
 type MailModalProps = {
   body: string
-  title: string
+  name: string
   subject: string
   isOpen: boolean
+  isLoading: boolean
   onClose: () => void
+  onSave: (values: CreateTemplateDto) => void
 }
 
 const extensions = () => [
@@ -47,10 +50,12 @@ const extensions = () => [
 
 export default function MailModal({
   body,
-  title,
+  name,
   isOpen,
   onClose,
   subject,
+  onSave,
+  isLoading,
 }: MailModalProps) {
   const [form] = Form.useForm()
 
@@ -62,28 +67,31 @@ export default function MailModal({
   })
 
   function handleOk() {
-    form.validateFields().then(() => {})
+    form.validateFields().then((values: Omit<CreateTemplateDto, 'body'>) => {
+      onSave({ ...values, body: prosemirrorNodeToHtml(state.doc) })
+    })
   }
 
   return (
     <Modal
       width={720}
       open={isOpen}
+      okText="Save"
       destroyOnClose
       onOk={handleOk}
       onCancel={onClose}
-      okText="Save"
       title="Email Template"
+      okButtonProps={{ loading: isLoading }}
     >
       <Form
         form={form}
         layout="vertical"
         className="py-2"
-        initialValues={{ title, subject }}
+        initialValues={{ name, subject }}
       >
         <Form.Item
           label="Template Name"
-          name="title"
+          name="name"
           rules={[
             { required: true, message: 'Please enter name for this template!' },
           ]}

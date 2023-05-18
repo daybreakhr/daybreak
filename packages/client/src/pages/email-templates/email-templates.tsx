@@ -1,11 +1,30 @@
+import { useState } from 'react'
 import { Button } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MailOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
 import Template from './components/template'
-import mailTemplates from './constants/mail-templates'
+import { createEmailTemplate, fetchEmailTemplates } from './queries'
+import MailModal from './components/mail-modal'
 
 export default function EmailTemplates() {
+  const initialValues = { name: '', subject: '', body: '' }
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { data } = useQuery(['email-templates'], fetchEmailTemplates)
+
+  const queryClient = useQueryClient()
+  const { mutate: createTemplate, isLoading } = useMutation(
+    createEmailTemplate,
+    {
+      onSuccess: () => {
+        setIsModalOpen(false)
+        queryClient.invalidateQueries(['email-templates'])
+      },
+    },
+  )
+
   return (
     <>
       <PageHeader
@@ -27,17 +46,29 @@ export default function EmailTemplates() {
           </div>
           <p className="text-lg font-semibold">Email Templates</p>
           <div className="flex-1" />
-          <Button icon={<PlusOutlined />} type="primary">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setIsModalOpen(true)}
+          >
             Create New Template
           </Button>
         </div>
 
         <div className="space-y-6">
-          {mailTemplates.map((template, idx) => (
+          {data?.map((template, idx) => (
             <Template key={idx} {...template} />
           ))}
         </div>
       </div>
+
+      <MailModal
+        {...initialValues}
+        isOpen={isModalOpen}
+        isLoading={isLoading}
+        onSave={createTemplate}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   )
 }
