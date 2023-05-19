@@ -136,7 +136,9 @@ export default function ApplicationForm({ workspaceId }: ApplicationFormProps) {
       <Form.Item
         name="location"
         label="City / Country"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        rules={[
+          { required: true, message: 'Please input your current location!' },
+        ]}
         required
       >
         <Input placeholder="Enter your current location..." />
