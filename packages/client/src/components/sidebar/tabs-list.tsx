@@ -46,6 +46,10 @@ const tabs: Tab[] = [
         key: 'settings/integrations',
         label: <Link to="/settings/integrations">Integrations</Link>,
       },
+      {
+        key: 'settings/email-templates',
+        label: <Link to="/settings/email-templates">Email Templates</Link>,
+      },
     ],
   },
 ]
