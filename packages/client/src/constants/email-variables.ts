@@ -4,5 +4,4 @@ export const EMAIL_VARIABLES = [
   '{{company_name}}',
   '{{job_title}}',
   '{{job_link}}',
-  '{{job_apply_link}}',
 ]
