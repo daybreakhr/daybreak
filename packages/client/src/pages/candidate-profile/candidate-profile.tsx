@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
-import { Button, Result, Tag } from 'antd'
+import { Result, Tag } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
-import { AiOutlineCloudDownload } from 'react-icons/ai'
 import { Show, Switch } from 'ui-kit'
 
 import { Candidate as TCandidate } from 'types/candidate'
@@ -98,7 +97,7 @@ export default function CandidateProfile() {
 
                   <Switch.Match when={data}>
                     {({ location }) => (
-                      <p className="font-medium">{location}</p>
+                      <p className="font-medium">{location ?? 'N/A'}</p>
                     )}
                   </Switch.Match>
                 </Switch>
@@ -146,20 +145,6 @@ export default function CandidateProfile() {
                 </Switch>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <img src="/assets/pdf.png" className="w-12" />
-
-            <Button
-              type="link"
-              size="large"
-              target="_blank"
-              href={data?.resume ?? ''}
-              icon={<AiOutlineCloudDownload />}
-            >
-              Resume.pdf
-            </Button>
           </div>
         </div>
       </div>
