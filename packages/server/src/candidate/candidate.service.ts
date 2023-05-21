@@ -1,5 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Express } from 'express'
+import type { ResumeData } from '@affinda/affinda'
+import type { Education, Experience } from '@prisma/client'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
@@ -54,7 +56,7 @@ export class CandidateService {
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,
   ) {
-    const { jobId, workspaceId, ...restParams } = createCandidateDto
+    const { jobId, workspaceId, affindaId, ...restParams } = createCandidateDto
 
     const isApplied = await this.prismaService.candidate.findFirst({
       where: {
@@ -74,9 +76,18 @@ export class CandidateService {
       )
     }
 
-    const { id, affindaId, Job } = await this.prismaService.candidate.create({
+    const affindaData = await this.affindaService.getParsedResume(affindaId)
+    const education = this.getEducationDetails(affindaData)
+    const experience = this.getExperienceDetails(affindaData)
+
+    const { id } = await this.prismaService.candidate.create({
       data: {
         ...restParams,
+        affindaId,
+        education,
+        experience,
+        totalYearsOfExperience: affindaData.totalYearsExperience,
+        skills: affindaData.skills.map(({ name }) => name),
         Workspace: { connect: { id: workspaceId } },
         Job: { connect: { id: jobId } },
       },
@@ -84,29 +95,15 @@ export class CandidateService {
     })
 
     const key = `candidate/${id}/${file.originalname}`
-    const uploadResult = await this.s3Service.uploadS3({
+    const { Location } = await this.s3Service.uploadS3({
       file: file.buffer,
       key,
       mimetype: file.mimetype,
     })
 
-    let matchScore: number
-
-    if (affindaId && Job.affindaId) {
-      const data = await this.affindaService.matchResumeAgainstJobDescription(
-        affindaId,
-        Job.affindaId,
-      )
-
-      matchScore = data?.score
-    }
-
     const candidate = await this.prismaService.candidate.update({
       where: { id },
-      data: {
-        resume: uploadResult.Location,
-        matchScore: matchScore ? +(matchScore * 100).toFixed(0) : undefined,
-      },
+      data: { resume: Location },
     })
 
     this.notificationService.candidateAppliedNotification(jobId, candidate)
@@ -128,5 +125,27 @@ export class CandidateService {
       where: { id: candidateId },
     })
     return candidate
+  }
+
+  getEducationDetails(data: ResumeData): Education[] {
+    return data.education.map((edu) => ({
+      location: edu.location?.formatted,
+      course: edu.accreditation?.education,
+      startDate: new Date(edu.dates?.startDate),
+      endDate: new Date(edu.dates?.completionDate),
+      isCurrent: edu.dates.isCurrent,
+      institute: edu?.organization,
+    }))
+  }
+
+  getExperienceDetails(data: ResumeData): Experience[] {
+    return data.workExperience.map((exp) => ({
+      location: exp.location?.formatted,
+      company: exp?.organization,
+      startDate: new Date(exp.dates?.startDate),
+      endDate: new Date(exp.dates?.endDate),
+      isCurrent: exp.dates.isCurrent,
+      designation: exp?.jobTitle,
+    }))
   }
 }

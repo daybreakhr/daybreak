@@ -168,32 +168,55 @@ model Location {
 }
 
 model Candidate {
-  id               String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstName        String
-  middleName       String?
-  lastName         String
-  email            String
-  phone            String
-  location         String?
-  resume           String?
-  source           CandidateSource @default(jobBoard)
-  affindaId        String          @unique
-  linkedInUrl      String?
-  matchScore       Int?
-  status           CandidateStatus @default(applied)
-  rejectionMessage String?
-  createdAt        DateTime        @default(now())
-  Job              Job             @relation(fields: [jobId], references: [id])
-  jobId            String          @db.ObjectId
-  Workspace        Workspace       @relation(fields: [workspaceId], references: [id])
-  workspaceId      String          @db.ObjectId
-  Feedback         Feedback[]
-  Calendar         Calendar[]
-  Email            Email[]
-  Interview        Interview?      @relation(fields: [interviewId], references: [id])
-  interviewId      String?         @db.ObjectId
-  Referral         Member?         @relation(fields: [referredBy], references: [uid])
-  referredBy       String?
+  id                     String          @id @default(auto()) @map("_id") @db.ObjectId
+  firstName              String
+  middleName             String?
+  lastName               String
+  email                  String
+  phone                  String
+  location               String?
+  resume                 String?
+  skills                 String[]
+  totalYearsOfExperience Int?
+  currentCompany         String?
+  education              Education[]
+  experience             Experience[]
+  source                 CandidateSource @default(jobBoard)
+  affindaId              String          @unique
+  linkedInUrl            String?
+  matchScore             Int?
+  status                 CandidateStatus @default(applied)
+  rejectionMessage       String?
+  createdAt              DateTime        @default(now())
+  Job                    Job             @relation(fields: [jobId], references: [id])
+  jobId                  String          @db.ObjectId
+  Workspace              Workspace       @relation(fields: [workspaceId], references: [id])
+  workspaceId            String          @db.ObjectId
+  Feedback               Feedback[]
+  Calendar               Calendar[]
+  Email                  Email[]
+  Interview              Interview?      @relation(fields: [interviewId], references: [id])
+  interviewId            String?         @db.ObjectId
+  Referral               Member?         @relation(fields: [referredBy], references: [uid])
+  referredBy             String?
+}
+
+type Education {
+  location  String?
+  course    String?
+  isCurrent Boolean?
+  startDate DateTime?
+  endDate   DateTime?
+  institute String?
+}
+
+type Experience {
+  location    String?
+  isCurrent   Boolean?
+  startDate   DateTime?
+  endDate     DateTime?
+  company     String?
+  designation String?
 }
 
 enum CandidateSource {
