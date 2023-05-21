@@ -100,7 +100,7 @@ export default function App() {
                     <Route path="profile" element={<CandidateProfile />} />
                     <Route path="resume" element={<CandidateResume />} />
                     <Route path="feedback" element={<CandidateFeedback />} />
-                    <Route path="engagement" element={<CandidateComment />} />
+                    <Route path="comment" element={<CandidateComment />} />
                     <Route
                       path="engagement"
                       element={<CandidateEngagement />}
