@@ -37,6 +37,7 @@ import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import CandidateResume from 'pages/candidate-resume'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -96,6 +97,7 @@ export default function App() {
                       element={<Navigate to="profile" replace />}
                     />
                     <Route path="profile" element={<CandidateProfile />} />
+                    <Route path="resume" element={<CandidateResume />} />
                     <Route path="feedback" element={<CandidateFeedback />} />
                     <Route
                       path="engagement"
