@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import { Button } from 'antd'
+import { range } from 'lodash'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MailOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
+import { Switch } from 'ui-kit'
 
 import PageHeader from 'components/page-header'
 import Template from './components/template'
-import { createEmailTemplate, fetchEmailTemplates } from './queries'
 import MailModal from './components/mail-modal'
+import { createEmailTemplate, fetchEmailTemplates } from './queries'
 
 export default function EmailTemplates() {
   const initialValues = { name: '', subject: '', body: '' }
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data } = useQuery(['email-templates'], fetchEmailTemplates)
+  const { data, isLoading } = useQuery(['email-templates'], fetchEmailTemplates)
 
   const queryClient = useQueryClient()
-  const { mutate: createTemplate, isLoading } = useMutation(
+  const { mutate: createTemplate, isLoading: isCreatingTemplate } = useMutation(
     createEmailTemplate,
     {
       onSuccess: () => {
@@ -56,17 +58,37 @@ export default function EmailTemplates() {
         </div>
 
         <div className="space-y-6">
-          {data?.map((template, idx) => (
-            <Template key={idx} {...template} />
-          ))}
+          <Switch>
+            <Switch.Match when={isLoading}>
+              {range(3).map((val) => (
+                <div
+                  key={val}
+                  className="flex items-center px-4 py-3 space-x-3 border rounded-md"
+                >
+                  <div className="w-full h-6 max-w-lg bg-gray-100 rounded animate-pulse" />
+                  <div className="flex-1" />
+                  <div className="w-20 h-8 bg-gray-100 rounded animate-pulse" />
+                  <div className="w-20 h-8 bg-gray-100 rounded animate-pulse" />
+                </div>
+              ))}
+            </Switch.Match>
+
+            <Switch.Match when={data}>
+              {(data) =>
+                data.map((template, idx) => (
+                  <Template key={idx} {...template} />
+                ))
+              }
+            </Switch.Match>
+          </Switch>
         </div>
       </div>
 
       <MailModal
         {...initialValues}
         isOpen={isModalOpen}
-        isLoading={isLoading}
         onSave={createTemplate}
+        isLoading={isCreatingTemplate}
         onClose={() => setIsModalOpen(false)}
       />
     </>

@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import type { UploadProps } from 'antd'
+import Dragger from 'antd/lib/upload/Dragger'
 import { InboxOutlined } from '@ant-design/icons'
+import { Button, Form, Input, message } from 'antd'
 import { useMutation } from '@tanstack/react-query'
 import type { RcFile, UploadFile } from 'antd/lib/upload'
-import { Button, Form, Input, message } from 'antd'
 import { createCandidate, CreateCandidateBody } from 'queries'
-import Dragger from 'antd/lib/upload/Dragger'
 
 type ApplicationFormProps = {
   workspaceId: string

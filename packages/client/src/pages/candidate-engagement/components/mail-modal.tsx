@@ -27,6 +27,7 @@ import {
 } from 'remirror/extensions'
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from 'remirror'
 
+import VariablesDropdown from 'components/variables-dropdown'
 import { fetchEmailTemplates } from 'pages/email-templates/queries'
 import { createEmailEvent } from '../queries'
 
@@ -51,7 +52,7 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
   const [form] = Form.useForm()
   const { candidateId = '' } = useParams()
 
-  const { manager, state } = useRemirror({
+  const { manager, state, setState, onChange } = useRemirror({
     extensions,
     selection: 'end',
     stringHandler: htmlToProsemirrorNode,
@@ -86,6 +87,11 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
         body: prosemirrorNodeToHtml(manager.view.state.doc),
       })
     })
+  }
+
+  function insertVariable(variable: string) {
+    const newState = state.applyTransaction(state.tr.insertText(variable)).state
+    setState(newState)
   }
 
   return (
@@ -126,7 +132,8 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
           <Remirror
             autoRender="end"
             manager={manager}
-            initialContent={state}
+            state={state}
+            onChange={onChange}
             classNames={[
               'h-56',
               'prose',
@@ -145,6 +152,7 @@ export default function MailModal({ isOpen, onClose }: MailModalProps) {
               <ToggleBulletListButton />
               <ToggleOrderedListButton />
               <ToggleStrikeButton />
+              <VariablesDropdown insertVariable={insertVariable} />
             </Toolbar>
           </Remirror>
         </ThemeProvider>
