@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
-import { Avatar, Empty } from 'antd'
 import { range } from 'lodash'
+import { Avatar, Empty } from 'antd'
+import type { Experience } from '@prisma/client'
 import { Scrollbars } from 'react-custom-scrollbars'
-import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
+// import type { ResumeDataWorkExperienceItem } from '@affinda/affinda'
 import { Show, Switch } from 'ui-kit'
 
 type ExperiencesProps = {
-  experiences: ResumeDataWorkExperienceItem[]
+  experiences: Experience[] | undefined
   isLoading: boolean
 }
 
@@ -39,7 +40,7 @@ export default function Experiences({
               ))}
             </Switch.Match>
 
-            <Switch.Match when={experiences.length === 0}>
+            <Switch.Match when={experiences?.length === 0}>
               <Empty
                 description={
                   <div>
@@ -52,36 +53,41 @@ export default function Experiences({
 
             <Switch.Match when={experiences}>
               {(data) =>
-                data.map(({ jobTitle, organization, id, dates }) => (
-                  <li key={id}>
-                    <div className="flex items-start space-x-3">
-                      <Avatar>{organization?.[0]}</Avatar>
-                      <div>
-                        <p className="font-medium">{organization}</p>
-                        <p className="text-gray-800">{jobTitle}</p>
+                data.map(
+                  (
+                    { company, designation, startDate, endDate, isCurrent },
+                    idx,
+                  ) => (
+                    <li key={idx}>
+                      <div className="flex items-start space-x-3">
+                        <Avatar>{company?.[0]}</Avatar>
+                        <div>
+                          <p className="font-medium">{company}</p>
+                          <p className="text-gray-800">{designation}</p>
+                        </div>
+                        <div className="flex-1" />
+
+                        <p className="text-gray-500">
+                          <Show when={startDate}>
+                            {(date) => (
+                              <span>{dayjs(date).format('MMM YY')} - </span>
+                            )}
+                          </Show>
+
+                          <Show when={endDate}>
+                            {(date) => (
+                              <span>
+                                {isCurrent
+                                  ? 'Present'
+                                  : dayjs(date).format('MMM YY')}
+                              </span>
+                            )}
+                          </Show>
+                        </p>
                       </div>
-                      <div className="flex-1" />
-
-                      <p className="text-gray-500">
-                        <Show when={dates?.startDate}>
-                          {(date) => (
-                            <span>{dayjs(date).format('MMM YY')} - </span>
-                          )}
-                        </Show>
-
-                        <Show when={dates?.endDate}>
-                          {(date) => (
-                            <span>
-                              {dates?.isCurrent
-                                ? 'Present'
-                                : dayjs(date).format('MMM YY')}
-                            </span>
-                          )}
-                        </Show>
-                      </p>
-                    </div>
-                  </li>
-                ))
+                    </li>
+                  ),
+                )
               }
             </Switch.Match>
           </Switch>

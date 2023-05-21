@@ -1,7 +1,7 @@
 import { Express } from 'express'
-import type { ResumeData } from '@affinda/affinda'
 import type { Education, Experience } from '@prisma/client'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
@@ -77,8 +77,16 @@ export class CandidateService {
     }
 
     const affindaData = await this.affindaService.getParsedResume(affindaId)
+
+    const sortedExperiences =
+      affindaData?.workExperience?.sort(
+        (a, b) =>
+          new Date(b.dates?.endDate ?? '').valueOf() -
+          new Date(a.dates?.endDate ?? '').valueOf(),
+      ) ?? []
+
     const education = this.getEducationDetails(affindaData)
-    const experience = this.getExperienceDetails(affindaData)
+    const experience = this.getExperienceDetails(sortedExperiences)
 
     const { id } = await this.prismaService.candidate.create({
       data: {
@@ -86,6 +94,7 @@ export class CandidateService {
         affindaId,
         education,
         experience,
+        currentCompany: sortedExperiences[0]?.organization,
         totalYearsOfExperience: affindaData.totalYearsExperience,
         skills: affindaData.skills.map(({ name }) => name),
         Workspace: { connect: { id: workspaceId } },
@@ -138,8 +147,8 @@ export class CandidateService {
     }))
   }
 
-  getExperienceDetails(data: ResumeData): Experience[] {
-    return data.workExperience.map((exp) => ({
+  getExperienceDetails(data: ResumeDataWorkExperienceItem[]): Experience[] {
+    return data.map((exp) => ({
       location: exp.location?.formatted,
       company: exp?.organization,
       startDate: new Date(exp.dates?.startDate),

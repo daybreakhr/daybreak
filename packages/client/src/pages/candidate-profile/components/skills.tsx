@@ -1,11 +1,10 @@
-import { range } from 'lodash'
-import type { ResumeDataSkillsItem } from '@affinda/affinda'
-import { Switch } from 'ui-kit'
 import { Tag } from 'antd'
+import { range } from 'lodash'
 import { Scrollbars } from 'react-custom-scrollbars'
+import { Switch } from 'ui-kit'
 
 type SkillsProps = {
-  skills: ResumeDataSkillsItem[] | undefined
+  skills: string[] | undefined
   isLoading: boolean
 }
 
@@ -29,8 +28,8 @@ export default function Skills({ skills, isLoading }: SkillsProps) {
 
             <Switch.Match when={skills}>
               {(data) =>
-                data.map(({ id, name }) => (
-                  <li key={id} className="pb-2">
+                data.map((name, idx) => (
+                  <li key={idx} className="pb-2">
                     <Tag>{name}</Tag>
                   </li>
                 ))

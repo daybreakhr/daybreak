@@ -1,48 +1,18 @@
-import { useMemo, useState } from 'react'
 import { Result, Tag } from 'antd'
 import { useParams } from 'react-router-dom'
-import { useQueries } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
 
-import { Candidate as TCandidate } from 'types/candidate'
-import { fetchCandidate, fetchParseResume } from 'pages/candidate/queries'
+import { fetchCandidate } from 'pages/candidate/queries'
 import Skills from './components/skills'
 import Education from './components/education'
 import Experiences from './components/experiences'
 
 export default function CandidateProfile() {
   const { candidateId = '' } = useParams()
-  const [affindaKey, setAffindaKey] = useState<string | undefined>()
-  const [
-    { data, isLoading: isCandidateLoading },
-    { data: affindaData, isLoading: isAffindaLoading },
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: ['candidate', candidateId],
-        queryFn: () => fetchCandidate(candidateId),
-        onSuccess({ affindaId }: TCandidate) {
-          setAffindaKey(affindaId)
-        },
-      },
-      {
-        queryKey: ['affinda', candidateId],
-        queryFn: () => fetchParseResume(affindaKey),
-        enabled: !!affindaKey,
-      },
-    ],
-  })
 
-  const isLoading = () => isCandidateLoading || isAffindaLoading
-
-  const sortedExperiences = useMemo(
-    () =>
-      affindaData?.data?.workExperience?.sort(
-        (a, b) =>
-          new Date(b.dates?.endDate ?? '').valueOf() -
-          new Date(a.dates?.endDate ?? '').valueOf(),
-      ) ?? [],
-    [affindaData?.data?.workExperience],
+  const { data, isLoading } = useQuery(['candidate', candidateId], () =>
+    fetchCandidate(candidateId),
   )
 
   return (
@@ -74,7 +44,7 @@ export default function CandidateProfile() {
               <div>
                 <p className="text-xs text-gray-800 uppercase">Name</p>
                 <Switch>
-                  <Switch.Match when={isLoading()}>
+                  <Switch.Match when={isLoading}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
                   </Switch.Match>
 
@@ -91,7 +61,7 @@ export default function CandidateProfile() {
               <div>
                 <p className="text-xs text-gray-800 uppercase">Location</p>
                 <Switch>
-                  <Switch.Match when={isLoading()}>
+                  <Switch.Match when={isLoading}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
                   </Switch.Match>
 
@@ -107,18 +77,14 @@ export default function CandidateProfile() {
                 <p className="text-xs text-gray-800 uppercase">
                   Current Company
                 </p>
-                <Switch>
-                  <Switch.Match when={isLoading()}>
+                <Switch fallback="N/A">
+                  <Switch.Match when={isLoading}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
                   </Switch.Match>
 
-                  <Switch.Match when={sortedExperiences.length === 0}>
-                    <p className="font-medium">N/A</p>
-                  </Switch.Match>
-
-                  <Switch.Match when={sortedExperiences}>
-                    {([current]) => (
-                      <p className="font-medium">{current?.organization}</p>
+                  <Switch.Match when={data?.currentCompany}>
+                    {(companyName) => (
+                      <p className="font-medium">{companyName}</p>
                     )}
                   </Switch.Match>
                 </Switch>
@@ -129,16 +95,16 @@ export default function CandidateProfile() {
                   Total Experience
                 </p>
                 <Switch>
-                  <Switch.Match when={isLoading()}>
+                  <Switch.Match when={isLoading}>
                     <div className="w-20 h-6 mt-1 bg-gray-100 rounded animate-pulse" />
                   </Switch.Match>
 
-                  <Switch.Match when={affindaData?.data}>
-                    {({ totalYearsExperience }) => (
+                  <Switch.Match when={data}>
+                    {({ totalYearsOfExperience }) => (
                       <p className="font-medium">
-                        {totalYearsExperience === 0
+                        {totalYearsOfExperience === 0
                           ? 'N/A'
-                          : totalYearsExperience + ' Years'}
+                          : totalYearsOfExperience + ' Years'}
                       </p>
                     )}
                   </Switch.Match>
@@ -150,12 +116,9 @@ export default function CandidateProfile() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
-        <Experiences isLoading={isLoading()} experiences={sortedExperiences} />
-        <Education
-          isLoading={isLoading()}
-          educations={affindaData?.data?.education}
-        />
-        <Skills isLoading={isLoading()} skills={affindaData?.data?.skills} />
+        <Experiences isLoading={isLoading} experiences={data?.experience} />
+        <Education isLoading={isLoading} educations={data?.education} />
+        <Skills isLoading={isLoading} skills={data?.skills} />
       </div>
     </>
   )

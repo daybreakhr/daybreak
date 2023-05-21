@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
 import { range } from 'lodash'
 import { Avatar, Empty } from 'antd'
-import type { ResumeDataEducationItem } from '@affinda/affinda'
-import { Show, Switch } from 'ui-kit'
+
 import { Scrollbars } from 'react-custom-scrollbars'
+import type { Education as TEducation } from '@prisma/client'
+import { Show, Switch } from 'ui-kit'
 
 type EducationProps = {
-  educations: ResumeDataEducationItem[] | undefined
+  educations: TEducation[] | undefined
   isLoading: boolean
 }
 
@@ -50,30 +51,30 @@ export default function Education({ educations, isLoading }: EducationProps) {
             <Switch.Match when={educations}>
               {(data) =>
                 data.map(
-                  ({ accreditation, organization, id, dates, grade }) => (
-                    <li key={id}>
+                  (
+                    { institute, course, startDate, endDate, isCurrent },
+                    idx,
+                  ) => (
+                    <li key={idx}>
                       <div className="flex items-start space-x-3">
-                        <Avatar>{organization?.[0]}</Avatar>
+                        <Avatar>{institute?.[0]}</Avatar>
                         <div>
-                          <p className="font-medium">{organization}</p>
-                          <p className="text-gray-500">
-                            {accreditation?.education}{' '}
-                            {grade?.raw ? `, ${grade.raw}` : null}
-                          </p>
+                          <p className="font-medium">{institute}</p>
+                          <p className="text-gray-500">{course}</p>
                         </div>
                         <div className="flex-1" />
 
                         <p className="flex-none text-gray-500">
-                          <Show when={dates?.startDate}>
+                          <Show when={startDate}>
                             {(date) => (
                               <span>{dayjs(date).format('MMM YY')} - </span>
                             )}
                           </Show>
 
-                          <Show when={dates?.completionDate}>
+                          <Show when={endDate}>
                             {(date) => (
                               <span>
-                                {dates?.isCurrent
+                                {isCurrent
                                   ? 'Present'
                                   : dayjs(date).format('MMM YY')}
                               </span>
