@@ -44,3 +44,9 @@ body {
 .header-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap {
   @apply px-0;
 }
+
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+  width: 80% !important;
+  height: 100% !important;
+}
