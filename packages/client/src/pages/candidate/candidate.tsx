@@ -14,7 +14,7 @@ export default function Candidate() {
   )
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <PageHeader
         title="Candidate Profile"
         breadcrumb={[
@@ -33,15 +33,10 @@ export default function Candidate() {
         ]}
       />
 
-      <div className="flex flex-col flex-1 px-8 pt-4 pb-8">
-        <div className="flex flex-1 space-x-4">
-          <div className="flex-1 overflow-hidden rounded-md">
-            <Outlet />
-          </div>
-
-          <Details data={data} />
-        </div>
+      <div className="flex flex-1 px-8 py-4 space-x-4 overflow-y-auto">
+        <Outlet />
+        <Details data={data} />
       </div>
-    </>
+    </div>
   )
 }

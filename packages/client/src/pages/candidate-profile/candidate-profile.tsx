@@ -16,7 +16,7 @@ export default function CandidateProfile() {
   )
 
   return (
-    <>
+    <div className="flex flex-col flex-1 pb-4">
       <div className="p-4 mb-4 text-gray-800 bg-white shadow-md rounded-b-md">
         <Switch>
           <Switch.Match when={data?.status === 'rejected'}>
@@ -120,6 +120,6 @@ export default function CandidateProfile() {
         <Education isLoading={isLoading} educations={data?.education} />
         <Skills isLoading={isLoading} skills={data?.skills} />
       </div>
-    </>
+    </div>
   )
 }

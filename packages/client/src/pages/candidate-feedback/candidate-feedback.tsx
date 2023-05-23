@@ -23,7 +23,7 @@ export default function CandidateFeedback() {
   )
 
   return (
-    <div className="p-4 text-gray-800 bg-white shadow-md rounded-b-md">
+    <div className="flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md h-fit">
       <div className="flex items-center justify-between mb-6">
         <p className="text-lg font-semibold">Interview Feedback</p>
         <Show when={data && data.length > 0}>

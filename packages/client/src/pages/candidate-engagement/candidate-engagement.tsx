@@ -47,7 +47,7 @@ export default function CandidateEngagement() {
   }, [calendars, emails])
 
   return (
-    <div className="p-8 text-gray-800 bg-white shadow-md rounded-b-md">
+    <div className="flex-1 p-8 text-gray-800 bg-white shadow-md h-fit rounded-b-md">
       <div className="flex items-center mb-6 space-x-4">
         <InteractionOutlined className="text-2xl text-primary-main" />
         <p className="text-lg font-semibold">Candidate Engagement</p>
