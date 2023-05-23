@@ -37,7 +37,7 @@ export const ExperienceLevelOptions = Object.entries(ExperienceLevel).map(
 )
 
 export const getFilteredArray = (data: Job[], filters: any) => {
-  return data.filter((item: any) => {
+  const filteredData = data.filter((item: any) => {
     let match = true
     for (const key in filters) {
       if (filters[key] instanceof Array) {
@@ -54,6 +54,18 @@ export const getFilteredArray = (data: Job[], filters: any) => {
     }
     return match
   })
+
+  const sortedData = filteredData.sort((a, b) => {
+    const departmentComparison = a.Department.name.localeCompare(
+      b.Department.name,
+    )
+    if (departmentComparison === 0) {
+      return (a.title ?? '').localeCompare(b.title ?? '')
+    }
+    return departmentComparison
+  })
+
+  return sortedData
 }
 
 export const getFilters = (params: any) => {
