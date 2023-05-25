@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Empty, Spin } from 'antd'
+import { Button, Empty, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Document, Page, pdfjs } from 'react-pdf'
 
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
 import { fetchCandidate } from 'pages/candidate/queries'
+import { DownloadOutlined } from '@ant-design/icons'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -18,9 +19,32 @@ export default function CandidateResume() {
 
   const [pageCount, setPageCount] = useState(0)
 
+  const onDownload = () => {
+    try {
+      fetch(data?.resume || '').then((response) => {
+        response.blob().then((blob) => {
+          const fileURL = window.URL.createObjectURL(blob)
+          const alink = document.createElement('a')
+          alink.href = fileURL
+          alink.download = `${data?.firstName.toLowerCase()}_${data?.lastName.toLowerCase()}_Resume.pdf`
+          alink.click()
+        })
+      })
+    } catch (error) {}
+  }
+
   return (
     <div className="flex-1 p-4 bg-white shadow-md h-fit rounded-b-md">
-      <p className="mb-2 text-lg font-semibold text-gray-800">Resume</p>
+      <div className="flex items-center justify-between mb-6">
+        <p className="text-lg font-semibold">Resume</p>
+        <Show when={data && data.resume}>
+          <Button
+            type="text"
+            icon={<DownloadOutlined className="text-2xl" />}
+            onClick={onDownload}
+          />
+        </Show>
+      </div>
 
       <Switch>
         <Switch.Match when={isLoading}>
