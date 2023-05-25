@@ -1,7 +1,21 @@
-import { SendOutlined } from '@ant-design/icons'
-import { Button, Empty, Form, Mentions } from 'antd'
+import { Button, Empty } from 'antd'
+import { Remirror, ThemeProvider, useRemirror } from '@remirror/react'
+import { MentionAtomExtension, PlaceholderExtension } from 'remirror/extensions'
+import UserSuggestor from './components/user-suggestor'
+
+const extensions = () => [
+  new MentionAtomExtension({
+    extraAttributes: { type: 'user' },
+    matchers: [{ name: 'at', char: '@', matchOffset: 0 }],
+  }),
+  new PlaceholderExtension({
+    placeholder: 'Drop your notes or mention a @user',
+  }),
+]
 
 export default function CandidateComment() {
+  const { manager, state } = useRemirror({ extensions })
+
   return (
     <div className="flex flex-col flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md">
       <p className="text-lg font-semibold">Comments</p>
@@ -11,18 +25,21 @@ export default function CandidateComment() {
         </div>
       </div>
 
-      <Form className="flex items-end space-x-4">
-        <Form.Item name="comment" className="flex-1" noStyle>
-          <Mentions
-            rows={4}
-            className="p-2"
-            placeholder="Write your notes here! You can refer other members using @"
-          />
-        </Form.Item>
-        <Button type="primary" icon={<SendOutlined />}>
-          Submit
-        </Button>
-      </Form>
+      <div className="space-y-2 h-42">
+        <ThemeProvider>
+          <Remirror
+            autoRender="end"
+            manager={manager}
+            initialContent={state}
+            classNames={['h-24', 'border', 'rounded-md']}
+          >
+            <UserSuggestor />
+          </Remirror>
+        </ThemeProvider>
+        <div className="flex justify-end">
+          <Button type="primary">Submit</Button>
+        </div>
+      </div>
     </div>
   )
 }
