@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { Avatar } from 'antd'
+import { orderBy } from 'lodash'
 import { useQuery } from '@tanstack/react-query'
 import { MentionAtomNodeAttributes } from 'remirror/extensions'
 import { FloatingWrapper, useMentionAtom } from '@remirror/react'
@@ -13,10 +14,9 @@ export default function UserSuggestor() {
 
   const allUsers = useMemo(
     () =>
-      members.map(({ uid, displayName }) => ({
-        id: uid,
-        label: displayName ?? '',
-      })),
+      orderBy(members, ['displayName']).map(({ uid, displayName }) => {
+        return { id: uid, label: displayName ?? '' }
+      }),
     [members],
   )
 
@@ -53,9 +53,8 @@ export default function UserSuggestor() {
           users.map((user, index) => {
             const isHighlighted = indexIsSelected(index)
             const isHovered = indexIsHovered(index)
-            const photoUrl = members.find(
-              ({ uid }) => uid === user.id,
-            )?.photoURL
+            const photoUrl =
+              members.find(({ uid }) => uid === user.id)?.photoURL ?? ''
 
             return (
               <div

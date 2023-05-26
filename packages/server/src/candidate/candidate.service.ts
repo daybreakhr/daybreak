@@ -43,6 +43,15 @@ export class CandidateService {
     return calendarEvents
   }
 
+  async getCommentsForCandidate(candidateId: string) {
+    const comments = await this.prismaService.comment.findMany({
+      where: { candidateId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return comments
+  }
+
   async getEmailsForCandidate(candidateId: string) {
     const emailEvents = await this.prismaService.email.findMany({
       where: { candidateId },

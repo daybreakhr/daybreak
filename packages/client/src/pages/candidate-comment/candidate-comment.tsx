@@ -1,9 +1,19 @@
 import { Button, Empty } from 'antd'
 import { Remirror, ThemeProvider, useRemirror } from '@remirror/react'
-import { MentionAtomExtension, PlaceholderExtension } from 'remirror/extensions'
+import {
+  BulletListExtension,
+  ListItemExtension,
+  MentionAtomExtension,
+  OrderedListExtension,
+  PlaceholderExtension,
+} from 'remirror/extensions'
+
 import UserSuggestor from './components/user-suggestor'
 
 const extensions = () => [
+  new BulletListExtension(),
+  new ListItemExtension(),
+  new OrderedListExtension(),
   new MentionAtomExtension({
     extraAttributes: { type: 'user' },
     matchers: [{ name: 'at', char: '@', matchOffset: 0 }],
@@ -14,7 +24,7 @@ const extensions = () => [
 ]
 
 export default function CandidateComment() {
-  const { manager, state } = useRemirror({ extensions })
+  const { manager, state, onChange } = useRemirror({ extensions })
 
   return (
     <div className="flex flex-col flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md">
@@ -28,15 +38,16 @@ export default function CandidateComment() {
       <div className="space-y-2 h-42">
         <ThemeProvider>
           <Remirror
-            autoRender="end"
+            state={state}
             manager={manager}
-            initialContent={state}
-            classNames={['h-24', 'border', 'rounded-md']}
+            autoRender="start"
+            onChange={onChange}
+            classNames={['h-24', 'prose', 'max-w-none', 'border', 'rounded-md']}
           >
             <UserSuggestor />
           </Remirror>
         </ThemeProvider>
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-2">
           <Button type="primary">Submit</Button>
         </div>
       </div>
