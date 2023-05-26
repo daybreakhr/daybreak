@@ -55,7 +55,7 @@ export default function StatusList({
                 >
                   <CandidateCard
                     createdAt={candidate.createdAt}
-                    feedbacks={candidate.Feedback}
+                    source={candidate.source}
                     name={`${candidate.firstName} ${
                       candidate.middleName ?? ''
                     } ${candidate.lastName}`}

@@ -1,32 +1,37 @@
 import dayjs from 'dayjs'
-import { meanBy } from 'lodash'
-import { Avatar, Rate } from 'antd'
-import { Feedback } from '@prisma/client'
+import { Tag } from 'antd'
+import { CandidateSource } from '@prisma/client'
 
 type CandidateCardProps = {
   name: string
   createdAt: string
-  feedbacks: Feedback[]
+  source: string
+}
+
+const candidateSources: Record<CandidateSource, string> = {
+  [CandidateSource.jobBoard]: 'Portal',
+  [CandidateSource.referral]: 'Referral',
+  [CandidateSource.linkedIn]: 'LinkedIn',
+  [CandidateSource.instahyre]: 'Instahyre',
+  [CandidateSource.iimjobs]: 'IIM Jobs',
+  [CandidateSource.naukri]: 'Naukri',
+  [CandidateSource.other]: 'Other',
 }
 
 export default function CandidateCard({
   name,
   createdAt,
-  feedbacks,
+  source,
 }: CandidateCardProps) {
+  const sourceLabel = candidateSources[source as CandidateSource] || 'Unknown'
   return (
     <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50">
-      <div className="flex items-center mb-4 space-x-2">
-        <Avatar>{name.charAt(0)}</Avatar>
+      <div className="flex justify-between mb-4 space-x-2">
         <p className="font-semibold">{name}</p>
+        <Tag color="blue">{sourceLabel}</Tag>
       </div>
 
       <div className="flex items-end pt-2 border-t">
-        <div>
-          <p className="text-sm font-medium">Feedback Score</p>
-          <Rate allowHalf disabled value={meanBy(feedbacks, (f) => f.score)} />
-        </div>
-
         <div className="flex-1" />
 
         <p className="text-xs font-normal text-gray-500">
