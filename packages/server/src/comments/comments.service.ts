@@ -7,11 +7,12 @@ export class CommentsService {
   constructor(private prismaService: PrismaService) {}
 
   async createComment(createCommentDto: CreateCommentDto, userId: string) {
+    const { content, candidateId } = createCommentDto
     const data = await this.prismaService.comment.create({
       data: {
-        content: createCommentDto.content,
-        Member: { connect: { id: userId } },
-        Candidate: { connect: { id: createCommentDto.candidateId } },
+        content,
+        Member: { connect: { uid: userId } },
+        Candidate: { connect: { id: candidateId } },
       },
     })
     return data

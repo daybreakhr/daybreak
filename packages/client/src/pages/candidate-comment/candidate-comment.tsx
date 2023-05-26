@@ -1,56 +1,49 @@
-import { Button, Empty } from 'antd'
-import { Remirror, ThemeProvider, useRemirror } from '@remirror/react'
-import {
-  BulletListExtension,
-  ListItemExtension,
-  MentionAtomExtension,
-  OrderedListExtension,
-  PlaceholderExtension,
-} from 'remirror/extensions'
+import { Empty, Skeleton } from 'antd'
+import { useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { Switch } from 'ui-kit'
 
-import UserSuggestor from './components/user-suggestor'
-
-const extensions = () => [
-  new BulletListExtension(),
-  new ListItemExtension(),
-  new OrderedListExtension(),
-  new MentionAtomExtension({
-    extraAttributes: { type: 'user' },
-    matchers: [{ name: 'at', char: '@', matchOffset: 0 }],
-  }),
-  new PlaceholderExtension({
-    placeholder: 'Drop your notes or mention a @user',
-  }),
-]
+import { fetchComments } from './queries'
+import CreateComment from './components/create-comment'
+import Comment from './components/comment'
 
 export default function CandidateComment() {
-  const { manager, state, onChange } = useRemirror({ extensions })
+  const { candidateId = '' } = useParams()
+
+  const { data, isLoading } = useQuery(['comments', candidateId], () =>
+    fetchComments(candidateId),
+  )
 
   return (
     <div className="flex flex-col flex-1 p-4 text-gray-800 bg-white rounded-md shadow-md">
-      <p className="text-lg font-semibold">Comments</p>
-      <div className="flex-1">
-        <div className="flex items-center justify-center h-full">
-          <Empty description="No comments added yet!" />
-        </div>
-      </div>
+      <p className="mb-4 text-lg font-semibold">Comments</p>
+      <div className="flex-1 space-y-4">
+        <Switch>
+          <Switch.Match when={isLoading}>
+            {[1, 2].map((val) => (
+              <Skeleton key={val} avatar />
+            ))}
+          </Switch.Match>
 
-      <div className="space-y-2 h-42">
-        <ThemeProvider>
-          <Remirror
-            state={state}
-            manager={manager}
-            autoRender="start"
-            onChange={onChange}
-            classNames={['h-24', 'prose', 'max-w-none', 'border', 'rounded-md']}
-          >
-            <UserSuggestor />
-          </Remirror>
-        </ThemeProvider>
-        <div className="flex justify-end mt-2">
-          <Button type="primary">Submit</Button>
-        </div>
+          <Switch.Match when={data?.length === 0}>
+            <Empty description="No comments yet" />
+          </Switch.Match>
+
+          <Switch.Match when={data}>
+            {(data) =>
+              data.map(({ id, content, createdAt, User }) => (
+                <Comment
+                  key={id}
+                  user={User}
+                  content={content}
+                  createdAt={createdAt}
+                />
+              ))
+            }
+          </Switch.Match>
+        </Switch>
       </div>
+      <CreateComment />
     </div>
   )
 }

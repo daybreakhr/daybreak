@@ -1,6 +1,5 @@
 export class CreateCommentDto {
   content: any
-  createdBy: string
   candidateId: string
 }
 

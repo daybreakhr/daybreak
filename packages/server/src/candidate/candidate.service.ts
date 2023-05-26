@@ -1,4 +1,5 @@
 import { Express } from 'express'
+import type { UserRecord } from 'firebase-admin/auth'
 import type { Education, Experience } from '@prisma/client'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
@@ -49,7 +50,18 @@ export class CandidateService {
       orderBy: { createdAt: 'desc' },
     })
 
-    return comments
+    // get user object using `createdBy` field
+    const identifiers = comments.map(({ createdBy }) => ({ uid: createdBy }))
+    const users = await this.authService.getUsers(identifiers)
+    const usersById = users.reduce(
+      (acc, user) => ({ ...acc, [user.uid]: user }),
+      {},
+    )
+
+    return comments.map((comment) => ({
+      ...comment,
+      User: usersById[comment.createdBy] as UserRecord,
+    }))
   }
 
   async getEmailsForCandidate(candidateId: string) {

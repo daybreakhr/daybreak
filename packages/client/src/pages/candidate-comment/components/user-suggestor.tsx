@@ -9,14 +9,15 @@ import { fetchMembers } from 'pages/members/queries'
 
 export default function UserSuggestor() {
   const [users, setUsers] = useState<MentionAtomNodeAttributes[]>([])
-
   const { data: members = [] } = useQuery(['members'], fetchMembers)
 
   const allUsers = useMemo(
     () =>
-      orderBy(members, ['displayName']).map(({ uid, displayName }) => {
-        return { id: uid, label: displayName ?? '' }
-      }),
+      orderBy(members, ['displayName'])
+        .filter(({ isSuspended }) => !isSuspended)
+        .map(({ uid, displayName }) => {
+          return { id: uid, label: displayName ?? '' }
+        }),
     [members],
   )
 
