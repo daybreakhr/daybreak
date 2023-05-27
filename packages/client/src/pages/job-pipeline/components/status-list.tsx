@@ -47,7 +47,6 @@ export default function StatusList({
                 >
                   <CandidateCard
                     createdAt={candidate.createdAt}
-                    source={candidate.source}
                     experience={candidate.experience}
                     name={`${candidate.firstName} ${
                       candidate.middleName ?? ''
