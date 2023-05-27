@@ -39,13 +39,11 @@ export default function JobPipeline() {
       <StatusList
         title="Sourced"
         isLoading={isCandidatesLoading}
-        className="border-t-amber-500"
         candidates={groupByStatus[CandidateStatus.sourced]}
       />
       <StatusList
         title="Applied"
         isLoading={isCandidatesLoading}
-        className="border-t-amber-500"
         candidates={groupByStatus[CandidateStatus.applied]}
       />
       {interviews.map(({ id, title }) => (
@@ -53,26 +51,22 @@ export default function JobPipeline() {
           key={id}
           title={title}
           isLoading={isInterviewsLoading}
-          className="border-t-lime-500"
           candidates={groupByInterview[id]}
         />
       ))}
       <StatusList
         title="Offer Extended"
         isLoading={isCandidatesLoading}
-        className="border-t-indigo-500"
         candidates={groupByStatus[CandidateStatus.offered]}
       />
       <StatusList
         title="Accepted"
         isLoading={isCandidatesLoading}
-        className="border-t-green-500"
         candidates={groupByStatus[CandidateStatus.accepted]}
       />
       <StatusList
         title="Rejected"
         isLoading={isCandidatesLoading}
-        className="border-t-red-500"
         candidates={groupByStatus[CandidateStatus.rejected]}
       />
     </div>
