@@ -3,7 +3,7 @@ import { CandidateStatus } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { isEmpty } from 'lodash'
 import { AuthService } from 'src/auth/auth.service'
-import { UserRecord } from 'firebase-admin/auth'
+import type { UserRecord } from 'firebase-admin/auth'
 import { CreateFeedbackDto, Feedback } from './feedback.dto'
 
 @Injectable()
