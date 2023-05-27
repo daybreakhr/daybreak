@@ -54,6 +54,7 @@ export class SlackService {
       const { workspaceId } = await this.getSlackSecrets(body.event.user)
       const jobs = await this.prismaService.job.findMany({
         where: { workspaceId, isPublished: true },
+        orderBy: { createdAt: 'desc' },
         include: { Workspace: true },
       })
 
