@@ -1,21 +1,21 @@
 import dayjs from 'dayjs'
-import { AiOutlineApartment, AiOutlineHistory } from 'react-icons/ai'
-import { Experience } from '@prisma/client'
+import { FaAward } from 'react-icons/fa'
+import { HiOfficeBuilding } from 'react-icons/hi'
+import { Show } from 'ui-kit'
 
 type CandidateCardProps = {
   name: string
   createdAt: string
-  experience: Experience[]
+  currentCompany: string | null
+  totalYearsOfExperience: number | null
 }
 
 export default function CandidateCard({
   name,
   createdAt,
-  experience,
+  currentCompany,
+  totalYearsOfExperience,
 }: CandidateCardProps) {
-  const lastCompany =
-    experience.length > 0 ? experience[experience.length - 1].company : 'N/A'
-
   return (
     <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50">
       <div className="flex justify-between mb-4 space-x-2">
@@ -25,16 +25,19 @@ export default function CandidateCard({
         </p>
       </div>
 
-      <div className="flex justify-between pt-2 border-t">
+      <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2 text-gray-500">
-          <AiOutlineApartment className="w-4 h-4 " />
-          <div>{lastCompany}</div>
+          <HiOfficeBuilding className="w-4 h-4 " />
+          <div>{currentCompany ?? 'N/A'}</div>
         </div>
-      </div>
-      <div className="flex">
+
         <div className="flex items-center space-x-2 text-gray-500">
-          <AiOutlineHistory className="w-4 h-4 " />
-          <div>{experience.length} years</div>
+          <FaAward className="w-4 h-4 " />
+          <p>
+            <Show when={totalYearsOfExperience} fallback="N/A">
+              {(value) => `${value} years`}
+            </Show>
+          </p>
         </div>
       </div>
     </div>

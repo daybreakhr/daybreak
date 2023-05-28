@@ -38,22 +38,26 @@ export default function StatusList({
 
           <Switch.Match when={candidates}>
             {(data) =>
-              data.map((candidate) => (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  key={candidate.id}
-                  href={`/candidates/${candidate.id}/profile`}
-                >
-                  <CandidateCard
-                    createdAt={candidate.createdAt}
-                    experience={candidate.experience}
-                    name={`${candidate.firstName} ${
-                      candidate.middleName ?? ''
-                    } ${candidate.lastName}`}
-                  />
-                </a>
-              ))
+              data.map((candidate) => {
+                const { id, firstName, middleName, lastName } = candidate
+                const name = `${firstName} ${middleName ?? ''} ${lastName}`
+
+                return (
+                  <a
+                    key={id}
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`/candidates/${id}/profile`}
+                  >
+                    <CandidateCard
+                      name={name}
+                      createdAt={candidate.createdAt}
+                      currentCompany={candidate.currentCompany}
+                      totalYearsOfExperience={candidate.totalYearsOfExperience}
+                    />
+                  </a>
+                )
+              })
             }
           </Switch.Match>
         </Switch>
