@@ -1,15 +1,21 @@
+import { useState } from 'react'
+import { Spin } from 'antd'
 import { groupBy } from 'lodash'
+import { Interview } from '@prisma/client'
 import { useParams } from 'react-router-dom'
-import { CandidateStatus } from '@prisma/client'
 import { useQueries } from '@tanstack/react-query'
+import { Switch } from 'ui-kit'
 
+import { getPipelineStages } from 'utils/utils'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
-import StatusList from './components/status-list'
 import { fetchCandidatesByJob } from './queries'
+import StatusList from './components/status-list'
+import FilterPipeline from './components/filter-pipeline'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
@@ -23,52 +29,47 @@ export default function JobPipeline() {
       {
         queryKey: ['interviews', jobId],
         queryFn: () => fetchInterviews(jobId),
+        onSuccess: (data: Interview[]) => {
+          setSelectedKeys(getPipelineStages(data).map(({ value }) => value))
+        },
       },
     ],
   })
 
   const groupByStatus = groupBy(candidates, (candidate) => candidate.status)
 
-  const groupByInterview = groupBy(
-    candidates,
-    (candidate) => candidate.interviewId,
-  )
-
   return (
-    <div className="flex flex-1 gap-3 px-6 pt-4 overflow-x-auto">
-      <StatusList
-        title="Sourced"
-        isLoading={isCandidatesLoading}
-        candidates={groupByStatus[CandidateStatus.sourced]}
-      />
-      <StatusList
-        title="Applied"
-        isLoading={isCandidatesLoading}
-        candidates={groupByStatus[CandidateStatus.applied]}
-      />
-      {interviews.map(({ id, title }) => (
-        <StatusList
-          key={id}
-          title={title}
-          isLoading={isInterviewsLoading}
-          candidates={groupByInterview[id]}
+    <div className="flex flex-col flex-1 pt-4 overflow-hidden">
+      <div className="flex items-center justify-end px-6 mb-4 space-x-4">
+        <FilterPipeline
+          interviews={interviews}
+          selectedKeys={selectedKeys}
+          setSelectedKeys={setSelectedKeys}
         />
-      ))}
-      <StatusList
-        title="Offer Extended"
-        isLoading={isCandidatesLoading}
-        candidates={groupByStatus[CandidateStatus.offered]}
-      />
-      <StatusList
-        title="Accepted"
-        isLoading={isCandidatesLoading}
-        candidates={groupByStatus[CandidateStatus.accepted]}
-      />
-      <StatusList
-        title="Rejected"
-        isLoading={isCandidatesLoading}
-        candidates={groupByStatus[CandidateStatus.rejected]}
-      />
+      </div>
+
+      <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
+        <Switch>
+          <Switch.Match when={isInterviewsLoading || isCandidatesLoading}>
+            <div className="flex items-center justify-center flex-1">
+              <Spin tip="Fetching Candidates..." />
+            </div>
+          </Switch.Match>
+
+          <Switch.Match when={interviews}>
+            {getPipelineStages(interviews)
+              .filter(({ value }) => selectedKeys.includes(value))
+              .map(({ label, value }) => (
+                <StatusList
+                  key={value}
+                  title={label}
+                  isLoading={isCandidatesLoading}
+                  candidates={groupByStatus[value]}
+                />
+              ))}
+          </Switch.Match>
+        </Switch>
+      </div>
     </div>
   )
 }

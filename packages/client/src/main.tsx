@@ -8,6 +8,6 @@ import 'styles/preflight.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <App />,
   </React.StrictMode>,
 )

@@ -1,8 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom'
 import { AiOutlineLogout } from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
-import useAuth from 'hooks/use-auth'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import useAuth from 'hooks/use-auth'
 
 export default function Header() {
   const navigate = useNavigate()
