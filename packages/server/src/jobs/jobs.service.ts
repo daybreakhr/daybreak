@@ -34,6 +34,7 @@ export class JobsService {
   async getCandidatesByJobId(id: string) {
     const candidates = await this.prismaService.candidate.findMany({
       where: { jobId: id },
+      orderBy: { createdAt: 'desc' },
     })
     return candidates
   }
