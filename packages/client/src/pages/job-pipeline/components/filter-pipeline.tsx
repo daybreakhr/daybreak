@@ -10,14 +10,14 @@ import { ReactComponent as FilterIcon } from 'assets/icon/filter-icon.svg'
 
 type FilterPipelineProps = {
   interviews: Interview[]
-  selectedKeys: string[]
-  setSelectedKeys: Dispatch<SetStateAction<string[]>>
+  filteredStages: string[]
+  setFilteredStages: Dispatch<SetStateAction<string[]>>
 }
 
 export default function FilterPipeline({
   interviews,
-  selectedKeys,
-  setSelectedKeys,
+  filteredStages,
+  setFilteredStages,
 }: FilterPipelineProps) {
   const [open, setOpen] = useState(false)
 
@@ -28,7 +28,7 @@ export default function FilterPipeline({
   const handleMenuClick: MenuProps['onClick'] = ({ key, domEvent }) => {
     domEvent.stopPropagation()
 
-    setSelectedKeys((prev) => {
+    setFilteredStages((prev) => {
       if (prev.includes(key)) {
         return prev.filter((item) => item !== key)
       }
@@ -57,7 +57,7 @@ export default function FilterPipeline({
                     key: value,
                     label: (
                       <Space>
-                        <Checkbox checked={selectedKeys.includes(value)} />
+                        <Checkbox checked={!filteredStages.includes(value)} />
                         {label}
                       </Space>
                     ),

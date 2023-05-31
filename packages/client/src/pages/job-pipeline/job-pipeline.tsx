@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { Spin } from 'antd'
 import { groupBy } from 'lodash'
-import { Interview } from '@prisma/client'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import { Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
+import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
 import { fetchCandidatesByJob } from './queries'
@@ -15,7 +14,10 @@ import FilterPipeline from './components/filter-pipeline'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
+  const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
+    `stage-${jobId}`,
+    [],
+  )
 
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
@@ -29,9 +31,6 @@ export default function JobPipeline() {
       {
         queryKey: ['interviews', jobId],
         queryFn: () => fetchInterviews(jobId),
-        onSuccess: (data: Interview[]) => {
-          setSelectedKeys(getPipelineStages(data).map(({ value }) => value))
-        },
       },
     ],
   })
@@ -43,8 +42,8 @@ export default function JobPipeline() {
       <div className="flex items-center justify-end px-6 mb-4 space-x-4">
         <FilterPipeline
           interviews={interviews}
-          selectedKeys={selectedKeys}
-          setSelectedKeys={setSelectedKeys}
+          filteredStages={filteredStages}
+          setFilteredStages={setFilteredStages}
         />
       </div>
 
@@ -58,7 +57,7 @@ export default function JobPipeline() {
 
           <Switch.Match when={interviews}>
             {getPipelineStages(interviews)
-              .filter(({ value }) => selectedKeys.includes(value))
+              .filter(({ value }) => !filteredStages.includes(value))
               .map(({ label, value }) => (
                 <StatusList
                   key={value}
