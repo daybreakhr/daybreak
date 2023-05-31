@@ -18,10 +18,11 @@ import {
   ApiBody,
   ApiSecurity,
 } from '@nestjs/swagger'
-import { UserRecord } from 'firebase-admin/auth'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { GetUser } from 'src/auth/get-user.decorator'
+import { UserRecord } from 'firebase-admin/auth'
 import { Roles } from 'src/auth/roles.decorator'
+import { GetUser } from 'src/auth/get-user.decorator'
+import { CandidateDto } from 'src/candidate/candidate.dto'
 import { InterviewDto } from 'src/interviews/interview.dto'
 import { CreateJobDto, JobDto, UpdateJob } from './jobs.dto'
 import { JobsService } from './jobs.service'
@@ -51,6 +52,23 @@ export class JobsController {
   @ApiNotFoundResponse({ description: 'Job not found' })
   async getById(@Param('id') id: string) {
     const data = await this.jobsService.getById(id)
+    return data
+  }
+
+  @Get(':id/candidates')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetCandidatesByJobId',
+    summary: 'Get Candidates for a job',
+  })
+  @ApiOkResponse({
+    description: 'candidates returned successfully',
+    type: [CandidateDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getCandidatesByJobId(@Param('id') jobId: string) {
+    const data = await this.jobsService.getCandidatesByJobId(jobId)
     return data
   }
 

@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import { Tag } from 'antd'
 import { capitalize } from 'lodash'
+import type { Candidate } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { Show } from 'ui-kit'
-import { Candidate } from 'types/candidate'
 
 const columnHelper = createColumnHelper<Candidate>()
 

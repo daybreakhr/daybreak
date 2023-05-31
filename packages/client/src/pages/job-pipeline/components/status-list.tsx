@@ -1,7 +1,8 @@
 import { range } from 'lodash'
 import { Skeleton } from 'antd'
+import type { Candidate } from '@prisma/client'
 import { Switch } from 'ui-kit'
-import { Candidate } from 'types/candidate'
+
 import CandidateCard from './candidate-card'
 
 type StatusListProps = {

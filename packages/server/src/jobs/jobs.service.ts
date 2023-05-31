@@ -31,6 +31,13 @@ export class JobsService {
     return job
   }
 
+  async getCandidatesByJobId(id: string) {
+    const candidates = await this.prismaService.candidate.findMany({
+      where: { jobId: id },
+    })
+    return candidates
+  }
+
   async getInterviewsByJobId(id: string) {
     const interviews = await this.prismaService.interview.findMany({
       where: { jobId: id },

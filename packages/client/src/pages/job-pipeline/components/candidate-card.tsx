@@ -5,7 +5,7 @@ import { Show } from 'ui-kit'
 
 type CandidateCardProps = {
   name: string
-  createdAt: string
+  createdAt: Date
   currentCompany: string | null
   totalYearsOfExperience: number | null
 }

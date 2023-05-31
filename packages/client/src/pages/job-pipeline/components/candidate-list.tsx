@@ -3,9 +3,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import type { Candidate } from '@prisma/client'
 
 import { Show } from 'ui-kit'
-import { Candidate } from 'types/candidate'
 import { candidateListColumns } from '../constants/candidate-list'
 
 type CandidateListProps = {
