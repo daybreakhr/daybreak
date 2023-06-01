@@ -43,8 +43,6 @@ export default function JobPipeline() {
     ],
   })
 
-  const groupByStatus = groupBy(candidates, (candidate) => candidate.status)
-
   const viewTypes = [
     { label: <UnorderedListOutlined />, value: 'table' },
     {
@@ -60,25 +58,28 @@ export default function JobPipeline() {
   const filteredCandidates = matchSorter(candidates ?? [], input, {
     keys: ['firstName', 'middleName', 'lastName'],
   })
+  const groupByStatus = groupBy(
+    filteredCandidates,
+    (candidate) => candidate.status,
+  )
 
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
       <div className="flex items-center justify-between px-6 mb-4 space-x-4">
-        <div className="flex space-x-4">
-          <Radio.Group
-            value={viewState}
-            options={viewTypes}
-            optionType="button"
-            onChange={(e) => setViewState(e.target.value)}
-          />
-          <Input
-            value={input}
-            style={{ width: '16rem' }}
-            suffix={<SearchOutlined />}
-            placeholder="Search..."
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
+        <Radio.Group
+          value={viewState}
+          options={viewTypes}
+          optionType="button"
+          onChange={(e) => setViewState(e.target.value)}
+        />
+        <Input
+          value={input}
+          style={{ width: '16rem' }}
+          suffix={<SearchOutlined />}
+          placeholder="Search..."
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <div className="flex-1" />
         <FilterPipeline
           interviews={interviews}
           filteredStages={filteredStages}
@@ -101,26 +102,16 @@ export default function JobPipeline() {
             <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
               {getPipelineStages(interviews)
                 .filter(({ value }) => !filteredStages.includes(value))
-                .map(({ label, value }) => {
-                  const filteredCandidates = matchSorter(
-                    groupByStatus[value] || [],
-                    input,
-                    {
-                      keys: ['firstName', 'middleName', 'lastName'],
-                    },
-                  )
-
-                  return (
-                    <StatusList
-                      key={value}
-                      title={label}
-                      isLoading={isCandidatesLoading}
-                      candidates={filteredCandidates}
-                      selectedCandidates={selectedCandidates}
-                      setSelectedCandidates={setSelectedCandidates}
-                    />
-                  )
-                })}
+                .map(({ label, value }) => (
+                  <StatusList
+                    key={value}
+                    title={label}
+                    isLoading={isCandidatesLoading}
+                    candidates={groupByStatus[value]}
+                    selectedCandidates={selectedCandidates}
+                    setSelectedCandidates={setSelectedCandidates}
+                  />
+                ))}
             </div>
           </Show>
         </Switch.Match>
