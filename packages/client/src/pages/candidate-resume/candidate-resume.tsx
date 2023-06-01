@@ -11,6 +11,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons'
+import { downloadFile } from 'utils/utils'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -23,20 +24,6 @@ export default function CandidateResume() {
 
   const [pageCount, setPageCount] = useState(0)
   const [zoomScale, setZoomScale] = useState(1.5)
-
-  const onDownload = () => {
-    try {
-      fetch(data?.resume || '').then((response) => {
-        response.blob().then((blob) => {
-          const fileURL = window.URL.createObjectURL(blob)
-          const alink = document.createElement('a')
-          alink.href = fileURL
-          alink.download = `${data?.firstName.toLowerCase()}_${data?.lastName.toLowerCase()}_Resume.pdf`
-          alink.click()
-        })
-      })
-    } catch (error) {}
-  }
 
   const onZoomIn = () => {
     if (zoomScale < 2.5) setZoomScale((scale) => scale + 0.5)
@@ -70,7 +57,12 @@ export default function CandidateResume() {
             <Button
               type="text"
               icon={<DownloadOutlined className="text-2xl" />}
-              onClick={onDownload}
+              onClick={() =>
+                downloadFile(
+                  data?.resume || '',
+                  `${data?.firstName.toLowerCase()}_${data?.lastName.toLowerCase()}_Resume.pdf`,
+                )
+              }
             />
           </Show>
         </div>

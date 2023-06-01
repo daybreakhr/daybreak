@@ -22,3 +22,20 @@ export function getJobType(jobType: JobType | null | undefined) {
       return ''
   }
 }
+
+export const downloadFile = (url: string, filename?: string) => {
+  if (!url) return
+
+  try {
+    fetch(url || '').then((response) => {
+      response.blob().then((blob) => {
+        const fileURL = window.URL.createObjectURL(blob)
+        const alink = document.createElement('a')
+        alink.href = fileURL
+        alink.download = filename ?? `document_${new Date()}.pdf`
+        alink.click()
+        alink.remove()
+      })
+    })
+  } catch (error) {}
+}
