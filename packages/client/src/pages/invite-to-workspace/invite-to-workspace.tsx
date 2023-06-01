@@ -66,7 +66,7 @@ export default function InviteToWorkspace() {
                         {
                           required: true,
                           type: 'email',
-                          message: 'Enter email address',
+                          message: 'Enter a valid email address to invite',
                         },
                       ]}
                     >
