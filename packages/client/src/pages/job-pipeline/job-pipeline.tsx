@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Radio, Spin } from 'antd'
+import { Input, Radio, Spin } from 'antd'
 import { groupBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MdViewKanban } from 'react-icons/md'
 import { useQueries } from '@tanstack/react-query'
-import { UnorderedListOutlined } from '@ant-design/icons'
+import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
@@ -19,6 +19,7 @@ import CandidateList from './components/candidate-list'
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
+  const [input, setInput] = useState('')
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
     `stage-${jobId}`,
@@ -55,16 +56,29 @@ export default function JobPipeline() {
     },
   ]
 
+  const filteredCandidates = candidates.filter((candidate) => {
+    const fullName = `${candidate.firstName} ${candidate.middleName} ${candidate.lastName}`
+    return fullName.toLowerCase().includes(input.toLowerCase())
+  })
+
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
       <div className="flex items-center justify-between px-6 mb-4 space-x-4">
-        <Radio.Group
-          value={viewState}
-          options={viewTypes}
-          optionType="button"
-          onChange={(e) => setViewState(e.target.value)}
-        />
-
+        <div className="flex space-x-4">
+          <Radio.Group
+            value={viewState}
+            options={viewTypes}
+            optionType="button"
+            onChange={(e) => setViewState(e.target.value)}
+          />
+          <Input
+            value={input}
+            style={{ width: '16rem' }}
+            suffix={<SearchOutlined />}
+            placeholder="Search..."
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </div>
         <FilterPipeline
           interviews={interviews}
           filteredStages={filteredStages}
@@ -82,21 +96,34 @@ export default function JobPipeline() {
         <Switch.Match when={interviews}>
           <Show
             when={viewState === 'kanban'}
-            fallback={<CandidateList data={candidates} />}
+            fallback={<CandidateList data={filteredCandidates} />}
           >
             <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
               {getPipelineStages(interviews)
                 .filter(({ value }) => !filteredStages.includes(value))
-                .map(({ label, value }) => (
-                  <StatusList
-                    key={value}
-                    title={label}
-                    isLoading={isCandidatesLoading}
-                    candidates={groupByStatus[value]}
-                    selectedCandidates={selectedCandidates}
-                    setSelectedCandidates={setSelectedCandidates}
-                  />
-                ))}
+                .map(({ label, value }) => {
+                  const filteredCandidates = groupByStatus[value] || [] // Add a conditional check here
+
+                  const filteredCandidatesByName = filteredCandidates.filter(
+                    (candidate) => {
+                      const fullName = `${candidate.firstName} ${candidate.middleName} ${candidate.lastName}`
+                      return fullName
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    },
+                  )
+
+                  return (
+                    <StatusList
+                      key={value}
+                      title={label}
+                      isLoading={isCandidatesLoading}
+                      candidates={filteredCandidatesByName}
+                      selectedCandidates={selectedCandidates}
+                      setSelectedCandidates={setSelectedCandidates}
+                    />
+                  )
+                })}
             </div>
           </Show>
         </Switch.Match>
