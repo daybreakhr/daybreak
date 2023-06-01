@@ -65,7 +65,7 @@ export default function JobPipeline() {
 
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
-      <div className="flex items-center justify-between px-6 mb-4 space-x-4">
+      <div className="flex items-center px-6 mb-4 space-x-4">
         <Radio.Group
           value={viewState}
           options={viewTypes}
