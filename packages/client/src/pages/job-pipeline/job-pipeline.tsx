@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Radio, Spin } from 'antd'
+import { Button, Radio, Spin } from 'antd'
 import { groupBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MdViewKanban } from 'react-icons/md'
@@ -10,6 +10,7 @@ import { Show, Switch } from 'ui-kit'
 import { getPipelineStages } from 'utils/utils'
 import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
+import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
@@ -57,7 +58,7 @@ export default function JobPipeline() {
 
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
-      <div className="flex items-center justify-between px-6 mb-4 space-x-4">
+      <div className="flex items-center px-6 mb-4 space-x-4">
         <Radio.Group
           value={viewState}
           options={viewTypes}
@@ -70,6 +71,14 @@ export default function JobPipeline() {
           filteredStages={filteredStages}
           setFilteredStages={setFilteredStages}
         />
+
+        <div className="flex-1" />
+
+        <Show when={selectedCandidates.length > 0}>
+          <Button danger icon={<RejectCandidateIcon className="anticon" />}>
+            Reject
+          </Button>
+        </Show>
       </div>
 
       <Switch>
