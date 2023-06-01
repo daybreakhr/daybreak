@@ -6,7 +6,11 @@ import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Show, Switch } from 'ui-kit'
 import { fetchCandidate } from 'pages/candidate/queries'
-import { DownloadOutlined } from '@ant-design/icons'
+import {
+  DownloadOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -18,6 +22,7 @@ export default function CandidateResume() {
   )
 
   const [pageCount, setPageCount] = useState(0)
+  const [zoomScale, setZoomScale] = useState(1.5)
 
   const onDownload = () => {
     try {
@@ -33,17 +38,42 @@ export default function CandidateResume() {
     } catch (error) {}
   }
 
+  const onZoomIn = () => {
+    if (zoomScale < 2.5) setZoomScale((scale) => scale + 0.5)
+  }
+  const onZoomOut = () => {
+    if (zoomScale > 1) setZoomScale((scale) => scale - 0.5)
+  }
+
   return (
     <div className="flex-1 p-4 bg-white shadow-md h-fit rounded-b-md">
       <div className="flex items-center justify-between mb-6">
         <p className="text-lg font-semibold">Resume</p>
-        <Show when={data && data.resume}>
-          <Button
-            type="text"
-            icon={<DownloadOutlined className="text-2xl" />}
-            onClick={onDownload}
-          />
-        </Show>
+        <div className="flex items-center justify-center space-x-4">
+          <Show when={data && data.resume}>
+            <div className="px-4 border rounded-md">
+              <Button
+                type="text"
+                icon={<ZoomInOutlined className="text-lg" />}
+                onClick={onZoomIn}
+                disabled={zoomScale >= 2.5}
+              />
+              -
+              <Button
+                type="text"
+                icon={<ZoomOutOutlined className="text-lg" />}
+                onClick={onZoomOut}
+                disabled={zoomScale <= 1}
+              />
+            </div>
+
+            <Button
+              type="text"
+              icon={<DownloadOutlined className="text-2xl" />}
+              onClick={onDownload}
+            />
+          </Show>
+        </div>
       </div>
 
       <Switch>
@@ -63,20 +93,22 @@ export default function CandidateResume() {
           <Document
             file={data?.resume}
             loading={
-              <div className="flex items-center justify-center h-96">
+              <div className="flex items-center justify-center ">
                 <Spin tip="Loading..." />
               </div>
             }
             onLoadSuccess={({ numPages }) => setPageCount(numPages)}
           >
             {Array.from(new Array(pageCount), (_, index) => (
-              <Page
-                key={index}
-                scale={1.5}
-                pageNumber={index + 1}
-                renderAnnotationLayer={false}
-                renderTextLayer={false}
-              />
+              <div key={index} className="flex overflow-x-auto">
+                <Page
+                  scale={zoomScale}
+                  pageNumber={index + 1}
+                  renderAnnotationLayer={false}
+                  renderTextLayer={false}
+                  className="mx-auto"
+                />
+              </div>
             ))}
           </Document>
         </Switch.Match>
