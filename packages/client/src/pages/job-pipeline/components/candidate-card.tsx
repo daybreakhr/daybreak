@@ -1,7 +1,5 @@
 import clsx from 'clsx'
-import clsx from 'clsx'
 import dayjs from 'dayjs'
-import { Checkbox } from 'antd'
 import { Checkbox } from 'antd'
 import { FaAward } from 'react-icons/fa'
 import { HiOfficeBuilding } from 'react-icons/hi'
@@ -11,9 +9,7 @@ type CandidateCardProps = {
   name: string
   createdAt: Date
   isChecked: boolean
-  isChecked: boolean
   currentCompany: string | null
-  onCandidateSelect: () => void
   onCandidateSelect: () => void
   totalYearsOfExperience: number | null
 }
@@ -22,9 +18,7 @@ export default function CandidateCard({
   name,
   createdAt,
   isChecked,
-  isChecked,
   currentCompany,
-  onCandidateSelect,
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
