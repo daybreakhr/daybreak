@@ -1,4 +1,6 @@
+import clsx from 'clsx'
 import dayjs from 'dayjs'
+import { Checkbox } from 'antd'
 import { FaAward } from 'react-icons/fa'
 import { HiOfficeBuilding } from 'react-icons/hi'
 import { Show } from 'ui-kit'
@@ -6,20 +8,40 @@ import { Show } from 'ui-kit'
 type CandidateCardProps = {
   name: string
   createdAt: Date
+  isChecked: boolean
   currentCompany: string | null
+  onCandidateSelect: () => void
   totalYearsOfExperience: number | null
 }
 
 export default function CandidateCard({
   name,
   createdAt,
+  isChecked,
   currentCompany,
+  onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
   return (
-    <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50">
-      <div className="flex justify-between mb-4 space-x-2">
-        <p className="font-semibold">{name}</p>
+    <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 group">
+      <div className="relative flex items-center mb-4 space-x-2">
+        <Checkbox
+          checked={isChecked}
+          onChange={onCandidateSelect}
+          className={clsx(
+            'group-hover:inline-flex',
+            isChecked ? 'inline-flex' : 'hidden',
+          )}
+        />
+        <p
+          className={clsx(
+            'absolute font-semibold transition-all group-hover:left-4',
+            isChecked ? 'left-4' : '-left-2',
+          )}
+        >
+          {name}
+        </p>
+        <div className="flex-1" />
         <p className="text-xs font-normal text-gray-500">
           {dayjs(createdAt).fromNow()}
         </p>

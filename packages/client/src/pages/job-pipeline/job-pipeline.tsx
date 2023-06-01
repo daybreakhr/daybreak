@@ -19,6 +19,7 @@ import CandidateList from './components/candidate-list'
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
+  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
     `stage-${jobId}`,
     [],
@@ -92,6 +93,8 @@ export default function JobPipeline() {
                     title={label}
                     isLoading={isCandidatesLoading}
                     candidates={groupByStatus[value]}
+                    selectedCandidates={selectedCandidates}
+                    setSelectedCandidates={setSelectedCandidates}
                   />
                 ))}
             </div>
