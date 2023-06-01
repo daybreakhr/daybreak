@@ -35,8 +35,8 @@ export default function CandidateCard({
           checked={isChecked}
           onChange={onCandidateSelect}
           className={clsx(
-            'group-hover:inline-flex',
-            isChecked ? 'inline-flex' : 'hidden',
+            'group-hover:visible group-hover:opacity-100 opacity-0',
+            isChecked ? 'visible opacity-100' : 'invisible opacity-0',
           )}
         />
         <p
