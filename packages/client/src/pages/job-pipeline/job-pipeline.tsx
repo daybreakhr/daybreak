@@ -6,6 +6,7 @@ import { MdViewKanban } from 'react-icons/md'
 import { useQueries } from '@tanstack/react-query'
 import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
+import { matchSorter } from 'match-sorter'
 
 import { getPipelineStages } from 'utils/utils'
 import useLocalStorage from 'hooks/use-local-storage'
@@ -55,9 +56,8 @@ export default function JobPipeline() {
     },
   ]
 
-  const filteredCandidates = candidates.filter((candidate) => {
-    const fullName = `${candidate.firstName} ${candidate.middleName} ${candidate.lastName}`
-    return fullName.toLowerCase().includes(input.toLowerCase())
+  const filteredCandidates = matchSorter(candidates ?? [], input, {
+    keys: ['firstName', 'middleName', 'lastName'],
   })
 
   return (
@@ -101,14 +101,11 @@ export default function JobPipeline() {
               {getPipelineStages(interviews)
                 .filter(({ value }) => !filteredStages.includes(value))
                 .map(({ label, value }) => {
-                  const filteredCandidates = groupByStatus[value] || [] // Add a conditional check here
-
-                  const filteredCandidatesByName = filteredCandidates.filter(
-                    (candidate) => {
-                      const fullName = `${candidate.firstName} ${candidate.middleName} ${candidate.lastName}`
-                      return fullName
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
+                  const filteredCandidates = matchSorter(
+                    groupByStatus[value] || [],
+                    input,
+                    {
+                      keys: ['firstName', 'middleName', 'lastName'],
                     },
                   )
 
@@ -117,7 +114,7 @@ export default function JobPipeline() {
                       key={value}
                       title={label}
                       isLoading={isCandidatesLoading}
-                      candidates={filteredCandidatesByName}
+                      candidates={filteredCandidates}
                     />
                   )
                 })}
