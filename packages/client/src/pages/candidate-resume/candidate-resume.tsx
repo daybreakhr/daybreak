@@ -3,15 +3,15 @@ import { Button, Empty, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Document, Page, pdfjs } from 'react-pdf'
-
-import { Show, Switch } from 'ui-kit'
-import { fetchCandidate } from 'pages/candidate/queries'
 import {
   DownloadOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons'
-import { downloadFile } from 'utils/utils'
+
+import { Show, Switch } from 'ui-kit'
+import { downloadFile } from 'utils/download'
+import { fetchCandidate } from 'pages/candidate/queries'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -36,34 +36,30 @@ export default function CandidateResume() {
     <div className="flex-1 p-4 bg-white shadow-md h-fit rounded-b-md">
       <div className="flex items-center justify-between mb-6">
         <p className="text-lg font-semibold">Resume</p>
-        <div className="flex items-center justify-center space-x-4">
+        <div className="flex items-center justify-center space-x-2">
           <Show when={data && data.resume}>
-            <div className="px-4 border rounded-md">
-              <Button
-                type="text"
-                icon={<ZoomInOutlined className="text-lg" />}
-                onClick={onZoomIn}
-                disabled={zoomScale >= 2.5}
-              />
-              -
-              <Button
-                type="text"
-                icon={<ZoomOutOutlined className="text-lg" />}
-                onClick={onZoomOut}
-                disabled={zoomScale <= 1}
-              />
-            </div>
+            <Button
+              onClick={onZoomIn}
+              icon={<ZoomInOutlined />}
+              disabled={zoomScale >= 2.5}
+            />
 
             <Button
-              type="text"
-              icon={<DownloadOutlined className="text-2xl" />}
-              onClick={() =>
-                downloadFile(
-                  data?.resume || '',
-                  `${data?.firstName.toLowerCase()}_${data?.lastName.toLowerCase()}_Resume.pdf`,
-                )
-              }
+              icon={<ZoomOutOutlined />}
+              onClick={onZoomOut}
+              disabled={zoomScale <= 1}
             />
+
+            <Show when={data?.resume}>
+              {(url) => (
+                <Button
+                  icon={<DownloadOutlined />}
+                  onClick={() => downloadFile(url)}
+                >
+                  Download
+                </Button>
+              )}
+            </Show>
           </Show>
         </div>
       </div>
@@ -82,27 +78,29 @@ export default function CandidateResume() {
         </Switch.Match>
 
         <Switch.Match when={data?.resume}>
-          <Document
-            file={data?.resume}
-            loading={
-              <div className="flex items-center justify-center ">
-                <Spin tip="Loading..." />
-              </div>
-            }
-            onLoadSuccess={({ numPages }) => setPageCount(numPages)}
-          >
-            {Array.from(new Array(pageCount), (_, index) => (
-              <div key={index} className="flex overflow-x-auto">
-                <Page
-                  scale={zoomScale}
-                  pageNumber={index + 1}
-                  renderAnnotationLayer={false}
-                  renderTextLayer={false}
-                  className="mx-auto"
-                />
-              </div>
-            ))}
-          </Document>
+          <div>
+            <Document
+              file={data?.resume}
+              loading={
+                <div className="flex items-center justify-center ">
+                  <Spin tip="Loading..." />
+                </div>
+              }
+              onLoadSuccess={({ numPages }) => setPageCount(numPages)}
+            >
+              {Array.from(new Array(pageCount), (_, index) => (
+                <div key={index} className="flex overflow-x-auto">
+                  <Page
+                    scale={zoomScale}
+                    pageNumber={index + 1}
+                    renderAnnotationLayer={false}
+                    renderTextLayer={false}
+                    className="mx-auto"
+                  />
+                </div>
+              ))}
+            </Document>
+          </div>
         </Switch.Match>
       </Switch>
     </div>
