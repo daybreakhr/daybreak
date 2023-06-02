@@ -33,7 +33,7 @@ export default function CandidateResume() {
   }
 
   return (
-    <div className="flex-1 p-4 bg-white shadow-md h-fit rounded-b-md">
+    <div className="flex-1 p-4 bg-white rounded-md shadow-md h-fit">
       <div className="flex items-center justify-between mb-6">
         <p className="text-lg font-semibold">Resume</p>
         <div className="flex items-center justify-center space-x-2">
