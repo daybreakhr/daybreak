@@ -11,6 +11,7 @@ import { matchSorter } from 'match-sorter'
 import { getPipelineStages } from 'utils/utils'
 import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
+import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
@@ -85,6 +86,14 @@ export default function JobPipeline() {
           filteredStages={filteredStages}
           setFilteredStages={setFilteredStages}
         />
+
+        <div className="flex-1" />
+
+        <Show when={selectedCandidates.length > 0}>
+          <Button danger icon={<RejectCandidateIcon className="anticon" />}>
+            Reject
+          </Button>
+        </Show>
       </div>
 
       <Switch>

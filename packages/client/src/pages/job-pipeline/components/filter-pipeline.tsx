@@ -6,7 +6,7 @@ import { DownOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Dropdown, Space } from 'antd'
 
 import { getPipelineStages } from 'utils/utils'
-import { ReactComponent as FilterIcon } from 'assets/icon/filter-icon.svg'
+import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
 
 type FilterPipelineProps = {
   interviews: Interview[]
