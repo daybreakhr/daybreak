@@ -1,6 +1,7 @@
-import { fetchCandidates } from 'pages/candidates/queries'
+import type { Candidate } from '@prisma/client'
+import client from 'utils/client'
 
 export async function fetchCandidatesByJob(jobId: string) {
-  const candidates = await fetchCandidates()
-  return candidates.filter((candidate) => candidate.jobId === jobId)
+  const { data } = await client.get<Candidate[]>(`jobs/${jobId}/candidates`)
+  return data
 }

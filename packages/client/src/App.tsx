@@ -71,7 +71,7 @@ export default function App() {
                   <Route path="jobs/:jobId" element={<Job />}>
                     <Route
                       path=""
-                      element={<Navigate to="overview" replace />}
+                      element={<Navigate to="pipeline" replace />}
                     />
                     <Route path="overview" element={<JobOverview />} />
                     <Route path="pipeline" element={<JobPipeline />} />

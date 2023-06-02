@@ -34,6 +34,7 @@ import {
 } from './constants/create-job-values'
 import GenerateDescription from './components/generate-description'
 import DepartmentSelect from './components/department-select'
+import LocationSelect from './components/location-select'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -193,9 +194,10 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please select location' }]}
         >
-          <Select
+          <LocationSelect
+            form={form}
             placeholder="Select Office Location..."
-            options={locations?.map(({ id, name }) => {
+            initialOptions={locations?.map(({ id, name }) => {
               return { label: name, value: id }
             })}
           />

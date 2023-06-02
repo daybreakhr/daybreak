@@ -50,3 +50,11 @@ body {
   width: 80% !important;
   height: 100% !important;
 } */
+
+.remirror-floating-popover {
+  z-index: 10;
+}
+
+.remirror-theme .ProseMirror:active {
+  @apply shadow-none;
+}

@@ -1,4 +1,4 @@
-import { JobType, CandidateStatus } from '@prisma/client'
+import { JobType, CandidateStatus, Interview } from '@prisma/client'
 
 export const candidateStatusOptions = [
   { label: 'Sourced', value: CandidateStatus.sourced },
@@ -38,4 +38,14 @@ export const downloadFile = (url: string, filename?: string) => {
       })
     })
   } catch (error) {}
+}
+
+export function getPipelineStages(interviews: Interview[]) {
+  return [
+    ...candidateStatusOptions.slice(0, 2),
+    ...interviews.map(({ id, title }) => {
+      return { label: title, value: id }
+    }),
+    ...candidateStatusOptions.slice(2),
+  ]
 }

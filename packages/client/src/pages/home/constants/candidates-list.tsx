@@ -3,7 +3,7 @@ import { capitalize } from 'lodash'
 import { CandidateStatus } from '@prisma/client'
 import type { ColumnsType } from 'antd/es/table'
 import { Candidate } from 'types/candidate'
-import { statusColor } from 'pages/candidates/constants/candidate-list'
+import { getStatusColor } from 'pages/candidates/constants/candidate-list'
 
 export const candidatesList: ColumnsType<Candidate> = [
   {
@@ -24,7 +24,7 @@ export const candidatesList: ColumnsType<Candidate> = [
     dataIndex: 'status',
     key: 'status',
     render: (status: CandidateStatus) => (
-      <Tag color={statusColor[status]}>{capitalize(status)}</Tag>
+      <Tag color={getStatusColor[status]}>{capitalize(status)}</Tag>
     ),
   },
 ]

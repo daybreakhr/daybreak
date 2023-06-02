@@ -5,7 +5,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { CandidateSource, CandidateStatus, Job } from '@prisma/client'
 import { Candidate } from 'types/candidate'
 
-export const statusColor: Record<CandidateStatus, string> = {
+export const getStatusColor: Record<CandidateStatus, string> = {
   sourced: 'magenta',
   applied: 'cyan',
   interview: 'blue',
@@ -77,7 +77,7 @@ export const candidateColumns = (appliedFor: Job[]): ColumnsType<Candidate> => [
     dataIndex: 'status',
     key: 'status',
     render: (status: CandidateStatus) => (
-      <Tag color={statusColor[status]}>{capitalize(status)}</Tag>
+      <Tag color={getStatusColor[status]}>{capitalize(status)}</Tag>
     ),
     filters: [
       { text: 'Sourced', value: 'sourced' },

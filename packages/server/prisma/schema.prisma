@@ -51,6 +51,7 @@ model Member {
   Referrals          Candidate[] // Candidates referred by this member
   SlackReferral      Referral[] // These are intermediate states required to create a referral using slack
   EmailTemplates     EmailTemplate[]
+  Comments           Comment[]
 }
 
 type EncryptedData {
@@ -199,6 +200,7 @@ model Candidate {
   interviewId            String?         @db.ObjectId
   Referral               Member?         @relation(fields: [referredBy], references: [uid])
   referredBy             String?
+  Comments               Comment[]
 }
 
 type Education {
@@ -331,4 +333,14 @@ model EmailTemplate {
   workspaceId String    @db.ObjectId
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model Comment {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  content     Json
+  createdAt   DateTime  @default(now())
+  Member      Member    @relation(fields: [createdBy], references: [uid])
+  createdBy   String
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String    @db.ObjectId
 }

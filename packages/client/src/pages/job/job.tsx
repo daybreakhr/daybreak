@@ -30,8 +30,8 @@ export default function Job() {
           { label: 'Job', path: `/jobs/${jobId}` },
         ]}
         tabs={[
-          { label: 'Overview', key: `/jobs/${jobId}/overview` },
           { label: 'Pipeline', key: `/jobs/${jobId}/pipeline` },
+          { label: 'Overview', key: `/jobs/${jobId}/overview` },
         ]}
       />
       <Outlet />

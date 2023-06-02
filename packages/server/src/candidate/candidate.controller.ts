@@ -23,10 +23,11 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { EmailDto } from 'src/email/email.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
+import { CommentDto } from 'src/comments/comments.dto'
 import { CalendarDto } from 'src/calendar/calendar.dto'
-import { EmailDto } from 'src/email/email.dto'
 import {
   CandidateDto,
   CreateCandidateDto,
@@ -71,6 +72,23 @@ export class CandidateController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getCalendarEventsForCandidate(@Param('id') id: string) {
     const data = await this.candidateService.getCalendarEventsForCandidate(id)
+    return data
+  }
+
+  @Get(':id/comments')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    operationId: 'GetCommentsForCandidate',
+    summary: 'Get all comments for a candidate',
+  })
+  @ApiOkResponse({
+    description: 'Comments were returned successfully',
+    type: [CommentDto],
+  })
+  @ApiNotFoundResponse({ description: 'Candidate not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getCommentsForCandidate(@Param('id') id: string) {
+    const data = await this.candidateService.getCommentsForCandidate(id)
     return data
   }
 

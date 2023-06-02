@@ -26,6 +26,7 @@ import { InterviewModule } from './interviews/interview.module'
 import { SlackModule } from './slack/slack.module'
 import { ReferralsModule } from './referral/referral.module'
 import { EmailTemplatesModule } from './email-templates/email-templates.module'
+import { CommentsModule } from './comments/comments.module'
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { EmailTemplatesModule } from './email-templates/email-templates.module'
     AWSModule,
     CalendarModule,
     CandidateModule,
+    CommentsModule,
     DepartmentModule,
     EmailModule,
     EmailTemplatesModule,
