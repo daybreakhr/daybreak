@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Button, Radio, Spin } from 'antd'
 import { groupBy } from 'lodash'
+import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { MdViewKanban } from 'react-icons/md'
+import { Button, Input, Radio, Spin } from 'antd'
 import { useQueries } from '@tanstack/react-query'
-import { UnorderedListOutlined } from '@ant-design/icons'
+import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
@@ -20,6 +21,7 @@ import CandidateList from './components/candidate-list'
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
+  const [input, setInput] = useState('')
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
     `stage-${jobId}`,
@@ -42,8 +44,6 @@ export default function JobPipeline() {
     ],
   })
 
-  const groupByStatus = groupBy(candidates, (candidate) => candidate.status)
-
   const viewTypes = [
     { label: <UnorderedListOutlined />, value: 'table' },
     {
@@ -56,6 +56,14 @@ export default function JobPipeline() {
     },
   ]
 
+  const filteredCandidates = matchSorter(candidates ?? [], input, {
+    keys: ['firstName', 'middleName', 'lastName'],
+  })
+  const groupByStatus = groupBy(
+    filteredCandidates,
+    (candidate) => candidate.status,
+  )
+
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
       <div className="flex items-center px-6 mb-4 space-x-4">
@@ -65,15 +73,19 @@ export default function JobPipeline() {
           optionType="button"
           onChange={(e) => setViewState(e.target.value)}
         />
-
+        <Input
+          value={input}
+          style={{ width: '16rem' }}
+          suffix={<SearchOutlined />}
+          placeholder="Search..."
+          onChange={(e) => setInput(e.target.value)}
+        />
         <FilterPipeline
           interviews={interviews}
           filteredStages={filteredStages}
           setFilteredStages={setFilteredStages}
         />
-
         <div className="flex-1" />
-
         <Show when={selectedCandidates.length > 0}>
           <Button danger icon={<RejectCandidateIcon className="anticon" />}>
             Reject
@@ -91,7 +103,7 @@ export default function JobPipeline() {
         <Switch.Match when={interviews}>
           <Show
             when={viewState === 'kanban'}
-            fallback={<CandidateList data={candidates} />}
+            fallback={<CandidateList data={filteredCandidates} />}
           >
             <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
               {getPipelineStages(interviews)
