@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Input, Radio, Spin } from 'antd'
 import { groupBy } from 'lodash'
+import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { MdViewKanban } from 'react-icons/md'
+import { Button, Input, Radio, Spin } from 'antd'
 import { useQueries } from '@tanstack/react-query'
 import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
-import { matchSorter } from 'match-sorter'
 
 import { getPipelineStages } from 'utils/utils'
 import useLocalStorage from 'hooks/use-local-storage'
@@ -80,15 +80,12 @@ export default function JobPipeline() {
           placeholder="Search..."
           onChange={(e) => setInput(e.target.value)}
         />
-        <div className="flex-1" />
         <FilterPipeline
           interviews={interviews}
           filteredStages={filteredStages}
           setFilteredStages={setFilteredStages}
         />
-
         <div className="flex-1" />
-
         <Show when={selectedCandidates.length > 0}>
           <Button danger icon={<RejectCandidateIcon className="anticon" />}>
             Reject
