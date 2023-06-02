@@ -57,7 +57,7 @@ export class AffindaService {
         ),
     )
 
-    return data.meta.identifier
+    return data
   }
 
   async uploadJobDescription(jdPdfUrl: string) {

@@ -66,9 +66,9 @@ export class ProspectService {
           where: { id: prospectId },
         })
 
-      const identifier = await this.affindaService.uploadResume(
-        restProspectParams.resume,
-      )
+      const {
+        meta: { identifier },
+      } = await this.affindaService.uploadResume(restProspectParams.resume)
 
       if (!isEmpty(restProspectParams)) {
         await this.prismaService.candidate.create({

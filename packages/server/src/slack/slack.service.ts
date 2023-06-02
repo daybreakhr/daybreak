@@ -8,6 +8,7 @@ import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
 import { ReferralService } from 'src/referral/referral.service'
+import { CandidateService } from 'src/candidate/candidate.service'
 
 import { SlackViews } from './slack.views'
 
@@ -18,6 +19,7 @@ export class SlackService {
   private logger = new Logger('SLACK')
   constructor(
     private affindaService: AffindaService,
+    private candidateService: CandidateService,
     private prismaService: PrismaService,
     private referralService: ReferralService,
     private slackViews: SlackViews,
@@ -122,7 +124,21 @@ export class SlackService {
     const resumeUrl = encodeURI(resumeElement.replace('<', '').split('|')[0])
 
     // Parse resume using Affinda
-    const affindaId = await this.affindaService.uploadResume(resumeUrl)
+    const {
+      data: affindaData,
+      meta: { identifier },
+    } = await this.affindaService.uploadResume(resumeUrl)
+
+    const sortedExperiences =
+      affindaData?.workExperience?.sort(
+        (a, b) =>
+          new Date(b.dates?.endDate ?? '').valueOf() -
+          new Date(a.dates?.endDate ?? '').valueOf(),
+      ) ?? []
+
+    const education = this.candidateService.getEducationDetails(affindaData)
+    const experience =
+      this.candidateService.getExperienceDetails(sortedExperiences)
 
     // Fetch details of the referral from the 1st step of the modal
     const referral = await this.prismaService.referral.findUnique({
@@ -134,13 +150,18 @@ export class SlackService {
     // Create candidate in the database
     const candidate = await this.prismaService.candidate.create({
       data: {
-        affindaId,
+        affindaId: identifier,
         firstName,
         lastName,
         email,
         phone,
         source: CandidateSource.referral,
         linkedInUrl,
+        education,
+        experience,
+        currentCompany: sortedExperiences[0]?.organization,
+        totalYearsOfExperience: affindaData.totalYearsExperience,
+        skills: affindaData.skills.map(({ name }) => name),
         Job: { connect: { id: jobId } },
         Workspace: { connect: { id: workspaceId } },
         Referral: { connect: { uid: createdBy } },
