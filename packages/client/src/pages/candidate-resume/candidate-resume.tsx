@@ -78,29 +78,27 @@ export default function CandidateResume() {
         </Switch.Match>
 
         <Switch.Match when={data?.resume}>
-          <div>
-            <Document
-              file={data?.resume}
-              loading={
-                <div className="flex items-center justify-center ">
-                  <Spin tip="Loading..." />
-                </div>
-              }
-              onLoadSuccess={({ numPages }) => setPageCount(numPages)}
-            >
-              {Array.from(new Array(pageCount), (_, index) => (
-                <div key={index} className="flex overflow-x-auto">
-                  <Page
-                    scale={zoomScale}
-                    pageNumber={index + 1}
-                    renderAnnotationLayer={false}
-                    renderTextLayer={false}
-                    className="mx-auto"
-                  />
-                </div>
-              ))}
-            </Document>
-          </div>
+          <Document
+            file={data?.resume}
+            loading={
+              <div className="flex items-center justify-center ">
+                <Spin tip="Loading..." />
+              </div>
+            }
+            onLoadSuccess={({ numPages }) => setPageCount(numPages)}
+          >
+            {Array.from(new Array(pageCount), (_, index) => (
+              <div key={index} className="flex overflow-x-auto">
+                <Page
+                  scale={zoomScale}
+                  pageNumber={index + 1}
+                  renderAnnotationLayer={false}
+                  renderTextLayer={false}
+                  className="mx-auto"
+                />
+              </div>
+            ))}
+          </Document>
         </Switch.Match>
       </Switch>
     </div>
