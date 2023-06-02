@@ -174,7 +174,7 @@ export class CandidateService {
       company: exp?.organization,
       startDate: new Date(exp.dates?.startDate),
       endDate: new Date(exp.dates?.endDate),
-      isCurrent: exp.dates.isCurrent,
+      isCurrent: exp.dates?.isCurrent,
       designation: exp?.jobTitle,
     }))
   }
