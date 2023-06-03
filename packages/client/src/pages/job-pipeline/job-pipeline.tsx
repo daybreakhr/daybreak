@@ -15,13 +15,15 @@ import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candi
 
 import { fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
-import FilterPipeline from './components/filter-pipeline'
+import RejectModal from './components/reject-modal'
 import CandidateList from './components/candidate-list'
+import FilterPipeline from './components/filter-pipeline'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
-  const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
   const [input, setInput] = useState('')
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
+  const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
     `stage-${jobId}`,
@@ -87,7 +89,11 @@ export default function JobPipeline() {
         />
         <div className="flex-1" />
         <Show when={selectedCandidates.length > 0}>
-          <Button danger icon={<RejectCandidateIcon className="anticon" />}>
+          <Button
+            danger
+            onClick={() => setIsRejectModalOpen(true)}
+            icon={<RejectCandidateIcon className="anticon" />}
+          >
             Reject
           </Button>
         </Show>
@@ -112,7 +118,6 @@ export default function JobPipeline() {
                   <StatusList
                     key={value}
                     title={label}
-                    isLoading={isCandidatesLoading}
                     candidates={groupByStatus[value]}
                     selectedCandidates={selectedCandidates}
                     setSelectedCandidates={setSelectedCandidates}
@@ -122,6 +127,11 @@ export default function JobPipeline() {
           </Show>
         </Switch.Match>
       </Switch>
+
+      <RejectModal
+        isOpen={isRejectModalOpen}
+        onClose={() => setIsRejectModalOpen(false)}
+      />
     </div>
   )
 }

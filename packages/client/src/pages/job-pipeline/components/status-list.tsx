@@ -1,14 +1,13 @@
-import { range } from 'lodash'
-import { Checkbox, Skeleton } from 'antd'
+import { Checkbox } from 'antd'
+import { orderBy } from 'lodash'
 import type { Candidate } from '@prisma/client'
 import type { Dispatch, SetStateAction } from 'react'
-import { Switch } from 'ui-kit'
+import { Show } from 'ui-kit'
 
 import CandidateCard from './candidate-card'
 
 type StatusListProps = {
   title: string
-  isLoading: boolean
   candidates?: Candidate[]
   selectedCandidates: string[]
   setSelectedCandidates: Dispatch<SetStateAction<string[]>>
@@ -16,7 +15,6 @@ type StatusListProps = {
 
 export default function StatusList({
   title,
-  isLoading,
   candidates,
   selectedCandidates,
   setSelectedCandidates,
@@ -61,42 +59,32 @@ export default function StatusList({
       </div>
 
       <div className="flex flex-col px-2 pb-4 space-y-4 overflow-y-auto">
-        <Switch>
-          <Switch.Match when={isLoading}>
-            {range(3).map((val) => (
-              <div key={val} className="w-full p-4 bg-white rounded-md">
-                <Skeleton active avatar title paragraph={{ rows: 1 }} />
-              </div>
-            ))}
-          </Switch.Match>
+        <Show when={candidates}>
+          {(data) =>
+            orderBy(data, ['createdAt'], 'desc').map((candidate) => {
+              const { id, firstName, middleName, lastName } = candidate
+              const name = `${firstName} ${middleName ?? ''} ${lastName}`
 
-          <Switch.Match when={candidates}>
-            {(data) =>
-              data.map((candidate) => {
-                const { id, firstName, middleName, lastName } = candidate
-                const name = `${firstName} ${middleName ?? ''} ${lastName}`
-
-                return (
-                  <a
-                    key={id}
-                    target="_blank"
-                    rel="noreferrer"
-                    href={`/candidates/${id}/profile`}
-                  >
-                    <CandidateCard
-                      name={name}
-                      createdAt={candidate.createdAt}
-                      currentCompany={candidate.currentCompany}
-                      isChecked={selectedCandidates.includes(id)}
-                      onCandidateSelect={() => handleCandidateSelect(id)}
-                      totalYearsOfExperience={candidate.totalYearsOfExperience}
-                    />
-                  </a>
-                )
-              })
-            }
-          </Switch.Match>
-        </Switch>
+              return (
+                <a
+                  key={id}
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`/candidates/${id}/profile`}
+                >
+                  <CandidateCard
+                    name={name}
+                    createdAt={candidate.createdAt}
+                    currentCompany={candidate.currentCompany}
+                    isChecked={selectedCandidates.includes(id)}
+                    onCandidateSelect={() => handleCandidateSelect(id)}
+                    totalYearsOfExperience={candidate.totalYearsOfExperience}
+                  />
+                </a>
+              )
+            })
+          }
+        </Show>
       </div>
     </div>
   )
