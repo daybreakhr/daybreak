@@ -76,6 +76,7 @@ export default function StatusList({
                     name={name}
                     createdAt={candidate.createdAt}
                     currentCompany={candidate.currentCompany}
+                    source={candidate.source}
                     isChecked={selectedCandidates.includes(id)}
                     onCandidateSelect={() => handleCandidateSelect(id)}
                     totalYearsOfExperience={candidate.totalYearsOfExperience}

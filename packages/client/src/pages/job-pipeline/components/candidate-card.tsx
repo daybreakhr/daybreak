@@ -1,27 +1,73 @@
+import React from 'react'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
-import { Checkbox } from 'antd'
-import { FaAward } from 'react-icons/fa'
+import { Checkbox, Tag } from 'antd'
+import {
+  FaAward,
+  FaBriefcase,
+  FaGlobe,
+  FaUserFriends,
+  FaBuilding,
+} from 'react-icons/fa'
+import { AiFillLinkedin } from 'react-icons/ai'
 import { HiOfficeBuilding } from 'react-icons/hi'
+
 import { Show } from 'ui-kit'
+import { CandidateSource } from '@prisma/client'
 
 type CandidateCardProps = {
   name: string
   createdAt: Date
   isChecked: boolean
+  source: string
   currentCompany: string | null
   onCandidateSelect: () => void
   totalYearsOfExperience: number | null
+}
+
+const candidateSources: Record<CandidateSource, React.ReactNode> = {
+  [CandidateSource.jobBoard]: <FaBriefcase />,
+  [CandidateSource.referral]: <FaUserFriends />,
+  [CandidateSource.linkedIn]: <AiFillLinkedin />,
+  [CandidateSource.instahyre]: <FaBuilding />,
+  [CandidateSource.iimjobs]: <FaGlobe />,
+  [CandidateSource.naukri]: <FaBuilding />,
+  [CandidateSource.other]: <FaGlobe />,
+}
+
+const getSourceTagColor = (source: CandidateSource): string => {
+  switch (source) {
+    case CandidateSource.jobBoard:
+      return 'purple'
+    case CandidateSource.referral:
+      return 'gold'
+    case CandidateSource.linkedIn:
+      return 'blue'
+    case CandidateSource.instahyre:
+      return 'purple'
+    case CandidateSource.iimjobs:
+      return 'purple'
+    case CandidateSource.naukri:
+      return 'purple'
+    case CandidateSource.other:
+      return 'purple'
+    default:
+      return 'default'
+  }
 }
 
 export default function CandidateCard({
   name,
   createdAt,
   isChecked,
+  source,
   currentCompany,
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
+  const sourceLabel = candidateSources[source as CandidateSource] || 'Unknown'
+  const tagColor = getSourceTagColor(source as CandidateSource)
+
   return (
     <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 group">
       <div className="relative flex items-center mb-4 space-x-2">
@@ -39,7 +85,12 @@ export default function CandidateCard({
             isChecked ? 'left-4' : '-left-2',
           )}
         >
-          {name}
+          <div className="flex">
+            <Tag className="p-1" color={tagColor}>
+              {sourceLabel}
+            </Tag>
+            {name}
+          </div>
         </p>
         <div className="flex-1" />
         <p className="text-xs font-normal text-gray-500">
