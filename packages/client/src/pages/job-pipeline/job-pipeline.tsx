@@ -4,7 +4,8 @@ import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { MdViewKanban } from 'react-icons/md'
 import { Button, Input, Radio, Spin } from 'antd'
-import { useQueries } from '@tanstack/react-query'
+import { CandidateStatus } from '@prisma/client'
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
 
@@ -14,7 +15,7 @@ import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
-import { fetchCandidatesByJob } from './queries'
+import { bulkUpdateCandidate, fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
@@ -45,6 +46,30 @@ export default function JobPipeline() {
       },
     ],
   })
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(bulkUpdateCandidate, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['candidates', jobId])
+      setSelectedCandidates([])
+      setIsRejectModalOpen(false)
+    },
+  })
+
+  function handleBulkRejection(reasons: string[], notes: string) {
+    if (selectedCandidates.length > 0) {
+      const payload = selectedCandidates.map((id) => {
+        const data = {
+          status: CandidateStatus.rejected,
+          rejectionReasons: reasons,
+          rejectionNotes: notes,
+        }
+        return { id, data }
+      })
+
+      mutate(payload)
+    }
+  }
 
   const viewTypes = [
     { label: <UnorderedListOutlined />, value: 'table' },
@@ -77,9 +102,9 @@ export default function JobPipeline() {
         />
         <Input
           value={input}
-          style={{ width: '16rem' }}
-          suffix={<SearchOutlined />}
           placeholder="Search..."
+          style={{ width: '12rem' }}
+          suffix={<SearchOutlined />}
           onChange={(e) => setInput(e.target.value)}
         />
         <FilterPipeline
@@ -91,6 +116,7 @@ export default function JobPipeline() {
         <Show when={selectedCandidates.length > 0}>
           <Button
             danger
+            disabled={selectedCandidates.length === 0}
             onClick={() => setIsRejectModalOpen(true)}
             icon={<RejectCandidateIcon className="anticon" />}
           >
@@ -129,8 +155,8 @@ export default function JobPipeline() {
       </Switch>
 
       <RejectModal
-        onReject={() => {}}
         isOpen={isRejectModalOpen}
+        onReject={handleBulkRejection}
         onClose={() => setIsRejectModalOpen(false)}
       />
     </div>

@@ -9,7 +9,11 @@ import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
 import { AuthService } from 'src/auth/auth.service'
 import { NotificationService } from 'src/notification/notification.service'
-import { CreateCandidateDto, UpdateCandidateDto } from './candidate.dto'
+import {
+  BulkUpdateCandidateDto,
+  CreateCandidateDto,
+  UpdateCandidateDto,
+} from './candidate.dto'
 
 @Injectable()
 export class CandidateService {
@@ -148,6 +152,19 @@ export class CandidateService {
     })
 
     return candidate
+  }
+
+  async bulkCandidateUpdate(bulkUpdateCandidateDto: BulkUpdateCandidateDto[]) {
+    const data = await this.prismaService.$transaction(
+      bulkUpdateCandidateDto.map(({ id, data }) =>
+        this.prismaService.candidate.update({
+          where: { id },
+          data,
+        }),
+      ),
+    )
+
+    return data
   }
 
   async delete(candidateId: string) {
