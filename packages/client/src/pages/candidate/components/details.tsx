@@ -13,9 +13,10 @@ import {
 } from 'react-icons/ai'
 import { Show } from 'ui-kit'
 import { Candidate } from 'types/candidate'
+import RejectModal from 'components/reject-modal'
 import { candidateStatusOptions, getJobType } from 'utils/utils'
+
 import { updateCandidate } from '../queries'
-import CandidateRejectForm from './candidate-reject-form'
 import ReEnrollConfirmation from './re-enroll-confirmation'
 
 type DetailsProps = {
@@ -33,6 +34,7 @@ export default function Details({ data }: DetailsProps) {
     onSuccess: ({ status }) => {
       if (status === CandidateStatus.rejected) {
         message.info('This job application is rejected!')
+        setCandidateRejectForm(false)
       } else {
         message.info('The status has been successfully updated!')
       }
@@ -57,6 +59,17 @@ export default function Details({ data }: DetailsProps) {
       ...candidateStatusOptions.slice(2),
     ]
   }, [data])
+
+  function handleRejectCandidate(reasons: string[], notes: string) {
+    mutate({
+      candidateId,
+      body: {
+        status: CandidateStatus.rejected,
+        rejectionReasons: reasons,
+        rejectionNotes: notes,
+      },
+    })
+  }
 
   function handleStatusChange(value: string) {
     if (CandidateStatus[value as keyof typeof CandidateStatus]) {
@@ -154,9 +167,10 @@ export default function Details({ data }: DetailsProps) {
           <Button danger onClick={() => setCandidateRejectForm(true)}>
             Reject
           </Button>
-          <CandidateRejectForm
-            visible={candidateRejectForm}
-            onCancel={() => setCandidateRejectForm(false)}
+          <RejectModal
+            isOpen={candidateRejectForm}
+            onReject={handleRejectCandidate}
+            onClose={() => setCandidateRejectForm(false)}
           />
 
           <Select

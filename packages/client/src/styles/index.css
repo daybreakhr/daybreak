@@ -58,3 +58,14 @@ body {
 .remirror-theme .ProseMirror:active {
   @apply shadow-none;
 }
+
+.vertical-checkbox > .ant-checkbox-group {
+  @apply flex flex-col;
+}
+
+.vertical-checkbox
+  > .ant-checkbox-group
+  .ant-checkbox-wrapper
+  + .ant-checkbox-wrapper {
+  margin-inline-start: 0px;
+}

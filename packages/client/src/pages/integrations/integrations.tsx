@@ -14,7 +14,6 @@ export default function Integrations() {
 
   useQuery(['me'], fetchMe, {
     onSuccess: setMember,
-    refetchOnWindowFocus: true,
   })
 
   return (

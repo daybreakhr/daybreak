@@ -29,6 +29,7 @@ import { Roles } from 'src/auth/roles.decorator'
 import { CommentDto } from 'src/comments/comments.dto'
 import { CalendarDto } from 'src/calendar/calendar.dto'
 import {
+  BulkUpdateCandidateDto,
   CandidateDto,
   CreateCandidateDto,
   UpdateCandidateDto,
@@ -126,6 +127,28 @@ export class CandidateController {
     @Body() createCandidateDto: CreateCandidateDto,
   ) {
     const data = await this.candidateService.create(file, createCandidateDto)
+    return data
+  }
+
+  @Patch('bulk-actions')
+  @Roles('admin')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    operationId: 'BulkUpdateCandidate',
+    summary: 'Update multiple candidates',
+  })
+  @ApiOkResponse({
+    description: 'candidate updated successfully',
+    type: [CandidateDto],
+  })
+  @ApiBody({ type: [BulkUpdateCandidateDto] })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async bulkCandidateUpdate(
+    @Body() bulkUpdateCandidateDto: BulkUpdateCandidateDto[],
+  ) {
+    const data = await this.candidateService.bulkCandidateUpdate(
+      bulkUpdateCandidateDto,
+    )
     return data
   }
 

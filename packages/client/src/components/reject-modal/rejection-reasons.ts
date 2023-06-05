@@ -1,6 +1,7 @@
 export const rejectionReasons = [
   {
     title: 'Qualifications and Experience:',
+    name: 'qualifications',
     reasons: [
       'Failed Background Check',
       'Higher qualified candidates selected - education',
@@ -10,6 +11,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Cultural Fit:',
+    name: 'culturalFit',
     reasons: [
       'Not willing to work hours',
       'Incompatible work style or attitude',
@@ -18,6 +20,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Interview Performance:',
+    name: 'interviewPerformance',
     reasons: [
       'No show to interview',
       'Inability to articulate ideas effectively',
@@ -25,6 +28,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Skills Gap:',
+    name: 'skillsGap',
     reasons: [
       'Data management techniques',
       'Inadequate knowledge in a particular area',
@@ -33,6 +37,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Availability or Location:',
+    name: 'location',
     reasons: [
       'Not willing to relocate',
       'Relocation constraints',
@@ -43,6 +48,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Salary or Compensation:',
+    name: 'salary',
     reasons: [
       'Expectations mismatch regarding salary or benefits',
       'Not willing to work for compensation',
@@ -51,6 +57,7 @@ export const rejectionReasons = [
   },
   {
     title: 'Other Opportunities:',
+    name: 'otherOpportunities',
     reasons: [
       'Accepted offer at another company - Compensation',
       'Job does not meet career objectives',

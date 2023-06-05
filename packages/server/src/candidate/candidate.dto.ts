@@ -55,3 +55,8 @@ export class CandidateDto extends CreateCandidateDto {
 }
 
 export class UpdateCandidateDto extends PartialType(CreateCandidateDto) {}
+
+export class BulkUpdateCandidateDto {
+  id: string
+  data: UpdateCandidateDto
+}
