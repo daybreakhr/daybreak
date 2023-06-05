@@ -9,13 +9,13 @@ import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
+import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
-import RejectModal from './components/reject-modal'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
 
@@ -129,6 +129,7 @@ export default function JobPipeline() {
       </Switch>
 
       <RejectModal
+        onReject={() => {}}
         isOpen={isRejectModalOpen}
         onClose={() => setIsRejectModalOpen(false)}
       />

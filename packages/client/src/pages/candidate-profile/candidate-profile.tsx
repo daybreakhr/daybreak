@@ -23,7 +23,12 @@ export default function CandidateProfile() {
             <Result
               status="error"
               title="This applicant has been rejected"
-              subTitle={data?.rejectionMessage}
+              subTitle={
+                <>
+                  <p>{data?.rejectionReasons?.join(', ')}</p>
+                  <p>{data?.rejectionNotes}</p>
+                </>
+              }
             />
           </Switch.Match>
         </Switch>
