@@ -94,6 +94,17 @@ export default function JobPipeline() {
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
       <div className="flex items-center px-6 mb-4 space-x-4">
+        <Show when={selectedCandidates.length > 0}>
+          <Button
+            danger
+            disabled={selectedCandidates.length === 0}
+            onClick={() => setIsRejectModalOpen(true)}
+            icon={<RejectCandidateIcon className="anticon" />}
+          >
+            Reject
+          </Button>
+        </Show>
+        <div className="flex-1" />
         <Radio.Group
           value={viewState}
           options={viewTypes}
@@ -112,17 +123,6 @@ export default function JobPipeline() {
           filteredStages={filteredStages}
           setFilteredStages={setFilteredStages}
         />
-        <div className="flex-1" />
-        <Show when={selectedCandidates.length > 0}>
-          <Button
-            danger
-            disabled={selectedCandidates.length === 0}
-            onClick={() => setIsRejectModalOpen(true)}
-            icon={<RejectCandidateIcon className="anticon" />}
-          >
-            Reject
-          </Button>
-        </Show>
       </div>
 
       <Switch>
