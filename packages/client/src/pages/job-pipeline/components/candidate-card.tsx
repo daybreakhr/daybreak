@@ -2,18 +2,16 @@ import React from 'react'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { Checkbox, Tag } from 'antd'
-import {
-  FaAward,
-  FaBriefcase,
-  FaGlobe,
-  FaUserFriends,
-  FaBuilding,
-} from 'react-icons/fa'
+import { CandidateSource } from '@prisma/client'
+import { Show } from 'ui-kit'
+
+import { FaAward } from 'react-icons/fa'
 import { AiFillLinkedin } from 'react-icons/ai'
 import { HiOfficeBuilding } from 'react-icons/hi'
-
-import { Show } from 'ui-kit'
-import { CandidateSource } from '@prisma/client'
+import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-columns.svg'
+import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
+import { ReactComponent as ReferralIcon } from 'assets/icons/referral.svg'
+import { ReactComponent as JobPortalIcon } from 'assets/icons/job-portal.svg'
 
 type CandidateCardProps = {
   name: string
@@ -26,13 +24,13 @@ type CandidateCardProps = {
 }
 
 const candidateSources: Record<CandidateSource, React.ReactNode> = {
-  [CandidateSource.jobBoard]: <FaBriefcase />,
-  [CandidateSource.referral]: <FaUserFriends />,
+  [CandidateSource.jobBoard]: <JobPortalIcon />,
+  [CandidateSource.referral]: <ReferralIcon />,
   [CandidateSource.linkedIn]: <AiFillLinkedin />,
-  [CandidateSource.instahyre]: <FaBuilding />,
-  [CandidateSource.iimjobs]: <FaGlobe />,
-  [CandidateSource.naukri]: <FaBuilding />,
-  [CandidateSource.other]: <FaGlobe />,
+  [CandidateSource.instahyre]: <GlobeIcon />,
+  [CandidateSource.iimjobs]: <BuildingColumnsIcon />,
+  [CandidateSource.naukri]: <GlobeIcon />,
+  [CandidateSource.other]: <GlobeIcon />,
 }
 
 const getSourceTagColor = (source: CandidateSource): string => {
@@ -86,7 +84,7 @@ export default function CandidateCard({
           )}
         >
           <div className="flex">
-            <Tag className="p-1" color={tagColor}>
+            <Tag className="p-1 border-none" color={tagColor}>
               {sourceLabel}
             </Tag>
             {name}
