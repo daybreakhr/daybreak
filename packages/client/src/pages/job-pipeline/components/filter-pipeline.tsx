@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
 import type { MenuProps } from 'antd'
 import type { Interview } from '@prisma/client'
-import { DownOutlined } from '@ant-design/icons'
+import type { Dispatch, SetStateAction } from 'react'
 import { Button, Checkbox, Dropdown, Space } from 'antd'
 
 import { getPipelineStages } from 'utils/utils'
@@ -83,13 +82,7 @@ export default function FilterPipeline({
         triggerSubMenuAction: 'click',
       }}
     >
-      <Button>
-        <Space>
-          <FilterIcon />
-          Filter
-          <DownOutlined />
-        </Space>
-      </Button>
+      <Button icon={<FilterIcon />} />
     </Dropdown>
   )
 }

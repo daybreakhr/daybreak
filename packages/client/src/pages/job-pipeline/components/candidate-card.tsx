@@ -1,5 +1,4 @@
-import React from 'react'
-import clsx from 'clsx'
+import type { ReactNode } from 'react'
 import dayjs from 'dayjs'
 import { Checkbox, Tag } from 'antd'
 import { CandidateSource } from '@prisma/client'
@@ -23,7 +22,7 @@ type CandidateCardProps = {
   totalYearsOfExperience: number | null
 }
 
-const candidateSources: Record<CandidateSource, React.ReactNode> = {
+const candidateSources: Record<CandidateSource, ReactNode> = {
   [CandidateSource.jobBoard]: <JobPortalIcon />,
   [CandidateSource.referral]: <ReferralIcon />,
   [CandidateSource.linkedIn]: <AiFillLinkedin />,
@@ -69,28 +68,16 @@ export default function CandidateCard({
   return (
     <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 group">
       <div className="relative flex items-center mb-4 space-x-2">
-        <Checkbox
-          checked={isChecked}
-          onChange={onCandidateSelect}
-          className={clsx(
-            'group-hover:visible group-hover:opacity-100 opacity-0',
-            isChecked ? 'visible opacity-100' : 'invisible opacity-0',
-          )}
-        />
-        <p
-          className={clsx(
-            'absolute font-semibold transition-all group-hover:left-4',
-            isChecked ? 'left-4' : '-left-2',
-          )}
-        >
-          <div className="flex">
-            <Tag className="p-1 border-none" color={tagColor}>
-              {sourceLabel}
-            </Tag>
-            {name}
-          </div>
-        </p>
+        <Checkbox checked={isChecked} onChange={onCandidateSelect} />
+
+        <Tag className="p-1 border-none" color={tagColor}>
+          {sourceLabel}
+        </Tag>
+
+        <p className="font-semibold">{name}</p>
+
         <div className="flex-1" />
+
         <p className="text-xs font-normal text-gray-500">
           {dayjs(createdAt).fromNow()}
         </p>
