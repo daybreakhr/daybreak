@@ -1,16 +1,10 @@
-import type { ReactNode } from 'react'
 import dayjs from 'dayjs'
 import { Checkbox, Tag } from 'antd'
 import { CandidateSource } from '@prisma/client'
 import { Show } from 'ui-kit'
-
 import { FaAward } from 'react-icons/fa'
-import { AiFillLinkedin } from 'react-icons/ai'
 import { HiOfficeBuilding } from 'react-icons/hi'
-import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-columns.svg'
-import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
-import { ReactComponent as ReferralIcon } from 'assets/icons/referral.svg'
-import { ReactComponent as JobPortalIcon } from 'assets/icons/job-portal.svg'
+import { candidateSources, getSourceTagColor } from '../constants/icons'
 
 type CandidateCardProps = {
   name: string
@@ -20,37 +14,6 @@ type CandidateCardProps = {
   currentCompany: string | null
   onCandidateSelect: () => void
   totalYearsOfExperience: number | null
-}
-
-const candidateSources: Record<CandidateSource, ReactNode> = {
-  [CandidateSource.jobBoard]: <JobPortalIcon />,
-  [CandidateSource.referral]: <ReferralIcon />,
-  [CandidateSource.linkedIn]: <AiFillLinkedin />,
-  [CandidateSource.instahyre]: <GlobeIcon />,
-  [CandidateSource.iimjobs]: <BuildingColumnsIcon />,
-  [CandidateSource.naukri]: <GlobeIcon />,
-  [CandidateSource.other]: <GlobeIcon />,
-}
-
-const getSourceTagColor = (source: CandidateSource): string => {
-  switch (source) {
-    case CandidateSource.jobBoard:
-      return 'purple'
-    case CandidateSource.referral:
-      return 'gold'
-    case CandidateSource.linkedIn:
-      return 'blue'
-    case CandidateSource.instahyre:
-      return 'purple'
-    case CandidateSource.iimjobs:
-      return 'purple'
-    case CandidateSource.naukri:
-      return 'purple'
-    case CandidateSource.other:
-      return 'purple'
-    default:
-      return 'default'
-  }
 }
 
 export default function CandidateCard({
