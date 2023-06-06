@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import type { MenuProps } from 'antd'
+import { useMemo, useState } from 'react'
 import type { Interview } from '@prisma/client'
 import type { Dispatch, SetStateAction } from 'react'
-import { Button, Checkbox, Dropdown, Space } from 'antd'
+import { Button, Checkbox, Collapse, Drawer } from 'antd'
+import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 import { getPipelineStages } from 'utils/utils'
 import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
@@ -20,69 +20,55 @@ export default function FilterPipeline({
 }: FilterPipelineProps) {
   const [open, setOpen] = useState(false)
 
-  function handleOpenChange(flag: boolean) {
-    setOpen(flag)
+  const selectedStages = useMemo(
+    () =>
+      getPipelineStages(interviews)
+        .filter(({ value }) => !filteredStages.includes(value))
+        .map(({ value }) => value),
+    [filteredStages, interviews],
+  )
+
+  function handleSourceChange(values: CheckboxValueType[]) {
+    const newStages = getPipelineStages(interviews)
+      .filter(({ value }) => !values.includes(value))
+      .map(({ value }) => value)
+
+    setFilteredStages(newStages)
   }
-
-  const handleMenuClick: MenuProps['onClick'] = ({ key, domEvent }) => {
-    domEvent.stopPropagation()
-
-    setFilteredStages((prev) => {
-      if (prev.includes(key)) {
-        return prev.filter((item) => item !== key)
-      }
-
-      return [...prev, key]
-    })
-  }
-
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      type: 'group',
-      label: 'Quick Filters',
-      children: [
-        {
-          key: 'interview-dropdown',
-          label: 'Interview Stages',
-          children: [
-            {
-              key: 'interview-group',
-              type: 'group',
-              label: 'Interview Stages',
-              children: getPipelineStages(interviews).map(
-                ({ label, value }) => {
-                  return {
-                    key: value,
-                    label: (
-                      <Space>
-                        <Checkbox checked={!filteredStages.includes(value)} />
-                        {label}
-                      </Space>
-                    ),
-                  }
-                },
-              ),
-            },
-          ],
-        },
-      ],
-    },
-  ]
 
   return (
-    <Dropdown
-      open={open}
-      trigger={['click']}
-      onOpenChange={handleOpenChange}
-      menu={{
-        items,
-        multiple: true,
-        onClick: handleMenuClick,
-        triggerSubMenuAction: 'click',
-      }}
-    >
-      <Button icon={<FilterIcon />} />
-    </Dropdown>
+    <>
+      <Button icon={<FilterIcon />} onClick={() => setOpen(true)} />
+
+      <Drawer
+        open={open}
+        width={280}
+        closable={false}
+        onClose={() => setOpen(false)}
+      >
+        <p className="mb-4 font-semibold">Apply Filter</p>
+
+        <Collapse
+          ghost
+          size="small"
+          expandIconPosition="end"
+          className="filter-collapse"
+          defaultActiveKey={['source']}
+        >
+          <Collapse.Panel header="Source" key="source">
+            <div className="flex flex-col">
+              <div className="p-2 vertical-checkbox">
+                <Checkbox.Group
+                  value={selectedStages}
+                  className="w-full space-y-3"
+                  onChange={handleSourceChange}
+                  options={getPipelineStages(interviews)}
+                />
+              </div>
+            </div>
+          </Collapse.Panel>
+        </Collapse>
+      </Drawer>
+    </>
   )
 }

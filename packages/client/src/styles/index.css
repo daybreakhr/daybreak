@@ -69,3 +69,16 @@ body {
   + .ant-checkbox-wrapper {
   margin-inline-start: 0px;
 }
+
+.filter-collapse.ant-collapse-small
+  > .ant-collapse-item
+  > .ant-collapse-header {
+  @apply p-0;
+}
+
+.filter-collapse.ant-collapse-ghost
+  > .ant-collapse-item
+  > .ant-collapse-content
+  > .ant-collapse-content-box {
+  @apply p-0;
+}
