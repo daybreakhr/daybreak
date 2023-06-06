@@ -1,15 +1,45 @@
+import { useMemo } from 'react'
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import type { Candidate } from '@prisma/client'
-
+import type { Candidate, CandidateSource } from '@prisma/client'
 import { Show } from 'ui-kit'
+import { Tag } from 'antd'
 import { candidateListColumns } from '../constants/candidate-list'
+import { candidateSources, getSourceTagColor } from '../constants/icons'
 
 type CandidateListProps = {
   data: Candidate[]
+}
+
+function CellRenderer({ cell }: { cell: any }) {
+  const source = cell.row.original.source
+  const { sourceLabel, tagColor } = useMemo(() => {
+    const label = candidateSources[source as CandidateSource] || 'Unknown'
+    const color = getSourceTagColor(source as CandidateSource)
+    return { sourceLabel: label, tagColor: color }
+  }, [source])
+
+  if (cell.column.id === 'firstName') {
+    return (
+      <td key={cell.id} className="px-4 py-3 font-normal">
+        <span className="flex">
+          <Tag className="py-1 border-none " color={tagColor}>
+            {sourceLabel}
+          </Tag>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </span>
+      </td>
+    )
+  } else {
+    return (
+      <td key={cell.id} className="px-4 py-3 font-normal">
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </td>
+    )
+  }
 }
 
 export default function CandidateList({ data }: CandidateListProps) {
@@ -46,10 +76,8 @@ export default function CandidateList({ data }: CandidateListProps) {
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} className="border-gray-50 border-y">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-4 py-3 font-normal">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                {row.getVisibleCells().map((cell: any) => (
+                  <CellRenderer key={cell.id} cell={cell} />
                 ))}
               </tr>
             ))}
