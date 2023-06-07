@@ -12,6 +12,7 @@ const columnHelper = createColumnHelper<Candidate>()
 export const candidateListColumns = [
   columnHelper.accessor('source', {
     header: 'Source',
+    size: 50,
     cell: ({ row }) => {
       const source = (row.original as any).source as CandidateSource
       const sourceLabel =
@@ -19,8 +20,8 @@ export const candidateListColumns = [
       const tagColor = getSourceTagColor(source as CandidateSource)
       return (
         <td>
-          <span className="flex">
-            <Tag className="py-1 border-none" color={tagColor}>
+          <span className="flex items-center justify-center">
+            <Tag className="flex py-1 border-none" color={tagColor}>
               {sourceLabel}
             </Tag>
           </span>
