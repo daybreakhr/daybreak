@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
-import { TbArrowBarToRight } from 'react-icons/tb'
 import type { Dispatch, SetStateAction } from 'react'
-import { Button, Checkbox, Collapse, Drawer, Radio, Space } from 'antd'
 import { CandidateSource, Interview } from '@prisma/client'
+import { Button, Checkbox, Collapse, Drawer, Radio, Space } from 'antd'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 import { getPipelineStages } from 'utils/utils'
@@ -57,17 +56,15 @@ export default function FilterPipeline({
       <Drawer
         open={open}
         width={280}
+        mask={false}
         closable={false}
         onClose={() => setOpen(false)}
       >
         <div className="flex items-center justify-between mb-4">
           <p className="font-semibold">Apply Filter</p>
-          <Button
-            type="text"
-            size="small"
-            icon={<TbArrowBarToRight />}
-            onClick={() => setOpen(false)}
-          />
+          <Button type="link" size="small" onClick={() => setOpen(false)}>
+            Done
+          </Button>
         </div>
 
         <Collapse
