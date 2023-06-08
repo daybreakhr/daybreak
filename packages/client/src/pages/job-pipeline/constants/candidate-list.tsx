@@ -5,7 +5,7 @@ import type { Candidate, CandidateSource } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { Show } from 'ui-kit'
-import { candidateSources, getSourceTagColor } from '../constants/icons'
+import { candidateSources } from '../constants/icons'
 
 const columnHelper = createColumnHelper<Candidate>()
 
@@ -13,16 +13,14 @@ export const candidateListColumns = [
   columnHelper.accessor('source', {
     header: 'Source',
     size: 50,
-    cell: ({ row }) => {
-      const source = (row.original as any).source as CandidateSource
-      const sourceLabel =
-        candidateSources[source as CandidateSource] || 'Unknown'
-      const tagColor = getSourceTagColor(source as CandidateSource)
+    cell: ({ getValue }) => {
+      const source = getValue() as CandidateSource
+      const { color, icon } = candidateSources(source)
       return (
         <td>
           <span className="flex items-center justify-center">
-            <Tag className="flex py-1 border-none" color={tagColor}>
-              {sourceLabel}
+            <Tag className="flex py-1 border-none" color={color}>
+              {icon}
             </Tag>
           </span>
         </td>

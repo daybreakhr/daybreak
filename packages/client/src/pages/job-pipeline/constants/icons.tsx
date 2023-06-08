@@ -7,33 +7,25 @@ import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
 import { ReactComponent as ReferralIcon } from 'assets/icons/referral.svg'
 import { ReactComponent as JobPortalIcon } from 'assets/icons/job-portal.svg'
 
-export const candidateSources: Record<CandidateSource, ReactNode> = {
-  [CandidateSource.jobBoard]: <JobPortalIcon />,
-  [CandidateSource.referral]: <ReferralIcon />,
-  [CandidateSource.linkedIn]: <AiFillLinkedin />,
-  [CandidateSource.instahyre]: <GlobeIcon />,
-  [CandidateSource.iimjobs]: <BuildingColumnsIcon />,
-  [CandidateSource.naukri]: <GlobeIcon />,
-  [CandidateSource.other]: <GlobeIcon />,
-}
-
-export const getSourceTagColor = (source: CandidateSource): string => {
+export const candidateSources = (
+  source: CandidateSource,
+): { color: string; icon: ReactNode } | { color: string; icon: null } => {
   switch (source) {
     case CandidateSource.jobBoard:
-      return 'purple'
+      return { color: 'purple', icon: <JobPortalIcon /> }
     case CandidateSource.referral:
-      return 'gold'
+      return { color: 'gold', icon: <ReferralIcon /> }
     case CandidateSource.linkedIn:
-      return 'blue'
+      return { color: 'blue', icon: <AiFillLinkedin /> }
     case CandidateSource.instahyre:
-      return 'purple'
+      return { color: 'purple', icon: <GlobeIcon /> }
     case CandidateSource.iimjobs:
-      return 'purple'
+      return { color: 'purple', icon: <BuildingColumnsIcon /> }
     case CandidateSource.naukri:
-      return 'purple'
+      return { color: 'purple', icon: <GlobeIcon /> }
     case CandidateSource.other:
-      return 'purple'
+      return { color: 'purple', icon: <GlobeIcon /> }
     default:
-      return 'default'
+      return { color: 'default', icon: null }
   }
 }
