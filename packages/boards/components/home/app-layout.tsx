@@ -53,7 +53,7 @@ export default function AppLayout({
             href="https://www.daybreakhire.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-primary-main"
+            className="font-medium text-primary-500"
           >
             Daybreak Hire
           </a>{' '}

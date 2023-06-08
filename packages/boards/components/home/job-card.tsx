@@ -15,7 +15,7 @@ export default function JobCard({ job, workspaceSlug }: JobCardProps) {
     >
       <a
         href={`/${workspaceSlug}/jobs/${job.id}`}
-        className="text-lg font-medium text-primary-main"
+        className="text-lg font-medium text-primary-500"
       >
         {job.title}
       </a>

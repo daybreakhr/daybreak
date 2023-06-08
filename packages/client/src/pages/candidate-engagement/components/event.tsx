@@ -15,7 +15,7 @@ export default function Event(eventProps: Eventprops) {
   const { createdAt, scheduledAt, title, icon, details } = eventProps
   return (
     <div className="flex space-x-4">
-      <div className="flex flex-col items-center justify-center h-16 text-white rounded-md shadow w-14 bg-primary-main">
+      <div className="flex flex-col items-center justify-center h-16 text-white rounded-md shadow w-14 bg-primary-500">
         <span className="text-lg">{dayjs(createdAt).format('DD')}</span>
         <b className="-mt-1 text-xs uppercase">
           {dayjs(createdAt).format('MMM')}

@@ -45,7 +45,7 @@ export default function Login() {
           </p>
           <a
             href="/privacy-policy"
-            className="text-primary-main hover:underline"
+            className="text-primary-500 hover:underline"
             target="_blank"
           >
             Privacy Policy

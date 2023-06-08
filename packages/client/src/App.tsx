@@ -45,7 +45,7 @@ const queryClient = new QueryClient()
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider theme={{ token: { colorPrimary: '#9155fd' } }}>
+      <ConfigProvider theme={{ token: { colorPrimary: '#8441FC' } }}>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
           <Auth>
             <BrowserRouter>

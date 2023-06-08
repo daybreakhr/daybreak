@@ -17,7 +17,7 @@ export default function VariablesDropdown({
           <MenuItem
             key={val}
             onClick={() => insertVariable(val)}
-            classes={{ root: '!text-primary-main' }}
+            classes={{ root: '!text-primary-500' }}
           >
             {val}
           </MenuItem>

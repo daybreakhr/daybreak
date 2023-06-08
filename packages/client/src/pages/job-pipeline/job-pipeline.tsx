@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { groupBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
+import { Button, Input, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
-import { MdViewKanban } from 'react-icons/md'
-import { Button, Input, Radio, Spin } from 'antd'
 import { CandidateStatus } from '@prisma/client'
+import { SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Show, Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
@@ -15,10 +14,11 @@ import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
-import { bulkUpdateCandidate, fetchCandidatesByJob } from './queries'
 import StatusList from './components/status-list'
+import ToggleView from './components/toggle-view'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
+import { bulkUpdateCandidate, fetchCandidatesByJob } from './queries'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
@@ -72,18 +72,6 @@ export default function JobPipeline() {
     }
   }
 
-  const viewTypes = [
-    { label: <UnorderedListOutlined />, value: 'table' },
-    {
-      label: (
-        <span className="text-lg anticon">
-          <MdViewKanban />
-        </span>
-      ),
-      value: 'kanban',
-    },
-  ]
-
   const filteredCandidatesBySource = selectedSources.length
     ? candidates?.filter(({ source }) => selectedSources.includes(source))
     : candidates
@@ -102,6 +90,7 @@ export default function JobPipeline() {
   return (
     <div className="flex flex-col flex-1 pt-4 overflow-hidden">
       <div className="flex items-center px-6 mb-4 space-x-4">
+        <ToggleView viewType={viewState} onChange={setViewState} />
         <Show when={selectedCandidates.length > 0}>
           <Button
             danger
@@ -113,12 +102,6 @@ export default function JobPipeline() {
           </Button>
         </Show>
         <div className="flex-1" />
-        <Radio.Group
-          value={viewState}
-          options={viewTypes}
-          optionType="button"
-          onChange={(e) => setViewState(e.target.value)}
-        />
         <Input
           value={input}
           placeholder="Search..."

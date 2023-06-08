@@ -50,7 +50,7 @@ export default function FeedbackFragment({
               type="text"
               size="small"
               onClick={() => setFeedbackModal(true)}
-              icon={<EditOutlined className="text-primary-main" />}
+              icon={<EditOutlined className="text-primary-500" />}
             />
           </Show>
           <Show when={canDelete(createdBy)}>
