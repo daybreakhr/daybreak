@@ -24,6 +24,7 @@ export default function JobPipeline() {
   const { jobId = '' } = useParams()
   const [input, setInput] = useState('')
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
+  const [selectedSources, setSelectedSources] = useState<string[]>([])
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
@@ -83,11 +84,18 @@ export default function JobPipeline() {
     },
   ]
 
-  const filteredCandidates = matchSorter(candidates ?? [], input, {
-    keys: ['firstName', 'middleName', 'lastName'],
-  })
+  const filteredCandidatesBySource = selectedSources.length
+    ? candidates?.filter(({ source }) => selectedSources.includes(source))
+    : candidates
+
+  const filteredCandidatesBySearch = matchSorter(
+    filteredCandidatesBySource ?? [],
+    input,
+    { keys: ['firstName', 'middleName', 'lastName'] },
+  )
+
   const groupByStatus = groupBy(
-    filteredCandidates,
+    filteredCandidatesBySearch,
     (candidate) => candidate.status,
   )
 
@@ -121,7 +129,9 @@ export default function JobPipeline() {
         <FilterPipeline
           interviews={interviews}
           filteredStages={filteredStages}
+          selectedSources={selectedSources}
           setFilteredStages={setFilteredStages}
+          setSelectedSources={setSelectedSources}
         />
       </div>
 
@@ -135,7 +145,7 @@ export default function JobPipeline() {
         <Switch.Match when={interviews}>
           <Show
             when={viewState === 'kanban'}
-            fallback={<CandidateList data={filteredCandidates} />}
+            fallback={<CandidateList data={filteredCandidatesBySearch} />}
           >
             <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
               {getPipelineStages(interviews)

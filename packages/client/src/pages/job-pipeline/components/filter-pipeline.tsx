@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import type { Interview } from '@prisma/client'
 import type { Dispatch, SetStateAction } from 'react'
-import { Button, Checkbox, Collapse, Drawer } from 'antd'
+import { CandidateSource, Interview } from '@prisma/client'
+import { Button, Checkbox, Collapse, Drawer, Radio, Space } from 'antd'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 import { getPipelineStages } from 'utils/utils'
@@ -10,13 +10,17 @@ import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
 type FilterPipelineProps = {
   interviews: Interview[]
   filteredStages: string[]
+  selectedSources: string[]
   setFilteredStages: Dispatch<SetStateAction<string[]>>
+  setSelectedSources: Dispatch<SetStateAction<string[]>>
 }
 
 export default function FilterPipeline({
   interviews,
   filteredStages,
+  selectedSources,
   setFilteredStages,
+  setSelectedSources,
 }: FilterPipelineProps) {
   const [open, setOpen] = useState(false)
 
@@ -36,6 +40,15 @@ export default function FilterPipeline({
     setFilteredStages(newStages)
   }
 
+  const sourceOptions = [
+    { label: 'Portal', value: CandidateSource.jobBoard },
+    { label: 'Referrals', value: CandidateSource.referral },
+    { label: 'LinkedIn', value: CandidateSource.linkedIn },
+    { label: 'Instahyre', value: CandidateSource.instahyre },
+    { label: 'IIM Jobs', value: CandidateSource.iimjobs },
+    { label: 'Naukri', value: CandidateSource.naukri },
+  ]
+
   return (
     <>
       <Button icon={<FilterIcon />} onClick={() => setOpen(true)} />
@@ -43,28 +56,56 @@ export default function FilterPipeline({
       <Drawer
         open={open}
         width={280}
+        mask={false}
         closable={false}
         onClose={() => setOpen(false)}
       >
-        <p className="mb-4 font-semibold">Apply Filter</p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="font-semibold">Apply Filter</p>
+          <Button type="link" size="small" onClick={() => setOpen(false)}>
+            Done
+          </Button>
+        </div>
 
         <Collapse
           ghost
           size="small"
           expandIconPosition="end"
           className="filter-collapse"
-          defaultActiveKey={['source']}
+          defaultActiveKey={['source', 'date', 'stages']}
         >
-          <Collapse.Panel header="Source" key="source">
-            <div className="flex flex-col">
-              <div className="p-2 vertical-checkbox">
-                <Checkbox.Group
-                  value={selectedStages}
-                  className="w-full space-y-3"
-                  onChange={handleSourceChange}
-                  options={getPipelineStages(interviews)}
-                />
-              </div>
+          <Collapse.Panel key="source" header="Source" className="mb-4">
+            <div className="p-2 vertical-checkbox">
+              <Checkbox.Group
+                value={selectedSources}
+                options={sourceOptions}
+                className="w-full space-y-2"
+                onChange={(values) => setSelectedSources(values as string[])}
+              />
+            </div>
+          </Collapse.Panel>
+
+          <Collapse.Panel key="date" header="Date Applied" className="mb-4">
+            <div className="p-2">
+              <Radio.Group defaultValue="all-time">
+                <Space direction="vertical">
+                  <Radio value="all-time">All Time</Radio>
+                  <Radio value="last-week">Last Week</Radio>
+                  <Radio value="last-month">Last Month</Radio>
+                  <Radio value="last-quarter">Last 3 Months</Radio>
+                </Space>
+              </Radio.Group>
+            </div>
+          </Collapse.Panel>
+
+          <Collapse.Panel header="Stages" key="stages" className="mb-4">
+            <div className="p-2 vertical-checkbox">
+              <Checkbox.Group
+                value={selectedStages}
+                className="w-full space-y-2"
+                onChange={handleSourceChange}
+                options={getPipelineStages(interviews)}
+              />
             </div>
           </Collapse.Panel>
         </Collapse>
