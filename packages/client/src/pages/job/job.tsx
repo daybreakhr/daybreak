@@ -90,7 +90,7 @@ export default function JobPipeline() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <JobHeader />
+      <JobHeader candidates={candidates} />
       <div className="flex items-center px-6 mb-4 space-x-4">
         <ToggleView viewType={viewState} onChange={setViewState} />
         <Show when={selectedCandidates.length > 0}>
