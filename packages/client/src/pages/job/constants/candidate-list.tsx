@@ -1,14 +1,32 @@
 import dayjs from 'dayjs'
 import { Tag } from 'antd'
 import { capitalize } from 'lodash'
-import type { Candidate } from '@prisma/client'
+import type { Candidate, CandidateSource } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { Show } from 'ui-kit'
+import { candidateSources } from '../constants/icons'
 
 const columnHelper = createColumnHelper<Candidate>()
 
 export const candidateListColumns = [
+  columnHelper.accessor('source', {
+    header: 'Source',
+    size: 50,
+    cell: ({ getValue }) => {
+      const source = getValue() as CandidateSource
+      const { color, icon } = candidateSources(source)
+      return (
+        <td>
+          <span className="flex items-center justify-center">
+            <Tag className="flex py-1 border-none" color={color}>
+              {icon}
+            </Tag>
+          </span>
+        </td>
+      )
+    },
+  }),
   columnHelper.accessor('firstName', {
     header: 'Candidate Name',
     cell: ({ row }) => {

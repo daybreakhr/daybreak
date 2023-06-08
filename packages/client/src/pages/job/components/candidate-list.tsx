@@ -29,6 +29,7 @@ export default function CandidateList({ data }: CandidateListProps) {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
+                    style={{ width: header.getSize() }}
                     className="sticky top-0 z-10 px-4 py-3 text-xs font-medium text-left text-gray-600 bg-gray-50"
                   >
                     <Show when={!header.isPlaceholder}>
