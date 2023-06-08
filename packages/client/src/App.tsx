@@ -23,8 +23,6 @@ import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import CandidateProfile from 'pages/candidate-profile'
 import CandidateFeedback from 'pages/candidate-feedback'
-import JobOverview from 'pages/job-overview'
-import JobPipeline from 'pages/job-pipeline'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import CandidateEngagement from 'pages/candidate-engagement'
@@ -66,15 +64,7 @@ export default function App() {
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
                   <Route path="home" element={<Home />} />
                   <Route path="jobs" element={<Jobs />} />
-                  <Route path="jobs/:jobId" element={<Job />}>
-                    <Route
-                      path=""
-                      element={<Navigate to="pipeline" replace />}
-                    />
-                    <Route path="overview" element={<JobOverview />} />
-                    <Route path="pipeline" element={<JobPipeline />} />
-                    <Route path="*" element={<Navigate to="overview" />} />
-                  </Route>
+                  <Route path="jobs/:jobId" element={<Job />} />
                   <Route path="jobs/:jobId/create" element={<JobLayout />}>
                     <Route path="1" element={<CreateJob />} />
                     <Route path="2" element={<CreatePipeline />} />
@@ -131,7 +121,7 @@ export default function App() {
           </Auth>
         </GoogleOAuthProvider>
       </ConfigProvider>
-      <ReactQueryDevtools />
+      <ReactQueryDevtools position="bottom-right" />
     </QueryClientProvider>
   )
 }
