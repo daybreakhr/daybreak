@@ -43,7 +43,7 @@ export default function EmailTemplates() {
 
       <div className="p-4 m-8 bg-white rounded-md shadow-md">
         <div className="flex items-center mb-6 space-x-4">
-          <div className="flex items-center p-2 text-white rounded bg-primary-main">
+          <div className="flex items-center p-2 text-white rounded bg-primary-500">
             <MailOutlined />
           </div>
           <p className="text-lg font-semibold">Email Templates</p>

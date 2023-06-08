@@ -31,7 +31,7 @@ export default function PrivacyPolicy() {
         </li>
       </ol>
 
-      <h2 className="text-primary-main/60">Personal Information we collect </h2>
+      <h2 className="text-primary-500/60">Personal Information we collect </h2>
       <p>
         We require you to collect, access, and store your personal information
         during the period of account creation and thereafter during your usage
@@ -66,7 +66,7 @@ export default function PrivacyPolicy() {
         your account and the inability to continue using any part of Service.
       </p>
 
-      <h2 className="text-primary-main/60">Usage of Information</h2>
+      <h2 className="text-primary-500/60">Usage of Information</h2>
       <p>Information collected may be used for following general purposes:</p>
       <ol>
         <li>
@@ -92,7 +92,7 @@ export default function PrivacyPolicy() {
         </li>
       </ol>
 
-      <h2 className="text-primary-main/60">Information Storage and Security</h2>
+      <h2 className="text-primary-500/60">Information Storage and Security</h2>
       <p>
         All the information that we collect from you during your usage of
         Services is stored on Amazon Web Services (“AWS”) servers. We access the
@@ -101,7 +101,7 @@ export default function PrivacyPolicy() {
         privacy of all data on its servers.
       </p>
 
-      <h2 className="text-primary-main/60">Sharing of Information</h2>
+      <h2 className="text-primary-500/60">Sharing of Information</h2>
       <p>
         We do not sell or otherwise share any information about you or provided
         by you, except as described in this Policy. We may share your personal
@@ -132,7 +132,7 @@ export default function PrivacyPolicy() {
         activities.
       </p>
 
-      <h2 className="text-primary-main/60">Your Privacy Rights</h2>
+      <h2 className="text-primary-500/60">Your Privacy Rights</h2>
       <p>In accordance with applicable laws, you may have the right to:</p>
       <ol>
         <li>
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
         applicable laws.
       </p>
 
-      <h2 className="text-primary-main/60">Changes to Our Privacy Policy</h2>
+      <h2 className="text-primary-500/60">Changes to Our Privacy Policy</h2>
       <p>
         We may revise this Privacy Policy from time to time at our sole
         discretion. If there are any material changes to this Privacy Policy, we

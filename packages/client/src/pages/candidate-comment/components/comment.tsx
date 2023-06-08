@@ -21,7 +21,7 @@ export default function Comment({ content, user, createdAt }: CommentProps) {
         {user.displayName?.charAt(0)}
       </Avatar>
 
-      <div className="flex-1 p-4 rounded-md bg-primary-main/5">
+      <div className="flex-1 p-4 rounded-md bg-primary-500/5">
         <div className="flex items-center space-x-4">
           <p className="font-semibold">{user.displayName}</p>
           <p className="text-xs text-gray-600">{dayjs(createdAt).fromNow()}</p>

@@ -17,7 +17,7 @@ export default function Organisation() {
       <Show when={data}>
         <a
           target="_blank"
-          className="flex items-center space-x-1 text-sm text-primary-main"
+          className="flex items-center space-x-1 text-sm text-primary-500"
           href={`${import.meta.env.VITE_BOARDS_APP_URL}/${data?.slug}`}
           rel="noreferrer"
         >
