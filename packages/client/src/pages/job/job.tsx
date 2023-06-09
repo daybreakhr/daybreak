@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { groupBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
-import { Button, Input, Spin } from 'antd'
+import { Button, Dropdown, Input, Menu, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
-import { SearchOutlined } from '@ant-design/icons'
+import { DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
 
@@ -13,6 +13,7 @@ import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
+import { ReactComponent as MoveCandidateIcon } from 'assets/icons/move-candidate.svg'
 
 import JobHeader from './components/job-header'
 import StatusList from './components/status-list'
@@ -48,6 +49,16 @@ export default function JobPipeline() {
       },
     ],
   })
+
+  const menu = (
+    <Menu>
+      {getPipelineStages(interviews)
+        .filter(({ value }) => !filteredStages.includes(value))
+        .map(({ label, value }) => (
+          <Menu.Item key={value}>{label}</Menu.Item>
+        ))}
+    </Menu>
+  )
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation(bulkUpdateCandidate, {
@@ -102,6 +113,16 @@ export default function JobPipeline() {
           >
             Reject
           </Button>
+          <Dropdown trigger={['click']} overlay={menu}>
+            <Button
+              className="text-purple-500 border-purple-500"
+              disabled={selectedCandidates.length === 0}
+              icon={<MoveCandidateIcon className="anticon" />}
+            >
+              Move to
+              <DownOutlined />
+            </Button>
+          </Dropdown>
         </Show>
         <div className="flex-1" />
         <Input
