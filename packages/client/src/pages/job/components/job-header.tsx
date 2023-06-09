@@ -1,16 +1,20 @@
-import { Divider } from 'antd'
 import { capitalize, range } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { RxDotFilled } from 'react-icons/rx'
 import { HiChevronDown } from 'react-icons/hi'
+import { Button, Divider, Popover } from 'antd'
 import { useQuery } from '@tanstack/react-query'
+import { DownOutlined } from '@ant-design/icons'
 import { Candidate, CandidateStatus } from '@prisma/client'
 
 import { Switch } from 'ui-kit'
 import formatNumber from 'utils/format-number'
+import { fetchMembers } from 'pages/members/queries'
+import { fetchOrganisation } from 'pages/organisation/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchJob } from '../queries'
+import JobDetails from './job-details'
 
 type JobHeaderProps = {
   candidates: Candidate[]
@@ -19,6 +23,8 @@ type JobHeaderProps = {
 export default function JobHeader({ candidates }: JobHeaderProps) {
   const { jobId = '' } = useParams()
 
+  const { data: members } = useQuery(['members'], fetchMembers)
+  const { data: workspace } = useQuery(['organisation'], fetchOrganisation)
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
 
   const rejectedCandidates = candidates.filter(
@@ -83,6 +89,21 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                 </span>
                 <span>{job.Location?.name}</span>
                 <span>{capitalize(job.priority)}</span>
+
+                <Popover
+                  content={
+                    <JobDetails
+                      job={data}
+                      members={members}
+                      isLoading={isLoading}
+                      slug={workspace?.slug}
+                    />
+                  }
+                >
+                  <Button type="text">
+                    Job Details <DownOutlined />
+                  </Button>
+                </Popover>
               </div>
             </>
           )}
