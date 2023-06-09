@@ -54,6 +54,7 @@ export default function JobPipeline() {
     <Menu>
       {getPipelineStages(interviews)
         .filter(({ value }) => !filteredStages.includes(value))
+        .slice(0, -1)
         .map(({ label, value }) => (
           <Menu.Item key={value}>{label}</Menu.Item>
         ))}
