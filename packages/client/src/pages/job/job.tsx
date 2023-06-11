@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { groupBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
-import { Button, Dropdown, Input, Menu, Spin } from 'antd'
+import { Button, Dropdown, Input, MenuProps, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
 import { DownOutlined, SearchOutlined } from '@ant-design/icons'
@@ -50,16 +50,13 @@ export default function JobPipeline() {
     ],
   })
 
-  const menu = (
-    <Menu>
-      {getPipelineStages(interviews)
-        .filter(({ value }) => !filteredStages.includes(value))
-        .slice(0, -1)
-        .map(({ label, value }) => (
-          <Menu.Item key={value}>{label}</Menu.Item>
-        ))}
-    </Menu>
-  )
+  const items: MenuProps['items'] = getPipelineStages(interviews)
+    .filter(({ value }) => !filteredStages.includes(value))
+    .slice(0, -1)
+    .map(({ label, value }) => ({
+      key: value,
+      label,
+    }))
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation(bulkUpdateCandidate, {
@@ -114,9 +111,8 @@ export default function JobPipeline() {
           >
             Reject
           </Button>
-          <Dropdown trigger={['click']} overlay={menu}>
+          <Dropdown trigger={['click']} menu={{ items }}>
             <Button
-              className="text-purple-500 border-purple-500"
               disabled={selectedCandidates.length === 0}
               icon={<MoveCandidateIcon className="anticon" />}
             >
