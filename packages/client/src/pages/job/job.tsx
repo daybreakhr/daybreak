@@ -51,12 +51,10 @@ export default function JobPipeline() {
   })
 
   const items: MenuProps['items'] = getPipelineStages(interviews)
-    .filter(({ value }) => !filteredStages.includes(value))
     .slice(0, -1)
-    .map(({ label, value }) => ({
-      key: value,
-      label,
-    }))
+    .map(({ label, value }) => {
+      return { key: value, label }
+    })
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation(bulkUpdateCandidate, {
@@ -112,10 +110,7 @@ export default function JobPipeline() {
             Reject
           </Button>
           <Dropdown trigger={['click']} menu={{ items }}>
-            <Button
-              disabled={selectedCandidates.length === 0}
-              icon={<MoveCandidateIcon className="anticon" />}
-            >
+            <Button icon={<MoveCandidateIcon className="anticon" />}>
               Move to
               <DownOutlined />
             </Button>
