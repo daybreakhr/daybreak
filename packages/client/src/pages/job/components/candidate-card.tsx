@@ -1,9 +1,9 @@
+import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { Checkbox, Tag } from 'antd'
+import { HiBriefcase } from 'react-icons/hi'
 import { CandidateSource } from '@prisma/client'
 import { Show } from 'ui-kit'
-import { FaAward } from 'react-icons/fa'
-import { HiOfficeBuilding } from 'react-icons/hi'
 import { candidateSources } from '../constants/icons'
 
 type CandidateCardProps = {
@@ -28,7 +28,12 @@ export default function CandidateCard({
   const { color, icon } = candidateSources(source)
 
   return (
-    <div className="w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 group">
+    <div
+      className={clsx(
+        'w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50',
+        { 'outline outline-primary-300': isChecked },
+      )}
+    >
       <div className="relative flex items-center mb-4 space-x-2">
         <Checkbox checked={isChecked} onChange={onCandidateSelect} />
 
@@ -45,20 +50,15 @@ export default function CandidateCard({
         </p>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2 text-gray-500">
-          <HiOfficeBuilding className="w-4 h-4" />
-          <div>{currentCompany ?? 'N/A'}</div>
-        </div>
+      <p className="mb-1 text-gray-500">{currentCompany ?? 'N/A'}</p>
 
-        <div className="flex items-center space-x-2 text-gray-500">
-          <FaAward className="w-4 h-4" />
-          <p>
-            <Show when={totalYearsOfExperience} fallback="N/A">
-              {(value) => `${value} years`}
-            </Show>
-          </p>
-        </div>
+      <div className="flex items-center space-x-2 text-gray-500">
+        <HiBriefcase className="w-4 h-4" />
+        <p>
+          <Show when={totalYearsOfExperience} fallback="N/A">
+            {(value) => `${value} years`}
+          </Show>
+        </p>
       </div>
     </div>
   )

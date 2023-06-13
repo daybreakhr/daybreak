@@ -49,7 +49,7 @@ export default function StatusList({
   return (
     <div className="relative flex flex-col flex-none overflow-hidden w-80">
       <div className="px-2">
-        <div className="sticky top-0 z-10 flex items-center py-2 mb-4 space-x-2">
+        <div className="sticky top-0 z-10 flex items-center py-2 mb-2 space-x-2">
           <Checkbox checked={isChecked} onChange={handleSelectAll} />
           <p className="text-base font-medium">{title}</p>
           <p className="flex items-center justify-center w-5 h-5 text-gray-800 bg-gray-300 rounded-md">
@@ -58,7 +58,7 @@ export default function StatusList({
         </div>
       </div>
 
-      <div className="flex flex-col px-2 pb-4 space-y-4 overflow-y-auto">
+      <div className="flex flex-col px-2 py-4 space-y-4 overflow-y-auto">
         <Show when={candidates}>
           {(data) =>
             orderBy(data, ['createdAt'], 'desc').map((candidate) => {
