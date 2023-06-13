@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Tag } from 'antd'
+import { Checkbox, Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { Candidate, CandidateSource } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
@@ -10,6 +10,12 @@ import { candidateSources } from '../constants/icons'
 const columnHelper = createColumnHelper<Candidate>()
 
 export const candidateListColumns = [
+  columnHelper.display({
+    id: 'checkbox',
+    header: () => <Checkbox />,
+    size: 50,
+    cell: () => <Checkbox />,
+  }),
   columnHelper.accessor('source', {
     header: 'Source',
     size: 50,
