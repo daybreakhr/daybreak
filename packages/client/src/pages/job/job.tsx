@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { groupBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
-import { Button, Dropdown, Input, MenuProps, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
+import { Button, Dropdown, Input, MenuProps, Spin } from 'antd'
 import { DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
@@ -66,18 +66,31 @@ export default function JobPipeline() {
   })
 
   function handleBulkRejection(reasons: string[], notes: string) {
-    if (selectedCandidates.length > 0) {
-      const payload = selectedCandidates.map((id) => {
-        const data = {
-          status: CandidateStatus.rejected,
-          rejectionReasons: reasons,
-          rejectionNotes: notes,
-        }
-        return { id, data }
-      })
+    const payload = selectedCandidates.map((id) => {
+      const data = {
+        status: CandidateStatus.rejected,
+        rejectionReasons: reasons,
+        rejectionNotes: notes,
+      }
+      return { id, data }
+    })
 
-      mutate(payload)
-    }
+    mutate(payload)
+  }
+
+  const handleBulkStatusChange: MenuProps['onClick'] = ({ key }) => {
+    const payload = selectedCandidates.map((id) => {
+      const status = CandidateStatus[key as keyof typeof CandidateStatus]
+      if (status) {
+        return { id, data: { status } }
+      } else {
+        return {
+          id,
+          data: { interviewId: key, status: CandidateStatus.interview },
+        }
+      }
+    })
+    mutate(payload)
   }
 
   const filteredCandidatesBySource = selectedSources.length
@@ -109,7 +122,7 @@ export default function JobPipeline() {
           >
             Reject
           </Button>
-          <Dropdown trigger={['click']} menu={{ items }}>
+          <Dropdown menu={{ items, onClick: handleBulkStatusChange }}>
             <Button icon={<MoveCandidateIcon className="anticon" />}>
               Move to
               <DownOutlined />
