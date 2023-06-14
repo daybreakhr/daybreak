@@ -9,13 +9,39 @@ import { candidateSources } from '../constants/icons'
 
 const columnHelper = createColumnHelper<Candidate>()
 
-export const candidateListColumns = [
-  columnHelper.display({
+type CandidateListProps = {
+  isChecked: boolean
+  selectedCandidates: string[]
+  handleCandidateSelect: (id: string) => void
+  handleSelectAll: () => void
+}
+
+export const candidateListColumns = ({
+  isChecked,
+  selectedCandidates,
+  handleCandidateSelect,
+  handleSelectAll,
+}: CandidateListProps) => [
+  {
     id: 'checkbox',
-    header: () => <Checkbox />,
+    header: () => (
+      <Checkbox
+        checked={isChecked}
+        indeterminate={!isChecked}
+        onChange={handleSelectAll}
+      />
+    ),
     size: 50,
-    cell: () => <Checkbox />,
-  }),
+    cell: ({ row }: any) => (
+      <Checkbox
+        checked={selectedCandidates.includes(row.original.id)}
+        onChange={() => handleCandidateSelect(row.original.id)}
+      />
+    ),
+    getCheckboxProps: ({ row }: any) => ({
+      checked: selectedCandidates.includes(row.original.id),
+    }),
+  },
   columnHelper.accessor('source', {
     header: 'Source',
     size: 50,

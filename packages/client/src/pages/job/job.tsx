@@ -156,7 +156,13 @@ export default function JobPipeline() {
         <Switch.Match when={interviews}>
           <Show
             when={viewState === 'kanban'}
-            fallback={<CandidateList data={filteredCandidatesBySearch} />}
+            fallback={
+              <CandidateList
+                data={filteredCandidatesBySearch}
+                selectedCandidates={selectedCandidates}
+                setSelectedCandidates={setSelectedCandidates}
+              />
+            }
           >
             <div className="flex flex-1 gap-3 px-6 overflow-x-auto">
               {getPipelineStages(interviews)
