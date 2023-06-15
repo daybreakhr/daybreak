@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import {
   flexRender,
   getCoreRowModel,
@@ -10,12 +11,48 @@ import { candidateListColumns } from '../constants/candidate-list'
 
 type CandidateListProps = {
   data: Candidate[]
+  selectedCandidates: string[]
+  setSelectedCandidates: Dispatch<SetStateAction<string[]>>
 }
 
-export default function CandidateList({ data }: CandidateListProps) {
+export default function CandidateList({
+  data,
+  selectedCandidates,
+  setSelectedCandidates,
+}: CandidateListProps) {
+  const isChecked = data?.every(({ id }) => selectedCandidates.includes(id))
+
+  function handleSelectAll() {
+    const listCandidateIds = data?.map(({ id }) => id) ?? []
+    if (isChecked) {
+      setSelectedCandidates((prev) =>
+        prev.filter((id) => !listCandidateIds.includes(id)),
+      )
+    } else {
+      setSelectedCandidates((prev) => [
+        ...prev,
+        ...(data?.map(({ id }) => id) ?? []),
+      ])
+    }
+  }
+
+  function handleCandidateSelect(id: string) {
+    setSelectedCandidates((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((candidateId) => candidateId !== id)
+      }
+      return [...prev, id]
+    })
+  }
+
   const table = useReactTable({
     data,
-    columns: candidateListColumns,
+    columns: candidateListColumns({
+      isChecked,
+      selectedCandidates,
+      handleCandidateSelect,
+      handleSelectAll,
+    }),
     getCoreRowModel: getCoreRowModel(),
   })
 

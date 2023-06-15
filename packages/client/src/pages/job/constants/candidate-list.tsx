@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Tag } from 'antd'
+import { Checkbox, Tag } from 'antd'
 import { capitalize } from 'lodash'
 import type { Candidate, CandidateSource } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
@@ -9,7 +9,39 @@ import { candidateSources } from '../constants/icons'
 
 const columnHelper = createColumnHelper<Candidate>()
 
-export const candidateListColumns = [
+type CandidateListProps = {
+  isChecked: boolean
+  selectedCandidates: string[]
+  handleCandidateSelect: (id: string) => void
+  handleSelectAll: () => void
+}
+
+export const candidateListColumns = ({
+  isChecked,
+  selectedCandidates,
+  handleCandidateSelect,
+  handleSelectAll,
+}: CandidateListProps) => [
+  {
+    id: 'checkbox',
+    header: () => (
+      <Checkbox
+        checked={isChecked}
+        indeterminate={selectedCandidates.length > 0 && !isChecked}
+        onChange={handleSelectAll}
+      />
+    ),
+    size: 50,
+    cell: ({ row }: any) => (
+      <Checkbox
+        checked={selectedCandidates.includes(row.original.id)}
+        onChange={() => handleCandidateSelect(row.original.id)}
+      />
+    ),
+    getCheckboxProps: ({ row }: any) => ({
+      checked: selectedCandidates.includes(row.original.id),
+    }),
+  },
   columnHelper.accessor('source', {
     header: 'Source',
     size: 50,
@@ -17,13 +49,11 @@ export const candidateListColumns = [
       const source = getValue() as CandidateSource
       const { color, icon } = candidateSources(source)
       return (
-        <td>
-          <span className="flex items-center justify-center">
-            <Tag className="flex py-1 border-none" color={color}>
-              {icon}
-            </Tag>
-          </span>
-        </td>
+        <span className="flex items-center justify-center">
+          <Tag className="flex py-1 border-none" color={color}>
+            {icon}
+          </Tag>
+        </span>
       )
     },
   }),
