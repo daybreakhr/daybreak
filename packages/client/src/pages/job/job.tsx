@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { groupBy } from 'lodash'
+import { groupBy, orderBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { CandidateStatus } from '@prisma/client'
@@ -158,7 +158,7 @@ export default function JobPipeline() {
             when={viewState === 'kanban'}
             fallback={
               <CandidateList
-                data={filteredCandidatesBySearch}
+                data={orderBy(filteredCandidatesBySearch, 'createdAt', 'desc')}
                 selectedCandidates={selectedCandidates}
                 setSelectedCandidates={setSelectedCandidates}
               />

@@ -27,7 +27,7 @@ export const candidateListColumns = ({
     header: () => (
       <Checkbox
         checked={isChecked}
-        indeterminate={!isChecked}
+        indeterminate={selectedCandidates.length > 0 && !isChecked}
         onChange={handleSelectAll}
       />
     ),
@@ -49,13 +49,11 @@ export const candidateListColumns = ({
       const source = getValue() as CandidateSource
       const { color, icon } = candidateSources(source)
       return (
-        <td>
-          <span className="flex items-center justify-center">
-            <Tag className="flex py-1 border-none" color={color}>
-              {icon}
-            </Tag>
-          </span>
-        </td>
+        <span className="flex items-center justify-center">
+          <Tag className="flex py-1 border-none" color={color}>
+            {icon}
+          </Tag>
+        </span>
       )
     },
   }),
