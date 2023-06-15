@@ -1,0 +1,65 @@
+import { useState } from 'react'
+import { orderBy } from 'lodash'
+import { Button, Input } from 'antd'
+import { matchSorter } from 'match-sorter'
+import { useNavigate } from 'react-router-dom'
+import { SearchOutlined } from '@ant-design/icons'
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+// import ToggleView from 'components/toggle-view'
+// import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
+import { createJob, fetchJobs } from './queries'
+import JobCard from './components/job-card'
+
+export default function AllJobs() {
+  const navigate = useNavigate()
+  //   const [, setOpen] = useState(false)
+  const [input, setInput] = useState('')
+  //   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
+  const { data } = useQuery(['jobs'], fetchJobs)
+
+  const filterJobsBySearch = matchSorter(data ?? [], input, {
+    keys: ['title'],
+  })
+
+  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
+    onSuccess: ({ id }) => {
+      navigate(`/jobs/${id}/create/1`)
+    },
+  })
+
+  return (
+    <div className="px-12 py-6">
+      <div className="flex items-center mb-10">
+        <p className="text-2xl font-semibold">All Jobs</p>
+
+        <div className="flex-1" />
+
+        <Button loading={isCreatingJob} type="primary" onClick={() => mutate()}>
+          Create Job
+        </Button>
+      </div>
+
+      <div className="flex items-center mb-6 space-x-4">
+        {/* <ToggleView viewType={viewState} onChange={setViewState} /> */}
+        <div className="flex-1" />
+        <Input
+          value={input}
+          placeholder="Search..."
+          style={{ width: '12rem' }}
+          suffix={<SearchOutlined />}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        {/* <Button icon={<FilterIcon />} onClick={() => setOpen(true)} /> */}
+      </div>
+
+      <div className="flex flex-col space-y-4">
+        {orderBy(filterJobsBySearch, 'createdAt', 'desc')
+          .filter(({ title }) => title)
+          .map((job) => (
+            <JobCard key={job.id} job={job} />
+          ))}
+      </div>
+    </div>
+  )
+}

@@ -9,7 +9,7 @@ import {
   UserAddOutlined,
 } from '@ant-design/icons'
 import { fetchCandidates } from 'pages/candidates/queries'
-import { fetchJobs } from 'pages/jobs/queries'
+import { fetchJobs } from 'pages/all-jobs/queries'
 import JobsTable from './components/jobs-table'
 import TalentFunnel from './components/talent-pipeline'
 import CandidatesChart from './components/candidates-chart'

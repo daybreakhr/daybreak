@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, Input, message, Select, UploadProps } from 'antd'
 import { InboxOutlined, TeamOutlined } from '@ant-design/icons'
 import PageHeader from 'components/page-header'
-import { fetchJobs } from 'pages/jobs/queries'
+import { fetchJobs } from 'pages/all-jobs/queries'
 
 import { RcFile } from 'antd/es/upload'
 import { createProspect } from './queries'

@@ -12,7 +12,7 @@ import AppShell from 'components/app-shell'
 import Candidates from 'pages/candidates'
 import Prospects from 'pages/prospects'
 import Members from 'pages/members'
-import Jobs from 'pages/jobs'
+import AllJobs from 'pages/all-jobs'
 import CreateJob from 'pages/create-job'
 import Candidate from 'pages/candidate'
 import Organisation from 'pages/organisation'
@@ -63,7 +63,7 @@ export default function App() {
                 />
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
                   <Route path="home" element={<Home />} />
-                  <Route path="jobs" element={<Jobs />} />
+                  <Route path="jobs" element={<AllJobs />} />
                   <Route path="jobs/:jobId" element={<Job />} />
                   <Route path="jobs/:jobId/create" element={<JobLayout />}>
                     <Route path="1" element={<CreateJob />} />

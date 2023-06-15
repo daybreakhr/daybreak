@@ -9,6 +9,7 @@ import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
 
 import { getPipelineStages } from 'utils/utils'
+import ToggleView from 'components/toggle-view'
 import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
@@ -17,7 +18,6 @@ import { ReactComponent as MoveCandidateIcon } from 'assets/icons/move-candidate
 
 import JobHeader from './components/job-header'
 import StatusList from './components/status-list'
-import ToggleView from './components/toggle-view'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
 import { bulkUpdateCandidate, fetchCandidatesByJob } from './queries'

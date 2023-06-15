@@ -21,7 +21,7 @@ const tabs: Tab[] = [
   { key: 'home', label: <Link to="/home">Home</Link>, icon: <AiOutlineHome /> },
   {
     key: 'jobs',
-    label: <Link to="/jobs">Jobs</Link>,
+    label: <Link to="/jobs">All Jobs</Link>,
     icon: <AiOutlineWallet />,
   },
   {

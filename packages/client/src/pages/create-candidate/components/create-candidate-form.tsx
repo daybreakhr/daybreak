@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { storage } from 'ui-kit'
 import type { RcFile } from 'antd/es/upload'
-import { fetchJobs } from 'pages/jobs/queries'
+import { fetchJobs } from 'pages/all-jobs/queries'
 import { WORKSPACE_ID } from 'utils/constants'
 
 import { createCandidate } from '../queries'
