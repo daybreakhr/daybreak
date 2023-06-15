@@ -8,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 // import ToggleView from 'components/toggle-view'
 // import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
+import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 import { createJob, fetchJobs } from './queries'
 import JobCard from './components/job-card'
 
@@ -35,7 +36,12 @@ export default function AllJobs() {
 
         <div className="flex-1" />
 
-        <Button loading={isCreatingJob} type="primary" onClick={() => mutate()}>
+        <Button
+          type="primary"
+          loading={isCreatingJob}
+          icon={<UserArrowDown className="anticon" />}
+          onClick={() => mutate()}
+        >
           Create Job
         </Button>
       </div>

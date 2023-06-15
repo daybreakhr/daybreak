@@ -140,7 +140,7 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                 </div>
 
                 <div className="flex items-center px-2 py-1 space-x-2 border rounded-md shadow">
-                  <UserArrowDown />
+                  <UserArrowDown className="text-primary-500" />
                   <span>Import Talent</span> <DownOutlined />
                 </div>
               </div>

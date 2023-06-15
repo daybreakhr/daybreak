@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { RxDotFilled } from 'react-icons/rx'
 import { Job } from 'types/job'
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
+import { capitalize, words } from 'lodash'
+import formatNumber from 'utils/format-number'
+import dayjs from 'dayjs'
 
 type JobCardProps = {
   job: Job
@@ -24,9 +27,42 @@ export default function JobCard({ job }: JobCardProps) {
             </div>
           </Switch.Match>
         </Switch>
-        <p className="text-xs text-gray-600">#{job.Department?.name}</p>
+        <span className="text-xs text-gray-600">#{job.Department?.name}</span>
+
+        <div className="flex-1" />
+
+        <span className="text-xs text-gray-600">
+          {dayjs(job.createdAt).fromNow()}
+        </span>
       </div>
-      <p className="text-lg font-semibold">{job.title}</p>
+
+      <p className="mb-1 text-lg font-semibold">{job.title}</p>
+
+      <div className="flex items-center space-x-1 text-gray-500">
+        <span>
+          {words(job.jobType ?? '')
+            .map((val) => capitalize(val))
+            .join(' ')}{' '}
+          {job.isRemote ? '(Remote)' : null}
+        </span>
+        <RxDotFilled />
+        <span>{job.Location?.name}</span>
+        <Show when={job.minSalary}>
+          {(value) => (
+            <>
+              <RxDotFilled />
+              {formatNumber(value)}
+            </>
+          )}
+        </Show>{' '}
+        <Show when={job.maxSalary}>
+          {(value) => `- ${formatNumber(value)}`}
+        </Show>
+        <RxDotFilled />
+        <span>{job.experience}</span>
+        <RxDotFilled />
+        <span>{capitalize(job.priority)} Priority</span>
+      </div>
     </Link>
   )
 }
