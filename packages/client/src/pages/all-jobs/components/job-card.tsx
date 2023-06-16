@@ -1,16 +1,23 @@
-import { Link } from 'react-router-dom'
-import { RxDotFilled } from 'react-icons/rx'
-import { Job } from 'types/job'
-import { Show, Switch } from 'ui-kit'
-import { capitalize, words } from 'lodash'
-import formatNumber from 'utils/format-number'
 import dayjs from 'dayjs'
+import { Avatar } from 'antd'
+import { Link } from 'react-router-dom'
+import { capitalize, words } from 'lodash'
+import { RxDotFilled } from 'react-icons/rx'
+
+import { Job } from 'types/job'
+import { Member } from 'types/member'
+import { Show, Switch } from 'ui-kit'
+import formatNumber from 'utils/format-number'
+import { ReactComponent as CandidatesIcon } from 'assets/icons/candidates.svg'
 
 type JobCardProps = {
   job: Job
+  members: Member[]
 }
 
-export default function JobCard({ job }: JobCardProps) {
+export default function JobCard({ job, members }: JobCardProps) {
+  const recruiter = members.find(({ uid }) => uid === job.createdBy)
+
   return (
     <Link to={`${job.id}`} className="p-4 bg-white rounded-md shadow">
       <div className="flex items-center mb-2 space-x-4">
@@ -38,7 +45,7 @@ export default function JobCard({ job }: JobCardProps) {
 
       <p className="mb-1 text-lg font-semibold">{job.title}</p>
 
-      <div className="flex items-center space-x-1 text-gray-500">
+      <div className="flex items-center mb-4 space-x-1 text-base text-gray-500">
         <span>
           {words(job.jobType ?? '')
             .map((val) => capitalize(val))
@@ -62,6 +69,27 @@ export default function JobCard({ job }: JobCardProps) {
         <span>{job.experience}</span>
         <RxDotFilled />
         <span>{capitalize(job.priority)} Priority</span>
+      </div>
+
+      <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 text-gray-500">
+          <CandidatesIcon />
+          <p>
+            <span className="font-medium text-gray-800">
+              {job._count.Candidate}
+            </span>{' '}
+            Candidates
+          </p>
+        </div>
+
+        <Show when={recruiter}>
+          {({ displayName, photoURL }) => (
+            <div className="flex items-center space-x-1">
+              <Avatar size="small" src={photoURL} />
+              <span>{displayName}</span>
+            </div>
+          )}
+        </Show>
       </div>
     </Link>
   )

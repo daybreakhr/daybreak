@@ -3,7 +3,9 @@ import dayjs from 'dayjs'
 import { Checkbox, Tag } from 'antd'
 import { HiBriefcase } from 'react-icons/hi'
 import { CandidateSource } from '@prisma/client'
+
 import { Show } from 'ui-kit'
+import { ReactComponent as OfficeBuildingsIcon } from 'assets/icons/office-buildings.svg'
 import { candidateSources } from '../constants/icons'
 
 type CandidateCardProps = {
@@ -41,7 +43,9 @@ export default function CandidateCard({
           {icon}
         </Tag>
 
-        <p className="font-semibold">{name}</p>
+        <p className="font-semibold truncate" title={name}>
+          {name}
+        </p>
 
         <div className="flex-1" />
 
@@ -50,10 +54,13 @@ export default function CandidateCard({
         </p>
       </div>
 
-      <p className="mb-1 text-gray-500">{currentCompany ?? 'N/A'}</p>
+      <div className="flex items-center mb-1 space-x-2 text-gray-500">
+        <OfficeBuildingsIcon className="text-gray-400" />
+        <p>{currentCompany ?? 'N/A'}</p>
+      </div>
 
       <div className="flex items-center space-x-2 text-gray-500">
-        <HiBriefcase className="w-4 h-4" />
+        <HiBriefcase className="text-gray-400" />
         <p>
           <Show when={totalYearsOfExperience} fallback="N/A">
             {(value) => `${value} years`}

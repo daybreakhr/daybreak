@@ -72,7 +72,13 @@ export class WorkspaceService {
   async getJobsForWorkspace(workspaceId: string) {
     const jobs = await this.prismaService.job.findMany({
       where: { workspaceId },
-      include: { Location: true, Department: true },
+      include: {
+        Location: true,
+        Department: true,
+        _count: {
+          select: { Candidate: true },
+        },
+      },
     })
     return jobs
   }

@@ -7,6 +7,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 // import ToggleView from 'components/toggle-view'
+import { fetchMembers } from 'pages/members/queries'
 // import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
 import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 import { createJob, fetchJobs } from './queries'
@@ -18,6 +19,7 @@ export default function AllJobs() {
   const [input, setInput] = useState('')
   //   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
   const { data } = useQuery(['jobs'], fetchJobs)
+  const { data: members = [] } = useQuery(['members'], fetchMembers)
 
   const filterJobsBySearch = matchSorter(data ?? [], input, {
     keys: ['title'],
@@ -59,11 +61,11 @@ export default function AllJobs() {
         {/* <Button icon={<FilterIcon />} onClick={() => setOpen(true)} /> */}
       </div>
 
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-5">
         {orderBy(filterJobsBySearch, 'createdAt', 'desc')
           .filter(({ title }) => title)
           .map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job.id} job={job} members={members} />
           ))}
       </div>
     </div>
