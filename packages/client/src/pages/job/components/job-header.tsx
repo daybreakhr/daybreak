@@ -1,12 +1,11 @@
-import { useMemo } from 'react'
 import { capitalize, range } from 'lodash'
-import { useParams } from 'react-router-dom'
 import { RxDotFilled } from 'react-icons/rx'
 import { HiChevronDown } from 'react-icons/hi'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DownOutlined } from '@ant-design/icons'
-import { Button, Divider, Dropdown, MenuProps, Popover } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Candidate, CandidateStatus } from '@prisma/client'
+import { Button, Divider, Dropdown, MenuProps, Popover } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Switch } from 'ui-kit'
 import formatNumber from 'utils/format-number'
@@ -14,8 +13,10 @@ import { fetchMembers } from 'pages/members/queries'
 import { updateJobById } from 'pages/create-job/queries'
 import { fetchOrganisation } from 'pages/organisation/queries'
 import { ReactComponent as RupeeIcon } from 'assets/icons/rupee.svg'
+import { ReactComponent as PencilIcon } from 'assets/icons/pencil.svg'
 import { ReactComponent as MapPinIcon } from 'assets/icons/map-pin.svg'
 import { ReactComponent as BriefcaseIcon } from 'assets/icons/briefcase.svg'
+import { ReactComponent as FileImportIcon } from 'assets/icons/file-import.svg'
 import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
@@ -27,6 +28,7 @@ type JobHeaderProps = {
 }
 
 export default function JobHeader({ candidates }: JobHeaderProps) {
+  const navigate = useNavigate()
   const { jobId = '' } = useParams()
 
   const { data: members } = useQuery(['members'], fetchMembers)
@@ -76,12 +78,26 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
     }
   }
 
-  const items: MenuProps['items'] = useMemo(() => {
-    return [
-      { key: '1', label: data?.isPublished ? 'Move to drafts' : 'Publish Job' },
-      { key: '2', label: 'Archive Job', disabled: true },
-    ]
-  }, [data?.isPublished])
+  const items: MenuProps['items'] = [
+    { key: '1', label: data?.isPublished ? 'Move to drafts' : 'Publish Job' },
+    { key: '2', label: 'Archive Job', disabled: true },
+  ]
+
+  const importCandidateItems: MenuProps['items'] = [
+    {
+      key: '1',
+      label: 'Import Resumes',
+      icon: <FileImportIcon />,
+      disabled: true,
+    },
+    { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
+  ]
+
+  const handleImportClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '2') {
+      navigate('/candidates/create')
+    }
+  }
 
   return (
     <div className="px-6 py-4 mb-4 bg-white shadow-lg">
@@ -139,10 +155,17 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                   </span>
                 </div>
 
-                <div className="flex items-center px-2 py-1 space-x-2 border rounded-md shadow">
-                  <UserArrowDown className="text-primary-500" />
-                  <span>Import Talent</span> <DownOutlined />
-                </div>
+                <Dropdown
+                  menu={{
+                    items: importCandidateItems,
+                    onClick: handleImportClick,
+                  }}
+                >
+                  <div className="flex items-center px-2 py-1 space-x-2 border rounded-md shadow cursor-pointer">
+                    <UserArrowDown className="text-primary-500" />
+                    <span>Import Talent</span> <DownOutlined />
+                  </div>
+                </Dropdown>
               </div>
               <p className="mb-2 text-xl font-semibold">{job.title}</p>
               <div className="flex items-center space-x-4 text-gray-600">

@@ -24,14 +24,14 @@ export default function AllJobs() {
   const { data = [] } = useQuery(['jobs'], fetchJobs)
   const { data: members = [] } = useQuery(['members'], fetchMembers)
 
-  const sortedJobs = useMemo(() => {
-    const filteredJobs = data.filter(({ title }) => title)
-    return orderBy(filteredJobs, 'createdAt', 'desc')
-  }, [data])
-
-  const filterJobsBySearch = matchSorter(sortedJobs, input, {
+  const filterJobsBySearch = matchSorter(data, input, {
     keys: ['title'],
   })
+
+  const sortedJobs = useMemo(() => {
+    const filteredJobs = filterJobsBySearch.filter(({ title }) => title)
+    return orderBy(filteredJobs, 'createdAt', 'desc')
+  }, [filterJobsBySearch])
 
   const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
     onSuccess: ({ id }) => {
@@ -71,15 +71,15 @@ export default function AllJobs() {
 
       <Switch>
         <Switch.Match when={viewState === 'kanban'}>
-          <div className="flex flex-col space-y-5">
-            {filterJobsBySearch.map((job) => (
+          <div className="flex flex-col space-y-5 overflow-y-auto">
+            {sortedJobs.map((job) => (
               <JobCard key={job.id} job={job} members={members} />
             ))}
           </div>
         </Switch.Match>
 
         <Switch.Match when={viewState === 'table'}>
-          <JobList data={filterJobsBySearch} />
+          <JobList data={sortedJobs} />
         </Switch.Match>
       </Switch>
     </div>
