@@ -6,6 +6,9 @@ import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-col
 import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
 import { ReactComponent as ReferralIcon } from 'assets/icons/referral.svg'
 import { ReactComponent as JobPortalIcon } from 'assets/icons/job-portal.svg'
+import { ReactComponent as LowPriorityIcon } from 'assets/icons/low_priority.svg'
+import { ReactComponent as MediumPriorityIcon } from 'assets/icons/medium_priority.svg'
+import { ReactComponent as HighPriorityIcon } from 'assets/icons/high_priority.svg'
 
 export const candidateSources = (
   source: CandidateSource,
@@ -27,5 +30,35 @@ export const candidateSources = (
       return { color: 'purple', icon: <GlobeIcon /> }
     default:
       return { color: 'default', icon: null }
+  }
+}
+
+export const jobPriorityInfo = (
+  priority: string,
+): {
+  icon: ReactNode
+  labelColor: string
+} => {
+  switch (priority) {
+    case 'low':
+      return {
+        icon: <LowPriorityIcon />,
+        labelColor: 'text-green-600',
+      }
+    case 'medium':
+      return {
+        icon: <MediumPriorityIcon />,
+        labelColor: 'text-orange-600',
+      }
+    case 'high':
+      return {
+        icon: <HighPriorityIcon />,
+        labelColor: 'text-red-600',
+      }
+    default:
+      return {
+        icon: null,
+        labelColor: '',
+      }
   }
 }

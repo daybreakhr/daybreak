@@ -21,6 +21,7 @@ import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.sv
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchJob } from '../queries'
+import { jobPriorityInfo } from '../constants/icons'
 import JobDetails from './job-details'
 
 type JobHeaderProps = {
@@ -98,6 +99,9 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
       navigate('/candidates/create')
     }
   }
+
+  const { icon: priorityIcon, labelColor: priorityLabelColor } =
+    jobPriorityInfo(data?.priority || '')
 
   return (
     <div className="px-6 py-4 mb-4 bg-white shadow-lg">
@@ -187,7 +191,12 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                   <span>{job.Location?.name}</span>
                 </div>
 
-                <span>{capitalize(job.priority)}</span>
+                <div className="flex items-center space-x-1">
+                  {priorityIcon}
+                  <span className={`${priorityLabelColor}`}>
+                    {capitalize(job.priority)}
+                  </span>
+                </div>
 
                 <Popover
                   content={
