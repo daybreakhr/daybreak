@@ -22,7 +22,7 @@ export const candidateListColumns = ({
   handleCandidateSelect,
   handleSelectAll,
 }: CandidateListProps) => [
-  {
+  columnHelper.display({
     id: 'checkbox',
     header: () => (
       <Checkbox
@@ -32,16 +32,13 @@ export const candidateListColumns = ({
       />
     ),
     size: 50,
-    cell: ({ row }: any) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={selectedCandidates.includes(row.original.id)}
         onChange={() => handleCandidateSelect(row.original.id)}
       />
     ),
-    getCheckboxProps: ({ row }: any) => ({
-      checked: selectedCandidates.includes(row.original.id),
-    }),
-  },
+  }),
   columnHelper.accessor('source', {
     header: 'Source',
     size: 50,
