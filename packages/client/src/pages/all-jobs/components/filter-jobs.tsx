@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { Priority } from '@prisma/client'
-import { Button, Checkbox, Collapse, Drawer } from 'antd'
-
-import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
+import { Button, Checkbox, Collapse } from 'antd'
+import clsx from 'clsx'
 
 type FilterJobsProps = {
+  open: boolean
+  onClose: () => void
   filteredPriority: string[]
   filteredDepartment: string[]
   filteredStatus: ('published' | 'draft')[]
@@ -15,6 +15,8 @@ type FilterJobsProps = {
 }
 
 export default function FilterJobs({
+  open,
+  onClose,
   departments,
   filteredStatus,
   filteredPriority,
@@ -23,8 +25,6 @@ export default function FilterJobs({
   setFilteredPriority,
   setFilteredDepartment,
 }: FilterJobsProps) {
-  const [open, setOpen] = useState(false)
-
   const selectedPriority = ['high', 'medium', 'low'].filter(
     (priority) => !filteredPriority.includes(priority),
   )
@@ -59,19 +59,16 @@ export default function FilterJobs({
   }
 
   return (
-    <>
-      <Button icon={<FilterIcon />} onClick={() => setOpen(true)} />
-
-      <Drawer
-        open={open}
-        width={280}
-        mask={false}
-        closable={false}
-        onClose={() => setOpen(false)}
-      >
+    <div
+      className={clsx(
+        'bg-white w-64 transition-all',
+        open ? 'max-w-xs' : 'max-w-0',
+      )}
+    >
+      <div className="p-5">
         <div className="flex items-center justify-between mb-4">
           <p className="font-semibold">Apply Filter</p>
-          <Button type="link" size="small" onClick={() => setOpen(false)}>
+          <Button type="link" size="small" onClick={onClose}>
             Done
           </Button>
         </div>
@@ -125,7 +122,7 @@ export default function FilterJobs({
             </div>
           </Collapse.Panel>
         </Collapse>
-      </Drawer>
-    </>
+      </div>
+    </div>
   )
 }

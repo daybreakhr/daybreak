@@ -10,6 +10,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { Switch } from 'ui-kit'
 import ToggleView from 'components/toggle-view'
 import { fetchMembers } from 'pages/members/queries'
+import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
 import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 
 import JobCard from './components/job-card'
@@ -20,6 +21,7 @@ import FilterJobs from './components/filter-jobs'
 export default function AllJobs() {
   const navigate = useNavigate()
   const [input, setInput] = useState('')
+  const [open, setOpen] = useState(false)
   const [filteredPriority, setFilteredPriority] = useState<string[]>([])
   const [filteredDepartment, setFilteredDepartment] = useState<string[]>([])
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
@@ -72,54 +74,64 @@ export default function AllJobs() {
   }, [data])
 
   return (
-    <div className="flex flex-col h-screen px-12 py-6 overflow-hidden">
-      <div className="flex items-center mb-10">
-        <p className="text-2xl font-semibold">All Jobs</p>
-        <div className="flex-1" />
-        <Button
-          type="primary"
-          loading={isCreatingJob}
-          onClick={() => mutate()}
-          icon={<UserArrowDown className="anticon" />}
-        >
-          Create Job
-        </Button>
+    <div className="flex h-screen overflow-hidden">
+      <div className="flex flex-col flex-1 px-10 py-6">
+        <div className="flex items-center mb-10">
+          <p className="text-2xl font-semibold">All Jobs</p>
+          <div className="flex-1" />
+          <Button
+            type="primary"
+            loading={isCreatingJob}
+            onClick={() => mutate()}
+            icon={<UserArrowDown className="anticon" />}
+          >
+            Create Job
+          </Button>
+        </div>
+
+        <div className="flex items-center mb-6 space-x-4">
+          <ToggleView viewType={viewState} onChange={setViewState} />
+          <div className="flex-1" />
+          <Input
+            value={input}
+            placeholder="Search..."
+            style={{ width: '12rem' }}
+            suffix={<SearchOutlined />}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <Button
+            icon={<FilterIcon />}
+            onClick={() => setOpen(!open)}
+            type={open ? 'primary' : 'default'}
+          />
+        </div>
+
+        <Switch>
+          <Switch.Match when={viewState === 'kanban'}>
+            <div className="flex flex-col space-y-5 overflow-y-auto">
+              {sortedAndFilteredJobs.map((job) => (
+                <JobCard key={job.id} job={job} members={members} />
+              ))}
+            </div>
+          </Switch.Match>
+
+          <Switch.Match when={viewState === 'table'}>
+            <JobList data={sortedAndFilteredJobs} />
+          </Switch.Match>
+        </Switch>
       </div>
 
-      <div className="flex items-center mb-6 space-x-4">
-        <ToggleView viewType={viewState} onChange={setViewState} />
-        <div className="flex-1" />
-        <Input
-          value={input}
-          placeholder="Search..."
-          style={{ width: '12rem' }}
-          suffix={<SearchOutlined />}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <FilterJobs
-          departments={uniqueDepartments}
-          filteredStatus={filteredStatus}
-          filteredPriority={filteredPriority}
-          setFilteredStatus={setFilteredStatus}
-          filteredDepartment={filteredDepartment}
-          setFilteredPriority={setFilteredPriority}
-          setFilteredDepartment={setFilteredDepartment}
-        />
-      </div>
-
-      <Switch>
-        <Switch.Match when={viewState === 'kanban'}>
-          <div className="flex flex-col space-y-5 overflow-y-auto">
-            {sortedAndFilteredJobs.map((job) => (
-              <JobCard key={job.id} job={job} members={members} />
-            ))}
-          </div>
-        </Switch.Match>
-
-        <Switch.Match when={viewState === 'table'}>
-          <JobList data={sortedAndFilteredJobs} />
-        </Switch.Match>
-      </Switch>
+      <FilterJobs
+        open={open}
+        onClose={() => setOpen(false)}
+        departments={uniqueDepartments}
+        filteredStatus={filteredStatus}
+        filteredPriority={filteredPriority}
+        setFilteredStatus={setFilteredStatus}
+        filteredDepartment={filteredDepartment}
+        setFilteredPriority={setFilteredPriority}
+        setFilteredDepartment={setFilteredDepartment}
+      />
     </div>
   )
 }
