@@ -33,6 +33,8 @@ export default function JobPipeline() {
     `stage-${jobId}`,
     [],
   )
+  const [selectedDateFilter, setSelectedDateFilter] =
+    useState<string>('all-time')
 
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
@@ -103,8 +105,38 @@ export default function JobPipeline() {
     { keys: ['firstName', 'middleName', 'lastName'] },
   )
 
+  const filteredCandidatesByDate = filteredCandidatesBySearch.filter(
+    (candidate) => {
+      if (selectedDateFilter === 'all-time') {
+        return true
+      }
+
+      const currentDate = new Date()
+      const candidateDate = new Date(candidate.createdAt)
+
+      if (selectedDateFilter === 'last-week') {
+        const lastWeekDate = new Date()
+        lastWeekDate.setDate(currentDate.getDate() - 7)
+        return candidateDate >= lastWeekDate
+      }
+
+      if (selectedDateFilter === 'last-month') {
+        const lastMonthDate = new Date()
+        lastMonthDate.setMonth(currentDate.getMonth() - 1)
+        return candidateDate >= lastMonthDate
+      }
+
+      if (selectedDateFilter === 'last-quarter') {
+        const lastQuarterDate = new Date()
+        lastQuarterDate.setMonth(currentDate.getMonth() - 3)
+        return candidateDate >= lastQuarterDate
+      }
+
+      return true
+    },
+  )
   const groupByStatus = groupBy(
-    filteredCandidatesBySearch,
+    filteredCandidatesByDate,
     (candidate) => candidate.status,
   )
 
@@ -143,6 +175,8 @@ export default function JobPipeline() {
           selectedSources={selectedSources}
           setFilteredStages={setFilteredStages}
           setSelectedSources={setSelectedSources}
+          selectedDateFilter={selectedDateFilter}
+          setSelectedDateFilter={setSelectedDateFilter}
         />
       </div>
 
@@ -158,7 +192,7 @@ export default function JobPipeline() {
             when={viewState === 'kanban'}
             fallback={
               <CandidateList
-                data={orderBy(filteredCandidatesBySearch, 'createdAt', 'desc')}
+                data={orderBy(filteredCandidatesByDate, 'createdAt', 'desc')}
                 selectedCandidates={selectedCandidates}
                 setSelectedCandidates={setSelectedCandidates}
               />
