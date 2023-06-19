@@ -1,22 +1,20 @@
+import { useState } from 'react'
 import clsx from 'clsx'
+import { Avatar, Popover } from 'antd'
 import { LogoutOutlined } from '@ant-design/icons'
-import { Avatar, Dropdown, MenuProps } from 'antd'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
+import Integrations from 'components/integrations'
+import { ReactComponent as IntegrationsIcon } from 'assets/icons/integrations.svg'
+
 import tabs from './tabs-list'
 
 export default function Sidebar() {
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
-
-  const items: MenuProps['items'] = [
-    {
-      key: 1,
-      label: 'Logout',
-      icon: <LogoutOutlined />,
-      onClick: () => signOut().then(() => navigate('/')),
-    },
-  ]
+  const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false)
 
   return (
     <div className="flex flex-col w-56 py-4 text-white bg-gray-900 border-r">
@@ -60,7 +58,32 @@ export default function Sidebar() {
 
       <div className="flex-1" />
 
-      <Dropdown menu={{ items, theme: 'dark' }} placement="topRight">
+      <Show when={false}>
+        <div
+          className={clsx(
+            'flex items-center gap-2 px-4 py-1 cursor-pointer hover:bg-primary-500',
+            { 'bg-primary-500': isIntegrationsOpen },
+          )}
+          onClick={() => setIsIntegrationsOpen(true)}
+        >
+          <IntegrationsIcon />
+          Integrations
+        </div>
+      </Show>
+
+      <Popover
+        arrow={false}
+        placement="right"
+        overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
+        content={
+          <div
+            onClick={() => signOut().then(() => navigate('/'))}
+            className="flex items-center justify-center py-2 space-x-2 rounded-md cursor-pointer w-28 hover:bg-gray-50"
+          >
+            <LogoutOutlined /> <span>Logout</span>
+          </div>
+        }
+      >
         <div className="flex items-center px-4 py-1 space-x-2 rounded-md cursor-pointer">
           <Avatar size="small" src={user?.photoURL}>
             {user?.displayName?.charAt(0)}
@@ -69,7 +92,12 @@ export default function Sidebar() {
             <p className="text-sm">{user?.displayName}</p>
           </div>
         </div>
-      </Dropdown>
+      </Popover>
+
+      <Integrations
+        isOpen={isIntegrationsOpen}
+        onClose={() => setIsIntegrationsOpen(false)}
+      />
     </div>
   )
 }
