@@ -19,7 +19,7 @@ export default function InviteToWorkspace() {
     enabled: enableMe,
     onSuccess: (member) => {
       setMember(member)
-      navigate('/home')
+      navigate('/dashboard')
     },
   })
 

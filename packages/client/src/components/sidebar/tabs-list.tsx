@@ -1,11 +1,9 @@
 import { ReactNode } from 'react'
-import {
-  AiOutlineHome,
-  AiOutlineSetting,
-  AiOutlineTeam,
-  AiOutlineWallet,
-} from 'react-icons/ai'
 import { Link } from 'react-router-dom'
+
+import { ReactComponent as HomeIcon } from 'assets/icons/home.svg'
+import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg'
+import { ReactComponent as BreifcaseIcon } from 'assets/icons/briefcase.svg'
 
 type Tab = {
   key: string
@@ -18,21 +16,20 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-  { key: 'home', label: <Link to="/home">Home</Link>, icon: <AiOutlineHome /> },
+  {
+    key: 'dashboard',
+    label: <Link to="/dashboard">Dashboard</Link>,
+    icon: <HomeIcon />,
+  },
   {
     key: 'jobs',
     label: <Link to="/jobs">All Jobs</Link>,
-    icon: <AiOutlineWallet />,
-  },
-  {
-    key: 'candidates',
-    label: <Link to="/candidates">Candidates</Link>,
-    icon: <AiOutlineTeam />,
+    icon: <BreifcaseIcon />,
   },
   {
     key: 'settings',
     label: 'Settings',
-    icon: <AiOutlineSetting />,
+    icon: <SettingsIcon />,
     children: [
       {
         key: 'settings/organisation',

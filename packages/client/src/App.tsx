@@ -62,7 +62,7 @@ export default function App() {
                   element={<AuthLayout component={ConnectSlack} />}
                 />
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
-                  <Route path="home" element={<Home />} />
+                  <Route path="dashboard" element={<Home />} />
                   <Route path="jobs" element={<AllJobs />} />
                   <Route path="jobs/:jobId" element={<Job />} />
                   <Route path="jobs/:jobId/create" element={<JobLayout />}>

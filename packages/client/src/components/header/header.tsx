@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="flex items-center px-5 py-2 space-x-4 border-b">
-      <Link to="/home">
+      <Link to="/dashboard">
         <img
           src="/assets/logo_large.svg"
           className="flex items-center object-center w-40 h-8"

@@ -36,7 +36,7 @@ export default function Invite() {
   }
 
   if (user && member) {
-    return <Navigate to="/home" />
+    return <Navigate to="/dashboard" />
   }
 
   return (
