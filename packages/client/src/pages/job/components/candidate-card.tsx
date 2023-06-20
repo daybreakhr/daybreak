@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import dayjs from 'dayjs'
-import { Checkbox, Tag } from 'antd'
+import { Checkbox, Tag, Tooltip } from 'antd'
 import { HiBriefcase } from 'react-icons/hi'
 import { CandidateSource } from '@prisma/client'
 
@@ -27,7 +27,7 @@ export default function CandidateCard({
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
-  const { color, icon } = candidateSources(source)
+  const { color, text, icon } = candidateSources(source)
 
   return (
     <div
@@ -40,7 +40,7 @@ export default function CandidateCard({
         <Checkbox checked={isChecked} onChange={onCandidateSelect} />
 
         <Tag className="p-1 border-none" color={color}>
-          {icon}
+          <Tooltip title={text}>{icon}</Tooltip>
         </Tag>
 
         <p className="font-semibold truncate" title={name}>
