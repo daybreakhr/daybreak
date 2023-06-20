@@ -8,7 +8,7 @@ import { DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
 
-import { getPipelineStages } from 'utils/utils'
+import { getPipelineStages, getLastDate } from 'utils/utils'
 import ToggleView from 'components/toggle-view'
 import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
@@ -105,36 +105,14 @@ export default function JobPipeline() {
     { keys: ['firstName', 'middleName', 'lastName'] },
   )
 
-  const filteredCandidatesByDate = filteredCandidatesBySearch.filter(
-    (candidate) => {
-      if (selectedDateFilter === 'all-time') {
-        return true
-      }
+  const filteredCandidatesByDate =
+    selectedDateFilter === 'all-time'
+      ? filteredCandidatesBySearch
+      : filteredCandidatesBySearch?.filter(
+          ({ createdAt }) =>
+            new Date(createdAt) >= getLastDate(selectedDateFilter),
+        )
 
-      const currentDate = new Date()
-      const candidateDate = new Date(candidate.createdAt)
-
-      if (selectedDateFilter === 'last-week') {
-        const lastWeekDate = new Date()
-        lastWeekDate.setDate(currentDate.getDate() - 7)
-        return candidateDate >= lastWeekDate
-      }
-
-      if (selectedDateFilter === 'last-month') {
-        const lastMonthDate = new Date()
-        lastMonthDate.setMonth(currentDate.getMonth() - 1)
-        return candidateDate >= lastMonthDate
-      }
-
-      if (selectedDateFilter === 'last-quarter') {
-        const lastQuarterDate = new Date()
-        lastQuarterDate.setMonth(currentDate.getMonth() - 3)
-        return candidateDate >= lastQuarterDate
-      }
-
-      return true
-    },
-  )
   const groupByStatus = groupBy(
     filteredCandidatesByDate,
     (candidate) => candidate.status,
