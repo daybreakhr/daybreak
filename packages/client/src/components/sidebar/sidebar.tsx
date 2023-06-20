@@ -4,7 +4,6 @@ import { Avatar, Popover } from 'antd'
 import { LogoutOutlined } from '@ant-design/icons'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
-import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import Integrations from 'components/integrations'
 import { ReactComponent as IntegrationsIcon } from 'assets/icons/integrations.svg'
@@ -58,18 +57,16 @@ export default function Sidebar() {
 
       <div className="flex-1" />
 
-      <Show when={false}>
-        <div
-          className={clsx(
-            'flex items-center gap-2 px-4 py-1 cursor-pointer hover:bg-primary-500',
-            { 'bg-primary-500': isIntegrationsOpen },
-          )}
-          onClick={() => setIsIntegrationsOpen(true)}
-        >
-          <IntegrationsIcon />
-          Integrations
-        </div>
-      </Show>
+      <div
+        className={clsx(
+          'flex items-center gap-2 px-4 py-1 cursor-pointer hover:bg-primary-500',
+          { 'bg-primary-500': isIntegrationsOpen },
+        )}
+        onClick={() => setIsIntegrationsOpen(true)}
+      >
+        <IntegrationsIcon />
+        Integrations
+      </div>
 
       <Popover
         arrow={false}

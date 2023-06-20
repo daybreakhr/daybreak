@@ -26,7 +26,6 @@ import CandidateFeedback from 'pages/candidate-feedback'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import CandidateEngagement from 'pages/candidate-engagement'
-import Integrations from 'pages/integrations'
 import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
@@ -99,17 +98,13 @@ export default function App() {
                   <Route path="prospects/create" element={<CreateProspect />} />
                   <Route
                     path="settings"
-                    element={<Navigate to="members" replace />}
+                    element={<Navigate to="organisation" replace />}
                   />
                   <Route
                     path="settings/organisation"
                     element={<Organisation />}
                   />
                   <Route path="settings/members" element={<Members />} />
-                  <Route
-                    path="settings/integrations"
-                    element={<Integrations />}
-                  />
                   <Route
                     path="settings/email-templates"
                     element={<EmailTemplates />}

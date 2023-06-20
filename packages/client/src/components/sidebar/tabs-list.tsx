@@ -40,10 +40,6 @@ const tabs: Tab[] = [
         label: <Link to="/settings/members">Members</Link>,
       },
       {
-        key: 'settings/integrations',
-        label: <Link to="/settings/integrations">Integrations</Link>,
-      },
-      {
         key: 'settings/email-templates',
         label: <Link to="/settings/email-templates">Email Templates</Link>,
       },
