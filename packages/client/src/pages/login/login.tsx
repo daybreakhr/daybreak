@@ -5,7 +5,7 @@ import useAuth from 'hooks/use-auth'
 export default function Login() {
   const { signInWithGoogle, user, member } = useAuth()
   const { state }: any = useLocation()
-  const from = state?.from?.pathname ?? '/home'
+  const from = state?.from?.pathname ?? '/dashboard'
   const inviteId = state?.inviteId
 
   if (user && !member && inviteId) {

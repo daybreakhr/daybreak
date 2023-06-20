@@ -6,7 +6,7 @@ export default function Onboarding() {
   const { member } = useAuth()
 
   if (member) {
-    return <Navigate to="/home" />
+    return <Navigate to="/dashboard" />
   }
 
   return (

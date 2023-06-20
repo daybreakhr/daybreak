@@ -6,7 +6,7 @@ export default function AppShell() {
   return (
     <div className="flex w-screen h-screen overflow-hidden">
       <Sidebar />
-      <Scrollbars autoHide className="flex-1 bg-gray-100">
+      <Scrollbars id="application" autoHide className="flex-1 bg-gray-100">
         <Outlet />
       </Scrollbars>
     </div>
