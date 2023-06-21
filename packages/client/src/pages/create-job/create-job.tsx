@@ -21,8 +21,8 @@ import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Job } from 'types/job'
 import { RemirrorEditor } from 'ui-kit'
 
-import { Member } from 'types/member'
 import { fetchJob } from 'pages/job/queries'
+import { MemberWithUserInfo } from 'types/member'
 import { fetchMembers } from 'pages/members/queries'
 import { fetchDepartments, fetchLocations, updateJobById } from './queries'
 import {
@@ -144,7 +144,7 @@ export default function JobForm() {
             showSearch
             options={membersList}
             filterOption={(input, option) => {
-              const member: Member | undefined = members?.find(
+              const member: MemberWithUserInfo | undefined = members?.find(
                 ({ uid }) => uid === option?.value,
               )
               if (member) {

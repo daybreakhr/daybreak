@@ -24,12 +24,7 @@ export class MembersService {
     const users = await this.authService.getUsers(identifiers)
 
     return users.map((user) => {
-      return {
-        ...user,
-        role: memberByUid[user.uid].role,
-        memberId: memberByUid[user.uid].id,
-        isSuspended: memberByUid[user.uid].isSuspended,
-      }
+      return { ...user, ...memberByUid[user.uid] }
     })
   }
 
@@ -40,12 +35,7 @@ export class MembersService {
     })
 
     const user = await this.authService.getUser(member.uid)
-    return {
-      ...user,
-      role: member.role,
-      memberId: member.id,
-      isSuspended: member.isSuspended,
-    }
+    return { ...user, ...member }
   }
 
   async addApp(
@@ -65,6 +55,7 @@ export class MembersService {
     const member = await this.prismaService.member.update({
       where: { id: memberId },
       data: { Integration: newIntegration },
+      include: { Workspace: true },
     })
 
     return member

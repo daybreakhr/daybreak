@@ -5,7 +5,7 @@ import { Show, Switch } from 'ui-kit'
 
 import { Job } from 'types/job'
 import useAuth from 'hooks/use-auth'
-import { Member } from 'types/member'
+import { MemberWithUserInfo } from 'types/member'
 
 import { fields } from '../constants/summary-fields'
 
@@ -13,7 +13,7 @@ type JobDetailsProps = {
   isLoading: boolean
   job: Job | undefined
   slug: string | undefined
-  members: Member[] | undefined
+  members: MemberWithUserInfo[] | undefined
 }
 
 export default function JobDetails({

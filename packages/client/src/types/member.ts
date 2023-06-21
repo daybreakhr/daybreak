@@ -1,20 +1,19 @@
-import { Role } from '@prisma/client'
+import { Workspace, Member as PMember } from '@prisma/client'
 import { UserInfo } from 'firebase/auth'
 
-export type Member = UserInfo & {
-  role: Role
-  memberId: string
-  isSuspended: boolean
+export type Member = PMember & {
+  Workspace: Workspace
 }
+
+export type MemberWithUserInfo = PMember & UserInfo
 
 export type MemberTableData = {
   rowId: string
-  id?: string
   uid?: string
   email: string
   role: string
   displayName?: string
   photoURL?: string
-  memberId: string
+  id: string
   isSuspended?: boolean
 }

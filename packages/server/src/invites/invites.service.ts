@@ -132,6 +132,7 @@ export class InvitesService {
         role: invitee.role,
         Workspace: { connect: { id: invitee.workspaceId } },
       },
+      include: { Workspace: true },
     })
 
     await this.deleteInvitee(invitee.id)

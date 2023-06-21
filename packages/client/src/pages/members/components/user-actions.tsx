@@ -14,11 +14,7 @@ import { updateMember } from '../queries'
 
 import ChangeRoleForm from './change-role-form'
 
-export default function UserActions({
-  uid,
-  memberId,
-  isSuspended,
-}: MemberTableData) {
+export default function UserActions({ uid, id, isSuspended }: MemberTableData) {
   const { member: currentMember } = useAuth()
   const queryClient = useQueryClient()
   const [changeRoleModal, setChangeRoleModal] = useState(false)
@@ -42,11 +38,7 @@ export default function UserActions({
         : 'Are You Sure You Want To Suspend This Account?',
       okText: status ? 'Activate' : 'Suspend',
       cancelText: 'Cancel',
-      onOk: () =>
-        suspendAccount({
-          memberId,
-          body: { isSuspended: !status },
-        }),
+      onOk: () => suspendAccount({ id, body: { isSuspended: !status } }),
     })
   }
 
@@ -83,7 +75,7 @@ export default function UserActions({
           </Switch>
         </Menu>
         <ChangeRoleForm
-          memberId={memberId}
+          id={id}
           visible={changeRoleModal}
           onCancel={() => setChangeRoleModal(false)}
         />
