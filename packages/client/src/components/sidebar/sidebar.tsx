@@ -66,7 +66,7 @@ export default function Sidebar() {
       <div
         className={clsx(
           'flex items-center gap-2 px-4 py-1 cursor-pointer hover:bg-primary-500',
-          { 'bg-primary-500': isIntegrationsOpen },
+          isIntegrationsOpen ? 'bg-primary-500' : 'hover:bg-gray-800',
         )}
         onClick={() => setIsIntegrationsOpen(true)}
       >
