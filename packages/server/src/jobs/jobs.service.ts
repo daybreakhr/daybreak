@@ -1,9 +1,11 @@
+import { Cron, CronExpression } from '@nestjs/schedule'
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
-import { AffindaService } from 'src/affinda/affinda.service'
-import { AWSS3Service } from 'src/aws/aws.s3.service'
-import { PrismaService } from 'src/prisma.service'
+
 import openai from 'src/utils/openai'
 import generatePdf from 'src/utils/pdf-generator'
+import { PrismaService } from 'src/prisma.service'
+import { AWSS3Service } from 'src/aws/aws.s3.service'
+import { AffindaService } from 'src/affinda/affinda.service'
 import { CreateJobDto, UpdateJob } from './jobs.dto'
 
 @Injectable()
@@ -131,5 +133,14 @@ export class JobsService {
         HttpStatus.BAD_REQUEST,
       )
     }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_9AM)
+  async deleteEmptyJobs() {
+    const { count } = await this.prismaService.job.deleteMany({
+      where: { title: { isSet: false } },
+    })
+
+    this.logger.log(`Deleting ${count} empty jobs`)
   }
 }
