@@ -19,10 +19,10 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col w-56 py-4 text-white bg-gray-900 border-r">
       <Link to="/dashboard" className="flex items-center px-4 mb-5 space-x-2">
-        <Avatar shape="square" size="small" src={member?.Workspace.logo}>
-          {member?.Workspace.name.charAt(0)}
+        <Avatar shape="square" size="small" src={member?.Workspace?.logo}>
+          {member?.Workspace?.name?.charAt(0)}
         </Avatar>
-        <p className="font-semibold">{member?.Workspace.name}</p>
+        <p className="font-semibold">{member?.Workspace?.name}</p>
       </Link>
 
       {tabs.map(({ key, label, icon, children }) => (
