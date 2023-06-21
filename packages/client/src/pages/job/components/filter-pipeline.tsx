@@ -1,7 +1,15 @@
 import { useMemo, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { CandidateSource, Interview } from '@prisma/client'
-import { Button, Checkbox, Collapse, Drawer, Radio, Space } from 'antd'
+import {
+  Button,
+  Checkbox,
+  Collapse,
+  Drawer,
+  Radio,
+  RadioChangeEvent,
+  Space,
+} from 'antd'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 import { getPipelineStages } from 'utils/utils'
@@ -11,8 +19,10 @@ type FilterPipelineProps = {
   interviews: Interview[]
   filteredStages: string[]
   selectedSources: string[]
+  selectedDateFilter: string
   setFilteredStages: Dispatch<SetStateAction<string[]>>
   setSelectedSources: Dispatch<SetStateAction<string[]>>
+  setSelectedDateFilter: Dispatch<SetStateAction<string>>
 }
 
 export default function FilterPipeline({
@@ -21,6 +31,8 @@ export default function FilterPipeline({
   selectedSources,
   setFilteredStages,
   setSelectedSources,
+  selectedDateFilter,
+  setSelectedDateFilter,
 }: FilterPipelineProps) {
   const [open, setOpen] = useState(false)
 
@@ -38,6 +50,10 @@ export default function FilterPipeline({
       .map(({ value }) => value)
 
     setFilteredStages(newStages)
+  }
+
+  function handleDateFilterChange(e: RadioChangeEvent) {
+    setSelectedDateFilter(e.target.value)
   }
 
   const sourceOptions = [
@@ -87,7 +103,10 @@ export default function FilterPipeline({
 
           <Collapse.Panel key="date" header="Date Applied" className="mb-4">
             <div className="p-2">
-              <Radio.Group defaultValue="all-time">
+              <Radio.Group
+                value={selectedDateFilter}
+                onChange={handleDateFilterChange}
+              >
                 <Space direction="vertical">
                   <Radio value="all-time">All Time</Radio>
                   <Radio value="last-week">Last Week</Radio>

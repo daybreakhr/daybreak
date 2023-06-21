@@ -8,7 +8,7 @@ import { DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Show, Switch } from 'ui-kit'
 
-import { getPipelineStages } from 'utils/utils'
+import { getPipelineStages, getLastDate } from 'utils/utils'
 import ToggleView from 'components/toggle-view'
 import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
@@ -33,6 +33,8 @@ export default function JobPipeline() {
     `stage-${jobId}`,
     [],
   )
+  const [selectedDateFilter, setSelectedDateFilter] =
+    useState<string>('all-time')
 
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
@@ -103,8 +105,16 @@ export default function JobPipeline() {
     { keys: ['firstName', 'middleName', 'lastName'] },
   )
 
+  const filteredCandidatesByDate =
+    selectedDateFilter === 'all-time'
+      ? filteredCandidatesBySearch
+      : filteredCandidatesBySearch?.filter(
+          ({ createdAt }) =>
+            new Date(createdAt) >= getLastDate(selectedDateFilter),
+        )
+
   const groupByStatus = groupBy(
-    filteredCandidatesBySearch,
+    filteredCandidatesByDate,
     (candidate) => candidate.status,
   )
 
@@ -143,6 +153,8 @@ export default function JobPipeline() {
           selectedSources={selectedSources}
           setFilteredStages={setFilteredStages}
           setSelectedSources={setSelectedSources}
+          selectedDateFilter={selectedDateFilter}
+          setSelectedDateFilter={setSelectedDateFilter}
         />
       </div>
 
@@ -158,7 +170,7 @@ export default function JobPipeline() {
             when={viewState === 'kanban'}
             fallback={
               <CandidateList
-                data={orderBy(filteredCandidatesBySearch, 'createdAt', 'desc')}
+                data={orderBy(filteredCandidatesByDate, 'createdAt', 'desc')}
                 selectedCandidates={selectedCandidates}
                 setSelectedCandidates={setSelectedCandidates}
               />
