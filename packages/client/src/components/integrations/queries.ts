@@ -1,5 +1,5 @@
-import { Member } from '@prisma/client'
 import { Credentials } from 'google-auth-library'
+import { Member } from 'types/member'
 import { storage } from 'ui-kit'
 import client from 'utils/client'
 

@@ -4,9 +4,9 @@ import { Location } from '@prisma/client'
 import { capitalize, words } from 'lodash'
 
 import { Show } from 'ui-kit'
-import { Member } from 'types/member'
+import { MemberWithUserInfo } from 'types/member'
 
-export const fields = (members: Member[] | undefined) => [
+export const fields = (members: MemberWithUserInfo[] | undefined) => [
   {
     id: 'createdAt',
     title: 'Job Creation Date',

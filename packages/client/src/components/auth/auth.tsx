@@ -9,9 +9,10 @@ import {
 } from 'firebase/auth'
 import { setUserProperties } from 'firebase/analytics'
 import { useQueryClient } from '@tanstack/react-query'
-import type { Member } from '@prisma/client'
+
 import { storage } from 'ui-kit'
 
+import { Member } from 'types/member'
 import { WORKSPACE_ID } from 'utils/constants'
 import AuthContext from 'contexts/auth-context'
 import { analytics, auth } from 'utils/firebase'

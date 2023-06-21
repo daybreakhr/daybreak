@@ -3,13 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateMember } from '../queries'
 
 type ChangeRoleFormProps = {
-  memberId: string
+  id: string
   visible: boolean
   onCancel: () => void
 }
 
 export default function ChangeRoleForm({
-  memberId,
+  id,
   visible,
   onCancel,
 }: ChangeRoleFormProps) {
@@ -26,14 +26,9 @@ export default function ChangeRoleForm({
   })
 
   function handleOk() {
-    form.validateFields().then(({ role }) =>
-      mutateAsync({
-        memberId,
-        body: {
-          role,
-        },
-      }),
-    )
+    form
+      .validateFields()
+      .then(({ role }) => mutateAsync({ id, body: { role } }))
   }
 
   function handleCancel() {

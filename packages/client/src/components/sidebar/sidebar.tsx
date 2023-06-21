@@ -11,17 +11,18 @@ import { ReactComponent as IntegrationsIcon } from 'assets/icons/integrations.sv
 import tabs from './tabs-list'
 
 export default function Sidebar() {
+  const { member } = useAuth()
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false)
 
   return (
     <div className="flex flex-col w-56 py-4 text-white bg-gray-900 border-r">
-      <Link to="/dashboard">
-        <img
-          src="/assets/logo_large.svg"
-          className="flex items-center w-40 py-1 pl-5 mb-3"
-        />
+      <Link to="/dashboard" className="flex items-center px-4 mb-5 space-x-2">
+        <Avatar shape="square" size="small" src={member?.Workspace.logo}>
+          {member?.Workspace.name.charAt(0)}
+        </Avatar>
+        <p className="font-semibold">{member?.Workspace.name}</p>
       </Link>
 
       {tabs.map(({ key, label, icon, children }) => (
@@ -29,9 +30,12 @@ export default function Sidebar() {
           <NavLink
             to={key}
             className={({ isActive }) =>
-              clsx('flex items-center gap-2 px-4 py-1 hover:bg-primary-500', {
-                'bg-primary-500': isActive,
-              })
+              clsx(
+                'flex items-center gap-2 px-4 py-1',
+                isActive && !isIntegrationsOpen
+                  ? 'bg-primary-500'
+                  : 'hover:bg-gray-800',
+              )
             }
           >
             {icon} {label}
@@ -42,8 +46,10 @@ export default function Sidebar() {
               to={key}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-2 pl-10 pr-4 hover:bg-primary-500',
-                  { 'bg-primary-500': isActive },
+                  'flex items-center gap-2 pl-10 pr-4 hover:bg-gray-800',
+                  isActive && !isIntegrationsOpen
+                    ? 'bg-primary-500'
+                    : 'hover:bg-gray-800',
                 )
               }
             >

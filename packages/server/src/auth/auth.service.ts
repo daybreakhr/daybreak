@@ -67,6 +67,7 @@ export class AuthService {
     try {
       const member = await this.prismaService.member.findUnique({
         where: { uid },
+        include: { Workspace: true },
       })
       return member
     } catch (error) {

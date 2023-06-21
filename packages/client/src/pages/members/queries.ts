@@ -1,12 +1,14 @@
 import { storage } from 'ui-kit'
 import client from 'utils/client'
-import { Member } from 'types/member'
+import { Member, MemberWithUserInfo } from 'types/member'
 import { WORKSPACE_ID } from 'utils/constants'
 import { Invitees, Role } from '@prisma/client'
 
 export async function fetchMembers() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
-  const { data } = await client.get<Member[]>(`${workspaceId}/members`)
+  const { data } = await client.get<MemberWithUserInfo[]>(
+    `${workspaceId}/members`,
+  )
   return data
 }
 
@@ -32,15 +34,15 @@ export async function fetchInvitedMembers() {
 }
 
 export async function updateMember({
-  memberId,
+  id,
   body,
 }: {
-  memberId: string
+  id: string
   body: Partial<Member>
 }) {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Member>(
-    `${workspaceId}/members/${memberId}`,
+    `${workspaceId}/members/${id}`,
     body,
   )
   return data

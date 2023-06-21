@@ -1,4 +1,4 @@
-import { Member } from '@prisma/client'
+import { Member } from 'types/member'
 import client from 'utils/client'
 
 export async function verifyInvitee({ inviteId }: { inviteId: string }) {

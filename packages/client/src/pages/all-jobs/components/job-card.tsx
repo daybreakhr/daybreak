@@ -5,14 +5,14 @@ import { capitalize, words } from 'lodash'
 import { RxDotFilled } from 'react-icons/rx'
 
 import { Job } from 'types/job'
-import { Member } from 'types/member'
+import { MemberWithUserInfo } from 'types/member'
 import { Show, Switch } from 'ui-kit'
 import formatNumber from 'utils/format-number'
 import { ReactComponent as CandidatesIcon } from 'assets/icons/candidates.svg'
 
 type JobCardProps = {
   job: Job
-  members: Member[]
+  members: MemberWithUserInfo[]
 }
 
 export default function JobCard({ job, members }: JobCardProps) {
