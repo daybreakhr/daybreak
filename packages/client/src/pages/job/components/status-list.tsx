@@ -76,6 +76,7 @@ export default function StatusList({
                     name={name}
                     source={candidate.source}
                     createdAt={candidate.createdAt}
+                    referredBy={candidate.referredBy}
                     currentCompany={candidate.currentCompany}
                     isChecked={selectedCandidates.includes(id)}
                     onCandidateSelect={() => handleCandidateSelect(id)}

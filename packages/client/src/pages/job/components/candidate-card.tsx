@@ -2,16 +2,18 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { Checkbox, Tag, Tooltip } from 'antd'
 import { HiBriefcase } from 'react-icons/hi'
-import { CandidateSource } from '@prisma/client'
+import { Candidate, CandidateSource } from '@prisma/client'
 
 import { Show } from 'ui-kit'
 import { ReactComponent as OfficeBuildingsIcon } from 'assets/icons/office-buildings.svg'
 import { candidateSources } from '../constants/icons'
+import { getCandidateSourceTitle } from '../../../utils/utils'
 
 type CandidateCardProps = {
   name: string
   createdAt: Date
   isChecked: boolean
+  referredBy?: Candidate | null | string
   source: CandidateSource
   currentCompany: string | null
   onCandidateSelect: () => void
@@ -23,11 +25,25 @@ export default function CandidateCard({
   createdAt,
   isChecked,
   source,
+  referredBy,
   currentCompany,
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
-  const { color, text, icon } = candidateSources(source)
+  const { color, icon } = candidateSources(source)
+  let sourceTitle: string | undefined
+
+  if (source === CandidateSource.referral) {
+    const referredByName = referredBy as Candidate
+    if (referredByName) {
+      sourceTitle = getCandidateSourceTitle(
+        source,
+        referredByName.referredBy,
+      ) as string
+    }
+  } else {
+    sourceTitle = getCandidateSourceTitle(source, null) as string
+  }
 
   return (
     <div
@@ -40,7 +56,7 @@ export default function CandidateCard({
         <Checkbox checked={isChecked} onChange={onCandidateSelect} />
 
         <Tag className="p-1 border-none" color={color}>
-          <Tooltip title={text}>{icon}</Tooltip>
+          <Tooltip title={sourceTitle}>{icon}</Tooltip>
         </Tag>
 
         <p className="font-semibold truncate" title={name}>
