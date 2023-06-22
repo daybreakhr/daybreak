@@ -12,28 +12,27 @@ import { ReactComponent as HighPriorityIcon } from 'assets/icons/high_priority.s
 
 export const candidateSources = (
   source: CandidateSource,
-): { color: string; text: string; icon: ReactNode } => {
+): { color: string; icon: ReactNode } => {
   switch (source) {
     case CandidateSource.jobBoard:
-      return { color: 'purple', text: 'Portal', icon: <JobPortalIcon /> }
+      return { color: 'purple', icon: <JobPortalIcon /> }
     case CandidateSource.referral:
-      return { color: 'gold', text: 'Referral', icon: <ReferralIcon /> }
+      return { color: 'gold', icon: <ReferralIcon /> }
     case CandidateSource.linkedIn:
-      return { color: 'blue', text: 'LinkedIn', icon: <AiFillLinkedin /> }
+      return { color: 'blue', icon: <AiFillLinkedin /> }
     case CandidateSource.instahyre:
-      return { color: 'purple', text: 'Instahyre', icon: <GlobeIcon /> }
+      return { color: 'purple', icon: <GlobeIcon /> }
     case CandidateSource.iimjobs:
       return {
         color: 'purple',
-        text: 'IIM Jobs',
         icon: <BuildingColumnsIcon />,
       }
     case CandidateSource.naukri:
-      return { color: 'purple', text: 'Naukri', icon: <GlobeIcon /> }
+      return { color: 'purple', icon: <GlobeIcon /> }
     case CandidateSource.other:
-      return { color: 'purple', text: 'Other', icon: <GlobeIcon /> }
+      return { color: 'purple', icon: <GlobeIcon /> }
     default:
-      return { color: 'default', text: 'None', icon: null }
+      return { color: 'default', icon: null }
   }
 }
 
