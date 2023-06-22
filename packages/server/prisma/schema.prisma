@@ -100,6 +100,7 @@ model Job {
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  favorites     String[] // uid of users who have favorited this job
   Interview     Interview[]
   Workspace     Workspace   @relation(fields: [workspaceId], references: [id])
   workspaceId   String      @db.ObjectId

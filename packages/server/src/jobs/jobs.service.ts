@@ -25,6 +25,13 @@ export class JobsService {
     return jobs
   }
 
+  async getFavoriteJobs(uid: string) {
+    const jobs = await this.prismaService.job.findMany({
+      where: { favorites: { has: uid } },
+    })
+    return jobs
+  }
+
   async getById(id: string) {
     const job = await this.prismaService.job.findUnique({
       where: { id },

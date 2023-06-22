@@ -1,13 +1,14 @@
 import { capitalize, range } from 'lodash'
 import { RxDotFilled } from 'react-icons/rx'
-import { HiChevronDown } from 'react-icons/hi'
+import { HiChevronDown, HiOutlineStar, HiStar } from 'react-icons/hi'
 import { DownOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Candidate, CandidateStatus } from '@prisma/client'
 import { Button, Divider, Dropdown, MenuProps, Popover } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
+import useAuth from 'hooks/use-auth'
 import formatNumber from 'utils/format-number'
 import { fetchMembers } from 'pages/members/queries'
 import { updateJobById } from 'pages/create-job/queries'
@@ -29,12 +30,15 @@ type JobHeaderProps = {
 }
 
 export default function JobHeader({ candidates }: JobHeaderProps) {
+  const { member } = useAuth()
   const navigate = useNavigate()
   const { jobId = '' } = useParams()
 
   const { data: members } = useQuery(['members'], fetchMembers)
   const { data: workspace } = useQuery(['organisation'], fetchOrganisation)
   const { data, isLoading } = useQuery(['job', jobId], () => fetchJob(jobId))
+
+  const isJobStarred = data?.favorites.includes(member?.uid ?? '')
 
   const rejectedCandidates = candidates.filter(
     ({ status }) => status === CandidateStatus.rejected,
@@ -68,6 +72,9 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
     },
     // Always refetch after error or success:
     onSettled: () => queryClient.invalidateQueries(['job', jobId]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['favorite-jobs'])
+    },
   })
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
@@ -102,6 +109,26 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
 
   const { icon: priorityIcon, labelColor: priorityLabelColor } =
     jobPriorityInfo(data?.priority || '')
+
+  function handleStarChange() {
+    if (data && member) {
+      if (isJobStarred) {
+        mutate({
+          jobId,
+          updateJobDto: {
+            favorites: data?.favorites.filter((uid) => uid !== member.uid),
+          },
+        })
+      } else {
+        mutate({
+          jobId,
+          updateJobDto: {
+            favorites: [...data.favorites, member.uid],
+          },
+        })
+      }
+    }
+  }
 
   return (
     <div className="px-6 py-4 mb-4 bg-white shadow-lg">
@@ -171,7 +198,26 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                   </div>
                 </Dropdown>
               </div>
-              <p className="mb-2 text-xl font-semibold">{job.title}</p>
+
+              <div className="flex items-center mb-2 space-x-2">
+                <p className="text-xl font-semibold">{job.title}</p>
+                <button
+                  onClick={handleStarChange}
+                  className="p-1 text-lg bg-transparent border rounded-md"
+                >
+                  <Show
+                    when={isJobStarred}
+                    fallback={
+                      <HiOutlineStar
+                        strokeWidth="1"
+                        className="text-gray-500"
+                      />
+                    }
+                  >
+                    <HiStar className="text-yellow-500" strokeWidth={1} />
+                  </Show>
+                </button>
+              </div>
               <div className="flex items-center space-x-4 text-gray-600">
                 <div className="flex items-center space-x-1">
                   <BriefcaseIcon />

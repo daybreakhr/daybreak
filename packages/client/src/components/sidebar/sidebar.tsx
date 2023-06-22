@@ -1,20 +1,26 @@
 import { useState } from 'react'
 import clsx from 'clsx'
 import { Avatar, Popover } from 'antd'
+import { useQuery } from '@tanstack/react-query'
 import { LogoutOutlined } from '@ant-design/icons'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import Integrations from 'components/integrations'
+import { ReactComponent as BreifcaseIcon } from 'assets/icons/briefcase.svg'
 import { ReactComponent as IntegrationsIcon } from 'assets/icons/integrations.svg'
 
 import tabs from './tabs-list'
+import { fetchFavoriteJobs } from './queries'
 
 export default function Sidebar() {
   const { member } = useAuth()
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false)
+
+  const { data } = useQuery(['favorite-jobs'], fetchFavoriteJobs)
 
   return (
     <div className="flex flex-col w-56 py-4 text-white bg-gray-900 border-r">
@@ -26,7 +32,7 @@ export default function Sidebar() {
       </Link>
 
       {tabs.map(({ key, label, icon, children }) => (
-        <div key={key}>
+        <>
           <NavLink
             to={key}
             className={({ isActive }) =>
@@ -46,7 +52,7 @@ export default function Sidebar() {
               to={key}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-2 pl-10 pr-4 hover:bg-gray-800',
+                  'flex items-center gap-2 pl-10 pr-4',
                   isActive && !isIntegrationsOpen
                     ? 'bg-primary-500'
                     : 'hover:bg-gray-800',
@@ -58,8 +64,28 @@ export default function Sidebar() {
               </span>
             </NavLink>
           ))}
-        </div>
+        </>
       ))}
+
+      <div className="mt-5">
+        <Show when={data && data?.length > 0}>
+          <p className="px-4 py-1 font-medium text-gray-300 uppercase text-xxs">
+            Favorite Jobs
+          </p>
+          {data?.map(({ id, title }) => (
+            <NavLink
+              key={id}
+              to={`/jobs/${id}`}
+              className="flex items-center gap-1 px-4 py-1"
+            >
+              <BreifcaseIcon className="flex-none" />
+              <span className="truncate" title={title ?? ''}>
+                {title}
+              </span>
+            </NavLink>
+          ))}
+        </Show>
+      </div>
 
       <div className="flex-1" />
 

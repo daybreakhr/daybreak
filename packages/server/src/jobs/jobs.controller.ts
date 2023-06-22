@@ -43,6 +43,23 @@ export class JobsController {
     return data
   }
 
+  @Get('favorites')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('access-key')
+  @ApiOperation({
+    operationId: 'GetFavoriteJobs',
+    summary: 'Get favorite Jobs for a user',
+  })
+  @ApiOkResponse({
+    description: 'Jobs were returned successfully',
+    type: [JobDto],
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getFavoriteJobs(@GetUser() user: UserRecord) {
+    const data = await this.jobsService.getFavoriteJobs(user.uid)
+    return data
+  }
+
   @Get(':id')
   @ApiOperation({ operationId: 'GetJobById', summary: 'Get a Job by jobId' })
   @ApiOkResponse({
