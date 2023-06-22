@@ -76,7 +76,14 @@ export default function Sidebar() {
             <NavLink
               key={id}
               to={`/jobs/${id}`}
-              className="flex items-center gap-1 px-4 py-1"
+              className={({ isActive }) =>
+                clsx(
+                  'flex items-center gap-1 px-4 py-1',
+                  isActive && !isIntegrationsOpen
+                    ? 'bg-primary-500'
+                    : 'hover:bg-gray-800',
+                )
+              }
             >
               <BreifcaseIcon className="flex-none" />
               <span className="truncate" title={title ?? ''}>
