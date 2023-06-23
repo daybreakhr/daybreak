@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { groupBy, orderBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
-import { CandidateStatus } from '@prisma/client'
+import { Candidate, CandidateStatus } from '@prisma/client'
 import { Button, Dropdown, Input, MenuProps, Spin } from 'antd'
 import { DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { Show, Switch } from 'ui-kit'
 
-import { getPipelineStages, getLastDate } from 'utils/utils'
+import { Show, Switch } from 'ui-kit'
 import ToggleView from 'components/toggle-view'
 import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
+import { getPipelineStages, getLastDate } from 'utils/utils'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 import { ReactComponent as MoveCandidateIcon } from 'assets/icons/move-candidate.svg'
@@ -113,10 +113,30 @@ export default function JobPipeline() {
             new Date(createdAt) >= getLastDate(selectedDateFilter),
         )
 
-  const groupByStatus = groupBy(
-    filteredCandidatesByDate,
-    (candidate) => candidate.status,
-  )
+  const candidateByStatus = useMemo(() => {
+    const result = {} as Record<string, Candidate[]>
+
+    const groupByStatus = groupBy(
+      filteredCandidatesByDate,
+      (candidate) => candidate.status,
+    )
+
+    Object.entries(groupByStatus).forEach(([key, value]) => {
+      if (key !== CandidateStatus.interview) {
+        result[key] = value
+      } else {
+        const groupByInterview = groupBy(
+          value,
+          (candidate) => candidate.interviewId,
+        )
+        Object.entries(groupByInterview).forEach(([key, value]) => {
+          result[key] = value
+        })
+      }
+    })
+
+    return result
+  }, [filteredCandidatesByDate])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -183,7 +203,7 @@ export default function JobPipeline() {
                   <StatusList
                     key={value}
                     title={label}
-                    candidates={groupByStatus[value]}
+                    candidates={candidateByStatus[value]}
                     selectedCandidates={selectedCandidates}
                     setSelectedCandidates={setSelectedCandidates}
                   />

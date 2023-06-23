@@ -1,29 +1,27 @@
 import { capitalize, range } from 'lodash'
 import { RxDotFilled } from 'react-icons/rx'
-import { HiChevronDown, HiOutlineStar, HiStar } from 'react-icons/hi'
+import { useParams } from 'react-router-dom'
 import { DownOutlined } from '@ant-design/icons'
-import { useNavigate, useParams } from 'react-router-dom'
 import { Candidate, CandidateStatus } from '@prisma/client'
+import { HiChevronDown, HiOutlineStar, HiStar } from 'react-icons/hi'
 import { Button, Divider, Dropdown, MenuProps, Popover } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
+import { Show, Switch } from 'ui-kit'
 import formatNumber from 'utils/format-number'
 import { fetchMembers } from 'pages/members/queries'
 import { updateJobById } from 'pages/create-job/queries'
 import { fetchOrganisation } from 'pages/organisation/queries'
 import { ReactComponent as RupeeIcon } from 'assets/icons/rupee.svg'
-import { ReactComponent as PencilIcon } from 'assets/icons/pencil.svg'
 import { ReactComponent as MapPinIcon } from 'assets/icons/map-pin.svg'
 import { ReactComponent as BriefcaseIcon } from 'assets/icons/briefcase.svg'
-import { ReactComponent as FileImportIcon } from 'assets/icons/file-import.svg'
-import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import { fetchJob } from '../queries'
-import { jobPriorityInfo } from '../constants/icons'
 import JobDetails from './job-details'
+import ImportTalent from './import-talent'
+import { jobPriorityInfo } from '../constants/icons'
 
 type JobHeaderProps = {
   candidates: Candidate[]
@@ -31,7 +29,6 @@ type JobHeaderProps = {
 
 export default function JobHeader({ candidates }: JobHeaderProps) {
   const { member } = useAuth()
-  const navigate = useNavigate()
   const { jobId = '' } = useParams()
 
   const { data: members } = useQuery(['members'], fetchMembers)
@@ -90,22 +87,6 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
     { key: '1', label: data?.isPublished ? 'Move to drafts' : 'Publish Job' },
     { key: '2', label: 'Archive Job', disabled: true },
   ]
-
-  const importCandidateItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'Import Resumes',
-      icon: <FileImportIcon />,
-      disabled: true,
-    },
-    { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
-  ]
-
-  const handleImportClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '2') {
-      navigate('/candidates/create')
-    }
-  }
 
   const { icon: priorityIcon, labelColor: priorityLabelColor } =
     jobPriorityInfo(data?.priority || '')
@@ -186,17 +167,7 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
                   </span>
                 </div>
 
-                <Dropdown
-                  menu={{
-                    items: importCandidateItems,
-                    onClick: handleImportClick,
-                  }}
-                >
-                  <div className="flex items-center px-2 py-1 space-x-2 border rounded-md shadow cursor-pointer">
-                    <UserArrowDown className="text-primary-500" />
-                    <span>Import Talent</span> <DownOutlined />
-                  </div>
-                </Dropdown>
+                <ImportTalent title={data?.title} />
               </div>
 
               <div className="flex items-center mb-2 space-x-2">

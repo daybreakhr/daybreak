@@ -3,6 +3,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import * as Joi from 'joi'
 import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
+import { ScheduleModule } from '@nestjs/schedule'
 
 import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/auth.middleware'
@@ -77,6 +78,7 @@ import { CommentsModule } from './comments/comments.module'
     MembersModule,
     NotificationModule,
     ProspectModule,
+    ScheduleModule.forRoot(),
     SlackModule,
     WorkspaceModule,
     ReferralsModule,

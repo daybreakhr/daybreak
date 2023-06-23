@@ -53,7 +53,7 @@ export function getPipelineStages(interviews: Interview[]) {
     ...interviews.map(({ id, title }) => {
       return { label: title, value: id }
     }),
-    ...candidateStatusOptions.slice(2),
+    ...candidateStatusOptions.slice(3),
     { label: 'Rejected', value: CandidateStatus.rejected },
   ]
 }

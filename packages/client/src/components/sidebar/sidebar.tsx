@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { Avatar, Popover } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { LogoutOutlined } from '@ant-design/icons'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom'
 
 import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
@@ -17,10 +17,14 @@ import { fetchFavoriteJobs } from './queries'
 export default function Sidebar() {
   const { member } = useAuth()
   const navigate = useNavigate()
+  const { jobId = '' } = useParams()
   const { signOut, user } = useAuth()
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false)
 
   const { data } = useQuery(['favorite-jobs'], fetchFavoriteJobs)
+
+  const getIsActive = (isActive: boolean) =>
+    isActive && !isIntegrationsOpen && !data?.find(({ id }) => id === jobId)
 
   return (
     <div className="flex flex-col w-56 py-4 text-white bg-gray-900 border-r">
@@ -38,9 +42,7 @@ export default function Sidebar() {
             className={({ isActive }) =>
               clsx(
                 'flex items-center gap-2 px-4 py-1',
-                isActive && !isIntegrationsOpen
-                  ? 'bg-primary-500'
-                  : 'hover:bg-gray-800',
+                getIsActive(isActive) ? 'bg-primary-500' : 'hover:bg-gray-800',
               )
             }
           >
