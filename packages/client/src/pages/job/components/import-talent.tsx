@@ -20,7 +20,12 @@ export default function ImportTalent({ title }: ImportTalentProps) {
   const [bulkImportDrawer, setBulkImportDrawer] = useState(false)
 
   const importCandidateItems: MenuProps['items'] = [
-    { key: '1', label: 'Import Resumes', icon: <FileImportIcon /> },
+    {
+      key: '1',
+      label: 'Import Resumes',
+      icon: <FileImportIcon />,
+      disabled: true,
+    },
     { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
   ]
 

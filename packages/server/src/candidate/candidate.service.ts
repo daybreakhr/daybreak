@@ -1,7 +1,7 @@
 import { Express } from 'express'
 import type { UserRecord } from 'firebase-admin/auth'
 import type { Education, Experience } from '@prisma/client'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
 import { PrismaService } from 'src/prisma.service'
@@ -17,6 +17,7 @@ import {
 
 @Injectable()
 export class CandidateService {
+  private readonly logger = new Logger('CandidateService')
   constructor(
     private affindaService: AffindaService,
     private s3Service: AWSS3Service,
@@ -112,6 +113,7 @@ export class CandidateService {
 
     const education = this.getEducationDetails(affindaData)
     const experience = this.getExperienceDetails(sortedExperiences)
+    this.logger.log({ education, experience })
 
     const { id } = await this.prismaService.candidate.create({
       data: {
@@ -157,10 +159,7 @@ export class CandidateService {
   async bulkCandidateUpdate(bulkUpdateCandidateDto: BulkUpdateCandidateDto[]) {
     const data = await this.prismaService.$transaction(
       bulkUpdateCandidateDto.map(({ id, data }) =>
-        this.prismaService.candidate.update({
-          where: { id },
-          data,
-        }),
+        this.prismaService.candidate.update({ where: { id }, data }),
       ),
     )
 
@@ -178,8 +177,10 @@ export class CandidateService {
     return data.education.map((edu) => ({
       location: edu.location?.formatted,
       course: edu.accreditation?.education,
-      startDate: new Date(edu.dates?.startDate),
-      endDate: new Date(edu.dates?.completionDate),
+      startDate: edu.dates?.startDate ? new Date(edu.dates?.startDate) : null,
+      endDate: edu.dates?.completionDate
+        ? new Date(edu.dates?.completionDate)
+        : null,
       isCurrent: edu?.dates?.isCurrent,
       institute: edu?.organization,
     }))
@@ -189,8 +190,8 @@ export class CandidateService {
     return data.map((exp) => ({
       location: exp.location?.formatted,
       company: exp?.organization,
-      startDate: new Date(exp.dates?.startDate),
-      endDate: new Date(exp.dates?.endDate),
+      startDate: exp.dates?.startDate ? new Date(exp.dates?.startDate) : null,
+      endDate: exp.dates.endDate ? new Date(exp.dates?.endDate) : null,
       isCurrent: exp.dates?.isCurrent,
       designation: exp?.jobTitle,
     }))
