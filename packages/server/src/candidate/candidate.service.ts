@@ -180,7 +180,7 @@ export class CandidateService {
       course: edu.accreditation?.education,
       startDate: new Date(edu.dates?.startDate),
       endDate: new Date(edu.dates?.completionDate),
-      isCurrent: edu.dates.isCurrent,
+      isCurrent: edu?.dates?.isCurrent,
       institute: edu?.organization,
     }))
   }

@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { HiX } from 'react-icons/hi'
 import Dragger from 'antd/es/upload/Dragger'
-import { HiArrowUpTray } from 'react-icons/hi2'
 import { useNavigate } from 'react-router-dom'
+import { HiArrowUpTray } from 'react-icons/hi2'
 import { DownOutlined } from '@ant-design/icons'
-import { Button, Drawer, Dropdown, MenuProps } from 'antd'
+import type { MenuProps, UploadProps } from 'antd'
+import { Button, Drawer, Dropdown, Select } from 'antd'
 
 import { ReactComponent as PencilIcon } from 'assets/icons/pencil.svg'
 import { ReactComponent as FileImportIcon } from 'assets/icons/file-import.svg'
@@ -19,12 +20,7 @@ export default function ImportTalent({ title }: ImportTalentProps) {
   const [bulkImportDrawer, setBulkImportDrawer] = useState(false)
 
   const importCandidateItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'Import Resumes',
-      icon: <FileImportIcon />,
-      disabled: true,
-    },
+    { key: '1', label: 'Import Resumes', icon: <FileImportIcon /> },
     { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
   ]
 
@@ -39,6 +35,11 @@ export default function ImportTalent({ title }: ImportTalentProps) {
 
   function onClose() {
     setBulkImportDrawer(false)
+  }
+
+  const props: UploadProps = {
+    name: 'file',
+    multiple: true,
   }
 
   return (
@@ -72,8 +73,10 @@ export default function ImportTalent({ title }: ImportTalentProps) {
           These Candidates will be added to {title}
         </p>
 
+        <Select placeholder="Select source..." className="w-full mb-5" />
+
         <div className="h-56">
-          <Dragger>
+          <Dragger {...props}>
             <p className="mb-4 ant-upload-drag-icon">
               <HiArrowUpTray className="anticon" />
             </p>

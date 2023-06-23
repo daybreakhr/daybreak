@@ -35,7 +35,7 @@ export class NotificationService {
       )
       const CurrOrganisationObj = find(
         resume.workExperience,
-        (r) => r.dates.isCurrent,
+        (r) => r.dates?.isCurrent,
       )
 
       const createdByUser = await this.authService.getUser(createdBy)
