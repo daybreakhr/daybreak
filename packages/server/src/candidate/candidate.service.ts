@@ -1,13 +1,13 @@
 import { Express } from 'express'
+import { Injectable, Logger } from '@nestjs/common'
 import type { UserRecord } from 'firebase-admin/auth'
 import type { Education, Experience } from '@prisma/client'
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
 import { PrismaService } from 'src/prisma.service'
+import { AuthService } from 'src/auth/auth.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
-import { AuthService } from 'src/auth/auth.service'
 import { NotificationService } from 'src/notification/notification.service'
 import {
   BulkUpdateCandidateDto,
@@ -83,24 +83,6 @@ export class CandidateService {
     createCandidateDto: CreateCandidateDto,
   ) {
     const { jobId, workspaceId, affindaId, ...restParams } = createCandidateDto
-
-    const isApplied = await this.prismaService.candidate.findFirst({
-      where: {
-        email: createCandidateDto.email,
-        phone: createCandidateDto.phone,
-        jobId,
-      },
-    })
-
-    if (isApplied) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "You've already applied for this job",
-        },
-        HttpStatus.BAD_REQUEST,
-      )
-    }
 
     const affindaData = await this.affindaService.getParsedResume(affindaId)
 
