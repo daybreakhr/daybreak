@@ -191,7 +191,7 @@ export class CandidateService {
       location: exp.location?.formatted,
       company: exp?.organization,
       startDate: exp.dates?.startDate ? new Date(exp.dates?.startDate) : null,
-      endDate: exp.dates.endDate ? new Date(exp.dates?.endDate) : null,
+      endDate: exp.dates?.endDate ? new Date(exp.dates?.endDate) : null,
       isCurrent: exp.dates?.isCurrent,
       designation: exp?.jobTitle,
     }))
