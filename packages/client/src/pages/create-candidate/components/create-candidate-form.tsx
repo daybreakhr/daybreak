@@ -184,14 +184,7 @@ export default function CandidateForm() {
         </Form.Item>
       </div>
 
-      <Form.Item
-        name="location"
-        label="City / Country"
-        rules={[
-          { required: true, message: 'Please input candidate location!' },
-        ]}
-        required
-      >
+      <Form.Item name="location" label="City / Country">
         <Input placeholder="Enter your current location..." />
       </Form.Item>
 
