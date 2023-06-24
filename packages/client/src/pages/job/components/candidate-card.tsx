@@ -36,10 +36,7 @@ export default function CandidateCard({
   if (source === CandidateSource.referral) {
     const referredByName = referredBy as Candidate
     if (referredByName) {
-      sourceTitle = getCandidateSourceTitle(
-        source,
-        referredByName.referredBy,
-      ) as string
+      sourceTitle = getCandidateSourceTitle(source, referredByName) as string
     }
   } else {
     sourceTitle = getCandidateSourceTitle(source, null) as string

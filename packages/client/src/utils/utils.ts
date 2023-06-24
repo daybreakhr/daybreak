@@ -3,6 +3,7 @@ import {
   CandidateStatus,
   Interview,
   CandidateSource,
+  Candidate,
 } from '@prisma/client'
 import React from 'react'
 
@@ -16,7 +17,7 @@ export const candidateStatusOptions = [
 
 export function getCandidateSourceTitle(
   source: CandidateSource,
-  referredBy?: string | null,
+  referredBy?: Candidate | null,
 ): React.ReactNode {
   switch (source) {
     case CandidateSource.jobBoard:
@@ -33,7 +34,7 @@ export function getCandidateSourceTitle(
         null,
         React.createElement('p', { className: 'text-yellow-400' }, 'Referral'),
         React.createElement('p', null, 'by '),
-        React.createElement('p', null, referredBy),
+        React.createElement('p', null, referredBy as React.ReactNode),
       )
 
     case CandidateSource.linkedIn:
