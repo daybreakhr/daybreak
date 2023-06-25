@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import clsx from 'clsx'
 import { Avatar, Popover } from 'antd'
 import { useQuery } from '@tanstack/react-query'
@@ -36,7 +36,7 @@ export default function Sidebar() {
       </Link>
 
       {tabs.map(({ key, label, icon, children }) => (
-        <>
+        <Fragment key={key}>
           <NavLink
             to={key}
             className={({ isActive }) =>
@@ -66,7 +66,7 @@ export default function Sidebar() {
               </span>
             </NavLink>
           ))}
-        </>
+        </Fragment>
       ))}
 
       <div className="mt-5">
