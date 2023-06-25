@@ -1,7 +1,7 @@
 import { Express } from 'express'
-import { Injectable, Logger } from '@nestjs/common'
 import type { UserRecord } from 'firebase-admin/auth'
 import type { Education, Experience } from '@prisma/client'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
 import { PrismaService } from 'src/prisma.service'
@@ -83,6 +83,25 @@ export class CandidateService {
     createCandidateDto: CreateCandidateDto,
   ) {
     const { jobId, workspaceId, affindaId, ...restParams } = createCandidateDto
+
+    const isApplied = await this.prismaService.candidate.findFirst({
+      where: {
+        email: createCandidateDto.email,
+        phone: createCandidateDto.phone,
+        jobId,
+      },
+      include: { Job: true },
+    })
+
+    if (isApplied) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: `Candidate's profile already exists for ${isApplied.Job.title} job`,
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
 
     const affindaData = await this.affindaService.getParsedResume(affindaId)
 
