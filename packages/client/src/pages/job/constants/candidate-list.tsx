@@ -1,10 +1,11 @@
 import dayjs from 'dayjs'
-import { Checkbox, Tag } from 'antd'
+import { Checkbox, Tag, Tooltip } from 'antd'
 import { capitalize } from 'lodash'
 import type { Candidate, CandidateSource } from '@prisma/client'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { Show } from 'ui-kit'
+import { getCandidateSourceTitle } from 'utils/utils'
 import { candidateSources } from '../constants/icons'
 
 const columnHelper = createColumnHelper<Candidate>()
@@ -45,10 +46,12 @@ export const candidateListColumns = ({
     cell: ({ getValue }) => {
       const source = getValue() as CandidateSource
       const { color, icon } = candidateSources(source)
+      const sourceTitle = getCandidateSourceTitle(source)
+
       return (
         <span className="flex items-center justify-center">
           <Tag className="flex py-1 border-none" color={color}>
-            {icon}
+            <Tooltip title={sourceTitle}>{icon}</Tooltip>
           </Tag>
         </span>
       )

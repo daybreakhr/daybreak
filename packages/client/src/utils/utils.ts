@@ -1,4 +1,10 @@
-import { JobType, CandidateStatus, Interview } from '@prisma/client'
+import {
+  JobType,
+  CandidateStatus,
+  Interview,
+  CandidateSource,
+} from '@prisma/client'
+import React from 'react'
 
 export const candidateStatusOptions = [
   { label: 'Sourced', value: CandidateStatus.sourced },
@@ -44,6 +50,84 @@ export function getLastDate(timeRange: string): Date {
     }
     default:
       return currentDate
+  }
+}
+
+export function getCandidateSourceTitle(
+  source: CandidateSource,
+): React.ReactNode {
+  switch (source) {
+    case CandidateSource.jobBoard:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('p', { className: 'text-purple-400' }, 'Portal'),
+        React.createElement('p', null, 'Daybreak'),
+      )
+
+    case CandidateSource.referral:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('p', { className: 'text-yellow-400' }, 'Referral'),
+      )
+
+    case CandidateSource.linkedIn:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('p', { className: 'text-blue-400' }, 'Linkedin'),
+      )
+
+    case CandidateSource.instahyre:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'p',
+          { className: 'text-purple-400' },
+          'Job Websites',
+        ),
+        React.createElement('p', null, 'Instahyre'),
+      )
+
+    case CandidateSource.iimjobs:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'p',
+          { className: 'text-purple-400' },
+          'College Portal',
+        ),
+        React.createElement('p', null, 'IIM Jobs'),
+      )
+
+    case CandidateSource.naukri:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'p',
+          { className: 'text-purple-400' },
+          'Job Websites',
+        ),
+        React.createElement('p', null, 'Naukri'),
+      )
+
+    case CandidateSource.other:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('p', { className: 'text-purple-400' }, 'Other'),
+      )
+
+    default:
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('p', { className: 'text-purple-400' }, 'Other'),
+      )
   }
 }
 
