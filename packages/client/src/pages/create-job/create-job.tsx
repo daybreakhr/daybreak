@@ -35,6 +35,7 @@ import {
 import GenerateDescription from './components/generate-description'
 import DepartmentSelect from './components/department-select'
 import LocationSelect from './components/location-select'
+import SkillSelect from './components/skill-select'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -228,11 +229,18 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please choose required skills' }]}
         >
-          <Select
+          {/* <Select
             mode="multiple"
             allowClear
             placeholder="Please select required skills"
             options={skillList}
+          /> */}
+          <SkillSelect
+            form={form}
+            placeholder="Select Office Location..."
+            initialOptions={skillList?.map(({ label, value }) => {
+              return { label, value }
+            })}
           />
         </Form.Item>
 
