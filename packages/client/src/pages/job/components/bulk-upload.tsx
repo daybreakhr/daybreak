@@ -1,9 +1,16 @@
-import { Button, Drawer, Select, UploadFile, UploadProps } from 'antd'
-import Dragger from 'antd/es/upload/Dragger'
-import { candidateSources } from 'pages/create-candidate/constants/source-list'
 import { useState } from 'react'
 import { HiX } from 'react-icons/hi'
+import Dragger from 'antd/es/upload/Dragger'
+import type { RcFile } from 'antd/es/upload'
+import { useParams } from 'react-router-dom'
 import { HiArrowUpTray } from 'react-icons/hi2'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button, Drawer, Select, UploadFile, UploadProps } from 'antd'
+
+import { storage } from 'ui-kit'
+import { WORKSPACE_ID } from 'utils/constants'
+import { candidateSources } from 'pages/create-candidate/constants/source-list'
+import { createCandidateFromResume } from '../queries'
 
 type BulkUploadProps = {
   isOpen: boolean
@@ -16,14 +23,51 @@ export default function BulkUpload({
   onClose,
   title,
 }: BulkUploadProps) {
+  const { jobId = '' } = useParams()
+  const [uploading, setUploading] = useState(false)
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [selectedSource, setSelectedSource] = useState(undefined)
+
+  const queryClient = useQueryClient()
+  const { mutateAsync } = useMutation(createCandidateFromResume, {
+    onMutate: (formData) => {
+      const file = formData.get('file') as RcFile
+      setFileList((prev) =>
+        prev.map((obj) => {
+          if (obj.uid === file.uid) {
+            obj.status = 'uploading'
+            return obj
+          } else {
+            return obj
+          }
+        }),
+      )
+    },
+    onError: (_, formData) => {
+      const file = formData.get('file') as RcFile
+      setFileList((prev) =>
+        prev.map((obj) => {
+          if (obj.uid === file.uid) {
+            obj.status = 'error'
+            return obj
+          } else {
+            return obj
+          }
+        }),
+      )
+    },
+    onSuccess: (_, formData) => {
+      const file = formData.get('file') as RcFile
+      setFileList((prev) => prev.filter((obj) => obj.uid !== file.uid))
+    },
+  })
 
   const props: UploadProps = {
     fileList,
     name: 'files',
     maxCount: 20,
     multiple: true,
+    disabled: !selectedSource,
     beforeUpload: (file) => {
       setFileList((prev) => [...prev, file])
       return false
@@ -39,6 +83,28 @@ export default function BulkUpload({
     onClose()
   }
 
+  function handleUpload() {
+    setUploading(true)
+
+    Promise.all(
+      fileList.map((file) => {
+        const formData = new FormData()
+        const workspaceId = storage.get(WORKSPACE_ID) ?? ''
+        if (selectedSource) {
+          formData.append('source', selectedSource)
+        }
+        formData.append('jobId', jobId)
+        formData.append('workspaceId', workspaceId)
+        formData.append('file', file as RcFile)
+        return mutateAsync(formData)
+      }),
+    ).finally(() => {
+      setUploading(false)
+      queryClient.invalidateQueries(['candidates', jobId])
+      handleClose()
+    })
+  }
+
   return (
     <Drawer
       width={480}
@@ -48,7 +114,9 @@ export default function BulkUpload({
       footer={
         <div className="flex items-center justify-end space-x-2">
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="primary">Upload</Button>
+          <Button type="primary" loading={uploading} onClick={handleUpload}>
+            Upload
+          </Button>
         </div>
       }
     >

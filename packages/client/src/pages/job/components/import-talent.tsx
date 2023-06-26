@@ -16,15 +16,10 @@ type ImportTalentProps = {
 
 export default function ImportTalent({ title }: ImportTalentProps) {
   const navigate = useNavigate()
-  const [bulkImportDrawer, setBulkImportDrawer] = useState(true)
+  const [bulkImportDrawer, setBulkImportDrawer] = useState(false)
 
   const importCandidateItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'Import Resumes',
-      icon: <FileImportIcon />,
-      // disabled: true,
-    },
+    { key: '1', label: 'Import Resumes', icon: <FileImportIcon /> },
     { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
   ]
 

@@ -1,6 +1,10 @@
 import { Express } from 'express'
 import type { UserRecord } from 'firebase-admin/auth'
-import type { Education, Experience } from '@prisma/client'
+import {
+  CandidateStatus,
+  type Education,
+  type Experience,
+} from '@prisma/client'
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
@@ -179,6 +183,7 @@ export class CandidateService {
           phone: affindaData?.phoneNumbers[0],
           affindaId: identifier,
           source,
+          status: CandidateStatus.sourced,
           resume: Location,
           linkedInUrl: affindaData.linkedin,
           location: affindaData.location?.formatted,
