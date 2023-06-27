@@ -58,59 +58,28 @@ export function getCandidateSourceTitle(
 ): React.ReactNode {
   switch (source) {
     case CandidateSource.jobBoard:
-      return (
-        <div>
-          <p className="text-purple-400">Career Portal</p>
-        </div>
-      )
+      return <p className="text-purple-400">Career Portal</p>
 
     case CandidateSource.referral:
-      return (
-        <div>
-          <p className="text-yellow-400">Referral</p>
-        </div>
-      )
+      return <p className="text-yellow-400">Referral</p>
 
     case CandidateSource.linkedIn:
-      return (
-        <div>
-          <p className="text-blue-400">Linkedin</p>
-        </div>
-      )
+      return <p className="text-blue-400">Linkedin</p>
 
     case CandidateSource.instahyre:
-      return (
-        <div>
-          <p className="text-purple-400">Instahyre</p>
-        </div>
-      )
+      return <p className="text-purple-400">Instahyre</p>
 
     case CandidateSource.iimjobs:
-      return (
-        <div>
-          <p className="text-purple-400">IIM Jobs</p>
-        </div>
-      )
+      return <p className="text-purple-400">IIM Jobs</p>
 
     case CandidateSource.naukri:
-      return (
-        <div>
-          <p className="text-purple-400">Naukri</p>
-        </div>
-      )
+      return <p className="text-purple-400">Naukri</p>
 
     case CandidateSource.other:
-      return (
-        <div>
-          <p className="text-purple-400">Other</p>
-        </div>
-      )
+      return <p className="text-purple-400">Other</p>
+
     default:
-      return (
-        <div>
-          <p className="text-purple-400">Other</p>
-        </div>
-      )
+      return <p className="text-purple-400">Other</p>
   }
 }
 
