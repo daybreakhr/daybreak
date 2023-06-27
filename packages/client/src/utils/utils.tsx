@@ -93,21 +93,16 @@ export function getCandidateSourceTitle(
       )
 
     case CandidateSource.naukri:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement(
-          'p',
-          { className: 'text-purple-400' },
-          'Job Websites',
-        ),
-        React.createElement('p', null, 'Naukri'),
+      return (
+        <div>
+          <p className="text-purple-400">Naukri</p>
+        </div>
       )
 
     case CandidateSource.other:
       return (
         <div>
-          <p className="text-purple-400">Naukri</p>
+          <p className="text-purple-400">Other</p>
         </div>
       )
     default:
