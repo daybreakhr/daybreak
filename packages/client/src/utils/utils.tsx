@@ -1,4 +1,10 @@
-import { JobType, CandidateStatus, Interview } from '@prisma/client'
+import {
+  JobType,
+  CandidateStatus,
+  Interview,
+  CandidateSource,
+} from '@prisma/client'
+import React from 'react'
 
 export const candidateStatusOptions = [
   { label: 'Sourced', value: CandidateStatus.sourced },
@@ -44,6 +50,36 @@ export function getLastDate(timeRange: string): Date {
     }
     default:
       return currentDate
+  }
+}
+
+export function getCandidateSourceTitle(
+  source: CandidateSource,
+): React.ReactNode {
+  switch (source) {
+    case CandidateSource.jobBoard:
+      return <p className="text-purple-400">Career Portal</p>
+
+    case CandidateSource.referral:
+      return <p className="text-yellow-400">Referral</p>
+
+    case CandidateSource.linkedIn:
+      return <p className="text-blue-400">Linkedin</p>
+
+    case CandidateSource.instahyre:
+      return <p className="text-purple-400">Instahyre</p>
+
+    case CandidateSource.iimjobs:
+      return <p className="text-purple-400">IIM Jobs</p>
+
+    case CandidateSource.naukri:
+      return <p className="text-purple-400">Naukri</p>
+
+    case CandidateSource.other:
+      return <p className="text-purple-400">Other</p>
+
+    default:
+      return <p className="text-purple-400">Other</p>
   }
 }
 
