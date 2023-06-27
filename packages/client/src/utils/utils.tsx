@@ -58,49 +58,38 @@ export function getCandidateSourceTitle(
 ): React.ReactNode {
   switch (source) {
     case CandidateSource.jobBoard:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('p', { className: 'text-purple-400' }, 'Portal'),
-        React.createElement('p', null, 'Daybreak'),
+      return (
+        <div>
+          <p className="text-purple-400">Career Portal</p>
+        </div>
       )
 
     case CandidateSource.referral:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('p', { className: 'text-yellow-400' }, 'Referral'),
+      return (
+        <div>
+          <p className="text-yellow-400">Referral</p>
+        </div>
       )
 
     case CandidateSource.linkedIn:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('p', { className: 'text-blue-400' }, 'Linkedin'),
+      return (
+        <div>
+          <p className="text-blue-400">Linkedin</p>
+        </div>
       )
 
     case CandidateSource.instahyre:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement(
-          'p',
-          { className: 'text-purple-400' },
-          'Job Websites',
-        ),
-        React.createElement('p', null, 'Instahyre'),
+      return (
+        <div>
+          <p className="text-purple-400">Instahyre</p>
+        </div>
       )
 
     case CandidateSource.iimjobs:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement(
-          'p',
-          { className: 'text-purple-400' },
-          'College Portal',
-        ),
-        React.createElement('p', null, 'IIM Jobs'),
+      return (
+        <div>
+          <p className="text-purple-400">IIM Jobs</p>
+        </div>
       )
 
     case CandidateSource.naukri:
@@ -116,17 +105,16 @@ export function getCandidateSourceTitle(
       )
 
     case CandidateSource.other:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('p', { className: 'text-purple-400' }, 'Other'),
+      return (
+        <div>
+          <p className="text-purple-400">Naukri</p>
+        </div>
       )
-
     default:
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('p', { className: 'text-purple-400' }, 'Other'),
+      return (
+        <div>
+          <p className="text-purple-400">Other</p>
+        </div>
       )
   }
 }
