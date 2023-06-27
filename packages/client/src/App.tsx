@@ -26,7 +26,6 @@ import CandidateFeedback from 'pages/candidate-feedback'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import CandidateEngagement from 'pages/candidate-engagement'
-import CreateCandidate from 'pages/create-candidate'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import CreateProspect from 'pages/create-prospect'
@@ -75,10 +74,6 @@ export default function App() {
                     <Route path="3" element={<PublishJob />} />
                   </Route>
                   <Route path="candidates" element={<Candidates />} />
-                  <Route
-                    path="candidates/create"
-                    element={<CreateCandidate />}
-                  />
                   <Route path="candidates/:candidateId" element={<Candidate />}>
                     <Route
                       path=""

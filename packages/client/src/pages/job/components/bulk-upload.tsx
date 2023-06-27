@@ -9,8 +9,9 @@ import { Button, Drawer, Select, UploadFile, UploadProps } from 'antd'
 
 import { storage } from 'ui-kit'
 import { WORKSPACE_ID } from 'utils/constants'
-import { candidateSources } from 'pages/create-candidate/constants/source-list'
+
 import { createCandidateFromResume } from '../queries'
+import { candidateSources } from '../constants/source-list'
 
 type BulkUploadProps = {
   isOpen: boolean

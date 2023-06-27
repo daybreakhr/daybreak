@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { uniqBy, flatMap } from 'lodash'
-import { Button, Input, Table } from 'antd'
+import { Input, Table } from 'antd'
 import type { Job } from '@prisma/client'
 import { matchSorter } from 'match-sorter'
 import { useQuery } from '@tanstack/react-query'
-import { Link, useNavigate } from 'react-router-dom'
-import { PlusOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
+import { SearchOutlined, TeamOutlined } from '@ant-design/icons'
 
 import PageHeader from 'components/page-header'
 import { fetchCandidates } from 'pages/candidates/queries'
@@ -48,12 +48,6 @@ export default function Candidates() {
             placeholder="Search by Candidate Name..."
             onChange={(e) => setInput(e.target.value)}
           />
-
-          <Link to="/candidates/create">
-            <Button type="primary" icon={<PlusOutlined />}>
-              Add Candidate
-            </Button>
-          </Link>
         </div>
 
         <Table

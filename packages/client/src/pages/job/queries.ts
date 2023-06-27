@@ -12,6 +12,11 @@ export async function fetchCandidatesByJob(jobId: string) {
   return data
 }
 
+export async function createCandidate(body: FormData) {
+  const { data } = await client.post<Candidate>('candidates', body)
+  return data
+}
+
 export async function createCandidateFromResume(body: FormData) {
   const { data } = await client.post<Candidate>('candidates/process', body)
   return data
