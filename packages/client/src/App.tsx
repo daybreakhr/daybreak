@@ -10,7 +10,6 @@ import Home from 'pages/home'
 import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
 import Candidates from 'pages/candidates'
-import Prospects from 'pages/prospects'
 import Members from 'pages/members'
 import AllJobs from 'pages/all-jobs'
 import CreateJob from 'pages/create-job'
@@ -28,7 +27,6 @@ import InviteToWorkspace from 'pages/invite-to-workspace'
 import CandidateEngagement from 'pages/candidate-engagement'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
-import CreateProspect from 'pages/create-prospect'
 import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
@@ -89,8 +87,6 @@ export default function App() {
                     />
                     <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
-                  <Route path="prospects" element={<Prospects />} />
-                  <Route path="prospects/create" element={<CreateProspect />} />
                   <Route
                     path="settings"
                     element={<Navigate to="organisation" replace />}
