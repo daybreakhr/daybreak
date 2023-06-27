@@ -6,37 +6,51 @@ import { rejectionReasons } from './rejection-reasons'
 type RejectModalProps = {
   isOpen: boolean
   onClose: () => void
-  onReject: (reasons: string[], notes: string) => void
+  isRejecting: boolean
+  onReject: (reasons: string[], notes: string) => Promise<void>
 }
 
 export default function RejectModal({
   isOpen,
   onClose,
   onReject,
+  isRejecting,
 }: RejectModalProps) {
-  const [sendMail, setSendMail] = useState(false)
-  const [additionalNotes, setAdditionalNotes] = useState('')
-  const [checked, setChecked] = useState(
-    rejectionReasons.reduce(
-      (acc, { name }) => ({ ...acc, [name]: [] }),
-      {} as Record<string, CheckboxValueType[]>,
-    ),
+  const initialReasons = rejectionReasons.reduce(
+    (acc, { name }) => ({ ...acc, [name]: [] }),
+    {} as Record<string, CheckboxValueType[]>,
   )
+
+  const [sendMail, setSendMail] = useState(false)
+  const [checked, setChecked] = useState(initialReasons)
+  const [additionalNotes, setAdditionalNotes] = useState('')
 
   const isDisabled = Object.values(checked).every((value) => value.length === 0)
 
-  function handleReject() {
+  function resetFormValues() {
+    setSendMail(false)
+    setAdditionalNotes('')
+    setChecked(initialReasons)
+  }
+
+  async function handleReject() {
     const reasons = Object.values(checked)
       .reduce((acc, value) => [...acc, ...value], [] as string[])
       .map((value) => `${value}`)
 
-    onReject(reasons, additionalNotes)
+    await onReject(reasons, additionalNotes)
+    resetFormValues()
+  }
+
+  function handleClose() {
+    onClose()
+    resetFormValues()
   }
 
   return (
     <Modal
       open={isOpen}
-      onCancel={onClose}
+      onCancel={handleClose}
       title="Rejecting Candidate"
       footer={
         <div className="flex items-center justify-between">
@@ -49,6 +63,7 @@ export default function RejectModal({
           <Button
             danger
             type="primary"
+            loading={isRejecting}
             disabled={isDisabled}
             onClick={handleReject}
           >

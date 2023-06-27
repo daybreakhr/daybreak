@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Button, Input } from 'antd'
-import { orderBy, uniqBy } from 'lodash'
+import { Button, Input, Skeleton } from 'antd'
+import { range, orderBy, uniqBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
 import type { Department } from '@prisma/client'
@@ -29,7 +29,7 @@ export default function AllJobs() {
     ('published' | 'draft')[]
   >([])
 
-  const { data = [] } = useQuery(['jobs'], fetchJobs)
+  const { data = [], isLoading: isLoadingJobs } = useQuery(['jobs'], fetchJobs)
   const { data: members = [] } = useQuery(['members'], fetchMembers)
 
   const filterJobsBySearch = matchSorter(data, input, {
@@ -107,6 +107,16 @@ export default function AllJobs() {
         </div>
 
         <Switch>
+          <Switch.Match when={isLoadingJobs}>
+            <div className="space-y-5">
+              {range(2).map((val) => (
+                <Skeleton
+                  key={val}
+                  className="p-4 bg-white rounded-md shadow"
+                />
+              ))}
+            </div>
+          </Switch.Match>
           <Switch.Match when={viewState === 'kanban'}>
             <div className="flex flex-col space-y-5 overflow-y-auto">
               {sortedAndFilteredJobs.map((job) => (

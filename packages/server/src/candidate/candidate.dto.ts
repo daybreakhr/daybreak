@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/swagger'
-import { CandidateStatus } from '@prisma/client'
+import { CandidateSource, CandidateStatus } from '@prisma/client'
 import { IsEnum, IsOptional, IsString } from 'class-validator'
 
 export class CreateCandidateDto {
@@ -59,4 +59,16 @@ export class UpdateCandidateDto extends PartialType(CreateCandidateDto) {}
 export class BulkUpdateCandidateDto {
   id: string
   data: UpdateCandidateDto
+}
+
+export class ProcessCandidateDto {
+  @IsString()
+  jobId: string
+
+  @IsString()
+  workspaceId: string
+
+  @IsOptional()
+  @IsEnum(CandidateStatus)
+  source: CandidateSource
 }

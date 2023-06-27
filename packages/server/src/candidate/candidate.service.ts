@@ -1,17 +1,22 @@
 import { Express } from 'express'
 import type { UserRecord } from 'firebase-admin/auth'
-import type { Education, Experience } from '@prisma/client'
+import {
+  CandidateStatus,
+  type Education,
+  type Experience,
+} from '@prisma/client'
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import type { ResumeData, ResumeDataWorkExperienceItem } from '@affinda/affinda'
 
 import { PrismaService } from 'src/prisma.service'
+import { AuthService } from 'src/auth/auth.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
-import { AuthService } from 'src/auth/auth.service'
 import { NotificationService } from 'src/notification/notification.service'
 import {
   BulkUpdateCandidateDto,
   CreateCandidateDto,
+  ProcessCandidateDto,
   UpdateCandidateDto,
 } from './candidate.dto'
 
@@ -90,13 +95,14 @@ export class CandidateService {
         phone: createCandidateDto.phone,
         jobId,
       },
+      include: { Job: true },
     })
 
     if (isApplied) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: "You've already applied for this job",
+          error: `Candidate's profile already exists for ${isApplied.Job.title} job`,
         },
         HttpStatus.BAD_REQUEST,
       )
@@ -111,16 +117,12 @@ export class CandidateService {
           new Date(a.dates?.endDate ?? '').valueOf(),
       ) ?? []
 
-    const education = this.getEducationDetails(affindaData)
-    const experience = this.getExperienceDetails(sortedExperiences)
-    this.logger.log({ education, experience })
-
     const { id } = await this.prismaService.candidate.create({
       data: {
         ...restParams,
         affindaId,
-        education,
-        experience,
+        education: this.getEducationDetails(affindaData),
+        experience: this.getExperienceDetails(sortedExperiences),
         currentCompany: sortedExperiences[0]?.organization,
         totalYearsOfExperience: affindaData.totalYearsExperience,
         skills: affindaData.skills.map(({ name }) => name),
@@ -145,6 +147,69 @@ export class CandidateService {
     this.notificationService.candidateAppliedNotification(jobId, candidate)
 
     return candidate
+  }
+
+  async createCandidateFromResume(
+    file: Express.Multer.File,
+    processCandidateDto: ProcessCandidateDto,
+  ) {
+    try {
+      const { jobId, workspaceId, source } = processCandidateDto
+
+      const { Location } = await this.s3Service.uploadS3({
+        file: file.buffer,
+        key: `candidate/${jobId}/bulk-uploads/${file.originalname}`,
+        mimetype: file.mimetype,
+      })
+
+      const {
+        data: affindaData,
+        meta: { identifier },
+      } = await this.affindaService.uploadResume(Location)
+
+      const sortedExperiences =
+        affindaData?.workExperience?.sort(
+          (a, b) =>
+            new Date(b.dates?.endDate ?? '').valueOf() -
+            new Date(a.dates?.endDate ?? '').valueOf(),
+        ) ?? []
+
+      const candidate = await this.prismaService.candidate.create({
+        data: {
+          firstName: affindaData?.name?.first,
+          middleName: affindaData?.name?.middle,
+          lastName: affindaData?.name?.last,
+          email: affindaData?.emails[0],
+          phone: affindaData?.phoneNumbers[0],
+          affindaId: identifier,
+          source,
+          status: CandidateStatus.sourced,
+          resume: Location,
+          linkedInUrl: affindaData.linkedin,
+          location: affindaData.location?.formatted,
+          education: this.getEducationDetails(affindaData),
+          experience: this.getExperienceDetails(sortedExperiences),
+          currentCompany: sortedExperiences[0]?.organization,
+          totalYearsOfExperience: affindaData.totalYearsExperience,
+          skills: affindaData.skills.map(({ name }) => name),
+          Job: { connect: { id: jobId } },
+          Workspace: { connect: { id: workspaceId } },
+        },
+        include: { Job: true },
+      })
+
+      return candidate
+    } catch (error) {
+      this.logger.log(error)
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error:
+            'Unable to parse required fields from the resume. Kindly add candidate manually',
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 
   async update(candidateId: string, updateCandidateDto: UpdateCandidateDto) {

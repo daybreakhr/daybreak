@@ -59,7 +59,7 @@ export default function JobPipeline() {
     })
 
   const queryClient = useQueryClient()
-  const { mutate } = useMutation(bulkUpdateCandidate, {
+  const { mutate, mutateAsync, isLoading } = useMutation(bulkUpdateCandidate, {
     onSuccess: () => {
       queryClient.invalidateQueries(['candidates', jobId])
       setSelectedCandidates([])
@@ -67,7 +67,7 @@ export default function JobPipeline() {
     },
   })
 
-  function handleBulkRejection(reasons: string[], notes: string) {
+  async function handleBulkRejection(reasons: string[], notes: string) {
     const payload = selectedCandidates.map((id) => {
       const data = {
         status: CandidateStatus.rejected,
@@ -77,7 +77,7 @@ export default function JobPipeline() {
       return { id, data }
     })
 
-    mutate(payload)
+    await mutateAsync(payload)
   }
 
   const handleBulkStatusChange: MenuProps['onClick'] = ({ key }) => {
@@ -214,6 +214,7 @@ export default function JobPipeline() {
       </Switch>
 
       <RejectModal
+        isRejecting={isLoading}
         isOpen={isRejectModalOpen}
         onReject={handleBulkRejection}
         onClose={() => setIsRejectModalOpen(false)}

@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg'
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg'
@@ -16,33 +15,16 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-  {
-    key: 'dashboard',
-    label: <Link to="/dashboard">Dashboard</Link>,
-    icon: <HomeIcon />,
-  },
-  {
-    key: 'jobs',
-    label: <Link to="/jobs">All Jobs</Link>,
-    icon: <BreifcaseIcon />,
-  },
+  { key: 'dashboard', label: 'Dashboard', icon: <HomeIcon /> },
+  { key: 'jobs', label: 'All Jobs', icon: <BreifcaseIcon /> },
   {
     key: 'settings',
     label: 'Settings',
     icon: <SettingsIcon />,
     children: [
-      {
-        key: 'settings/organisation',
-        label: <Link to="/settings/organisation">Organisation</Link>,
-      },
-      {
-        key: 'settings/members',
-        label: <Link to="/settings/members">Members</Link>,
-      },
-      {
-        key: 'settings/email-templates',
-        label: <Link to="/settings/email-templates">Email Templates</Link>,
-      },
+      { key: 'settings/organisation', label: 'Organisation' },
+      { key: 'settings/members', label: 'Members' },
+      { key: 'settings/email-templates', label: 'Email Templates' },
     ],
   },
 ]

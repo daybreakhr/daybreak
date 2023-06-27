@@ -1,15 +1,14 @@
 import { useState } from 'react'
-import { HiX } from 'react-icons/hi'
-import Dragger from 'antd/es/upload/Dragger'
+import { Dropdown } from 'antd'
+import type { MenuProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { HiArrowUpTray } from 'react-icons/hi2'
 import { DownOutlined } from '@ant-design/icons'
-import type { MenuProps, UploadProps } from 'antd'
-import { Button, Drawer, Dropdown, Select } from 'antd'
 
 import { ReactComponent as PencilIcon } from 'assets/icons/pencil.svg'
 import { ReactComponent as FileImportIcon } from 'assets/icons/file-import.svg'
 import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
+
+import BulkUpload from './bulk-upload'
 
 type ImportTalentProps = {
   title: string | undefined | null
@@ -20,31 +19,13 @@ export default function ImportTalent({ title }: ImportTalentProps) {
   const [bulkImportDrawer, setBulkImportDrawer] = useState(false)
 
   const importCandidateItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'Import Resumes',
-      icon: <FileImportIcon />,
-      disabled: true,
-    },
+    { key: '1', label: 'Import Resumes', icon: <FileImportIcon /> },
     { key: '2', label: 'Add Manually', icon: <PencilIcon /> },
   ]
 
   const handleImportClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '1') {
-      setBulkImportDrawer(true)
-    }
-    if (key === '2') {
-      navigate('/candidates/create')
-    }
-  }
-
-  function onClose() {
-    setBulkImportDrawer(false)
-  }
-
-  const props: UploadProps = {
-    name: 'file',
-    multiple: true,
+    if (key === '1') setBulkImportDrawer(true)
+    else if (key === '2') navigate('/candidates/create')
   }
 
   return (
@@ -61,41 +42,11 @@ export default function ImportTalent({ title }: ImportTalentProps) {
         </div>
       </Dropdown>
 
-      <Drawer
-        width={480}
-        closable={false}
-        onClose={onClose}
-        open={bulkImportDrawer}
-      >
-        <div className="flex items-center justify-between">
-          <p className="text-base font-semibold">Upload Resumes</p>
-          <Button size="small" type="text" icon={<HiX />} onClick={onClose} />
-        </div>
-
-        <hr className="my-5" />
-
-        <p className="mb-4 text-xs text-gray-500">
-          These Candidates will be added to {title}
-        </p>
-
-        <Select placeholder="Select source..." className="w-full mb-5" />
-
-        <div className="h-56">
-          <Dragger {...props}>
-            <p className="mb-4 ant-upload-drag-icon">
-              <HiArrowUpTray className="anticon" />
-            </p>
-
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="px-6 ant-upload-hint">
-              PDF, Word or Rich Text only. 20 Resumes per batch are supported
-              for bulk upload.
-            </p>
-          </Dragger>
-        </div>
-      </Drawer>
+      <BulkUpload
+        title={title}
+        isOpen={bulkImportDrawer}
+        onClose={() => setBulkImportDrawer(false)}
+      />
     </>
   )
 }

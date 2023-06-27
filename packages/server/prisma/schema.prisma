@@ -173,9 +173,9 @@ model Candidate {
   id                     String          @id @default(auto()) @map("_id") @db.ObjectId
   firstName              String
   middleName             String?
-  lastName               String
+  lastName               String?
   email                  String
-  phone                  String
+  phone                  String?
   location               String?
   resume                 String?
   skills                 String[]

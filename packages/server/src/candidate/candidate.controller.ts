@@ -32,6 +32,7 @@ import {
   BulkUpdateCandidateDto,
   CandidateDto,
   CreateCandidateDto,
+  ProcessCandidateDto,
   UpdateCandidateDto,
 } from './candidate.dto'
 import { CandidateService } from './candidate.service'
@@ -127,6 +128,29 @@ export class CandidateController {
     @Body() createCandidateDto: CreateCandidateDto,
   ) {
     const data = await this.candidateService.create(file, createCandidateDto)
+    return data
+  }
+
+  @Post('process')
+  @ApiOperation({
+    operationId: 'CreateCandidateFromResume',
+    summary: 'Create new candidate from resume',
+  })
+  @ApiCreatedResponse({
+    description: 'Created Succesfully',
+    type: CandidateDto,
+  })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @UseInterceptors(FileInterceptor('file'))
+  async createCandidateFromResume(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() processCandidateDto: ProcessCandidateDto,
+  ) {
+    const data = await this.candidateService.createCandidateFromResume(
+      file,
+      processCandidateDto,
+    )
     return data
   }
 
