@@ -229,12 +229,6 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please choose required skills' }]}
         >
-          {/* <Select
-            mode="multiple"
-            allowClear
-            placeholder="Please select required skills"
-            options={skillList}
-          /> */}
           <SkillSelect
             form={form}
             placeholder="Select Office Location..."

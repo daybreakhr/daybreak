@@ -25,8 +25,8 @@ export default function SkillSelect({
     o.label.toLowerCase().includes(inputValue.toLowerCase()),
   )
 
-  function onChange(value: string) {
-    if (value === NEW_ITEM) {
+  function onChange(value: string[]) {
+    if (value.includes(NEW_ITEM)) {
       const newSkillLabel = inputValue.trim()
 
       if (newSkillLabel) {
@@ -35,12 +35,14 @@ export default function SkillSelect({
 
         setOptions((prev) => [...prev, newOption])
 
-        form.setFieldsValue({ skillId: newSkillValue })
+        value = value.filter((v) => v !== NEW_ITEM)
+        value.push(newSkillValue)
+
         setInputValue('')
       }
-    } else {
-      form.setFieldsValue({ skillId: value })
     }
+
+    form.setFieldsValue({ skills: value })
   }
 
   return (
@@ -52,7 +54,7 @@ export default function SkillSelect({
       mode="multiple"
       optionFilterProp="children"
       placeholder="Select Skill..."
-      value={form.getFieldValue('skillId')}
+      value={form.getFieldValue('skills')}
     >
       {inputValue && filteredOptions?.length === 0 && (
         <Select.Option key={NEW_ITEM} value={NEW_ITEM}>
