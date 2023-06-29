@@ -28,7 +28,6 @@ import { fetchDepartments, fetchLocations, updateJobById } from './queries'
 import {
   jobTypeOptions,
   experienceOptions,
-  skillList,
   currency_list,
   jobPriority,
 } from './constants/create-job-values'
@@ -229,13 +228,7 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please choose required skills' }]}
         >
-          <SkillSelect
-            form={form}
-            placeholder="Select Office Location..."
-            initialOptions={skillList?.map(({ label, value }) => {
-              return { label, value }
-            })}
-          />
+          <SkillSelect form={form} placeholder="Select Office Location..." />
         </Form.Item>
 
         <Form.Item

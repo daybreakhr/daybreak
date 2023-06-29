@@ -1,25 +1,17 @@
 import { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import { FormInstance, Select, SelectProps } from 'antd'
-
-type OptionType = {
-  label: string
-  value: string
-}
+import { skillList } from '../constants/create-job-values'
 
 type SkillSelectProps = Omit<SelectProps<string>, 'options'> & {
   form: FormInstance<any>
-  initialOptions?: OptionType[]
 }
 
 const NEW_ITEM = 'CREATE_NEW_ITEM'
 
-export default function SkillSelect({
-  form,
-  initialOptions,
-}: SkillSelectProps) {
+export default function SkillSelect({ form }: SkillSelectProps) {
   const [inputValue, setInputValue] = useState('')
-  const [options, setOptions] = useState<OptionType[]>(initialOptions || [])
+  const [options, setOptions] = useState(skillList)
 
   const filteredOptions = options?.filter((o) =>
     o.label.toLowerCase().includes(inputValue.toLowerCase()),
@@ -30,13 +22,11 @@ export default function SkillSelect({
       const newSkillLabel = inputValue.trim()
 
       if (newSkillLabel) {
-        const newSkillValue = newSkillLabel.toLowerCase().replace(/\s+/g, '-')
-        const newOption = { label: newSkillLabel, value: newSkillValue }
-
+        const newOption = { label: newSkillLabel, value: newSkillLabel }
         setOptions((prev) => [...prev, newOption])
 
         value = value.filter((v) => v !== NEW_ITEM)
-        value.push(newSkillValue)
+        value.push(newSkillLabel)
 
         setInputValue('')
       }

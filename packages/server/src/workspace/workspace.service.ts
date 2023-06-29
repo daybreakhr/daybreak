@@ -4,7 +4,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role, Workspace } from '@prisma/client'
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
-import { FirebaseService } from 'src/firebase/firebase.service'
 import exists from 'src/utils/prisma.exists'
 import { CreateWorkspaceDto } from './workspace.dto'
 
@@ -13,7 +12,6 @@ export class WorkspaceService {
   constructor(
     private prismaService: PrismaService,
     private s3Service: AWSS3Service,
-    private firebaseService: FirebaseService,
   ) {}
 
   async getAllWorkspaces() {
