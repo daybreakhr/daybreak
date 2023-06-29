@@ -30,7 +30,7 @@ export default function Details({ data }: DetailsProps) {
   const [candidateReEnrollConfirmation, setReEnrollConfirmation] =
     useState(false)
 
-  const { mutate } = useMutation(updateCandidate, {
+  const { mutate, mutateAsync, isLoading } = useMutation(updateCandidate, {
     onSuccess: ({ status }) => {
       if (status === CandidateStatus.rejected) {
         message.info('This job application is rejected!')
@@ -60,8 +60,8 @@ export default function Details({ data }: DetailsProps) {
     ]
   }, [data])
 
-  function handleRejectCandidate(reasons: string[], notes: string) {
-    mutate({
+  async function handleRejectCandidate(reasons: string[], notes: string) {
+    await mutateAsync({
       candidateId,
       body: {
         status: CandidateStatus.rejected,
@@ -168,6 +168,7 @@ export default function Details({ data }: DetailsProps) {
             Reject
           </Button>
           <RejectModal
+            isRejecting={isLoading}
             isOpen={candidateRejectForm}
             onReject={handleRejectCandidate}
             onClose={() => setCandidateRejectForm(false)}

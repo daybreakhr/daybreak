@@ -12,7 +12,7 @@ import { ReactComponent as HighPriorityIcon } from 'assets/icons/high_priority.s
 
 export const candidateSources = (
   source: CandidateSource,
-): { color: string; icon: ReactNode } | { color: string; icon: null } => {
+): { color: string; icon: ReactNode } => {
   switch (source) {
     case CandidateSource.jobBoard:
       return { color: 'purple', icon: <JobPortalIcon /> }

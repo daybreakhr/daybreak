@@ -109,7 +109,7 @@ export default function AllJobs() {
         <Switch>
           <Switch.Match when={isLoadingJobs}>
             <div className="space-y-5">
-              {range(2).map((val) => (
+              {range(4).map((val) => (
                 <Skeleton
                   key={val}
                   className="p-4 bg-white rounded-md shadow"

@@ -20,7 +20,6 @@ import { FeedbackModule } from './feedback/feedback.module'
 import { InvitesModule } from './invites/invites.module'
 import { NotificationModule } from './notification/notification.module'
 import { AffindaModule } from './affinda/affinda.module'
-import { ProspectModule } from './prospect/prospect.module'
 import { CalendarModule } from './calendar/calendar.module'
 import { EmailModule } from './email/email.module'
 import { InterviewModule } from './interviews/interview.module'
@@ -77,7 +76,6 @@ import { CommentsModule } from './comments/comments.module'
     LocationModule,
     MembersModule,
     NotificationModule,
-    ProspectModule,
     ScheduleModule.forRoot(),
     SlackModule,
     WorkspaceModule,
