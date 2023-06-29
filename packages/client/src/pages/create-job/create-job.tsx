@@ -28,13 +28,13 @@ import { fetchDepartments, fetchLocations, updateJobById } from './queries'
 import {
   jobTypeOptions,
   experienceOptions,
-  skillList,
   currency_list,
   jobPriority,
 } from './constants/create-job-values'
 import GenerateDescription from './components/generate-description'
 import DepartmentSelect from './components/department-select'
 import LocationSelect from './components/location-select'
+import SkillSelect from './components/skill-select'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -228,12 +228,7 @@ export default function JobForm() {
           className="flex-1"
           rules={[{ required: true, message: 'Please choose required skills' }]}
         >
-          <Select
-            mode="multiple"
-            allowClear
-            placeholder="Please select required skills"
-            options={skillList}
-          />
+          <SkillSelect form={form} placeholder="Select Office Location..." />
         </Form.Item>
 
         <Form.Item
