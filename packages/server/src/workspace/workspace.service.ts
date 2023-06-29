@@ -1,15 +1,19 @@
 import { isEmpty } from 'lodash'
 import type { Express } from 'express'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Role, Workspace } from '@prisma/client'
+import { EventEmitter2 } from '@nestjs/event-emitter'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+
 import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import exists from 'src/utils/prisma.exists'
 import { CreateWorkspaceDto } from './workspace.dto'
+import { WorkspaceCreatedEvent } from './events/workspace-created.event'
 
 @Injectable()
 export class WorkspaceService {
   constructor(
+    private eventEmitter: EventEmitter2,
     private prismaService: PrismaService,
     private s3Service: AWSS3Service,
   ) {}
@@ -121,6 +125,12 @@ export class WorkspaceService {
           Workspace: { connect: { id: workspace.id } },
         },
       })
+
+      this.eventEmitter.emit(
+        'workspace.created',
+        new WorkspaceCreatedEvent(workspace.id, uid),
+      )
+
       return workspace
     }
   }

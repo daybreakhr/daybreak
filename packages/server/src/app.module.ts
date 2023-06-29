@@ -1,9 +1,10 @@
-import { APP_GUARD } from '@nestjs/core'
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import * as Joi from 'joi'
-import { ConfigModule } from '@nestjs/config'
+import { APP_GUARD } from '@nestjs/core'
 import { LoggerModule } from 'nestjs-pino'
+import { ConfigModule } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
+import { EventEmitterModule } from '@nestjs/event-emitter'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 
 import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/auth.middleware'
@@ -69,6 +70,7 @@ import { CommentsModule } from './comments/comments.module'
     DepartmentModule,
     EmailModule,
     EmailTemplatesModule,
+    EventEmitterModule.forRoot(),
     FeedbackModule,
     InterviewModule,
     InvitesModule,
