@@ -9,6 +9,12 @@ import { MemberWithUserInfo } from 'types/member'
 import { Show, Switch } from 'ui-kit'
 import formatNumber from 'utils/format-number'
 import { ReactComponent as CandidatesIcon } from 'assets/icons/candidates.svg'
+import { HiOutlineStar, HiStar } from 'react-icons/hi'
+
+import useAuth from 'hooks/use-auth'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchJob } from 'pages/job/queries'
+import { updateJobById } from 'pages/create-job/queries'
 
 type JobCardProps = {
   job: Job
@@ -16,7 +22,62 @@ type JobCardProps = {
 }
 
 export default function JobCard({ job, members }: JobCardProps) {
+  const { member } = useAuth()
+  const jobId = job.id
+
   const recruiter = members.find(({ uid }) => uid === job.createdBy)
+  const { data } = useQuery(['job', jobId], () => fetchJob(jobId))
+
+  const isJobStarred = data?.favorites.includes(member?.uid ?? '')
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(updateJobById, {
+    onMutate: async ({ jobId, updateJobDto }) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries(['job', jobId])
+      // Snapshot the previous value
+      const previousJob = queryClient.getQueryData(['job', jobId])
+      // Optimistically update to the new value
+      queryClient.setQueryData(['job', jobId], (old: any) => {
+        return { ...old, ...updateJobDto }
+      })
+      // Return a context object with the snapshotted value
+      return { previousJob, jobId }
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (_, __, context) => {
+      if (context) {
+        queryClient.setQueryData(['job', context.jobId], context.previousJob)
+      }
+    },
+    // Always refetch after error or success:
+    onSettled: () => queryClient.invalidateQueries(['job', jobId]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['favorite-jobs'])
+    },
+  })
+
+  function handleStarChange() {
+    if (data && member) {
+      if (isJobStarred) {
+        mutate({
+          jobId,
+          updateJobDto: {
+            favorites: data?.favorites.filter((uid) => uid !== member.uid),
+          },
+        })
+      } else {
+        mutate({
+          jobId,
+          updateJobDto: {
+            favorites: [...data.favorites, member.uid],
+          },
+        })
+      }
+    }
+  }
 
   return (
     <Link to={`${job.id}`} className="p-4 bg-white rounded-md shadow">
@@ -38,6 +99,21 @@ export default function JobCard({ job, members }: JobCardProps) {
 
         <div className="flex-1" />
 
+        <div>
+          <button
+            onClick={handleStarChange}
+            className="p-1 text-lg bg-transparent border rounded-md"
+          >
+            <Show
+              when={isJobStarred}
+              fallback={
+                <HiOutlineStar strokeWidth="1" className="text-gray-500" />
+              }
+            >
+              <HiStar className="text-yellow-500" strokeWidth={1} />
+            </Show>
+          </button>
+        </div>
         <span className="text-xs text-gray-600">
           {dayjs(job.createdAt).fromNow()}
         </span>
