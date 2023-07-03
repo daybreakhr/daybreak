@@ -1,8 +1,10 @@
 import { Button, Drawer } from 'antd'
+import { useQuery } from '@tanstack/react-query'
 import { HiOutlineLink, HiX } from 'react-icons/hi'
 
 import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
+import { fetchMe } from 'components/auth/queries'
 
 import Slack from './slack'
 import Gmail from './gmail'
@@ -15,8 +17,12 @@ type IntegrationsProps = {
 }
 
 export default function Integrations({ isOpen, onClose }: IntegrationsProps) {
-  const { member } = useAuth()
+  const { member, setMember } = useAuth()
   const container = document.getElementById('application') as Element
+
+  useQuery(['me'], fetchMe, {
+    onSuccess: setMember,
+  })
 
   const isGCalInstalled = member?.Integration?.gcal?.isInstalled
   const isSlackInstalled = member?.Integration?.slack?.isInstalled

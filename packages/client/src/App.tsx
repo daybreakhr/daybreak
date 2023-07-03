@@ -34,7 +34,15 @@ import EmailTemplates from 'pages/email-templates'
 import CandidateResume from 'pages/candidate-resume'
 import CandidateComment from 'pages/candidate-comment'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+    },
+  },
+})
 
 export default function App() {
   return (
