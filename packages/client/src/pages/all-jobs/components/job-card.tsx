@@ -1,3 +1,4 @@
+import React from 'react'
 import dayjs from 'dayjs'
 import { Avatar } from 'antd'
 import { Link } from 'react-router-dom'
@@ -59,7 +60,8 @@ export default function JobCard({ job, members }: JobCardProps) {
     },
   })
 
-  function handleStarChange() {
+  function handleStarChange(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault()
     if (data && member) {
       if (isJobStarred) {
         mutate({
