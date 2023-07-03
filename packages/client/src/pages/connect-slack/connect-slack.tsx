@@ -18,8 +18,11 @@ export default function ConnectSlack() {
       if (state === storage.get('state')) {
         setIsStateCorrect(true)
       } else {
-        message.error('Incorrect state parameter. Please try again.')
-        window.close()
+        message
+          .error('Incorrect state parameter. Please try again.')
+          .then(() => {
+            window.close()
+          })
       }
     } finally {
       storage.remove('state')
