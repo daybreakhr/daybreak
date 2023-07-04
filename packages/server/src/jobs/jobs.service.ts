@@ -1,3 +1,4 @@
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 
@@ -7,12 +8,14 @@ import { PrismaService } from 'src/prisma.service'
 import { AWSS3Service } from 'src/aws/aws.s3.service'
 import { AffindaService } from 'src/affinda/affinda.service'
 import { CreateJobDto, UpdateJob } from './jobs.dto'
+import { JobPublishedEvent } from './events/job-published.event'
 
 @Injectable()
 export class JobsService {
   private logger = new Logger('JOBS')
   constructor(
     private affindaService: AffindaService,
+    private eventEmitter: EventEmitter2,
     private prismaService: PrismaService,
     private s3Service: AWSS3Service,
   ) {}
@@ -120,6 +123,8 @@ export class JobsService {
         jdPdfUrl: uploadResult.Location,
       },
     })
+
+    this.eventEmitter.emit('job.published', new JobPublishedEvent(jobId))
 
     return updateJob
   }

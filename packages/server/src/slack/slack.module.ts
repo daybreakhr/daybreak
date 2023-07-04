@@ -13,5 +13,6 @@ import { SlackController } from './slack.controller'
   imports: [AffindaModule, AWSModule, CandidateModule],
   controllers: [SlackController],
   providers: [SlackService, SlackViews, PrismaService, ReferralService],
+  exports: [SlackService],
 })
 export class SlackModule {}
