@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
         className="w-64 mx-auto mb-8"
       />
       <h2 className="mx-auto text-gray-500 w-fit">Privacy Policy</h2>
-      <p className="mx-auto font-medium w-fit">Last Updated on: 17/01/2023</p>
+      <p className="mx-auto font-medium w-fit">Last Updated on: 29/06/2023</p>
       <p>
         Daybreak Technologies Private Limited is committed to protecting your
         privacy. We have created this Privacy and Data Protection Policy to
@@ -33,12 +33,13 @@ export default function PrivacyPolicy() {
 
       <h2 className="text-primary-500/60">Personal Information we collect </h2>
       <p>
-        We require you to collect, access, and store your personal information
+        We require to collect, access, and store your personal information
         during the period of account creation and thereafter during your usage
         of Services. This includes your name, company, title, country, e-mail
         address information pertaining to you as well as information pertaining
-        to third-persons/individuals whose resumes will be uploaded for availing
-        the Services.
+        to third- persons/individual whose resumes will be uploaded for availing
+        the Services. We retain your information until your account remains
+        active with our application.
       </p>
       <p>
         Daybreak has developed a functionality that allows its customers to
@@ -52,6 +53,23 @@ export default function PrivacyPolicy() {
         personal information on your Google Calendar and Gmail Mailbox. You may
         choose not to connect your Google Calendar and Gmail Mailbox with
         Daybreak.
+      </p>
+      <p>
+        Daybreak app complies with the{' '}
+        <a
+          href="https://developers.google.com/terms/api-services-user-data-policy"
+          className="text-primary-500 hover:underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Google API Services User Data Policy
+        </a>
+        , including the Limited Use requirements.
+      </p>
+      <p>
+        Use and transfer to any other app of information received from Google
+        APIs will adhere to Google API Services User Data Policy, including the
+        Limited Use requirements
       </p>
       <p>
         Daybreak logs and stores session usage of our product to be able to
@@ -155,9 +173,14 @@ export default function PrivacyPolicy() {
         </li>
       </ol>
       <p>
-        If you would like to exercise any of these rights, please contact us as
-        set forth below. We will process such requests in accordance with
-        applicable laws.
+        If you would like to exercise any of these rights, please contact us at{' '}
+        <a
+          href="mailto:himanshu@daybreakhire.com"
+          className="text-primary-500 hover:underline"
+        >
+          himanshu@daybreakhire.com
+        </a>
+        . We will process such requests in accordance with applicable laws.
       </p>
 
       <h2 className="text-primary-500/60">Changes to Our Privacy Policy</h2>
