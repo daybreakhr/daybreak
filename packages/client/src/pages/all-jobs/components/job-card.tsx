@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { Avatar } from 'antd'
 import { Link } from 'react-router-dom'
@@ -61,11 +62,10 @@ export default function JobCard({ jobData, members }: JobCardProps) {
     onSettled: () => queryClient.invalidateQueries(['jobs']),
     onSuccess: () => {
       queryClient.invalidateQueries(['favorite-jobs'])
-      queryClient.invalidateQueries(['jobs'])
     },
   })
 
-  function handleStarChange(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleStarChange(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
 
     if (job && member) {
