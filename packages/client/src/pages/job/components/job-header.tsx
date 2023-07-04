@@ -93,21 +93,13 @@ export default function JobHeader({ candidates }: JobHeaderProps) {
 
   function handleStarChange() {
     if (data && member) {
+      let favorites = data.favorites
       if (isJobStarred) {
-        mutate({
-          jobId,
-          updateJobDto: {
-            favorites: data?.favorites.filter((uid) => uid !== member.uid),
-          },
-        })
+        favorites = data.favorites.filter((uid) => uid !== member.uid)
       } else {
-        mutate({
-          jobId,
-          updateJobDto: {
-            favorites: [...data.favorites, member.uid],
-          },
-        })
+        favorites = [...data.favorites, member.uid]
       }
+      mutate({ jobId, updateJobDto: { favorites } })
     }
   }
 

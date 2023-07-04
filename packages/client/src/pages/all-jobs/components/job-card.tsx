@@ -1,83 +1,81 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { Avatar } from 'antd'
 import { Link } from 'react-router-dom'
 import { capitalize, words } from 'lodash'
 import { RxDotFilled } from 'react-icons/rx'
-
-import { Job } from 'types/job'
-import { MemberWithUserInfo } from 'types/member'
-import { Show, Switch } from 'ui-kit'
-import formatNumber from 'utils/format-number'
-import { ReactComponent as CandidatesIcon } from 'assets/icons/candidates.svg'
 import { HiOutlineStar, HiStar } from 'react-icons/hi'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { Show, Switch } from 'ui-kit'
+import { Job } from 'types/job'
 import useAuth from 'hooks/use-auth'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchJob } from 'pages/job/queries'
+import formatNumber from 'utils/format-number'
+import { MemberWithUserInfo } from 'types/member'
 import { updateJobById } from 'pages/create-job/queries'
+import { ReactComponent as CandidatesIcon } from 'assets/icons/candidates.svg'
 
 type JobCardProps = {
-  job: Job
+  jobData: Job
   members: MemberWithUserInfo[]
 }
 
-export default function JobCard({ job, members }: JobCardProps) {
+export default function JobCard({ jobData, members }: JobCardProps) {
+  const jobId = jobData.id
   const { member } = useAuth()
-  const jobId = job.id
+
+  const [job, setJob] = useState(jobData)
+
+  useEffect(() => {
+    setJob(jobData)
+  }, [jobData])
 
   const recruiter = members.find(({ uid }) => uid === job.createdBy)
-  const { data } = useQuery(['job', jobId], () => fetchJob(jobId))
-
-  const isJobStarred = data?.favorites.includes(member?.uid ?? '')
+  const isJobStarred = job?.favorites.includes(member?.uid ?? '')
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation(updateJobById, {
     onMutate: async ({ jobId, updateJobDto }) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries(['job', jobId])
+      await queryClient.cancelQueries(['jobs'])
       // Snapshot the previous value
-      const previousJob = queryClient.getQueryData(['job', jobId])
+      const jobs = queryClient.getQueryData<Job[]>(['jobs'])
       // Optimistically update to the new value
-      queryClient.setQueryData(['job', jobId], (old: any) => {
-        return { ...old, ...updateJobDto }
-      })
+      queryClient.setQueryData<Job[]>(['jobs'], (old) =>
+        old?.map((job) =>
+          job.id === jobId ? { ...job, ...updateJobDto } : job,
+        ),
+      )
       // Return a context object with the snapshotted value
-      return { previousJob, jobId }
+      return { jobs }
     },
     // If the mutation fails,
     // use the context returned from onMutate to roll back
     onError: (_, __, context) => {
       if (context) {
-        queryClient.setQueryData(['job', context.jobId], context.previousJob)
+        queryClient.setQueryData(['jobs'], context.jobs)
       }
     },
     // Always refetch after error or success:
-    onSettled: () => queryClient.invalidateQueries(['job', jobId]),
+    onSettled: () => queryClient.invalidateQueries(['jobs']),
     onSuccess: () => {
       queryClient.invalidateQueries(['favorite-jobs'])
+      queryClient.invalidateQueries(['jobs'])
     },
   })
 
   function handleStarChange(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
-    if (data && member) {
+
+    if (job && member) {
+      let favorites = job.favorites
       if (isJobStarred) {
-        mutate({
-          jobId,
-          updateJobDto: {
-            favorites: data?.favorites.filter((uid) => uid !== member.uid),
-          },
-        })
+        favorites = job.favorites.filter((uid) => uid !== member.uid)
       } else {
-        mutate({
-          jobId,
-          updateJobDto: {
-            favorites: [...data.favorites, member.uid],
-          },
-        })
+        favorites = [...job.favorites, member.uid]
       }
+      mutate({ jobId, updateJobDto: { favorites } })
     }
   }
 

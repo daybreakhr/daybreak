@@ -120,7 +120,7 @@ export default function AllJobs() {
           <Switch.Match when={viewState === 'kanban'}>
             <div className="flex flex-col space-y-5 overflow-y-auto">
               {sortedAndFilteredJobs.map((job) => (
-                <JobCard key={job.id} job={job} members={members} />
+                <JobCard key={job.id} jobData={job} members={members} />
               ))}
             </div>
           </Switch.Match>
