@@ -5,10 +5,12 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  RawBodyRequest,
   Req,
 } from '@nestjs/common'
 import { Request } from 'express'
-import isVerified from 'src/utils/verify-signature'
+
+import isValidRequestFromSlack from 'src/utils/verify-signature'
 import { SlackService } from './slack.service'
 
 @ApiTags('Slack')
@@ -18,12 +20,12 @@ export class SlackController {
 
   @Post('events')
   @ApiOperation({ summary: 'Slack Events' })
-  async slackEvents(@Req() req: Request, @Body() body: any) {
+  async slackEvents(@Req() req: RawBodyRequest<Request>, @Body() body: any) {
     switch (body.type) {
       case 'url_verification':
         return this.slackService.verifyUrl(body)
       case 'event_callback':
-        if (!isVerified(req)) {
+        if (!isValidRequestFromSlack(req)) {
           throw new HttpException(
             { status: HttpStatus.NOT_FOUND, error: 'Invalid signing secret' },
             HttpStatus.NOT_FOUND,

@@ -59,6 +59,7 @@ export class SlackService {
         orderBy: { createdAt: 'desc' },
         include: { Workspace: true },
       })
+      this.logger.log(jobs.map(({ title }) => title))
 
       const view = this.slackViews.homeView(body.event.user, jobs)
       await this.publishHomeView(body.event.user, view)

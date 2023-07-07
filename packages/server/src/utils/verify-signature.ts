@@ -12,22 +12,40 @@
  * ******************************************************************************/
 
 import { createHmac } from 'crypto'
-import timingSafeCompare from 'tsscmp'
+import { Request } from 'express'
+import { RawBodyRequest } from '@nestjs/common'
 
-const isVerified = (req: any) => {
-  const signature = req.headers['x-slack-signature']
-  const timestamp = req.headers['x-slack-request-timestamp']
-  const hmac = createHmac('sha256', process.env.SLACK_SIGNING_SECRET)
-  const [version, hash] = signature.split('=')
+const secret = process.env.SLACK_SIGNING_SECRET
 
-  // Check if the timestamp is too old
-  const fiveMinutesAgo = ~~(Date.now() / 1000) - 60 * 5
-  if (timestamp < fiveMinutesAgo) return false
+const hasValidTimestamp = (req: Request) => {
+  const timestamp = req.headers['x-slack-request-timestamp'] as string
+  if (!timestamp) return false
 
-  hmac.update(`${version}:${timestamp}:${req.rawBody}`)
+  // Prevent replay attacks
+  const now = Math.floor(Date.now() / 1000)
+  if (now - parseInt(timestamp, 10) > 60 * 5) return false
 
-  // check that the request signature matches expected value
-  return timingSafeCompare(hmac.digest('hex'), hash)
+  return true
 }
 
-export default isVerified
+const hasValidSignature = (req: RawBodyRequest<Request>) => {
+  if (!secret) return false
+
+  // Check request headers
+  const timestamp = req.headers['x-slack-request-timestamp']
+  const signature = req.headers['x-slack-signature']
+  const requestBody = req.rawBody
+
+  if (!(timestamp && signature)) return false
+
+  // Generate signature w/ request body
+  const str = `v0:${timestamp}:${requestBody}`
+  const mySignature =
+    'v0=' + createHmac('sha256', secret).update(str).digest('hex')
+
+  return mySignature === signature
+}
+
+export default function isValidRequestFromSlack(req: Request) {
+  return hasValidSignature(req) && hasValidTimestamp(req)
+}
