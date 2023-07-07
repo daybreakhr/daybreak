@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Button, Input, Skeleton } from 'antd'
+import { Button, Empty, Input, Skeleton } from 'antd'
 import { range, orderBy, uniqBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,8 @@ import { Switch } from 'ui-kit'
 import ToggleView from 'components/toggle-view'
 import { fetchMembers } from 'pages/members/queries'
 import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
-import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
+import { ReactComponent as BriefcasePlus } from 'assets/icons/briefcase-plus.svg'
+import { ReactComponent as BriefcaseImage } from 'assets/icons/briefcase-image.svg'
 
 import JobCard from './components/job-card'
 import JobList from './components/job-list'
@@ -83,7 +84,7 @@ export default function AllJobs() {
             type="primary"
             loading={isCreatingJob}
             onClick={() => mutate()}
-            icon={<UserArrowDown className="anticon" />}
+            icon={<BriefcasePlus className="anticon" />}
           >
             Create Job
           </Button>
@@ -107,6 +108,29 @@ export default function AllJobs() {
         </div>
 
         <Switch>
+          <Switch.Match when={data.length === 0}>
+            <div className="p-6 bg-white">
+              <Empty
+                image={<BriefcaseImage />}
+                imageStyle={{ height: '20rem' }}
+                description={
+                  <span className="font-medium">
+                    Welcome to the Job Listing Page. <br />
+                    It looks like you have not created any jobs yet.
+                  </span>
+                }
+              >
+                <Button
+                  type="primary"
+                  loading={isCreatingJob}
+                  onClick={() => mutate()}
+                  icon={<BriefcasePlus className="anticon" />}
+                >
+                  Create your 1st Job
+                </Button>
+              </Empty>
+            </div>
+          </Switch.Match>
           <Switch.Match when={isLoadingJobs}>
             <div className="space-y-5">
               {range(4).map((val) => (
