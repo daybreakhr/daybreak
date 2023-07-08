@@ -42,6 +42,7 @@ export default function CandidateCard({
           'w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 cursor-pointer',
           { 'outline outline-primary-300': isChecked },
         )}
+        // onClick={() => setIsDetailsOpen(true)}
       >
         <div className="relative flex items-center mb-4 space-x-2">
           <Checkbox checked={isChecked} onChange={onCandidateSelect} />
