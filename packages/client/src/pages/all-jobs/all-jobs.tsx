@@ -7,7 +7,7 @@ import type { Department } from '@prisma/client'
 import { SearchOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
 import ToggleView from 'components/toggle-view'
 import { fetchMembers } from 'pages/members/queries'
 import { ReactComponent as FilterIcon } from 'assets/icons/filter-icon.svg'
@@ -90,47 +90,26 @@ export default function AllJobs() {
           </Button>
         </div>
 
-        <div className="flex items-center mb-6 space-x-4">
-          <ToggleView viewType={viewState} onChange={setViewState} />
-          <div className="flex-1" />
-          <Input
-            value={input}
-            placeholder="Search..."
-            style={{ width: '12rem' }}
-            suffix={<SearchOutlined />}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <Button
-            icon={<FilterIcon />}
-            onClick={() => setOpen(!open)}
-            type={open ? 'primary' : 'default'}
-          />
-        </div>
+        <Show when={!isLoadingJobs && sortedAndFilteredJobs.length !== 0}>
+          <div className="flex items-center mb-6 space-x-4">
+            <ToggleView viewType={viewState} onChange={setViewState} />
+            <div className="flex-1" />
+            <Input
+              value={input}
+              placeholder="Search..."
+              style={{ width: '12rem' }}
+              suffix={<SearchOutlined />}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <Button
+              icon={<FilterIcon />}
+              onClick={() => setOpen(!open)}
+              type={open ? 'primary' : 'default'}
+            />
+          </div>
+        </Show>
 
         <Switch>
-          <Switch.Match when={data.length === 0}>
-            <div className="p-6 bg-white">
-              <Empty
-                image={<BriefcaseImage />}
-                imageStyle={{ height: '20rem' }}
-                description={
-                  <span className="font-medium">
-                    Welcome to the Job Listing Page. <br />
-                    It looks like you have not created any jobs yet.
-                  </span>
-                }
-              >
-                <Button
-                  type="primary"
-                  loading={isCreatingJob}
-                  onClick={() => mutate()}
-                  icon={<BriefcasePlus className="anticon" />}
-                >
-                  Create your 1st Job
-                </Button>
-              </Empty>
-            </div>
-          </Switch.Match>
           <Switch.Match when={isLoadingJobs}>
             <div className="space-y-5">
               {range(4).map((val) => (
@@ -141,6 +120,29 @@ export default function AllJobs() {
               ))}
             </div>
           </Switch.Match>
+
+          <Switch.Match when={sortedAndFilteredJobs.length === 0}>
+            <Empty
+              image={<BriefcaseImage />}
+              imageStyle={{ height: '20rem' }}
+              description={
+                <span className="font-medium">
+                  Welcome to the Job Listing Page. <br />
+                  It looks like you have not created any jobs yet.
+                </span>
+              }
+            >
+              <Button
+                type="primary"
+                loading={isCreatingJob}
+                onClick={() => mutate()}
+                icon={<BriefcasePlus className="anticon" />}
+              >
+                Create your 1st Job
+              </Button>
+            </Empty>
+          </Switch.Match>
+
           <Switch.Match when={viewState === 'kanban'}>
             <div className="flex flex-col space-y-5 overflow-y-auto">
               {sortedAndFilteredJobs.map((job) => (
