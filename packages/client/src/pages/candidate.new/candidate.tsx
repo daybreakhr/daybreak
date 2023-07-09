@@ -11,7 +11,7 @@ export default function Candidate() {
   const [searchParams, setSearchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
 
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     ['candidate', candidateId],
     () => fetchCandidate(candidateId),
     { enabled: !!candidateId },
@@ -33,7 +33,7 @@ export default function Candidate() {
     >
       <div className="flex h-full max-w-6xl mx-auto">
         <Details candidate={data} />
-        <CandidateTabs />
+        <CandidateTabs candidate={data} isLoading={isLoading} />
         <Actions />
       </div>
     </Drawer>

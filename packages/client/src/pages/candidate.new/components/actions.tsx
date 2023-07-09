@@ -9,13 +9,13 @@ export default function Actions() {
   const { user } = useAuth()
 
   return (
-    <div className="pt-6 pl-6">
+    <div className="flex-none w-64 pt-6 pl-6">
       <p className="mb-4 text-xs">
         <span className="text-gray-500">Current Round:</span>{' '}
         <span className="text-primary-500">Phone Screen</span>
       </p>
 
-      <div className="grid w-64 grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="flex items-center justify-between px-4 py-2 text-gray-500 bg-gray-100 rounded-md">
           Move Candidate
           <DownOutlined />

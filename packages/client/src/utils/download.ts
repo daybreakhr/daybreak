@@ -14,6 +14,7 @@ export const downloadFile = (url: string, filename?: string) => {
   const a = document.createElement('a')
   document.body.appendChild(a)
   a.style.display = 'none'
+  a.target = '_blank'
   a.href = url
   if (filename) {
     a.download = filename
