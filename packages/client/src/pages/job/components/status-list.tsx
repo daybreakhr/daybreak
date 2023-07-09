@@ -73,6 +73,7 @@ export default function StatusList({
                   href={`/candidates/${id}/profile`}
                 >
                   <CandidateCard
+                    id={id}
                     name={name}
                     source={candidate.source}
                     createdAt={candidate.createdAt}

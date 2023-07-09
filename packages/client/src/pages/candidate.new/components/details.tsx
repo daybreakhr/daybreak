@@ -5,13 +5,25 @@ import { LinkedinFilled } from '@ant-design/icons'
 import { HiOutlineUserCircle, HiPhone } from 'react-icons/hi2'
 
 import { Show } from 'ui-kit'
+import { Candidate } from 'types/candidate'
 
-export default function Details() {
+type DetailsProps = {
+  candidate: Candidate | undefined
+}
+
+export default function Details({ candidate }: DetailsProps) {
+  const currentCompany = candidate?.experience.find(
+    ({ isCurrent }) => isCurrent,
+  )
+
   const details = [
-    { label: 'Experience', value: '4 years' },
-    { label: 'Current Company', value: 'Daybreak' },
-    { label: 'Source', value: 'LinkedIn' },
-    { label: 'Location', value: 'Bangalore' },
+    {
+      label: 'Total Experience',
+      value: `${candidate?.totalYearsOfExperience} years`,
+    },
+    { label: 'Current Company', value: candidate?.currentCompany },
+    { label: 'Source', value: candidate?.source },
+    { label: 'Location', value: candidate?.location },
   ]
 
   return (
@@ -19,8 +31,27 @@ export default function Details() {
       <div className="inline-flex items-center p-1 mb-4 text-2xl text-white bg-black rounded-full">
         <HiOutlineUserCircle />
       </div>
-      <p className="text-base font-semibold">Tarun Luthra</p>
-      <p className="mb-4 text-gray-500">Lead Data Analyst @Daybreak</p>
+
+      <Show
+        when={candidate}
+        fallback={
+          <div className="w-24 h-6 mb-2 bg-gray-100 rounded animate-pulse" />
+        }
+      >
+        {({ firstName, middleName, lastName }) => (
+          <p className="text-base font-medium">
+            {firstName} {middleName ?? ''} {lastName}
+          </p>
+        )}
+      </Show>
+
+      <Show when={currentCompany}>
+        {({ company, designation }) => (
+          <p className="mb-4 text-gray-500">
+            {designation} @{company}
+          </p>
+        )}
+      </Show>
 
       <div className="flex items-center mb-6 space-x-2">
         <Button shape="circle">

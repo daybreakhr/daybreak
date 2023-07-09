@@ -1,18 +1,18 @@
-import { useState } from 'react'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { Checkbox, Tag, Tooltip } from 'antd'
 import { HiBriefcase } from 'react-icons/hi'
 import { CandidateSource } from '@prisma/client'
+// import { useSearchParams } from 'react-router-dom'
 
 import { Show } from 'ui-kit'
-import Candidate from 'pages/candidate.new'
 import { getCandidateSourceTitle } from 'utils/utils'
 import { ReactComponent as OfficeBuildingsIcon } from 'assets/icons/office-buildings.svg'
 
 import { candidateSources } from '../constants/icons'
 
 type CandidateCardProps = {
+  id: string
   name: string
   createdAt: Date
   isChecked: boolean
@@ -23,6 +23,7 @@ type CandidateCardProps = {
 }
 
 export default function CandidateCard({
+  // id,
   name,
   createdAt,
   isChecked,
@@ -31,18 +32,23 @@ export default function CandidateCard({
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  // const [, setSearchParams] = useSearchParams()
 
   const { color, icon } = candidateSources(source)
   const sourceTitle = getCandidateSourceTitle(source)
+
+  function handleCandidateSelect() {
+    // setSearchParams({ candidateId: id })
+  }
+
   return (
     <>
       <div
+        onClick={handleCandidateSelect}
         className={clsx(
           'w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 cursor-pointer',
           { 'outline outline-primary-300': isChecked },
         )}
-        // onClick={() => setIsDetailsOpen(true)}
       >
         <div className="relative flex items-center mb-4 space-x-2">
           <Checkbox checked={isChecked} onChange={onCandidateSelect} />
@@ -76,11 +82,6 @@ export default function CandidateCard({
           </p>
         </div>
       </div>
-
-      <Candidate
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-      />
     </>
   )
 }
