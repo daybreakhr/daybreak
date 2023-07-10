@@ -45,12 +45,6 @@ body {
   @apply px-0;
 }
 
-/* .react-pdf__Page__canvas {
-  margin: 0 auto;
-  width: 80% !important;
-  height: 100% !important;
-} */
-
 .remirror-floating-popover {
   z-index: 10;
 }
@@ -81,4 +75,8 @@ body {
   > .ant-collapse-content
   > .ant-collapse-content-box {
   @apply p-0;
+}
+
+.mention-editor > .remirror-theme > .remirror-editor-wrapper {
+  @apply pt-0;
 }

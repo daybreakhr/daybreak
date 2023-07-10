@@ -27,7 +27,7 @@ export default function Details({ candidate }: DetailsProps) {
   ]
 
   return (
-    <div className="flex-none w-56 pt-6 pr-6 border-r">
+    <div className="flex-none w-56 pt-6 pr-6">
       <div className="inline-flex items-center p-1 mb-4 text-2xl text-white bg-black rounded-full">
         <HiOutlineUserCircle />
       </div>

@@ -30,8 +30,10 @@ export default function Resume({ resume, isLoading }: ResumeProps) {
   }
 
   return (
-    <div className="px-4 pt-6">
-      <div className="flex items-center justify-end mb-2 space-x-2">
+    <div className="flex-1 px-4 pt-6 overflow-y-auto">
+      <div className="flex items-center mb-2 space-x-2">
+        <p className="text-base font-semibold">Resume</p>
+        <div className="flex-1" />
         <Button
           onClick={onZoomIn}
           icon={<ZoomInOutlined />}

@@ -14,7 +14,7 @@ type ProfileProps = {
 
 export default function Profile({ candidate, isLoading }: ProfileProps) {
   return (
-    <div className="p-4">
+    <div className="flex-1 p-4 overflow-y-auto">
       <p className="text-base font-semibold">Experience</p>
       <p className="text-gray-500">{candidate?.totalYearsOfExperience} years</p>
 

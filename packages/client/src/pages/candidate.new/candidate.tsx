@@ -31,7 +31,7 @@ export default function Candidate() {
       className="rounded-t-lg"
       bodyStyle={{ padding: 0 }}
     >
-      <div className="flex h-full max-w-6xl mx-auto">
+      <div className="flex h-full max-w-6xl mx-auto overflow-hidden">
         <Details candidate={data} />
         <CandidateTabs candidate={data} isLoading={isLoading} />
         <Actions />
