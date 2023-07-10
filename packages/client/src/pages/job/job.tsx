@@ -3,9 +3,14 @@ import { groupBy, orderBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { Candidate, CandidateStatus } from '@prisma/client'
-import { Button, Dropdown, Input, MenuProps, Spin } from 'antd'
+import { Button, Dropdown, Empty, Input, MenuProps, Spin } from 'antd'
 import { DownOutlined, SearchOutlined } from '@ant-design/icons'
-import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { Show, Switch } from 'ui-kit'
 import CandidatePage from 'pages/candidate.new'
@@ -14,14 +19,16 @@ import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'
 import { getPipelineStages, getLastDate } from 'utils/utils'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
-import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
+import { ReactComponent as TieImage } from 'assets/icons/tie-image.svg'
 import { ReactComponent as MoveCandidateIcon } from 'assets/icons/move-candidate.svg'
+import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import JobHeader from './components/job-header'
 import StatusList from './components/status-list'
+import ImportTalent from './components/import-talent'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
-import { bulkUpdateCandidate, fetchCandidatesByJob } from './queries'
+import { bulkUpdateCandidate, fetchCandidatesByJob, fetchJob } from './queries'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
@@ -37,6 +44,7 @@ export default function JobPipeline() {
   const [selectedDateFilter, setSelectedDateFilter] =
     useState<string>('all-time')
 
+  const { data } = useQuery(['job', jobId], () => fetchJob(jobId))
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
     { data: interviews = [], isLoading: isInterviewsLoading },
@@ -160,23 +168,33 @@ export default function JobPipeline() {
             </Button>
           </Dropdown>
         </Show>
-        <div className="flex-1" />
-        <Input
-          value={input}
-          placeholder="Search..."
-          style={{ width: '12rem' }}
-          suffix={<SearchOutlined />}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <FilterPipeline
-          interviews={interviews}
-          filteredStages={filteredStages}
-          selectedSources={selectedSources}
-          setFilteredStages={setFilteredStages}
-          setSelectedSources={setSelectedSources}
-          selectedDateFilter={selectedDateFilter}
-          setSelectedDateFilter={setSelectedDateFilter}
-        />
+
+        <Show
+          when={
+            !isInterviewsLoading &&
+            !isCandidatesLoading &&
+            candidates?.length !== 0
+          }
+        >
+          <div className="flex-1" />
+          <Input
+            value={input}
+            placeholder="Search..."
+            style={{ width: '12rem' }}
+            suffix={<SearchOutlined />}
+            onChange={(e) => setInput(e.target.value)}
+          />
+
+          <FilterPipeline
+            interviews={interviews}
+            filteredStages={filteredStages}
+            selectedSources={selectedSources}
+            setFilteredStages={setFilteredStages}
+            setSelectedSources={setSelectedSources}
+            selectedDateFilter={selectedDateFilter}
+            setSelectedDateFilter={setSelectedDateFilter}
+          />
+        </Show>
       </div>
 
       <Switch>
@@ -184,6 +202,23 @@ export default function JobPipeline() {
           <div className="flex items-center justify-center flex-1">
             <Spin tip="Fetching Candidates..." />
           </div>
+        </Switch.Match>
+
+        <Switch.Match when={candidates?.length === 0}>
+          <Empty
+            image={<TieImage />}
+            imageStyle={{ height: '20rem' }}
+            description={
+              <span className="font-medium">
+                Welcome to the Job Pipeline. <br />
+                You have not imported/added any candidates yet.
+              </span>
+            }
+          >
+            <div className="flex justify-center">
+              <ImportTalent title={data?.title} />
+            </div>
+          </Empty>
         </Switch.Match>
 
         <Switch.Match when={interviews}>
