@@ -3,6 +3,7 @@ import { Tabs, TabsProps } from 'antd'
 import { Candidate } from 'types/candidate'
 
 import Resume from './resume'
+import Profile from './profile'
 
 type CandidateTabsProps = {
   isLoading: boolean
@@ -14,7 +15,11 @@ export default function CandidateTabs({
   isLoading,
 }: CandidateTabsProps) {
   const items: TabsProps['items'] = [
-    { key: 'profile', label: 'Profile' },
+    {
+      key: 'profile',
+      label: 'Profile',
+      children: <Profile isLoading={isLoading} candidate={candidate} />,
+    },
     {
       key: 'resume',
       label: 'Resume',

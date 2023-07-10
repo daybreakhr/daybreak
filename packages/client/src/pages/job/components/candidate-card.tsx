@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import dayjs from 'dayjs'
-import { Checkbox, Tag, Tooltip } from 'antd'
 import { HiBriefcase } from 'react-icons/hi'
+import { Checkbox, Tag, Tooltip } from 'antd'
 import { CandidateSource } from '@prisma/client'
 // import { useSearchParams } from 'react-router-dom'
 

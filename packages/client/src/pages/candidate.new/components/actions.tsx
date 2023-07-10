@@ -21,8 +21,10 @@ export default function Actions() {
           <DownOutlined />
         </div>
 
-        <div className="flex items-center px-4 py-2 space-x-2 border rounded-md">
-          <div className="text-xl">👍</div>
+        <div className="px-4 py-2 space-x-2 border rounded-md">
+          <div className="inline-flex items-center justify-center w-8 h-8 p-1 mb-1 text-lg rounded-md bg-gray-50">
+            👍
+          </div>
           <div>
             <p className="text-xs text-gray-500">Move to next round</p>
             <p>On-site Coding</p>

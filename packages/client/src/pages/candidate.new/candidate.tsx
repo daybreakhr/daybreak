@@ -25,11 +25,11 @@ export default function Candidate() {
     <Drawer
       height="85%"
       closable={false}
-      onClose={handleClose}
       placement="bottom"
+      open={!!candidateId}
+      onClose={handleClose}
       className="rounded-t-lg"
       bodyStyle={{ padding: 0 }}
-      open={!!candidateId}
     >
       <div className="flex h-full max-w-6xl mx-auto">
         <Details candidate={data} />

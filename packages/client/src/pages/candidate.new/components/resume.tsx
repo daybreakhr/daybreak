@@ -66,7 +66,7 @@ export default function Resume({ resume, isLoading }: ResumeProps) {
               <Document
                 file={resume}
                 loading={
-                  <div className="flex items-center justify-center ">
+                  <div className="flex items-center justify-center h-80">
                     <Spin tip="Loading..." />
                   </div>
                 }
