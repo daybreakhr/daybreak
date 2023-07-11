@@ -151,24 +151,6 @@ export default function JobPipeline() {
     <div className="flex flex-col h-full overflow-hidden">
       <JobHeader candidates={candidates} />
       <div className="flex items-center px-6 mb-4 space-x-4">
-        <ToggleView viewType={viewState} onChange={setViewState} />
-        <Show when={selectedCandidates.length > 0}>
-          <Button
-            danger
-            disabled={selectedCandidates.length === 0}
-            onClick={() => setIsRejectModalOpen(true)}
-            icon={<RejectCandidateIcon className="anticon" />}
-          >
-            Reject
-          </Button>
-          <Dropdown menu={{ items, onClick: handleBulkStatusChange }}>
-            <Button icon={<MoveCandidateIcon className="anticon" />}>
-              Move to
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Show>
-
         <Show
           when={
             !isInterviewsLoading &&
@@ -176,6 +158,24 @@ export default function JobPipeline() {
             candidates?.length !== 0
           }
         >
+          <ToggleView viewType={viewState} onChange={setViewState} />
+          <Show when={selectedCandidates.length > 0}>
+            <Button
+              danger
+              disabled={selectedCandidates.length === 0}
+              onClick={() => setIsRejectModalOpen(true)}
+              icon={<RejectCandidateIcon className="anticon" />}
+            >
+              Reject
+            </Button>
+            <Dropdown menu={{ items, onClick: handleBulkStatusChange }}>
+              <Button icon={<MoveCandidateIcon className="anticon" />}>
+                Move to
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Show>
+
           <div className="flex-1" />
           <Input
             value={input}
