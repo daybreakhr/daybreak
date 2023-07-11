@@ -3,6 +3,7 @@ import { Avatar } from 'antd'
 import type { User } from 'firebase/auth'
 import { useRemirror } from '@remirror/react'
 
+import useAuth from 'hooks/use-auth'
 import MentionEditor from './mention-editor'
 import { extensions } from './create-comment'
 
@@ -13,6 +14,7 @@ type CommentProps = {
 }
 
 export default function Comment({ content, user, createdAt }: CommentProps) {
+  const { user: currentUser } = useAuth()
   const { manager, state, onChange } = useRemirror({ extensions, content })
 
   return (
@@ -21,7 +23,9 @@ export default function Comment({ content, user, createdAt }: CommentProps) {
         <Avatar className="flex-none" src={user.photoURL}>
           {user.displayName?.charAt(0)}
         </Avatar>
-        <p className="font-semibold">{user.displayName}</p>
+        <p className="font-medium">
+          {user.displayName} {currentUser?.uid === user.uid && '(you)'}
+        </p>
         <p className="text-xs text-gray-600">{dayjs(createdAt).fromNow()}</p>
       </div>
 

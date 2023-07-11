@@ -19,7 +19,7 @@ export default function Comments() {
 
   return (
     <div className="flex flex-col flex-1 p-4">
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto">
         <Switch>
           <Switch.Match when={isLoading}>
             {[1, 2].map((val) => (
