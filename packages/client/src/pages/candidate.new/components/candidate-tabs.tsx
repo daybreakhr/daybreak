@@ -7,6 +7,7 @@ import { Candidate } from 'types/candidate'
 import Resume from './resume'
 import Profile from './profile'
 import Comments from './comments'
+import Feedback from './feedback'
 
 type CandidateTabsProps = {
   isLoading: boolean
@@ -41,6 +42,10 @@ export default function CandidateTabs({
 
         <Switch.Match when={activeKey === 'comments'}>
           <Comments />
+        </Switch.Match>
+
+        <Switch.Match when={activeKey === 'feedback'}>
+          <Feedback />
         </Switch.Match>
       </Switch>
     </div>
