@@ -3,14 +3,9 @@ import { groupBy, orderBy } from 'lodash'
 import { matchSorter } from 'match-sorter'
 import { useParams } from 'react-router-dom'
 import { Candidate, CandidateStatus } from '@prisma/client'
-import { Button, Dropdown, Empty, Input, MenuProps, Spin } from 'antd'
 import { DownOutlined, SearchOutlined } from '@ant-design/icons'
-import {
-  useMutation,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { Button, Dropdown, Empty, Input, MenuProps, Spin } from 'antd'
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 
 import { Show, Switch } from 'ui-kit'
 import CandidatePage from 'pages/candidate.new'
@@ -20,21 +15,23 @@ import useLocalStorage from 'hooks/use-local-storage'
 import { getPipelineStages, getLastDate } from 'utils/utils'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 import { ReactComponent as TieImage } from 'assets/icons/tie-image.svg'
+import { ReactComponent as UserArrowDown } from 'assets/icons/user-arrow-down.svg'
 import { ReactComponent as MoveCandidateIcon } from 'assets/icons/move-candidate.svg'
 import { ReactComponent as RejectCandidateIcon } from 'assets/icons/reject-candidate.svg'
 
 import JobHeader from './components/job-header'
 import StatusList from './components/status-list'
-import ImportTalent from './components/import-talent'
 import CandidateList from './components/candidate-list'
 import FilterPipeline from './components/filter-pipeline'
 import { bulkUpdateCandidate, fetchCandidatesByJob, fetchJob } from './queries'
+import CreateCandidate from './components/create-candidate'
 
 export default function JobPipeline() {
   const { jobId = '' } = useParams()
   const [input, setInput] = useState('')
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
   const [selectedSources, setSelectedSources] = useState<string[]>([])
+  const [createCandiateDrawer, setCreateCandidateDrawer] = useState(false)
   const [viewState, setViewState] = useState<'kanban' | 'table'>('kanban')
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
   const [filteredStages, setFilteredStages] = useLocalStorage<string[]>(
@@ -44,10 +41,10 @@ export default function JobPipeline() {
   const [selectedDateFilter, setSelectedDateFilter] =
     useState<string>('all-time')
 
-  const { data } = useQuery(['job', jobId], () => fetchJob(jobId))
   const [
     { data: candidates = [], isLoading: isCandidatesLoading },
     { data: interviews = [], isLoading: isInterviewsLoading },
+    { data: job },
   ] = useQueries({
     queries: [
       {
@@ -57,6 +54,10 @@ export default function JobPipeline() {
       {
         queryKey: ['interviews', jobId],
         queryFn: () => fetchInterviews(jobId),
+      },
+      {
+        queryKey: ['job', jobId],
+        queryFn: () => fetchJob(jobId),
       },
     ],
   })
@@ -209,14 +210,20 @@ export default function JobPipeline() {
             image={<TieImage />}
             imageStyle={{ height: '20rem' }}
             description={
-              <span className="font-medium">
+              <span className="text-base font-medium">
                 Welcome to the Job Pipeline. <br />
                 You have not imported/added any candidates yet.
               </span>
             }
           >
             <div className="flex justify-center">
-              <ImportTalent title={data?.title} />
+              <Button
+                type="primary"
+                icon={<UserArrowDown className="anticon" />}
+                onClick={() => setCreateCandidateDrawer(true)}
+              >
+                Add Candidate
+              </Button>
             </div>
           </Empty>
         </Switch.Match>
@@ -257,6 +264,11 @@ export default function JobPipeline() {
       />
 
       <CandidatePage />
+      <CreateCandidate
+        title={job?.title}
+        isOpen={createCandiateDrawer}
+        onClose={() => setCreateCandidateDrawer(false)}
+      />
     </div>
   )
 }
