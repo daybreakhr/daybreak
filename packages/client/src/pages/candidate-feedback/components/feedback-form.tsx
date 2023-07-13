@@ -48,9 +48,9 @@ export default function FeedbackForm({
         layout="vertical"
         onFinish={({ id, ...values }) => {
           if (id) {
-            mutate({ id, candidateId, body: values })
+            mutate({ id, candidateId, body: { ...values, candidateId } })
           } else {
-            mutate({ candidateId, body: values })
+            mutate({ candidateId, body: { ...values, candidateId } })
           }
         }}
       >

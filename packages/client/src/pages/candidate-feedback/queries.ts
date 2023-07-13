@@ -1,6 +1,6 @@
+import client from 'utils/client'
 import { User } from 'firebase/auth'
 import { Feedback } from '@prisma/client'
-import client from 'utils/client'
 import { Candidate } from 'types/candidate'
 
 export async function fetchFeedbacks(candidateId: string) {
@@ -10,17 +10,8 @@ export async function fetchFeedbacks(candidateId: string) {
   return data
 }
 
-export async function createFeedback({
-  candidateId,
-  body,
-}: {
-  candidateId: string
-  body: Partial<Candidate>
-}) {
-  const { data } = await client.post(
-    `candidates/${candidateId}/feedbacks`,
-    body,
-  )
+export async function createFeedback({ body }: { body: Partial<Candidate> }) {
+  const { data } = await client.post('feedbacks', body)
   return data
 }
 

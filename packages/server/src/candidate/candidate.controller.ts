@@ -26,6 +26,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { EmailDto } from 'src/email/email.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { Roles } from 'src/auth/roles.decorator'
+import { Feedback } from 'src/feedback/feedback.dto'
 import { CommentDto } from 'src/comments/comments.dto'
 import { CalendarDto } from 'src/calendar/calendar.dto'
 import {
@@ -108,6 +109,23 @@ export class CandidateController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getEmailsForCandidate(@Param('id') id: string) {
     const data = await this.candidateService.getEmailsForCandidate(id)
+    return data
+  }
+
+  @Get(':id/feedbacks')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    operationId: 'GetFeedbacksForCandidate',
+    summary: 'Get all feedbacks for a candidate',
+  })
+  @ApiOkResponse({
+    description: 'Feedbacks were returned successfully',
+    type: [Feedback],
+  })
+  @ApiNotFoundResponse({ description: 'Candidate not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async getFeedbacksForCandidate(@Param('id') id: string) {
+    const data = await this.candidateService.getFeedbacksForCandidate(id)
     return data
   }
 

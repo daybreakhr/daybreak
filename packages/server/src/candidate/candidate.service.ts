@@ -83,6 +83,25 @@ export class CandidateService {
     return emailEvents
   }
 
+  async getFeedbacksForCandidate(candidateId: string) {
+    const feedbacks = await this.prismaService.feedback.findMany({
+      where: { candidateId },
+    })
+
+    // get user object using `createdBy` field
+    const identifiers = feedbacks.map(({ createdBy }) => ({ uid: createdBy }))
+    const users = await this.authService.getUsers(identifiers)
+    const usersById = users.reduce(
+      (acc, user) => ({ ...acc, [user.uid]: user }),
+      {},
+    )
+
+    return feedbacks.map((feedback) => ({
+      ...feedback,
+      User: usersById[feedback.createdBy] as UserRecord,
+    }))
+  }
+
   async create(
     file: Express.Multer.File,
     createCandidateDto: CreateCandidateDto,

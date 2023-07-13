@@ -41,13 +41,13 @@ export class FeedbackService {
   }
 
   async create(
-    candidateId: string,
     createdBy: string,
     feedbackBody: CreateFeedbackDto,
   ): Promise<Feedback> {
+    const { candidateId, ...restValues } = feedbackBody
     const feedback = await this.prismaService.feedback.create({
       data: {
-        ...feedbackBody,
+        ...restValues,
         Member: { connect: { uid: createdBy } },
         Candidate: { connect: { id: candidateId } },
       },

@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Patch,
   Post,
@@ -27,35 +26,10 @@ import { CreateFeedbackDto, Feedback } from './feedback.dto'
 
 @ApiSecurity('access-key')
 @ApiTags('Feedback')
-@Controller('candidates/:candidateId/feedbacks')
+@Controller('feedbacks')
 @UseGuards(AuthGuard)
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
-
-  @Get('')
-  @ApiOperation({ summary: 'Get all Feedbacks' })
-  @ApiOkResponse({
-    description: 'Feedbacks were returned successfully',
-    type: [Feedback],
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getAll(@Param('candidateId') candidateId: string): Promise<Feedback[]> {
-    const data = await this.feedbackService.getAll(candidateId)
-    return data
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get feedback' })
-  @ApiOkResponse({
-    description: 'feedback returned successfully',
-    type: Feedback,
-  })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Feedback not found' })
-  async getFeedback(@Param('id') id: string): Promise<Feedback> {
-    const data = await this.feedbackService.getFeedback(id)
-    return data
-  }
 
   @Post('')
   @ApiBody({ type: CreateFeedbackDto })
@@ -64,15 +38,10 @@ export class FeedbackController {
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async createFeedback(
-    @Param('candidateId') candidateId: string,
     @GetUser() user: UserRecord,
     @Body() feedbackBody: CreateFeedbackDto,
   ): Promise<Feedback> {
-    const data = await this.feedbackService.create(
-      candidateId,
-      user.uid,
-      feedbackBody,
-    )
+    const data = await this.feedbackService.create(user.uid, feedbackBody)
     return data
   }
 

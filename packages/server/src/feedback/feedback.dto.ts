@@ -23,6 +23,13 @@ export class CreateFeedbackDto {
   })
   @IsNumber()
   score: number
+
+  @ApiProperty({
+    example: '83382e7332fac263632',
+    description: 'uid of feedback giver',
+  })
+  @IsString()
+  candidateId: string
 }
 
 export class Feedback {
