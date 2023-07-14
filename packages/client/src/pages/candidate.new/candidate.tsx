@@ -34,7 +34,7 @@ export default function Candidate() {
       <div className="flex h-full max-w-6xl mx-auto overflow-hidden">
         <Details candidate={data} />
         <CandidateTabs candidate={data} isLoading={isLoading} />
-        <Actions />
+        <Actions candidate={data} isLoading={isLoading} />
       </div>
     </Drawer>
   )

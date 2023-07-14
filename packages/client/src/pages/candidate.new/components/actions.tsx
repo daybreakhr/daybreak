@@ -1,70 +1,86 @@
-import { Button } from 'antd'
-import { DownOutlined, RightOutlined } from '@ant-design/icons'
-import { HiOutlineCalendar, HiOutlineMail } from 'react-icons/hi'
-import { HiOutlineChatBubbleLeftEllipsis } from 'react-icons/hi2'
+import { Button, Skeleton } from 'antd'
+import {
+  HiOutlineCalendar,
+  HiOutlineChatAlt,
+  HiOutlineMail,
+  HiThumbDown,
+  HiThumbUp,
+} from 'react-icons/hi'
 
 import useAuth from 'hooks/use-auth'
+import { Candidate } from 'types/candidate'
+import { CandidateStatus } from '@prisma/client'
+import { useMemo } from 'react'
+import { capitalize } from 'lodash'
+import { Show } from 'ui-kit'
 
-export default function Actions() {
+type ActionsProps = {
+  isLoading: boolean
+  candidate: Candidate | undefined
+}
+
+export default function Actions({ candidate, isLoading }: ActionsProps) {
   const { user } = useAuth()
+
+  const currentRound = useMemo(() => {
+    if (
+      candidate?.status === CandidateStatus.interview &&
+      candidate.interviewId
+    ) {
+      return candidate.Job.Interview.find(
+        ({ id }) => id === candidate.interviewId,
+      )?.title
+    } else {
+      return candidate?.status
+    }
+  }, [candidate])
 
   return (
     <div className="flex-none w-64 pt-6 pl-6">
-      <p className="mb-4 text-xs">
-        <span className="text-gray-500">Current Round:</span>{' '}
-        <span className="text-primary-500">Phone Screen</span>
-      </p>
+      <div className="px-4 py-2 space-y-2 border-t rounded-t-md border-x">
+        <p className="font-medium text-gray-700 text-xxs">CURRENT ROUND</p>
+        <Show
+          when={!isLoading}
+          fallback={<Skeleton paragraph={false} active />}
+        >
+          <p className="font-medium text-success-600">
+            {capitalize(currentRound)}
+          </p>
+        </Show>
+      </div>
+      <div className="px-4 py-2 border-t border-x">
+        <p className="font-medium text-gray-700 text-xxs">NEXT ROUND</p>
+      </div>
+      <div className="flex items-center px-4 py-2 mb-4 space-x-2 text-white border rounded-b-md border-success-600 bg-success-600">
+        <HiThumbUp />
+        <span>Move to next round</span>
+      </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        <div className="flex items-center justify-between px-4 py-2 text-gray-500 bg-gray-100 rounded-md">
-          Move Candidate
-          <DownOutlined />
+      <div className="flex flex-col space-y-2">
+        <div>
+          <Button icon={<HiThumbDown className="anticon" />} type="text" danger>
+            Reject
+          </Button>
         </div>
 
-        <div className="px-4 py-2 space-x-2 border rounded-md">
-          <div className="inline-flex items-center justify-center w-8 h-8 p-1 mb-1 text-lg rounded-md bg-gray-50">
-            👍
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Move to next round</p>
-            <p>On-site Coding</p>
-          </div>
+        <div>
+          <Button type="text" icon={<HiOutlineChatAlt className="anticon" />}>
+            Add Feedback
+          </Button>
         </div>
 
-        <div className="px-4 py-2 space-y-2 border rounded-md">
-          <span className="inline-flex p-1 text-xl rounded-md bg-primary-50 text-primary-500">
-            <HiOutlineCalendar />
-          </span>
-          <div className="flex items-center justify-between">
-            <p>Schedule an interview</p>
-            <RightOutlined />
-          </div>
+        <div>
+          <Button type="text" icon={<HiOutlineCalendar className="anticon" />}>
+            Schedule an Interview
+          </Button>
         </div>
 
-        <div className="px-4 py-2 border rounded-md">
-          <span className="inline-flex p-1 mb-2 text-xl rounded-md bg-primary-50 text-primary-500">
-            <HiOutlineMail />
-          </span>
-          <div className="flex items-center justify-between">
-            <p>Send Mail</p>
-            <RightOutlined />
-          </div>
-          <p className="text-xs text-gray-500">{user?.email}</p>
+        <div>
+          <Button type="text" icon={<HiOutlineMail className="anticon" />}>
+            Send Mail
+          </Button>
+          <span className="ml-4 text-xs text-gray-500">({user?.email})</span>
         </div>
-
-        <div className="px-4 py-2 border rounded-md">
-          <span className="inline-flex p-1 mb-2 text-xl rounded-md bg-primary-50 text-primary-500">
-            <HiOutlineChatBubbleLeftEllipsis />
-          </span>
-          <div className="flex items-center justify-between">
-            <p>Add Feedback</p>
-            <RightOutlined />
-          </div>
-        </div>
-
-        <Button block danger>
-          Reject
-        </Button>
       </div>
     </div>
   )
