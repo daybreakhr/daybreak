@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Avatar, Input, Modal, Rate, Select } from 'antd'
+import { Avatar, Button, Input, Modal, Rate, Select } from 'antd'
 
 import useAuth from 'hooks/use-auth'
+import { DeleteOutlined } from '@ant-design/icons'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
-import { HiX } from 'react-icons/hi'
+
+import { feedbackList } from '../constants/feedback-list'
 
 type AddFeedbackProps = {
   isOpen: boolean
@@ -14,8 +17,27 @@ type AddFeedbackProps = {
 export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
   const { user } = useAuth()
   const { jobId = '' } = useParams()
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const [rating, setRating] = useState<number | undefined>(undefined)
 
   const { data } = useQuery(['interviews', jobId], () => fetchInterviews(jobId))
+
+  const handleSelectChange = (value: string, index: number) => {
+    const newSelectedOptions = [...selectedOptions]
+    newSelectedOptions[index] = value
+    setSelectedOptions(newSelectedOptions)
+  }
+  const handleRateChange = (value: number | undefined) => {
+    setRating(value)
+  }
+  const handleAddOption = () => {
+    setSelectedOptions([...selectedOptions, ''])
+  }
+  const handleDeleteOption = (index: number) => {
+    const newSelectedOptions = [...selectedOptions]
+    newSelectedOptions.splice(index, 1)
+    setSelectedOptions(newSelectedOptions)
+  }
 
   return (
     <Modal
@@ -53,17 +75,41 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
       <hr className="my-3" />
 
       <div className="mb-6 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex group items-center justify-between w-64 px-3 py-1.5 font-medium rounded hover:bg-gray-100">
-            <span>Attitude</span>
-            <button className="hidden text-gray-600 group-hover:block">
-              <HiX />
-            </button>
-          </div>
+        {selectedOptions.map((selectedOption, index) => (
+          <div key={index} className="flex items-center justify-between">
+            <Select
+              allowClear
+              placeholder="+ Select feedback"
+              className="w-64"
+              onChange={(value) => handleSelectChange(value, index)}
+              value={selectedOption}
+            >
+              {feedbackList.map(({ value, label }) => (
+                <Select.Option key={value} value={value}>
+                  {label}
+                </Select.Option>
+              ))}
+            </Select>
+            {selectedOption && (
+              <Rate
+                className="mt-2"
+                value={rating}
+                onChange={handleRateChange}
+              />
+            )}
 
-          <Rate />
-        </div>
-        <Select className="w-64" removeIcon placeholder="+ Add more" />
+            <Button
+              danger
+              size="small"
+              type="text"
+              icon={<DeleteOutlined />}
+              onClick={() => handleDeleteOption(index)}
+            />
+          </div>
+        ))}
+        <button className="p-1 rounded-md" onClick={handleAddOption}>
+          + Add more
+        </button>
       </div>
 
       <div className="flex space-x-3">
