@@ -1,10 +1,15 @@
 import dayjs from 'dayjs'
+import { Avatar } from 'antd'
 import { Calendar } from '@prisma/client'
-import { useQuery } from '@tanstack/react-query'
+
 import { HiOutlineCalendar } from 'react-icons/hi'
 
-import { fetchMembers } from 'pages/members/queries'
-import { Avatar } from 'antd'
+import useAuth from 'hooks/use-auth'
+import { MemberWithUserInfo } from 'types/member'
+
+type CalendarEventProps = Calendar & {
+  members: MemberWithUserInfo[] | undefined
+}
 
 export default function CalendarEvent({
   title,
@@ -13,8 +18,9 @@ export default function CalendarEvent({
   attendees,
   createdAt,
   createdBy,
-}: Calendar) {
-  const { data: members } = useQuery(['members'], fetchMembers)
+  members,
+}: CalendarEventProps) {
+  const { user } = useAuth()
 
   function getInterviewers(emails: string[]) {
     return members?.filter(({ email }) => email && emails.includes(email))
@@ -26,8 +32,12 @@ export default function CalendarEvent({
     <div>
       <div className="flex items-center mb-4 space-x-2">
         <Avatar src={eventCreater?.photoURL} />
-        <p className="font-medium">{eventCreater?.displayName}</p>
-        <p className="text-gray-500">{dayjs(createdAt).fromNow()}</p>
+        <p className="font-medium">
+          {eventCreater?.displayName}{' '}
+          {eventCreater?.uid === user?.uid ? '(you)' : ''}
+        </p>
+        <div className="flex-1" />
+        <p className="text-xs text-gray-500">{dayjs(createdAt).fromNow()}</p>
       </div>
       <div className="p-4 rounded bg-gray-50">
         <div className="flex space-x-2">
@@ -77,7 +87,9 @@ export default function CalendarEvent({
           {getInterviewers(attendees)?.map(({ uid, displayName, photoURL }) => (
             <div key={uid} className="flex items-center space-x-2">
               <Avatar shape="square" src={photoURL} />
-              <p className="font-medium">{displayName}</p>
+              <p className="font-medium">
+                {displayName} {uid === user?.uid ? '(you)' : ''}
+              </p>
             </div>
           ))}
         </div>

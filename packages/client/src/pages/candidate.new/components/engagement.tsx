@@ -4,26 +4,33 @@ import { useSearchParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 
 import { Switch } from 'ui-kit'
-import { fetchCalendarEvents, fetchEmailEvents } from '../queries'
+import { fetchMembers } from 'pages/members/queries'
+
+import EmailEvent from './email-event'
 import CalendarEvent from './calendar-event'
-// import EmailEvent from './email-event'
+import { fetchCalendarEvents, fetchEmailEvents } from '../queries'
 
 export default function Engagement() {
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
 
-  const [{ data: calendars, isLoading }, { data: emails }] = useQueries({
-    queries: [
-      {
-        queryKey: ['calendars', candidateId],
-        queryFn: () => fetchCalendarEvents(candidateId),
-      },
-      {
-        queryKey: ['emails', candidateId],
-        queryFn: () => fetchEmailEvents(candidateId),
-      },
-    ],
-  })
+  const [{ data: calendars, isLoading }, { data: emails }, { data: members }] =
+    useQueries({
+      queries: [
+        {
+          queryKey: ['calendars', candidateId],
+          queryFn: () => fetchCalendarEvents(candidateId),
+        },
+        {
+          queryKey: ['emails', candidateId],
+          queryFn: () => fetchEmailEvents(candidateId),
+        },
+        {
+          queryKey: ['members'],
+          queryFn: fetchMembers,
+        },
+      ],
+    })
 
   const mergeData = useMemo(() => {
     const calendarData: Array<Calendar & { type: 'calendar' }> =
@@ -55,11 +62,11 @@ export default function Engagement() {
               {data.map(({ type, ...rest }) => (
                 <Switch key={rest.id}>
                   <Switch.Match when={type === 'calendar'}>
-                    <CalendarEvent {...(rest as Calendar)} />
+                    <CalendarEvent {...(rest as Calendar)} members={members} />
                   </Switch.Match>
 
                   <Switch.Match when={type === 'email'}>
-                    {/* <EmailEvent {...(rest as Email)} /> */}
+                    <EmailEvent {...(rest as Email)} members={members} />
                   </Switch.Match>
                 </Switch>
               ))}
