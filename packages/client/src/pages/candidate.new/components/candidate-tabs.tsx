@@ -8,6 +8,7 @@ import Resume from './resume'
 import Profile from './profile'
 import Comments from './comments'
 import Feedback from './feedback'
+import Engagement from './engagement'
 
 type CandidateTabsProps = {
   isLoading: boolean
@@ -19,7 +20,7 @@ const items: TabsProps['items'] = [
   { key: 'resume', label: 'Resume' },
   { key: 'comments', label: 'Comments' },
   { key: 'feedback', label: 'Feedback' },
-  { key: 'Engagement', label: 'Engagement' },
+  { key: 'engagement', label: 'Engagement' },
 ]
 
 export default function CandidateTabs({
@@ -46,6 +47,10 @@ export default function CandidateTabs({
 
         <Switch.Match when={activeKey === 'feedback'}>
           <Feedback />
+        </Switch.Match>
+
+        <Switch.Match when={activeKey === 'engagement'}>
+          <Engagement />
         </Switch.Match>
       </Switch>
     </div>
