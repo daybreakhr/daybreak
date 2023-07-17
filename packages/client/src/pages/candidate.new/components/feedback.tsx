@@ -5,7 +5,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import AddFeedback from './add-feedback'
 
 export default function Feedback() {
-  const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(true)
+  const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
 
   return (
     <>
