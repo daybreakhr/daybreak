@@ -1,20 +1,20 @@
 import { useMemo, useState } from 'react'
 import { capitalize } from 'lodash'
 import { CandidateStatus } from '@prisma/client'
+import { DownOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'react-router-dom'
-import { Button, ButtonProps, Skeleton, message } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button, ButtonProps, Dropdown, MenuProps, message } from 'antd'
 import {
   HiOutlineCalendar,
   HiOutlineChatAlt,
   HiOutlineMail,
   HiThumbDown,
-  HiThumbUp,
 } from 'react-icons/hi'
 
-import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { Candidate } from 'types/candidate'
+import { getPipelineStages } from 'utils/utils'
 import RejectModal from 'components/reject-modal'
 import { updateCandidate } from 'pages/candidate/queries'
 
@@ -48,7 +48,7 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
   }, [candidate])
 
   const queryClient = useQueryClient()
-  const { mutateAsync } = useMutation(updateCandidate, {
+  const { mutateAsync, mutate } = useMutation(updateCandidate, {
     onSuccess: ({ status }) => {
       if (status === CandidateStatus.rejected) {
         message.success('Candidate is now moved to Rejected state!')
@@ -73,6 +73,14 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
     })
   }
 
+  const items: MenuProps['items'] = getPipelineStages(
+    candidate?.Job.Interview ?? [],
+  )
+    .slice(0, -1)
+    .map(({ label, value }) => {
+      return { key: value, label }
+    })
+
   const actionButtons: ButtonProps[] = [
     {
       danger: true,
@@ -95,27 +103,31 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
     },
   ]
 
+  const handleStatusChange: MenuProps['onClick'] = ({ key }) => {
+    const status = CandidateStatus[key as keyof typeof CandidateStatus]
+    if (status) {
+      mutate({ candidateId, body: { status } })
+    } else {
+      mutate({
+        candidateId,
+        body: { interviewId: key, status: CandidateStatus.interview },
+      })
+    }
+  }
+
   return (
     <>
       <div className="flex-none w-64 pt-6 pl-6">
-        <div className="px-4 py-2 space-y-2 border-t rounded-t-md border-x">
-          <p className="font-medium text-gray-700 text-xxs">CURRENT ROUND</p>
-          <Show
-            when={!isLoading}
-            fallback={<Skeleton paragraph={false} active />}
-          >
-            <p className="font-medium text-success-600">
-              {capitalize(currentRound)}
-            </p>
-          </Show>
-        </div>
-        <div className="px-4 py-2 border-t border-x">
-          <p className="font-medium text-gray-700 text-xxs">NEXT ROUND</p>
-        </div>
-        <div className="flex items-center px-4 py-2 mb-4 space-x-2 text-white border rounded-b-md border-success-600 bg-success-600">
-          <HiThumbUp />
-          <span>Move to next round</span>
-        </div>
+        <p className="mb-2 text-xs">
+          <span className="text-gray-500">Current Round:</span>{' '}
+          <span className="text-primary-500">{capitalize(currentRound)}</span>
+        </p>
+        <Dropdown menu={{ items, onClick: handleStatusChange }}>
+          <div className="flex items-center justify-between w-56 px-3 py-1.5 mb-4 text-gray-500 rounded-md bg-gray-50 border border-gray-100">
+            <span>Move Candidate</span>
+            <DownOutlined />
+          </div>
+        </Dropdown>
 
         <div className="flex flex-col space-y-2">
           {actionButtons.map((props, index) => (
