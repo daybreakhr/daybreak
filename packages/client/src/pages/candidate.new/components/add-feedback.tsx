@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { DeleteOutlined } from '@ant-design/icons'
 import { Avatar, Button, Input, Modal, Rate, Select } from 'antd'
 
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
-import { DeleteOutlined } from '@ant-design/icons'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
 import { feedbackList } from '../constants/feedback-list'
@@ -79,10 +80,10 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
           <div key={index} className="flex items-center justify-between">
             <Select
               allowClear
-              placeholder="+ Select feedback"
               className="w-64"
-              onChange={(value) => handleSelectChange(value, index)}
               value={selectedOption}
+              placeholder="Select feedback"
+              onChange={(value) => handleSelectChange(value, index)}
             >
               {feedbackList.map(({ value, label }) => (
                 <Select.Option key={value} value={value}>
@@ -90,14 +91,9 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                 </Select.Option>
               ))}
             </Select>
-            {selectedOption && (
-              <Rate
-                className="mt-2"
-                value={rating}
-                onChange={handleRateChange}
-              />
-            )}
-
+            <Show when={selectedOption}>
+              <Rate value={rating} onChange={handleRateChange} />
+            </Show>
             <Button
               danger
               size="small"
@@ -107,9 +103,9 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
             />
           </div>
         ))}
-        <button className="p-1 rounded-md" onClick={handleAddOption}>
+        <Button type="text" onClick={handleAddOption}>
           + Add more
-        </button>
+        </Button>
       </div>
 
       <div className="flex space-x-3">
