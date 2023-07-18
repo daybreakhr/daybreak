@@ -66,23 +66,17 @@ export default function StatusList({
               const name = `${firstName} ${middleName ?? ''} ${lastName}`
 
               return (
-                <a
+                <CandidateCard
+                  id={id}
                   key={id}
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`/candidates/${id}/profile`}
-                >
-                  <CandidateCard
-                    id={id}
-                    name={name}
-                    source={candidate.source}
-                    createdAt={candidate.createdAt}
-                    currentCompany={candidate.currentCompany}
-                    isChecked={selectedCandidates.includes(id)}
-                    onCandidateSelect={() => handleCandidateSelect(id)}
-                    totalYearsOfExperience={candidate.totalYearsOfExperience}
-                  />
-                </a>
+                  name={name}
+                  source={candidate.source}
+                  createdAt={candidate.createdAt}
+                  currentCompany={candidate.currentCompany}
+                  isChecked={selectedCandidates.includes(id)}
+                  onCandidateSelect={() => handleCandidateSelect(id)}
+                  totalYearsOfExperience={candidate.totalYearsOfExperience}
+                />
               )
             })
           }

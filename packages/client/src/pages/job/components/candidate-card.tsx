@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { HiBriefcase } from 'react-icons/hi'
 import { Checkbox, Tag, Tooltip } from 'antd'
 import { CandidateSource } from '@prisma/client'
-// import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import { Show } from 'ui-kit'
 import { getCandidateSourceTitle } from 'utils/utils'
@@ -23,7 +23,7 @@ type CandidateCardProps = {
 }
 
 export default function CandidateCard({
-  // id,
+  id,
   name,
   createdAt,
   isChecked,
@@ -32,13 +32,13 @@ export default function CandidateCard({
   onCandidateSelect,
   totalYearsOfExperience,
 }: CandidateCardProps) {
-  // const [, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
 
   const { color, icon } = candidateSources(source)
   const sourceTitle = getCandidateSourceTitle(source)
 
   function handleCandidateSelect() {
-    // setSearchParams({ candidateId: id })
+    setSearchParams({ candidateId: id })
   }
 
   return (
@@ -46,7 +46,7 @@ export default function CandidateCard({
       <div
         onClick={handleCandidateSelect}
         className={clsx(
-          'w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-50 cursor-pointer',
+          'w-full p-4 bg-white rounded-md shadow-md hover:bg-gray-10 cursor-pointer',
           { 'outline outline-primary-300': isChecked },
         )}
       >

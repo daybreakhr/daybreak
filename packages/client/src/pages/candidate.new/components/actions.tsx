@@ -7,11 +7,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, ButtonProps, Dropdown, MenuProps, message } from 'antd'
 import {
   HiOutlineCalendar,
-  HiOutlineChatAlt,
+  // HiOutlineChatAlt,
   HiOutlineMail,
   HiThumbDown,
 } from 'react-icons/hi'
 
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { Candidate } from 'types/candidate'
 import { getPipelineStages } from 'utils/utils'
@@ -20,6 +21,7 @@ import { updateCandidate } from 'pages/candidate/queries'
 
 import AddFeedback from './add-feedback'
 import ScheduleModal from './schedule-modal'
+import MailModal from './mail-modal'
 
 type ActionsProps = {
   isLoading: boolean
@@ -30,6 +32,7 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
   const [candidateRejectForm, setCandidateRejectForm] = useState(false)
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
   const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
@@ -81,7 +84,7 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       return { key: value, label }
     })
 
-  const actionButtons: ButtonProps[] = [
+  const actionButtons: (ButtonProps & { subTitle?: string })[] = [
     {
       danger: true,
       type: 'text',
@@ -89,17 +92,24 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       icon: <HiThumbDown className="anticon" />,
       onClick: () => setCandidateRejectForm(true),
     },
-    {
-      type: 'text',
-      children: 'Add Feedback',
-      icon: <HiOutlineChatAlt className="anticon" />,
-      onClick: () => setIsFeedbackFormVisible(true),
-    },
+    // {
+    //   type: 'text',
+    //   children: 'Add Feedback',
+    //   icon: <HiOutlineChatAlt className="anticon" />,
+    //   onClick: () => setIsFeedbackFormVisible(true),
+    // },
     {
       type: 'text',
       children: 'Schedule an Interview',
       icon: <HiOutlineCalendar className="anticon" />,
       onClick: () => setIsCalendarModalOpen(true),
+    },
+    {
+      type: 'text',
+      children: 'Send Mail',
+      icon: <HiOutlineMail className="anticon" />,
+      onClick: () => setIsMailModalOpen(true),
+      subTitle: `(${user?.email})`,
     },
   ]
 
@@ -133,15 +143,13 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
           {actionButtons.map((props, index) => (
             <div key={index}>
               <Button {...props} />
+              <Show when={props.subTitle}>
+                <span className="ml-4 text-xs text-gray-500">
+                  {props.subTitle}
+                </span>
+              </Show>
             </div>
           ))}
-
-          <div>
-            <Button type="text" icon={<HiOutlineMail className="anticon" />}>
-              Send Mail
-            </Button>
-            <span className="ml-4 text-xs text-gray-500">({user?.email})</span>
-          </div>
         </div>
       </div>
 
@@ -160,6 +168,11 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       <ScheduleModal
         isModalOpen={isCalendarModalOpen}
         onCancel={() => setIsCalendarModalOpen(false)}
+      />
+
+      <MailModal
+        isOpen={isMailModalOpen}
+        onClose={() => setIsMailModalOpen(false)}
       />
     </>
   )

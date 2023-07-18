@@ -5,6 +5,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { Candidate } from '@prisma/client'
+import { useSearchParams } from 'react-router-dom'
 
 import { Show } from 'ui-kit'
 import { candidateListColumns } from '../constants/candidate-list'
@@ -20,6 +21,7 @@ export default function CandidateList({
   selectedCandidates,
   setSelectedCandidates,
 }: CandidateListProps) {
+  const [, setSearchParams] = useSearchParams()
   const isChecked = data?.every(({ id }) => selectedCandidates.includes(id))
 
   function handleSelectAll() {
@@ -56,6 +58,10 @@ export default function CandidateList({
     getCoreRowModel: getCoreRowModel(),
   })
 
+  function handleCandidateClick(id: string) {
+    setSearchParams({ candidateId: id })
+  }
+
   return (
     <div className="flex flex-1 mx-6 mb-4 overflow-hidden bg-white rounded-md shadow">
       <div className="flex-1 overflow-y-auto">
@@ -67,7 +73,7 @@ export default function CandidateList({
                   <th
                     key={header.id}
                     style={{ width: header.getSize() }}
-                    className="sticky top-0 z-10 px-4 py-3 text-xs font-medium text-left text-gray-600 bg-gray-50"
+                    className="sticky top-0 z-10 px-4 py-3 text-xs font-medium text-left text-gray-600 bg-gray-10"
                   >
                     <Show when={!header.isPlaceholder}>
                       {flexRender(
@@ -83,7 +89,11 @@ export default function CandidateList({
 
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-b border-gray-50">
+              <tr
+                key={row.id}
+                onClick={() => handleCandidateClick(row.original.id)}
+                className="border-b cursor-pointer border-gray-50"
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-4 py-3 font-normal">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

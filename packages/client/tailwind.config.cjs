@@ -53,6 +53,7 @@ module.exports = {
           200: '#D7DADC',
           100: '#E4E6E8',
           50: '#F2F3F3',
+          10: '#F7F8F8',
         },
         secondary: {
           main: '#EBD966',
