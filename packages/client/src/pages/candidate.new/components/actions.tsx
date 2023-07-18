@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import { capitalize } from 'lodash'
 import { CandidateStatus } from '@prisma/client'
-import { DownOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, ButtonProps, Dropdown, MenuProps, message } from 'antd'
+import { CalendarOutlined, DownOutlined, MailOutlined } from '@ant-design/icons'
 import {
-  HiOutlineCalendar,
   // HiOutlineChatAlt,
-  HiOutlineMail,
   HiThumbDown,
 } from 'react-icons/hi'
 
@@ -29,7 +27,7 @@ type ActionsProps = {
 }
 
 export default function Actions({ candidate, isLoading }: ActionsProps) {
-  const { user } = useAuth()
+  const { user, member } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
   const [isMailModalOpen, setIsMailModalOpen] = useState(false)
@@ -101,14 +99,16 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
     {
       type: 'text',
       children: 'Schedule an Interview',
-      icon: <HiOutlineCalendar className="anticon" />,
+      icon: <CalendarOutlined />,
       onClick: () => setIsCalendarModalOpen(true),
+      disabled: !member?.Integration?.gcal?.isInstalled,
     },
     {
       type: 'text',
       children: 'Send Mail',
-      icon: <HiOutlineMail className="anticon" />,
+      icon: <MailOutlined />,
       onClick: () => setIsMailModalOpen(true),
+      disabled: !member?.Integration?.gmail?.isInstalled,
       subTitle: `(${user?.email})`,
     },
   ]

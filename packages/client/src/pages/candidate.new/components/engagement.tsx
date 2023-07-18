@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
+import { Button } from 'antd'
 import { Calendar, Email } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
+import { CalendarOutlined, MailOutlined } from '@ant-design/icons'
 
 import { Switch } from 'ui-kit'
+import useAuth from 'hooks/use-auth'
 import { fetchMembers } from 'pages/members/queries'
 
 import EmailEvent from './email-event'
@@ -11,6 +14,7 @@ import CalendarEvent from './calendar-event'
 import { fetchCalendarEvents, fetchEmailEvents } from '../queries'
 
 export default function Engagement() {
+  const { member } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
 
@@ -53,7 +57,28 @@ export default function Engagement() {
         <Switch.Match when={isLoading}>{/* Add loading state */}</Switch.Match>
 
         <Switch.Match when={mergeData.length === 0}>
-          {/* Add empty state */}
+          <div className="p-4 border rounded-md">
+            <p className="font-medium text-gray-900">
+              No engagement for this candidate
+            </p>
+            <p className="mb-4 text-gray-500">
+              All the communication with candidate will show up here.
+            </p>
+
+            <Button
+              className="mr-4"
+              icon={<CalendarOutlined />}
+              disabled={!member?.Integration?.gcal?.isInstalled}
+            >
+              Schedule an Interview
+            </Button>
+            <Button
+              icon={<MailOutlined />}
+              disabled={!member?.Integration?.gmail?.isInstalled}
+            >
+              Send Email
+            </Button>
+          </div>
         </Switch.Match>
 
         <Switch.Match when={mergeData}>
