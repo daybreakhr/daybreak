@@ -29,8 +29,9 @@ export default function ScheduleModal({
       queries: [
         { queryKey: ['members'], queryFn: fetchMembers },
         {
-          queryKey: ['candidates', candidateId],
+          queryKey: ['candidate', candidateId],
           queryFn: () => fetchCandidate(candidateId),
+          enabled: !!candidateId,
         },
         {
           queryKey: ['interviews', jobId],

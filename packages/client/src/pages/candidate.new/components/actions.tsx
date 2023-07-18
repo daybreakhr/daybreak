@@ -10,7 +10,7 @@ import {
   HiThumbDown,
 } from 'react-icons/hi'
 
-import { Show } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { Candidate } from 'types/candidate'
 import { getPipelineStages } from 'utils/utils'
@@ -20,6 +20,7 @@ import { updateCandidate } from 'pages/candidate/queries'
 import AddFeedback from './add-feedback'
 import ScheduleModal from './schedule-modal'
 import MailModal from './mail-modal'
+import ReEnrollConfirmation from './re-enroll-confirmation'
 
 type ActionsProps = {
   isLoading: boolean
@@ -34,6 +35,8 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
   const [candidateRejectForm, setCandidateRejectForm] = useState(false)
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
   const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
+  const [candidateReEnrollConfirmation, setReEnrollConfirmation] =
+    useState(false)
 
   const currentRound = useMemo(() => {
     if (
@@ -88,6 +91,7 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       type: 'text',
       children: 'Reject',
       icon: <HiThumbDown className="anticon" />,
+      disabled: candidate?.status === CandidateStatus.rejected,
       onClick: () => setCandidateRejectForm(true),
     },
     // {
@@ -101,14 +105,18 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       children: 'Schedule an Interview',
       icon: <CalendarOutlined />,
       onClick: () => setIsCalendarModalOpen(true),
-      disabled: !member?.Integration?.gcal?.isInstalled,
+      disabled:
+        !member?.Integration?.gcal?.isInstalled ||
+        candidate?.status === CandidateStatus.rejected,
     },
     {
       type: 'text',
       children: 'Send Mail',
       icon: <MailOutlined />,
       onClick: () => setIsMailModalOpen(true),
-      disabled: !member?.Integration?.gmail?.isInstalled,
+      disabled:
+        !member?.Integration?.gmail?.isInstalled ||
+        candidate?.status === CandidateStatus.rejected,
       subTitle: `(${user?.email})`,
     },
   ]
@@ -132,21 +140,34 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
           <span className="text-gray-500">Current Round:</span>{' '}
           <span className="text-primary-500">{capitalize(currentRound)}</span>
         </p>
-        <Dropdown menu={{ items, onClick: handleStatusChange }}>
-          <div className="flex items-center justify-between w-56 px-3 py-1.5 mb-4 text-gray-500 rounded-md bg-gray-50 border border-gray-100">
-            <span>Move Candidate</span>
-            <DownOutlined />
-          </div>
-        </Dropdown>
+        <Switch>
+          <Switch.Match when={candidate?.status !== CandidateStatus.rejected}>
+            <Dropdown menu={{ items, onClick: handleStatusChange }}>
+              <div className="flex items-center justify-between w-56 px-3 py-1.5 mb-4 text-gray-500 rounded-md bg-gray-50 border border-gray-100">
+                <span>Move Candidate</span>
+                <DownOutlined />
+              </div>
+            </Dropdown>
+          </Switch.Match>
+
+          <Switch.Match when={candidate?.status === CandidateStatus.rejected}>
+            <Button
+              block
+              type="primary"
+              className="mb-4"
+              onClick={() => setReEnrollConfirmation(true)}
+            >
+              Re-Enroll
+            </Button>
+          </Switch.Match>
+        </Switch>
 
         <div className="flex flex-col space-y-2">
-          {actionButtons.map((props, index) => (
+          {actionButtons.map(({ subTitle, ...props }, index) => (
             <div key={index}>
               <Button {...props} />
-              <Show when={props.subTitle}>
-                <span className="ml-4 text-xs text-gray-500">
-                  {props.subTitle}
-                </span>
+              <Show when={subTitle}>
+                <span className="ml-4 text-xs text-gray-500">{subTitle}</span>
               </Show>
             </div>
           ))}
@@ -173,6 +194,11 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       <MailModal
         isOpen={isMailModalOpen}
         onClose={() => setIsMailModalOpen(false)}
+      />
+
+      <ReEnrollConfirmation
+        isOpen={candidateReEnrollConfirmation}
+        onCancel={() => setReEnrollConfirmation(false)}
       />
     </>
   )

@@ -3,9 +3,11 @@ import { range } from 'lodash'
 import { Skeleton } from 'antd'
 import { FaGraduationCap } from 'react-icons/fa'
 
-import { Switch } from 'ui-kit'
+import { Show, Switch } from 'ui-kit'
 import { Candidate } from 'types/candidate'
 import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-columns.svg'
+import { CandidateStatus } from '@prisma/client'
+import { HiOutlineBan } from 'react-icons/hi'
 
 type ProfileProps = {
   isLoading: boolean
@@ -15,6 +17,39 @@ type ProfileProps = {
 export default function Profile({ candidate, isLoading }: ProfileProps) {
   return (
     <div className="flex-1 p-4 overflow-y-auto">
+      <Show when={candidate?.status === CandidateStatus.rejected}>
+        <div className="p-4 mb-4 border rounded">
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center p-2 text-xl text-white bg-red-500 rounded-md">
+              <HiOutlineBan />
+            </div>
+            <p className="font-medium text-gray-900">
+              This applicant has been rejected
+            </p>
+          </div>
+
+          <hr className="my-4" />
+          <div className="space-y-2">
+            {candidate?.rejectionReasons.map((reason, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <HiOutlineBan className="text-red-500" />
+                <span className="text-gray-800">{reason}</span>
+              </div>
+            ))}
+          </div>
+
+          <Show when={candidate?.rejectionNotes}>
+            {(notes) => (
+              <div className="mt-4">
+                <p className="mb-1 text-xs text-gray-500">
+                  Additional Feedback
+                </p>
+                <p className="text-base text-gray-700">{notes}</p>
+              </div>
+            )}
+          </Show>
+        </div>
+      </Show>
       <p className="text-base font-semibold">Experience</p>
       <p className="text-gray-500">{candidate?.totalYearsOfExperience} years</p>
 

@@ -14,7 +14,7 @@ export default function Candidate() {
   const { data, isLoading } = useQuery(
     ['candidate', candidateId],
     () => fetchCandidate(candidateId),
-    { enabled: !!candidateId },
+    { enabled: candidateId !== '' },
   )
 
   function handleClose() {

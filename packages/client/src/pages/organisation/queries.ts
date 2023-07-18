@@ -16,7 +16,7 @@ export async function updateOrganisation({
 }) {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.patch<Workspace>(
-    `workspace/${workspaceId}`,
+    `workspaces/${workspaceId}`,
     updateWorkspaceDto,
   )
   return data

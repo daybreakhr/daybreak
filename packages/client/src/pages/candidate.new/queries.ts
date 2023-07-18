@@ -9,6 +9,20 @@ export async function fetchCandidate(candidateId: string) {
   return data
 }
 
+export async function updateCandidate({
+  candidateId,
+  body,
+}: {
+  candidateId: string
+  body: Partial<Candidate>
+}) {
+  const { data } = await client.patch<Candidate>(
+    `candidates/${candidateId}`,
+    body,
+  )
+  return data
+}
+
 export async function fetchComments(candidateId: string) {
   const { data } = await client.get<(Comment & { User: User })[]>(
     `candidates/${candidateId}/comments`,
