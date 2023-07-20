@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Button } from 'antd'
+import { Button, Skeleton } from 'antd'
 import { Calendar, Email } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
@@ -52,10 +52,21 @@ export default function Engagement() {
   return (
     <div className="flex-1 p-4 overflow-y-auto">
       <p className="mb-6 text-base font-semibold">Candidate Engagement</p>
-
       <Switch>
-        <Switch.Match when={isLoading}>{/* Add loading state */}</Switch.Match>
-
+        <Switch.Match when={isLoading}>
+          <Skeleton active paragraph={{ rows: 0 }} avatar={{ size: 32 }} />
+          <div className="p-4 rounded bg-gray-50">
+            <div className="flex space-x-2">
+              <Skeleton
+                avatar={{ shape: 'square', size: 32 }}
+                paragraph={{ rows: 0 }}
+                active
+              />
+            </div>
+            <div className="flex-1" />
+            <Skeleton active />
+          </div>
+        </Switch.Match>
         <Switch.Match when={mergeData.length === 0}>
           <div className="p-4 border rounded-md">
             <p className="font-medium text-gray-900">
