@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
-import { Avatar, Button, Rate, Skeleton } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
+import { CandidateStatus } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
+import { Avatar, Button, Rate, Skeleton } from 'antd'
 
 import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
@@ -12,7 +13,11 @@ import getEvaluation from 'utils/evaluation'
 import AddFeedback from './add-feedback'
 import { fetchFeedbacks } from '../queries'
 
-export default function Feedback() {
+type FeedbackProps = {
+  status: CandidateStatus | undefined
+}
+
+export default function Feedback({ status }: FeedbackProps) {
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') || ''
@@ -31,6 +36,7 @@ export default function Feedback() {
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setIsFeedbackFormVisible(true)}
+            disabled={status === CandidateStatus.rejected}
           >
             Add Feedback
           </Button>

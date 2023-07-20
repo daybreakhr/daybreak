@@ -46,7 +46,7 @@ export default function CandidateTabs({
         </Switch.Match>
 
         <Switch.Match when={activeKey === 'feedback'}>
-          <Feedback />
+          <Feedback status={candidate?.status} />
         </Switch.Match>
 
         <Switch.Match when={activeKey === 'engagement'}>

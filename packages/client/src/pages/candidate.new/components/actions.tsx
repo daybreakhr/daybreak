@@ -96,6 +96,7 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       children: 'Add Feedback',
       icon: <HiOutlineChatAlt className="anticon" />,
       onClick: () => setIsFeedbackFormVisible(true),
+      disabled: candidate?.status === CandidateStatus.rejected,
     },
     {
       type: 'text',
