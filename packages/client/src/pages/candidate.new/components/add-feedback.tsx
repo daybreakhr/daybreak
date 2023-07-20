@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { DeleteOutlined } from '@ant-design/icons'
-import { Avatar, Button, Input, Modal, Rate, Select } from 'antd'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { Avatar, Button, Form, Input, Modal, Rate, Select } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
+import { createFeedback, fetchFeedbacks } from '../queries'
+import FeedbackRadio from './feedback-radio'
 import { feedbackList } from '../constants/feedback-list'
 
 type AddFeedbackProps = {
@@ -15,107 +15,160 @@ type AddFeedbackProps = {
   onClose: () => void
 }
 
+const getInitialValues = (candidateId: string) => ({
+  interviewId: undefined,
+  candidateId,
+  evaluation: undefined,
+  notes: undefined,
+  attributes: [
+    { name: feedbackList[0], score: 0 },
+    { name: feedbackList[1], score: 0 },
+  ],
+})
+
 export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
   const { user } = useAuth()
+  const [form] = Form.useForm()
   const { jobId = '' } = useParams()
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const [rating, setRating] = useState<number | undefined>(undefined)
+  const [searchParams] = useSearchParams()
+  const candidateId = searchParams.get('candidateId') || ''
 
-  const { data } = useQuery(['interviews', jobId], () => fetchInterviews(jobId))
+  const { data: interviews } = useQuery(['interviews', jobId], () =>
+    fetchInterviews(jobId),
+  )
 
-  const handleSelectChange = (value: string, index: number) => {
-    const newSelectedOptions = [...selectedOptions]
-    newSelectedOptions[index] = value
-    setSelectedOptions(newSelectedOptions)
-  }
-  const handleRateChange = (value: number | undefined) => {
-    setRating(value)
-  }
-  const handleAddOption = () => {
-    setSelectedOptions([...selectedOptions, ''])
-  }
-  const handleDeleteOption = (index: number) => {
-    const newSelectedOptions = [...selectedOptions]
-    newSelectedOptions.splice(index, 1)
-    setSelectedOptions(newSelectedOptions)
+  const { data: feedbacks } = useQuery(['feedbacks', candidateId], () =>
+    fetchFeedbacks(candidateId),
+  )
+
+  const queryClient = useQueryClient()
+  const { mutate, isLoading } = useMutation(createFeedback, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['feedbacks', candidateId])
+      form.resetFields()
+      onClose()
+    },
+  })
+
+  function handleSubmit() {
+    form.validateFields().then((values) => {
+      mutate(values)
+    })
   }
 
   return (
     <Modal
-      title="Add Feedback"
       open={isOpen}
       onCancel={onClose}
+      onOk={handleSubmit}
+      title="Add Feedback"
       okText="Submit Feedback"
+      okButtonProps={{ loading: isLoading }}
     >
-      <Select
-        className="w-full mt-5 mb-10"
-        placeholder="Select an interview round..."
-        options={data?.map(({ id, title }) => ({ value: id, label: title }))}
-      />
+      <Form
+        form={form}
+        className="pt-4"
+        layout="vertical"
+        initialValues={getInitialValues(candidateId)}
+      >
+        <Form.Item name="candidateId" noStyle />
 
-      <p className="mb-3 text-gray-600">
-        Your overall opinion for this Candidate
-      </p>
-      <div className="flex items-center mb-10 space-x-3">
-        <button className="px-3 py-1.5 bg-transparent border rounded-full">
-          🚫 Strong No
-        </button>
-        <button className="px-3 py-1.5 bg-transparent border rounded-full">
-          👎 No
-        </button>
-        <button className="px-3 py-1.5 bg-transparent border rounded-full">
-          👍 Yes
-        </button>
-        <button className="px-3 py-1.5 bg-transparent border rounded-full">
-          🏆 Strong Yes
-        </button>
-      </div>
+        <Form.Item
+          name="interviewId"
+          rules={[{ required: true, message: 'Select Interview round!' }]}
+        >
+          <Select
+            className="w-full"
+            placeholder="Select an interview round..."
+            options={interviews
+              ?.filter(({ id }) =>
+                feedbacks?.every(({ Interview }) => id !== Interview.id),
+              )
+              ?.map(({ id, title }) => {
+                return { value: id, label: title }
+              })}
+          />
+        </Form.Item>
 
-      <p className="text-gray-600">Provide more feedback</p>
+        <p className="mb-3 text-gray-600">
+          Your overall opinion for this Candidate
+        </p>
+        <Form.Item
+          name="evaluation"
+          rules={[
+            {
+              required: true,
+              message: 'Evaluate candidate on their interview performance',
+            },
+          ]}
+        >
+          <FeedbackRadio />
+        </Form.Item>
 
-      <hr className="my-3" />
+        <p className="text-gray-600">Provide more feedback</p>
+        <hr className="my-2" />
 
-      <div className="mb-6 space-y-3">
-        {selectedOptions.map((selectedOption, index) => (
-          <div key={index} className="flex items-center justify-between">
-            <Select
-              allowClear
-              className="w-64"
-              value={selectedOption}
-              placeholder="Select feedback"
-              onChange={(value) => handleSelectChange(value, index)}
-            >
-              {feedbackList.map(({ value, label }) => (
-                <Select.Option key={value} value={value}>
-                  {label}
-                </Select.Option>
-              ))}
-            </Select>
-            <Show when={selectedOption}>
-              <Rate value={rating} onChange={handleRateChange} />
-            </Show>
-            <Button
-              danger
-              size="small"
-              type="text"
-              icon={<DeleteOutlined />}
-              onClick={() => handleDeleteOption(index)}
+        <div className="mb-6 space-y-3">
+          <Form.List name="attributes">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map((field) => (
+                  <div
+                    key={field.key}
+                    className="flex items-center justify-between"
+                  >
+                    <Form.Item {...field} noStyle name={[field.name, 'name']}>
+                      <Select
+                        allowClear
+                        className="w-64"
+                        placeholder="Select feedback"
+                        options={feedbackList.map((name) => {
+                          return { value: name, label: name }
+                        })}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'score']}
+                      noStyle
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Assign a score for the selected skill',
+                        },
+                      ]}
+                    >
+                      <Rate />
+                    </Form.Item>
+                    <Button
+                      danger
+                      size="small"
+                      type="text"
+                      icon={<DeleteOutlined className="text-xs" />}
+                      onClick={() => remove(field.name)}
+                    />
+                  </div>
+                ))}
+
+                <Button type="text" onClick={() => add()}>
+                  + Add more
+                </Button>
+              </>
+            )}
+          </Form.List>
+        </div>
+
+        <div className="flex space-x-3">
+          <Avatar className="flex-none" src={user?.photoURL} />
+          <Form.Item name="notes" className="w-full">
+            <Input.TextArea
+              rows={3}
+              style={{ resize: 'none' }}
+              placeholder="Add notes/feedback"
             />
-          </div>
-        ))}
-        <Button type="text" onClick={handleAddOption}>
-          + Add more
-        </Button>
-      </div>
-
-      <div className="flex space-x-3">
-        <Avatar className="flex-none" src={user?.photoURL} />
-        <Input.TextArea
-          rows={3}
-          style={{ resize: 'none' }}
-          placeholder="Add notes/feedback"
-        />
-      </div>
+          </Form.Item>
+        </div>
+      </Form>
     </Modal>
   )
 }

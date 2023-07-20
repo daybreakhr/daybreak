@@ -2,7 +2,7 @@ import { Calendar, Comment, Email } from '@prisma/client'
 
 import client from 'utils/client'
 import type { User } from 'firebase/auth'
-import { Candidate } from 'types/candidate'
+import { Candidate, Feedback } from 'types/candidate'
 
 export async function fetchCandidate(candidateId: string) {
   const { data } = await client.get<Candidate>(`candidates/${candidateId}`)
@@ -37,6 +37,18 @@ type CreateCommentPayload = {
 
 export async function createComment(payload: CreateCommentPayload) {
   const { data } = await client.post<Comment>('/comments', payload)
+  return data
+}
+
+export async function fetchFeedbacks(candidateId: string) {
+  const { data } = await client.get<Feedback[]>(
+    `candidates/${candidateId}/feedbacks`,
+  )
+  return data
+}
+
+export async function createFeedback(payload: Partial<Feedback>) {
+  const { data } = await client.post<Feedback>('/feedbacks', payload)
   return data
 }
 

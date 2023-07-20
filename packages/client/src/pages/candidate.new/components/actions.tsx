@@ -5,10 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, ButtonProps, Dropdown, MenuProps, message } from 'antd'
 import { CalendarOutlined, DownOutlined, MailOutlined } from '@ant-design/icons'
-import {
-  // HiOutlineChatAlt,
-  HiThumbDown,
-} from 'react-icons/hi'
+import { HiOutlineChatAlt, HiThumbDown } from 'react-icons/hi'
 
 import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
@@ -94,12 +91,12 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
       disabled: candidate?.status === CandidateStatus.rejected,
       onClick: () => setCandidateRejectForm(true),
     },
-    // {
-    //   type: 'text',
-    //   children: 'Add Feedback',
-    //   icon: <HiOutlineChatAlt className="anticon" />,
-    //   onClick: () => setIsFeedbackFormVisible(true),
-    // },
+    {
+      type: 'text',
+      children: 'Add Feedback',
+      icon: <HiOutlineChatAlt className="anticon" />,
+      onClick: () => setIsFeedbackFormVisible(true),
+    },
     {
       type: 'text',
       children: 'Schedule an Interview',

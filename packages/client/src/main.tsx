@@ -2,6 +2,7 @@ import React from 'react'
 import dayjs from 'dayjs'
 import ReactDOM from 'react-dom/client'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 import App from 'App'
 import 'remirror/styles/all.css'
@@ -10,6 +11,7 @@ import './styles/index.css'
 import 'styles/preflight.css'
 
 dayjs.extend(updateLocale)
+dayjs.extend(relativeTime)
 dayjs.updateLocale('en', {
   relativeTime: {
     future: 'in %s',

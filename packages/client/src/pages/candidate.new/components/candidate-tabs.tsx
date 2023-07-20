@@ -19,7 +19,7 @@ const items: TabsProps['items'] = [
   { key: 'profile', label: 'Profile' },
   { key: 'resume', label: 'Resume' },
   { key: 'comments', label: 'Comments' },
-  // { key: 'feedback', label: 'Feedback' },
+  { key: 'feedback', label: 'Feedback' },
   { key: 'engagement', label: 'Engagement' },
 ]
 

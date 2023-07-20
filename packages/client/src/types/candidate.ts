@@ -14,5 +14,6 @@ export type Candidate = Omit<PCandidate, 'createdAt'> & {
 }
 
 export type Feedback = PFeedback & {
+  Interview: Interview
   User?: User | null
 }

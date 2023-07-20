@@ -86,6 +86,7 @@ export class CandidateService {
   async getFeedbacksForCandidate(candidateId: string) {
     const feedbacks = await this.prismaService.feedback.findMany({
       where: { candidateId },
+      include: { Interview: true },
     })
 
     // get user object using `createdBy` field

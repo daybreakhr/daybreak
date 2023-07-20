@@ -21,7 +21,6 @@ import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import CandidateProfile from 'pages/candidate-profile'
-import CandidateFeedback from 'pages/candidate-feedback'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import CandidateEngagement from 'pages/candidate-engagement'
@@ -88,7 +87,6 @@ export default function App() {
                     <Route path="profile" element={<CandidateProfile />} />
                     <Route path="comments" element={<CandidateComment />} />
                     <Route path="resume" element={<CandidateResume />} />
-                    <Route path="feedback" element={<CandidateFeedback />} />
                     <Route
                       path="engagement"
                       element={<CandidateEngagement />}

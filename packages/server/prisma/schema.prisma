@@ -240,15 +240,29 @@ enum CandidateStatus {
 }
 
 model Feedback {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  notes       String
-  score       Float
-  createdAt   DateTime  @default(now())
-  Member      Member    @relation(fields: [createdBy], references: [uid])
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  evaluation  EvaluationEnum
+  attributes  Attribute[]
+  notes       String?
+  createdAt   DateTime       @default(now())
+  Member      Member         @relation(fields: [createdBy], references: [uid])
   createdBy   String
-  Candidate   Candidate @relation(fields: [candidateId], references: [id])
-  candidateId String    @db.ObjectId
+  Candidate   Candidate      @relation(fields: [candidateId], references: [id])
+  candidateId String         @db.ObjectId
+  Interview   Interview?     @relation(fields: [interviewId], references: [id])
+  interviewId String?        @unique @db.ObjectId
+}
+
+enum EvaluationEnum {
+  STRONG_YES
+  YES
+  NO
+  STRONG_NO
+}
+
+type Attribute {
+  name  String
+  score Float
 }
 
 // Details of interview round with candidate
@@ -263,6 +277,7 @@ model Interview {
   Candidate Candidate[]
   Job       Job         @relation(fields: [jobId], references: [id])
   jobId     String      @db.ObjectId
+  Feedback  Feedback?
 }
 
 model Calendar {
