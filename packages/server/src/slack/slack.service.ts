@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { stringify } from 'qs'
 import { CandidateSource } from '@prisma/client'
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 
 import { decrypt } from 'src/utils/encrypt'
 import { PrismaService } from 'src/prisma.service'
@@ -277,5 +277,25 @@ export class SlackService {
     const args = { user_id: user, token, view }
 
     await axios.post(`${slackApi}/views.publish`, stringify(args))
+  }
+
+  async uninstallSlack(uid: string) {
+    const member = await this.prismaService.member.findUnique({
+      where: { uid },
+    })
+
+    if (member) {
+      return this.prismaService.member.update({
+        where: { uid },
+        data: {
+          Integration: { ...member.Integration, slack: null },
+          slackBotToken: null,
+          slackBotUserId: null,
+          slackUserId: null,
+        },
+      })
+    } else {
+      throw new BadRequestException('Member not found')
+    }
   }
 }

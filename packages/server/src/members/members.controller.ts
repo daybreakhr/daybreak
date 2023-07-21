@@ -50,7 +50,7 @@ export class MembersController {
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Member not found' })
-  @ApiBody({ type: MemberDto })
+  @ApiBody({ type: UpdateMemberDto })
   async updateMember(
     @Param('memberId') memberId: string,
     @Body() updateMemberDto: UpdateMemberDto,

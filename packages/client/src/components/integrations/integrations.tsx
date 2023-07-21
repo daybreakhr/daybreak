@@ -1,15 +1,18 @@
-import { Button, Drawer } from 'antd'
-import { useQuery } from '@tanstack/react-query'
-import { HiOutlineLink, HiX } from 'react-icons/hi'
+import { HiX } from 'react-icons/hi'
+import { Button, Drawer, message } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import { fetchMe } from 'components/auth/queries'
+import { ReactComponent as LinkIcon } from 'assets/icons/link.svg'
+import { ReactComponent as UnLinkIcon } from 'assets/icons/unlink.svg'
 
 import Slack from './slack'
 import Gmail from './gmail'
 import Calendar from './calendar'
 import getAppDetails from './utils'
+import { disconnectSlack } from './queries'
 
 type IntegrationsProps = {
   isOpen: boolean
@@ -27,6 +30,14 @@ export default function Integrations({ isOpen, onClose }: IntegrationsProps) {
   const isGCalInstalled = member?.Integration?.gcal?.isInstalled
   const isSlackInstalled = member?.Integration?.slack?.isInstalled
   const isGmailInstalled = member?.Integration?.gmail?.isInstalled
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(disconnectSlack, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['me'])
+      message.success('Slack app is disconnected successfully!')
+    },
+  })
 
   return (
     <Drawer
@@ -59,7 +70,6 @@ export default function Integrations({ isOpen, onClose }: IntegrationsProps) {
         {getAppDetails({
           isGCalInstalled,
           isGmailInstalled,
-          isSlackInstalled,
         }).map(({ isInstalled, title, imgSrc }) => (
           <Show key={title} when={isInstalled}>
             <div className="flex items-center space-x-2">
@@ -69,12 +79,36 @@ export default function Integrations({ isOpen, onClose }: IntegrationsProps) {
               <div className="flex-1" />
 
               <div className="flex items-center px-3 py-1 space-x-2 rounded-md text-success-700 bg-success-50">
-                <HiOutlineLink />
+                <LinkIcon />
                 <span className="font-medium">Connected</span>
               </div>
             </div>
           </Show>
         ))}
+
+        <Show when={isSlackInstalled}>
+          <div className="flex items-center space-x-2 group">
+            <img
+              alt="Slack"
+              className="w-8 h-8"
+              src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg"
+            />
+            <p className="font-medium">Slack</p>
+            <div className="flex-1" />
+
+            <div
+              onClick={() => mutate()}
+              className="flex items-center px-3 py-1 space-x-2 rounded-md cursor-pointer group-hover:bg-red-50 group-hover:text-red-500 text-success-700 bg-success-50"
+            >
+              <LinkIcon className="group-hover:hidden" />
+              <UnLinkIcon className="hidden group-hover:block" />
+              <span className="font-medium group-hover:hidden">Connected</span>
+              <span className="hidden font-medium group-hover:inline">
+                Disconnect
+              </span>
+            </div>
+          </div>
+        </Show>
       </div>
 
       <Show when={!isGCalInstalled || !isGmailInstalled || !isSlackInstalled}>

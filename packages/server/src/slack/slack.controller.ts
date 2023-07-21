@@ -1,4 +1,10 @@
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger'
 import {
   Body,
   Controller,
@@ -7,10 +13,16 @@ import {
   Post,
   RawBodyRequest,
   Req,
+  UseGuards,
 } from '@nestjs/common'
 import { Request } from 'express'
+import type { UserRecord } from 'firebase-admin/auth'
 
+import { AuthGuard } from 'src/auth/auth.guard'
+import { MemberDto } from 'src/members/members.dto'
+import { GetUser } from 'src/auth/get-user.decorator'
 import isValidRequestFromSlack from 'src/utils/verify-signature'
+
 import { SlackService } from './slack.service'
 
 @ApiTags('Slack')
@@ -40,5 +52,18 @@ export class SlackController {
   @ApiOperation({ summary: 'Slack Actions' })
   async slackActions(@Body() body: any) {
     return this.slackService.handleAction(body)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('uninstall')
+  @ApiOperation({ operationId: 'UninstallSlack', summary: 'Uninstall Slack' })
+  @ApiCreatedResponse({
+    description: 'Uninstalled successfully',
+    type: MemberDto,
+  })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async uninstallSlack(@GetUser() user: UserRecord) {
+    return this.slackService.uninstallSlack(user.uid)
   }
 }

@@ -1,5 +1,6 @@
 import { Role } from '@prisma/client'
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsBoolean, IsEnum, IsOptional } from 'class-validator'
 
 export class MemberDto {
   @ApiProperty({
@@ -36,11 +37,49 @@ export class MemberDto {
     required: true,
   })
   id: string
+
+  Integration: {
+    gmail?: { isInstalled?: boolean; createdAt?: Date }
+    gcal?: { isInstalled?: boolean; createdAt?: Date }
+    slack?: { isInstalled?: boolean; createdAt?: Date }
+  }
+
+  googleRefreshToken?: {
+    iv: string
+    text: string
+  }
+
+  slackBotToken?: {
+    iv: string
+    text: string
+  }
+
+  slackBotUserId?: string
+
+  slackUserId?: string
 }
 
-export class CreateMemberDto extends PartialType(MemberDto) {}
+export class UpdateMemberDto {
+  @IsEnum(Role)
+  @IsOptional()
+  role?: Role
 
-export class UpdateMemberDto extends PartialType(MemberDto) {}
+  @IsBoolean()
+  @IsOptional()
+  isSuspended?: boolean
+
+  @IsOptional()
+  slackBotToken?: {
+    iv: string
+    text: string
+  }
+
+  @IsOptional()
+  slackBotUserId?: string
+
+  @IsOptional()
+  slackUserId?: string
+}
 
 export class AddAppBody {
   @ApiProperty({

@@ -28,3 +28,8 @@ export async function updateAppStatus({
   )
   return data
 }
+
+export async function disconnectSlack() {
+  const { data } = await client.post('slack/uninstall')
+  return data
+}

@@ -6,7 +6,6 @@ type InstalledTypes = {
 
 export default function getAppDetails({
   isGmailInstalled,
-  isSlackInstalled,
   isGCalInstalled,
 }: InstalledTypes) {
   return [
@@ -15,12 +14,6 @@ export default function getAppDetails({
       imgSrc:
         'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
       isInstalled: isGCalInstalled,
-    },
-    {
-      title: 'Slack',
-      imgSrc:
-        'https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg',
-      isInstalled: isSlackInstalled,
     },
     {
       title: 'Gmail',
