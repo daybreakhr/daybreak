@@ -1,20 +1,13 @@
 import { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import dayjs from 'dayjs'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import {
-  Avatar,
-  DatePicker,
-  Form,
-  Input,
-  Modal,
-  Select,
-  TimePicker,
-} from 'antd'
+import { Avatar, DatePicker, Form, Modal, Select, TimePicker } from 'antd'
 
 import { fetchMembers } from 'pages/members/queries'
-import { fetchCandidate } from 'pages/candidate/queries'
-import dayjs from 'dayjs'
-import { createCalendarEvent } from '../queries'
+import { fetchInterviews } from 'pages/create-pipeline/queries'
+
+import { createCalendarEvent, fetchCandidate } from '../queries'
 
 type ScheduleModalProps = {
   isModalOpen: boolean
@@ -26,17 +19,25 @@ export default function ScheduleModal({
   onCancel,
 }: ScheduleModalProps) {
   const [form] = Form.useForm()
-  const { candidateId = '' } = useParams()
+  const { jobId = '' } = useParams()
+  const [searchParams] = useSearchParams()
+  const candidateId = searchParams.get('candidateId') ?? ''
 
-  const [{ data: members }, { data: candidate }] = useQueries({
-    queries: [
-      { queryKey: ['members'], queryFn: fetchMembers },
-      {
-        queryKey: ['candidates', candidateId],
-        queryFn: () => fetchCandidate(candidateId),
-      },
-    ],
-  })
+  const [{ data: members }, { data: candidate }, { data: interviews }] =
+    useQueries({
+      queries: [
+        { queryKey: ['members'], queryFn: fetchMembers },
+        {
+          queryKey: ['candidate', candidateId],
+          queryFn: () => fetchCandidate(candidateId),
+          enabled: !!candidateId,
+        },
+        {
+          queryKey: ['interviews', jobId],
+          queryFn: () => fetchInterviews(jobId),
+        },
+      ],
+    })
 
   const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation(createCalendarEvent, {
@@ -106,7 +107,7 @@ export default function ScheduleModal({
 
   return (
     <Modal
-      width={720}
+      width={640}
       onOk={handleOk}
       open={isModalOpen}
       onCancel={onCancel}
@@ -122,7 +123,13 @@ export default function ScheduleModal({
             { required: true, message: 'Please enter interview title...' },
           ]}
         >
-          <Input placeholder="Interview Title..." />
+          <Select
+            placeholder="Select an interview round"
+            options={interviews?.map(({ title }) => {
+              return { label: title, value: title }
+            })}
+          />
+          {/* <Input placeholder="Interview Title..." /> */}
         </Form.Item>
 
         <div className="flex items-center w-full space-x-2">
@@ -143,7 +150,7 @@ export default function ScheduleModal({
           <Form.Item
             label="Start Time"
             name="startTime"
-            className="flex-1"
+            className="w-32"
             rules={[{ required: true, message: 'Please select start time' }]}
           >
             <TimePicker
@@ -159,7 +166,7 @@ export default function ScheduleModal({
           <Form.Item
             name="endTime"
             label="End Time"
-            className="flex-1"
+            className="w-32"
             rules={[
               {
                 required: true,

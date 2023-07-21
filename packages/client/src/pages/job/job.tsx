@@ -8,7 +8,7 @@ import { Button, Dropdown, Empty, Input, MenuProps, Spin } from 'antd'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 
 import { Show, Switch } from 'ui-kit'
-import CandidatePage from 'pages/candidate.new'
+import CandidatePage from 'pages/candidate'
 import ToggleView from 'components/toggle-view'
 import RejectModal from 'components/reject-modal'
 import useLocalStorage from 'hooks/use-local-storage'

@@ -1,19 +1,21 @@
 import { Modal, message } from 'antd'
-import { useParams } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CandidateStatus } from '@prisma/client'
+import { useSearchParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateCandidate } from '../queries'
 
 type ReEnrollConfirmationProps = {
-  visible: boolean
+  isOpen: boolean
   onCancel: () => void
 }
 
 export default function ReEnrollConfirmation({
-  visible,
+  isOpen,
   onCancel,
 }: ReEnrollConfirmationProps) {
-  const { candidateId = '' } = useParams()
+  const [searchParams] = useSearchParams()
+  const candidateId = searchParams.get('candidateId') ?? ''
+
   const queryClient = useQueryClient()
 
   const { mutate, isLoading } = useMutation(updateCandidate, {
@@ -34,7 +36,7 @@ export default function ReEnrollConfirmation({
       title="Candidate Rejection"
       destroyOnClose
       onOk={handleOk}
-      open={visible}
+      open={isOpen}
       onCancel={onCancel}
       okText="Yes"
       cancelText="No"

@@ -9,29 +9,23 @@ import Login from 'pages/login'
 import Home from 'pages/home'
 import AuthLayout from 'components/auth-layout'
 import AppShell from 'components/app-shell'
-import Candidates from 'pages/candidates'
 import Members from 'pages/members'
 import AllJobs from 'pages/all-jobs'
 import CreateJob from 'pages/create-job'
-import Candidate from 'pages/candidate'
 import Organisation from 'pages/organisation'
 import PublishJob from 'pages/publish-job'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
-import CandidateProfile from 'pages/candidate-profile'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
-import CandidateEngagement from 'pages/candidate-engagement'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
-import CandidateResume from 'pages/candidate-resume'
-import CandidateComment from 'pages/candidate-comment'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,21 +71,6 @@ export default function App() {
                     <Route path="1" element={<CreateJob />} />
                     <Route path="2" element={<CreatePipeline />} />
                     <Route path="3" element={<PublishJob />} />
-                  </Route>
-                  <Route path="candidates" element={<Candidates />} />
-                  <Route path="candidates/:candidateId" element={<Candidate />}>
-                    <Route
-                      path=""
-                      element={<Navigate to="profile" replace />}
-                    />
-                    <Route path="profile" element={<CandidateProfile />} />
-                    <Route path="comments" element={<CandidateComment />} />
-                    <Route path="resume" element={<CandidateResume />} />
-                    <Route
-                      path="engagement"
-                      element={<CandidateEngagement />}
-                    />
-                    <Route path="*" element={<Navigate to="profile" />} />
                   </Route>
                   <Route
                     path="settings"

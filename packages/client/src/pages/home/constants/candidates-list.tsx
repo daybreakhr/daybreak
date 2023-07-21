@@ -2,8 +2,17 @@ import { Tag } from 'antd'
 import { capitalize } from 'lodash'
 import { CandidateStatus } from '@prisma/client'
 import type { ColumnsType } from 'antd/es/table'
+
 import { Candidate } from 'types/candidate'
-import { getStatusColor } from 'pages/candidates/constants/candidate-list'
+
+export const getStatusColor: Record<CandidateStatus, string> = {
+  sourced: 'magenta',
+  applied: 'cyan',
+  interview: 'blue',
+  offered: 'gold',
+  accepted: 'green',
+  rejected: 'red',
+}
 
 export const candidatesList: ColumnsType<Candidate> = [
   {

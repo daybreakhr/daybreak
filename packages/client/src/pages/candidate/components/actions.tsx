@@ -12,11 +12,11 @@ import useAuth from 'hooks/use-auth'
 import { Candidate } from 'types/candidate'
 import { getPipelineStages } from 'utils/utils'
 import RejectModal from 'components/reject-modal'
-import { updateCandidate } from 'pages/candidate/queries'
 
+import MailModal from './mail-modal'
 import AddFeedback from './add-feedback'
 import ScheduleModal from './schedule-modal'
-import MailModal from './mail-modal'
+import { updateCandidate } from '../queries'
 import ReEnrollConfirmation from './re-enroll-confirmation'
 
 type ActionsProps = {

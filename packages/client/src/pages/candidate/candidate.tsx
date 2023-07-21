@@ -1,43 +1,41 @@
-import { TeamOutlined } from '@ant-design/icons'
+import { Drawer } from 'antd'
 import { useQuery } from '@tanstack/react-query'
-import { Outlet, useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
-import PageHeader from 'components/page-header'
 import Details from './components/details'
+import Actions from './components/actions'
+import CandidateTabs from './components/candidate-tabs'
 import { fetchCandidate } from './queries'
 
 export default function Candidate() {
-  const { candidateId = '' } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const candidateId = searchParams.get('candidateId') ?? ''
 
-  const { data } = useQuery(['candidate', candidateId], () =>
-    fetchCandidate(candidateId),
+  const { data, isLoading } = useQuery(
+    ['candidate', candidateId],
+    () => fetchCandidate(candidateId),
+    { enabled: candidateId !== '' },
   )
 
-  return (
-    <div className="flex flex-col h-full">
-      <PageHeader
-        title="Candidate Profile"
-        breadcrumb={[
-          {
-            label: 'Candidate List',
-            path: '/candidates',
-            icon: <TeamOutlined />,
-          },
-          { label: 'Candidate', path: `/candidates/${candidateId}` },
-        ]}
-        tabs={[
-          { label: 'Profile', key: `/candidates/${candidateId}/profile` },
-          { label: 'Resume', key: `/candidates/${candidateId}/resume` },
-          { label: 'Comments', key: `/candidates/${candidateId}/comments` },
-          { label: 'Feedback', key: `/candidates/${candidateId}/feedback` },
-          { label: 'Engagement', key: `/candidates/${candidateId}/engagement` },
-        ]}
-      />
+  function handleClose() {
+    setSearchParams({})
+  }
 
-      <div className="flex flex-1 px-8 py-4 space-x-4 overflow-y-auto">
-        <Outlet />
-        <Details data={data} />
+  return (
+    <Drawer
+      height="85%"
+      closable={false}
+      placement="bottom"
+      open={!!candidateId}
+      onClose={handleClose}
+      className="rounded-t-lg"
+      bodyStyle={{ padding: 0 }}
+    >
+      <div className="flex h-full max-w-6xl mx-auto overflow-hidden">
+        <Details candidate={data} />
+        <CandidateTabs candidate={data} isLoading={isLoading} />
+        <Actions candidate={data} isLoading={isLoading} />
       </div>
-    </div>
+    </Drawer>
   )
 }
