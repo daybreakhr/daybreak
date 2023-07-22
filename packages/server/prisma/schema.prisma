@@ -35,6 +35,7 @@ model Member {
   slackBotToken      EncryptedData?
   slackUserId        String?
   slackBotUserId     String?
+  slackTeamId        String?
   invites            Invitees[]
   Workspace          Workspace       @relation(fields: [workspaceId], references: [id])
   workspaceId        String          @db.ObjectId

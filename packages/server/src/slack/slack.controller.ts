@@ -6,10 +6,10 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger'
 import {
+  BadRequestException,
   Body,
   Controller,
-  HttpException,
-  HttpStatus,
+  Logger,
   Post,
   RawBodyRequest,
   Req,
@@ -28,6 +28,7 @@ import { SlackService } from './slack.service'
 @ApiTags('Slack')
 @Controller('slack')
 export class SlackController {
+  private readonly logger = new Logger('Slack')
   constructor(private readonly slackService: SlackService) {}
 
   @Post('events')
@@ -38,10 +39,7 @@ export class SlackController {
         return this.slackService.verifyUrl(body)
       case 'event_callback':
         if (!isValidRequestFromSlack(req)) {
-          throw new HttpException(
-            { status: HttpStatus.NOT_FOUND, error: 'Invalid signing secret' },
-            HttpStatus.NOT_FOUND,
-          )
+          throw new BadRequestException('Invalid signing secret')
         } else {
           return this.slackService.handleEvent(body)
         }

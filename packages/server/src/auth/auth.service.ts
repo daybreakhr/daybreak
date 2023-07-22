@@ -152,6 +152,7 @@ export class AuthService {
           slackBotToken: encryptedToken,
           slackUserId: data.authed_user.id,
           slackBotUserId: data.bot_user_id,
+          slackTeamId: data.team.id,
         },
       })
 

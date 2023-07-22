@@ -50,53 +50,70 @@ export class SlackService {
   }
 
   async handleEvent(body: any) {
-    const { type } = body.event
+    switch (body.event.type) {
+      case 'app_home_opened': {
+        await this.handleOpenHome(body.event.user)
+        break
+      }
+      case 'tokens_revoked': {
+        const members = await this.prismaService.member.findMany({
+          where: { slackBotUserId: body.event.tokens.bot[0] },
+        })
+        members.forEach(({ uid }) => {
+          this.uninstallSlack(uid)
+        })
+        break
+      }
+      case 'file_shared': {
+        const { token } = await this.getSlackSecrets(body.event.user_id)
+        const fileId = body.event.file_id
+        // Get file details using file.info method
+        const { data } = await axios.get(
+          `${slackApi}/files.info?file=${fileId}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        const { url_private_download, name, mimetype, thumb_pdf } = data.file
 
-    if (type === 'app_home_opened') {
-      const { workspaceId } = await this.getSlackSecrets(body.event.user)
-      const jobs = await this.prismaService.job.findMany({
-        where: { workspaceId, isPublished: true },
-        orderBy: { createdAt: 'desc' },
-        include: { Workspace: true },
-      })
-      this.logger.log(jobs.map(({ title }) => title))
-
-      const view = this.slackViews.homeView(body.event.user, jobs)
-      await this.publishHomeView(body.event.user, view)
-    } else if (type === 'file_shared') {
-      const { token } = await this.getSlackSecrets(body.event.user_id)
-      const fileId = body.event.file_id
-      // Get file details using file.info method
-      const { data } = await axios.get(
-        `${slackApi}/files.info?file=${fileId}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      )
-      const { url_private_download, name, mimetype, thumb_pdf } = data.file
-
-      // download the resume from the private url
-      const { data: file } = await axios.get<Buffer>(url_private_download, {
-        headers: { Authorization: `Bearer ${token}` },
-        responseType: 'arraybuffer',
-      })
-
-      const fileKey = `slack/referrals/${fileId}/${name}`
-      await this.s3Service.uploadS3({ file, key: fileKey, mimetype })
-
-      if (thumb_pdf) {
-        // download the thumbnail from the private url
-        const { data: thumbnail } = await axios.get<Buffer>(thumb_pdf, {
+        // download the resume from the private url
+        const { data: file } = await axios.get<Buffer>(url_private_download, {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'arraybuffer',
         })
 
-        const thumbnailKey = `slack/referrals/${fileId}/thumbnail.png`
-        await this.s3Service.uploadS3({
-          file: thumbnail,
-          key: thumbnailKey,
-          mimetype: 'image/png',
-        })
+        const fileKey = `slack/referrals/${fileId}/${name}`
+        await this.s3Service.uploadS3({ file, key: fileKey, mimetype })
+
+        if (thumb_pdf) {
+          // download the thumbnail from the private url
+          const { data: thumbnail } = await axios.get<Buffer>(thumb_pdf, {
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: 'arraybuffer',
+          })
+
+          const thumbnailKey = `slack/referrals/${fileId}/thumbnail.png`
+          await this.s3Service.uploadS3({
+            file: thumbnail,
+            key: thumbnailKey,
+            mimetype: 'image/png',
+          })
+        }
+        break
       }
+      default:
+        break
     }
+  }
+
+  async handleOpenHome(user: string) {
+    const { workspaceId } = await this.getSlackSecrets(user)
+    const jobs = await this.prismaService.job.findMany({
+      where: { workspaceId, isPublished: true },
+      orderBy: { createdAt: 'desc' },
+      include: { Workspace: true },
+    })
+    this.logger.log(jobs.map(({ title }) => title))
+    const view = this.slackViews.homeView(user, jobs)
+    await this.publishHomeView(user, view)
   }
 
   async handleAction(body: any) {
