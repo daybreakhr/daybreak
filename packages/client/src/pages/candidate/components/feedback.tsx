@@ -23,9 +23,12 @@ export default function Feedback({ status }: FeedbackProps) {
   const candidateId = searchParams.get('candidateId') || ''
   const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
 
-  const { data, isLoading } = useQuery(['feedbacks', candidateId], () =>
-    fetchFeedbacks(candidateId),
+  const { data, isLoading } = useQuery(
+    ['feedbacks', candidateId],
+    () => fetchFeedbacks(candidateId),
+    { enabled: !!candidateId },
   )
+
   return (
     <>
       <div className="flex-1 p-4 overflow-y-auto">

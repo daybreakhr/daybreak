@@ -37,8 +37,10 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
     fetchInterviews(jobId),
   )
 
-  const { data: feedbacks } = useQuery(['feedbacks', candidateId], () =>
-    fetchFeedbacks(candidateId),
+  const { data: feedbacks } = useQuery(
+    ['feedbacks', candidateId],
+    () => fetchFeedbacks(candidateId),
+    { enabled: !!candidateId },
   )
 
   const queryClient = useQueryClient()
