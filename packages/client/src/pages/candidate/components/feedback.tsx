@@ -87,8 +87,8 @@ export default function Feedback({ status }: FeedbackProps) {
 
                         <hr className="my-4" />
 
-                        {attributes?.map(({ name, score }) => (
-                          <div key={name} className="flex items-center mt-2">
+                        {attributes?.map(({ name, score }, index) => (
+                          <div key={index} className="flex items-center mt-2">
                             <p className="flex-1 text-base font-medium">
                               {name}
                             </p>

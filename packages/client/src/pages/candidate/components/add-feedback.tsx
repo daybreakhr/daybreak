@@ -21,8 +21,8 @@ const getInitialValues = (candidateId: string) => ({
   evaluation: undefined,
   notes: undefined,
   attributes: [
-    { name: feedbackList[0], score: 0 },
-    { name: feedbackList[1], score: 0 },
+    { name: feedbackList[0], score: undefined },
+    { name: feedbackList[1], score: undefined },
   ],
 })
 
@@ -110,7 +110,7 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
         <p className="text-gray-600">Provide more feedback</p>
         <hr className="my-2" />
 
-        <div className="mb-6 space-y-3">
+        <div className="mb-6">
           <Form.List name="attributes">
             {(fields, { add, remove }) => (
               <>
@@ -119,10 +119,16 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                     key={field.key}
                     className="flex items-center justify-between"
                   >
-                    <Form.Item {...field} noStyle name={[field.name, 'name']}>
+                    <Form.Item
+                      {...field}
+                      className="w-64"
+                      name={[field.name, 'name']}
+                      rules={[
+                        { required: true, message: 'Select a skill attribute' },
+                      ]}
+                    >
                       <Select
                         allowClear
-                        className="w-64"
                         placeholder="Select feedback"
                         options={feedbackList.map((name) => {
                           return { value: name, label: name }
@@ -132,23 +138,19 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                     <Form.Item
                       {...field}
                       name={[field.name, 'score']}
-                      noStyle
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Assign a score for the selected skill',
-                        },
-                      ]}
+                      rules={[{ required: true, message: 'Assign a score' }]}
                     >
                       <Rate />
                     </Form.Item>
-                    <Button
-                      danger
-                      size="small"
-                      type="text"
-                      icon={<DeleteOutlined className="text-xs" />}
-                      onClick={() => remove(field.name)}
-                    />
+                    <Form.Item>
+                      <Button
+                        danger
+                        size="small"
+                        type="text"
+                        icon={<DeleteOutlined className="text-xs" />}
+                        onClick={() => remove(field.name)}
+                      />
+                    </Form.Item>
                   </div>
                 ))}
 
