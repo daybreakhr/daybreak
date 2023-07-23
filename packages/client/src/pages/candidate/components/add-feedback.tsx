@@ -1,6 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { Avatar, Button, Form, Input, Modal, Rate, Select } from 'antd'
+import { Avatar, Button, Form, Input, Modal, Select } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useAuth from 'hooks/use-auth'
@@ -8,7 +8,7 @@ import { fetchInterviews } from 'pages/create-pipeline/queries'
 
 import { createFeedback, fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'
-import { feedbackList } from '../constants/feedback-list'
+import AttributeSelect from './select-attribute'
 
 type AddFeedbackProps = {
   isOpen: boolean
@@ -20,10 +20,7 @@ const getInitialValues = (candidateId: string) => ({
   candidateId,
   evaluation: undefined,
   notes: undefined,
-  attributes: [
-    { name: feedbackList[0], score: undefined },
-    { name: feedbackList[1], score: undefined },
-  ],
+  attributes: [],
 })
 
 export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
@@ -127,30 +124,15 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                         { required: true, message: 'Select a skill attribute' },
                       ]}
                     >
-                      <Select
-                        allowClear
-                        placeholder="Select feedback"
-                        options={feedbackList.map((name) => {
-                          return { value: name, label: name }
-                        })}
-                      />
+                      <AttributeSelect form={form} />
                     </Form.Item>
-                    <Form.Item
-                      {...field}
-                      name={[field.name, 'score']}
-                      rules={[{ required: true, message: 'Assign a score' }]}
-                    >
-                      <Rate />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button
-                        danger
-                        size="small"
-                        type="text"
-                        icon={<DeleteOutlined className="text-xs" />}
-                        onClick={() => remove(field.name)}
-                      />
-                    </Form.Item>
+                    <Button
+                      danger
+                      size="small"
+                      type="text"
+                      icon={<DeleteOutlined className="text-xs" />}
+                      onClick={() => remove(field.name)}
+                    />
                   </div>
                 ))}
 
