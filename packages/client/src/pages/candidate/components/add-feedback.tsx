@@ -115,13 +115,10 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
-                  <div
-                    key={field.key}
-                    className="flex items-center justify-between"
-                  >
+                  <div key={field.key} className="flex items-center space-x-2">
                     <Form.Item
                       {...field}
-                      className="w-64"
+                      className="w-56"
                       name={[field.name, 'name']}
                       rules={[
                         { required: true, message: 'Select a skill attribute' },
@@ -135,6 +132,9 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                         })}
                       />
                     </Form.Item>
+
+                    <div className="flex-1" />
+
                     <Form.Item
                       {...field}
                       name={[field.name, 'score']}
