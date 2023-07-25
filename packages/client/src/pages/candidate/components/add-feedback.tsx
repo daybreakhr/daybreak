@@ -141,6 +141,7 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                       icon={<DeleteOutlined className="text-xs" />}
                       onClick={() => remove(field.name)}
                     />
+
                   </div>
                 ))}
 

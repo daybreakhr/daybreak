@@ -210,7 +210,7 @@ export class SlackService {
     // send notification to the user on slack
     await this.sendMessage(
       userId,
-      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate profile at <${process.env.FRONTEND_URL}/candidates/${candidate.id}/profile|Daybreak App>. We will keep you posted on the update of this candidate's hiring process.`,
+      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate profile at <${process.env.FRONTEND_URL}/jobs/${jobId}?candidateId=${candidate.id}|Daybreak App>. We will keep you posted on the update of this candidate's hiring process.`,
     )
   }
 
