@@ -3,13 +3,15 @@ import { HttpService } from '@nestjs/axios'
 import type { Member } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { UserRecord } from 'firebase-admin/auth'
+import { catchError, firstValueFrom } from 'rxjs'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import { OAuth2Client, UserRefreshClient } from 'google-auth-library'
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
 import { encrypt, decrypt } from 'src/utils/encrypt'
 import { FirebaseService } from 'src/firebase/firebase.service'
-import { catchError, firstValueFrom } from 'rxjs'
+import { SlackInstalledEvent } from './events/slack-installed.event'
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,7 @@ export class AuthService {
 
   constructor(
     private readonly configService: ConfigService,
+    private eventEmitter: EventEmitter2,
     private readonly firebaseService: FirebaseService,
     private prismaService: PrismaService,
     private readonly httpService: HttpService,
@@ -166,6 +169,11 @@ export class AuthService {
         where: { uid },
         data: { Integration: slackIntegrationData },
       })
+
+      this.eventEmitter.emit(
+        'slack.installed',
+        new SlackInstalledEvent(member.slackUserId),
+      )
 
       return member
     }
