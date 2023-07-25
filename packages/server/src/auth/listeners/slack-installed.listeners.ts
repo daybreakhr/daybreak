@@ -15,7 +15,7 @@ export class SlackInstalledListener {
     const { slackUserId } = payload
     await this.slackService.sendMessage(
       slackUserId,
-      `Dear @<${slackUserId}>,\nWelcome to Daybreak - A new seamless and collaborative way to contribute to your organisation's recruiting engine.`,
+      `Dear <@${slackUserId}>,\nWelcome to Daybreak - A new seamless and collaborative way to contribute to your organisation's recruiting engine.`,
     )
   }
 }
