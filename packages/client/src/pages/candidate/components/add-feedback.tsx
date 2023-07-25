@@ -1,4 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Avatar, Button, Form, Input, Modal, Select } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -6,9 +7,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useAuth from 'hooks/use-auth'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
-import { createFeedback, fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'
-import AttributeSelect from './select-attribute'
+import SelectAttribute from './select-attribute'
+import { createFeedback, fetchFeedbacks } from '../queries'
+import { feedbackList as initialFeedbackList } from '../constants/feedback-list'
 
 type AddFeedbackProps = {
   isOpen: boolean
@@ -20,10 +22,15 @@ const getInitialValues = (candidateId: string) => ({
   candidateId,
   evaluation: undefined,
   notes: undefined,
-  attributes: [],
+  attributes: [
+    { name: initialFeedbackList[0], score: 0 },
+    { name: initialFeedbackList[1], score: 0 },
+  ],
 })
 
 export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
+  const [feedbackList, setFeedbackList] = useState(initialFeedbackList)
+
   const { user } = useAuth()
   const [form] = Form.useForm()
   const { jobId = '' } = useParams()
@@ -116,16 +123,17 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                     key={field.key}
                     className="flex items-center justify-between"
                   >
-                    <Form.Item
-                      {...field}
-                      className="w-64"
-                      name={[field.name, 'name']}
-                      rules={[
-                        { required: true, message: 'Select a skill attribute' },
-                      ]}
-                    >
-                      <AttributeSelect form={form} />
-                    </Form.Item>
+                    <SelectAttribute
+                      name={form.getFieldValue([
+                        'attributes',
+                        field.name,
+                        'name',
+                      ])}
+                      field={field}
+                      form={form}
+                      feedbackList={feedbackList}
+                      setFeedbackList={setFeedbackList}
+                    />
                     <Button
                       danger
                       size="small"
