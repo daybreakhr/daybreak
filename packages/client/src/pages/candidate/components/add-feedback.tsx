@@ -114,7 +114,7 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
         <p className="text-gray-600">Provide more feedback</p>
         <hr className="my-2" />
 
-        <div className="mb-6">
+        <div className="mb-6 space-y-2">
           <Form.List name="attributes">
             {(fields, { add, remove }) => (
               <>
@@ -124,11 +124,6 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                     className="flex items-center justify-between"
                   >
                     <SelectAttribute
-                      name={form.getFieldValue([
-                        'attributes',
-                        field.name,
-                        'name',
-                      ])}
                       field={field}
                       form={form}
                       feedbackList={feedbackList}
@@ -141,7 +136,6 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
                       icon={<DeleteOutlined className="text-xs" />}
                       onClick={() => remove(field.name)}
                     />
-
                   </div>
                 ))}
 

@@ -1,19 +1,17 @@
 import { useState } from 'react'
-import { Form, Rate, Select } from 'antd'
+import { Form, FormInstance, Rate, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 const NEW_ITEM = 'CREATE_NEW_ITEM'
 
 type SelectAttributeProps = {
-  name: string
   field: any
-  form: any
+  form: FormInstance<any>
   feedbackList: string[]
   setFeedbackList: (callback: (prev: string[]) => string[]) => void
 }
 
 function SelectAttribute({
-  name,
   field,
   form,
   feedbackList,
@@ -36,17 +34,18 @@ function SelectAttribute({
           placeholder="Select feedback"
           onChange={(value) => {
             if (value === NEW_ITEM) {
-              const newSkillLabel = inputValue.trim()
+              const newAttributeLabel = inputValue.trim()
 
-              if (newSkillLabel) {
-                setFeedbackList((prev) => [...prev, newSkillLabel])
+              if (newAttributeLabel) {
+                setFeedbackList((prev) => [...prev, newAttributeLabel])
 
                 form.setFieldsValue({
-                  attributes: form
-                    .getFieldValue('attributes')
-                    .map((f: any) =>
-                      f.name === name ? { name: newSkillLabel, score: 0 } : f,
-                    ),
+                  attributes: field.map(
+                    (f: { key: any; name: string | number }) =>
+                      f.key === field.key
+                        ? { name: newAttributeLabel, score: 0 }
+                        : form.getFieldValue(['attributes', f.name]),
+                  ),
                 })
 
                 setInputValue('')
