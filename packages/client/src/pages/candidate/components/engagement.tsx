@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Button, Skeleton } from 'antd'
 import { Calendar, Email } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
@@ -12,11 +12,15 @@ import { fetchMembers } from 'pages/members/queries'
 import EmailEvent from './email-event'
 import CalendarEvent from './calendar-event'
 import { fetchCalendarEvents, fetchEmailEvents } from '../queries'
+import ScheduleModal from './schedule-modal'
+import MailModal from './mail-modal'
 
 export default function Engagement() {
   const { member } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') ?? ''
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
 
   const [{ data: calendars, isLoading }, { data: emails }, { data: members }] =
     useQueries({
@@ -79,12 +83,14 @@ export default function Engagement() {
             <Button
               className="mr-4"
               icon={<CalendarOutlined />}
+              onClick={() => setIsCalendarModalOpen(true)}
               disabled={!member?.Integration?.gcal?.isInstalled}
             >
               Schedule an Interview
             </Button>
             <Button
               icon={<MailOutlined />}
+              onClick={() => setIsMailModalOpen(true)}
               disabled={!member?.Integration?.gmail?.isInstalled}
             >
               Send Email
@@ -110,6 +116,15 @@ export default function Engagement() {
           )}
         </Switch.Match>
       </Switch>
+      <ScheduleModal
+        isModalOpen={isCalendarModalOpen}
+        onCancel={() => setIsCalendarModalOpen(false)}
+      />
+
+      <MailModal
+        isOpen={isMailModalOpen}
+        onClose={() => setIsMailModalOpen(false)}
+      />
     </div>
   )
 }

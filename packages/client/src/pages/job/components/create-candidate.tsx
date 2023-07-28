@@ -33,7 +33,8 @@ export default function CreateCandidate({
     onSuccess: ({ id }) => {
       form.resetFields()
       queryClient.invalidateQueries(['candidates'])
-      navigate(`/candidates/${id}`)
+      onClose()
+      navigate(`/jobs/${jobId}?candidateId=${id}`)
     },
     onError: (error: any) => {
       const errMsg = error?.response?.data?.error

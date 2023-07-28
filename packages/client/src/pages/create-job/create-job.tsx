@@ -59,7 +59,9 @@ export default function JobForm() {
       {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
-        onSuccess(data: Job) {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        onSuccess: (data: Job) => {
           const { hireBy, ...restData } = data
           form.setFieldsValue(restData)
           if (hireBy) {

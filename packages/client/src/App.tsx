@@ -16,6 +16,7 @@ import Organisation from 'pages/organisation'
 import PublishJob from 'pages/publish-job'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
+import CreateJobV2 from 'pages/create-job.new'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
@@ -59,6 +60,7 @@ export default function App() {
                   element={<AuthLayout component={ConnectSlack} />}
                 />
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
+                  <Route path="create-job/v2" element={<CreateJobV2 />} />
                   <Route path="dashboard" element={<Home />} />
                   <Route path="jobs" element={<AllJobs />} />
                   <Route path="jobs/:jobId" element={<Job />} />
