@@ -10,6 +10,38 @@ Frontend code is available inside `packages/client` directory and backend code i
 
 Before getting started make sure you have [NodeJS](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/) installed in your local system. If you don't have NodeJS installed, then install using [nvm](https://github.com/nvm-sh/nvm). `v16.13.1` is preferrable version for NodeJS.
 
+### Database
+
+#### First Time Setup
+
+We use mongodb for database. If you don't have mongodb installed in your local system, then refer this [guide](https://www.prisma.io/dataguide/mongodb/setting-up-a-local-mongodb-database#setting-up-mongodb-on-macos). This will help you to install mongodb in your local system. Following this guide, your dbpath would be `/usr/local/var/mongodb`.
+
+We are using [Prisma](https://www.prisma.io/) as ORM for mongodb. Prisma internally uses transactions to communicate with the database which requires us to setup replica sets. To start local development server for database, run:
+
+```
+# Open terminal and run the following command
+mongod --port=27017 --dbpath=/usr/local/var/mongodb --replSet=rs0
+
+# Open another terminal and run the following command
+mongosh
+# Inside mongosh shell run the following command
+rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]});
+
+# Create a new database named `daybreak` inside mongosh shell
+use daybreak
+
+# your new connection String
+mongodb://localhost:27017
+```
+
+#### Subsequent Runs
+
+Once you complete your one-time setup, you can start your local development server for database by running:
+
+```
+mongod --port=27017 --dbpath=/usr/local/var/mongodb --replSet=rs0
+```
+
 ### Server
 
 To start local development server for backend, run:

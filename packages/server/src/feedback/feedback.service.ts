@@ -1,26 +1,14 @@
 import { isEmpty } from 'lodash'
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
-import { AuthService } from 'src/auth/auth.service'
 import { CreateFeedbackDto, Feedback } from './feedback.dto'
 
 @Injectable()
 export class FeedbackService {
-  constructor(
-    private prismaService: PrismaService,
-    private authService: AuthService,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
-  async create(
-    createdBy: string,
-    feedbackBody: CreateFeedbackDto,
-  ): Promise<Feedback> {
+  async create(createdBy: string, feedbackBody: CreateFeedbackDto) {
     const { candidateId, interviewId, ...restValues } = feedbackBody
     if (!interviewId) {
       throw new BadRequestException('Interview ID is required')
@@ -37,10 +25,7 @@ export class FeedbackService {
     return feedback
   }
 
-  async update(
-    feedbackId: string,
-    feedbackBody: Partial<Feedback>,
-  ): Promise<Feedback> {
+  async update(feedbackId: string, feedbackBody: Partial<Feedback>) {
     if (!isEmpty(feedbackBody)) {
       const feedback = await this.prismaService.feedback.update({
         where: { id: feedbackId },
@@ -48,17 +33,11 @@ export class FeedbackService {
       })
       return feedback
     } else {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Request body is not available',
-        },
-        HttpStatus.BAD_REQUEST,
-      )
+      throw new BadRequestException('Request body is not available')
     }
   }
 
-  async delete(feedbackId: string): Promise<Feedback> {
+  async delete(feedbackId: string) {
     const feedback = await this.prismaService.feedback.delete({
       where: { id: feedbackId },
     })
