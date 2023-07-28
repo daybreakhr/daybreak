@@ -62,6 +62,11 @@ export async function createFeedback(payload: Partial<Feedback>) {
   return data
 }
 
+export async function deleteFeedback({ id }: { id: string }) {
+  const { data } = await client.delete(`/feedbacks/${id}`)
+  return data
+}
+
 export async function fetchCalendarEvents(candidateId: string) {
   const { data } = await client.get<Calendar[]>(
     `candidates/${candidateId}/calendars`,
