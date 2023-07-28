@@ -1,5 +1,10 @@
 import { isEmpty } from 'lodash'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common'
 
 import { PrismaService } from 'src/prisma.service'
 import { AuthService } from 'src/auth/auth.service'
@@ -17,6 +22,9 @@ export class FeedbackService {
     feedbackBody: CreateFeedbackDto,
   ): Promise<Feedback> {
     const { candidateId, interviewId, ...restValues } = feedbackBody
+    if (!interviewId) {
+      throw new BadRequestException('Interview ID is required')
+    }
     const feedback = await this.prismaService.feedback.create({
       data: {
         ...restValues,
