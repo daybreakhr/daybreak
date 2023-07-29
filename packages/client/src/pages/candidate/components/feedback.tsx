@@ -35,11 +35,13 @@ export default function Feedback({ status }: FeedbackProps) {
 
   const queryClient = useQueryClient()
 
-  const { mutate } = useMutation(deleteFeedback, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['feedbacks', candidateId])
+  const { mutate, isLoading: isDeletingFeedback } = useMutation(
+    deleteFeedback,
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(['feedbacks', candidateId]),
     },
-  })
+  )
 
   function handleDelete({ id }: { id: string }) {
     Modal.confirm({
@@ -48,6 +50,7 @@ export default function Feedback({ status }: FeedbackProps) {
       okText: 'Delete',
       okType: 'danger',
       cancelText: 'Cancel',
+      okButtonProps: { loading: isDeletingFeedback },
       onOk() {
         mutate({ id })
       },
@@ -98,26 +101,21 @@ export default function Feedback({ status }: FeedbackProps) {
                         <p className="text-gray-500">
                           {dayjs(createdAt).fromNow()}
                         </p>
+                        <div className="flex-1" />
+                        <Button
+                          danger
+                          size="small"
+                          type="text"
+                          icon={<DeleteOutlined className="text-xs" />}
+                          onClick={() => handleDelete({ id })}
+                        />
                       </div>
 
                       <div className="p-4 rounded-md bg-gray-50">
-                        <div className="flex justify-between">
-                          <p className="mb-4">
-                            <span>Round:</span>{' '}
-                            <span className="font-medium">
-                              {Interview.title}
-                            </span>
-                          </p>
-                          <Button
-                            danger
-                            size="small"
-                            type="text"
-                            icon={<DeleteOutlined className="text-xs" />}
-                            onClick={() => {
-                              handleDelete({ id })
-                            }}
-                          />
-                        </div>
+                        <p className="mb-4">
+                          <span>Round:</span>{' '}
+                          <span className="font-medium">{Interview.title}</span>
+                        </p>
 
                         <span className="px-3 py-1.5 border rounded-full bg-white font-medium">
                           {getEvaluation(evaluation)}
