@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
-import { PlusOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+import {
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CandidateStatus } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
-import { Avatar, Button, Rate, Skeleton } from 'antd'
+import { Avatar, Button, Modal, Rate, Skeleton } from 'antd'
 
 import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import getEvaluation from 'utils/evaluation'
 
 import AddFeedback from './add-feedback'
-import { fetchFeedbacks } from '../queries'
+import { deleteFeedback, fetchFeedbacks } from '../queries'
 
 type FeedbackProps = {
   status: CandidateStatus | undefined
@@ -28,6 +32,30 @@ export default function Feedback({ status }: FeedbackProps) {
     () => fetchFeedbacks(candidateId),
     { enabled: !!candidateId },
   )
+
+  const queryClient = useQueryClient()
+
+  const { mutate, isLoading: isDeletingFeedback } = useMutation(
+    deleteFeedback,
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(['feedbacks', candidateId]),
+    },
+  )
+
+  function handleDelete({ id }: { id: string }) {
+    Modal.confirm({
+      title: 'Are you sure to delete this feedback?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      okButtonProps: { loading: isDeletingFeedback },
+      onOk() {
+        mutate({ id })
+      },
+    })
+  }
 
   return (
     <>
@@ -73,6 +101,14 @@ export default function Feedback({ status }: FeedbackProps) {
                         <p className="text-gray-500">
                           {dayjs(createdAt).fromNow()}
                         </p>
+                        <div className="flex-1" />
+                        <Button
+                          danger
+                          size="small"
+                          type="text"
+                          icon={<DeleteOutlined className="text-xs" />}
+                          onClick={() => handleDelete({ id })}
+                        />
                       </div>
 
                       <div className="p-4 rounded-md bg-gray-50">
