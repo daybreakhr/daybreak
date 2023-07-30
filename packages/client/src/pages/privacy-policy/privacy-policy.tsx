@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
         </h2>
       </div>
       <div className="max-w-3xl px-4 pb-12 mx-auto prose">
-        <p className="mx-auto font-medium w-fit">Last Updated on: 29/06/2023</p>
+        <p className="mx-auto font-medium w-fit">Last Updated on: 30/07/2023</p>
         <p>
           Daybreak Technologies Private Limited is committed to protecting your
           privacy. We have created this Privacy and Data Protection Policy to
@@ -47,8 +47,15 @@ export default function PrivacyPolicy() {
           of Services. This includes your name, company, title, country, e-mail
           address information pertaining to you as well as information
           pertaining to third- persons/individual whose resumes will be uploaded
-          for availing the Services. We retain your information until your
-          account remains active with our application.
+          for availing the Services. We also store Bot token, UserID, and BotID
+          provided by Slack&apos;s authentication API in the database.
+        </p>
+        <p>
+          We will store this information as long as it is necessary in order to
+          facilitate your use of the Services and for ancillary legitimate and
+          essential business purposes &mdash; these include, without limitation,
+          for improving our Services, attending to technical issues, and dealing
+          with disputes.
         </p>
         <p>
           Daybreak has developed a functionality that allows its customers to
