@@ -5,10 +5,10 @@ import {
   ExclamationCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CandidateStatus } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
 import { Avatar, Button, Modal, Rate, Skeleton } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'

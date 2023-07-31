@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common'
+import { EventEmitter2 } from '@nestjs/event-emitter'
+
 import { PrismaService } from 'src/prisma.service'
 import { CreateCommentDto } from './comments.dto'
 
 @Injectable()
 export class CommentsService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private eventEmitter: EventEmitter2,
+    private prismaService: PrismaService,
+  ) {}
 
   async createComment(createCommentDto: CreateCommentDto, userId: string) {
     const { content, candidateId } = createCommentDto
@@ -14,7 +19,9 @@ export class CommentsService {
         Member: { connect: { uid: userId } },
         Candidate: { connect: { id: candidateId } },
       },
+      include: { Candidate: true },
     })
+    this.eventEmitter.emit('comment.created', data)
     return data
   }
 
