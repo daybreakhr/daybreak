@@ -1,18 +1,23 @@
-import type { Candidate, Comment } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
 import { OnEvent } from '@nestjs/event-emitter'
 import { Injectable, Logger } from '@nestjs/common'
+import type { Candidate, Comment } from '@prisma/client'
 
 import { AuthService } from 'src/auth/auth.service'
+import { SlackService } from 'src/slack/slack.service'
 import { AWSSESService } from 'src/aws/aws.ses.service'
-import { ConfigService } from '@nestjs/config'
+import { MembersService } from 'src/members/members.service'
 
 @Injectable()
 export class CommentCreatedListener {
   private readonly logger = new Logger('COMMENT CREATED EVENT')
+
   constructor(
     private authService: AuthService,
-    private configService: ConfigService,
     private sesService: AWSSESService,
+    private configService: ConfigService,
+    private membersService: MembersService,
+    private slackService: SlackService,
   ) {}
 
   APP_URL = this.configService.get<string>('FRONTEND_URL')
@@ -39,6 +44,67 @@ export class CommentCreatedListener {
         }
       })
     }
+  }
+
+  @OnEvent('comment.created')
+  async sendSlackNotificationToMentions(
+    payload: Comment & { Candidate: Candidate },
+  ) {
+    const { content, createdBy } = payload
+    const mentionIds = this.getMentionsFromContent(content)
+
+    if (mentionIds?.length > 0) {
+      const mentions = await this.membersService.getMembersByUids(
+        mentionIds.map(({ uid }) => uid),
+      )
+
+      const slackIds = mentions
+        .map(({ slackUserId }) => slackUserId)
+        .filter(Boolean)
+
+      if (slackIds.length > 0) {
+        const slackMessage = await this.getSlackMessageFromContent(
+          payload,
+          createdBy,
+        )
+
+        slackIds.forEach(async (slackId) => {
+          await this.slackService.sendMessage(slackId, slackMessage)
+        })
+      }
+    }
+  }
+
+  async getSlackMessageFromContent(
+    payload: Comment & { Candidate: Candidate },
+    createdBy: string,
+  ) {
+    const { content, candidateId, Candidate } = payload
+    const { slackUserId, displayName } =
+      await this.membersService.getMemberByUid(createdBy)
+    const slackMessage = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `Hey there 👋 \n${
+            slackUserId ? `<@${slackUserId}>` : displayName
+          } added a comment on a candidate's profile and mentioned you. Here's the comment:`,
+        },
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: `*${this.getTextFromContent(content)}*` },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*<${this.APP_URL}/jobs/${Candidate.jobId}?candidateId=${candidateId}|View Candidate Profile>*`,
+        },
+      },
+    ]
+    return JSON.stringify(slackMessage)
   }
 
   getTextFromContent(content: any): string {
