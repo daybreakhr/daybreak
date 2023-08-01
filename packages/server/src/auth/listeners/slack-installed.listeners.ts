@@ -13,9 +13,9 @@ export class SlackInstalledListener {
   @OnEvent('slack.installed')
   async sendNotificationOnSlack(payload: SlackInstalledEvent) {
     const { slackUserId } = payload
-    await this.slackService.sendMessage(
-      slackUserId,
-      `Dear <@${slackUserId}>,\nWelcome to Daybreak - A new seamless and collaborative way to contribute to your organisation's recruiting engine.`,
-    )
+    await this.slackService.sendMessage({
+      channel: slackUserId,
+      text: `Dear <@${slackUserId}>,\nWelcome to Daybreak - A new seamless and collaborative way to contribute to your organisation's recruiting engine.`,
+    })
   }
 }

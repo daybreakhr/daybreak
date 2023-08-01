@@ -30,10 +30,10 @@ export class JobPublishedListener {
 
     employees.forEach(({ slackUserId }) => {
       if (slackUserId) {
-        this.slackService.sendMessage(
-          slackUserId,
-          `We are now hiring for <${process.env.BOARDS_URL}/${job.Workspace.slug}/jobs/${job.id}|${job.title}>!🚀\nSupport us to close it faster by referring candidates from your network suited for this profile and get exciting referral rewards. 🌟💼`,
-        )
+        this.slackService.sendMessage({
+          channel: slackUserId,
+          text: `We are now hiring for <${process.env.BOARDS_URL}/${job.Workspace.slug}/jobs/${job.id}|${job.title}>!🚀\nSupport us to close it faster by referring candidates from your network suited for this profile and get exciting referral rewards. 🌟💼`,
+        })
       }
     })
   }

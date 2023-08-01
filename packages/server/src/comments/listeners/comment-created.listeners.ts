@@ -69,7 +69,10 @@ export class CommentCreatedListener {
         )
 
         slackIds.forEach(async (slackId) => {
-          await this.slackService.sendMessage(slackId, slackMessage)
+          await this.slackService.sendMessage({
+            channel: slackId,
+            blocks: slackMessage,
+          })
         })
       }
     }
@@ -82,14 +85,15 @@ export class CommentCreatedListener {
     const { content, candidateId, Candidate } = payload
     const { slackUserId, displayName } =
       await this.membersService.getMemberByUid(createdBy)
+
+    const sender = slackUserId ? `<@${slackUserId}>` : displayName
+
     const slackMessage = [
       {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `Hey there 👋 \n${
-            slackUserId ? `<@${slackUserId}>` : displayName
-          } added a comment on a candidate's profile and mentioned you. Here's the comment:`,
+          text: `Hey there 👋 \n${sender} added a comment on a candidate's profile and mentioned you. Here's the comment:`,
         },
       },
       {
