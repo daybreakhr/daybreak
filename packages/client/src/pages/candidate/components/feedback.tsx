@@ -5,7 +5,7 @@ import {
   ExclamationCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-import { CandidateStatus } from '@prisma/client'
+import { CandidateStatus, Feedback as EditFeedback } from '@prisma/client'
 import { useSearchParams } from 'react-router-dom'
 import { Avatar, Button, Modal, Rate, Skeleton } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -14,6 +14,7 @@ import { Show, Switch } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import getEvaluation from 'utils/evaluation'
 
+import { AiOutlineEdit } from 'react-icons/ai'
 import AddFeedback from './add-feedback'
 import { deleteFeedback, fetchFeedbacks } from '../queries'
 
@@ -26,7 +27,9 @@ export default function Feedback({ status }: FeedbackProps) {
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') || ''
   const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
-
+  const [feedbackToEdit, setFeedbackToEdit] = useState<
+    EditFeedback | undefined
+  >(undefined)
   const { data, isLoading } = useQuery(
     ['feedbacks', candidateId],
     () => fetchFeedbacks(candidateId),
@@ -55,6 +58,20 @@ export default function Feedback({ status }: FeedbackProps) {
         mutate({ id })
       },
     })
+  }
+
+  function handleEdit(feedback: EditFeedback) {
+    setFeedbackToEdit({
+      id: feedback.id,
+      evaluation: feedback.evaluation,
+      attributes: feedback.attributes,
+      notes: feedback.notes,
+      createdAt: feedback.createdAt,
+      createdBy: feedback.createdBy,
+      candidateId: feedback.candidateId,
+      interviewId: feedback.interviewId,
+    })
+    setIsFeedbackFormVisible(true)
   }
 
   return (
@@ -103,6 +120,24 @@ export default function Feedback({ status }: FeedbackProps) {
                         </p>
                         <div className="flex-1" />
                         <Button
+                          size="small"
+                          type="text"
+                          icon={<AiOutlineEdit className="text-xs" />}
+                          onClick={() =>
+                            handleEdit({
+                              id,
+                              evaluation,
+                              attributes,
+                              notes,
+                              createdAt,
+                              createdBy: User?.uid || '',
+                              candidateId,
+                              interviewId: Interview.id,
+                            })
+                          }
+                        />
+
+                        <Button
                           danger
                           size="small"
                           type="text"
@@ -148,7 +183,11 @@ export default function Feedback({ status }: FeedbackProps) {
 
       <AddFeedback
         isOpen={isFeedbackFormVisible}
-        onClose={() => setIsFeedbackFormVisible(false)}
+        onClose={() => {
+          setIsFeedbackFormVisible(false)
+          setFeedbackToEdit(undefined)
+        }}
+        feedback={feedbackToEdit}
       />
     </>
   )

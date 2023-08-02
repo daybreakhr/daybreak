@@ -62,6 +62,17 @@ export async function createFeedback(payload: Partial<Feedback>) {
   return data
 }
 
+export async function updateFeedback({
+  id,
+  body,
+}: {
+  id: string
+  body: Partial<Feedback>
+}) {
+  const { data } = await client.patch<Feedback>(`/feedbacks/${id}`, body)
+  return data
+}
+
 export async function deleteFeedback({ id }: { id: string }) {
   const { data } = await client.delete(`/feedbacks/${id}`)
   return data

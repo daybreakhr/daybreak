@@ -1,18 +1,21 @@
+import { useEffect } from 'react'
 import { DeleteOutlined } from '@ant-design/icons'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Avatar, Button, Form, Input, Modal, Rate, Select } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useAuth from 'hooks/use-auth'
+import { Feedback } from '@prisma/client'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
-import { createFeedback, fetchFeedbacks } from '../queries'
+import { createFeedback, updateFeedback, fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'
 import { feedbackList } from '../constants/feedback-list'
 
 type AddFeedbackProps = {
   isOpen: boolean
   onClose: () => void
+  feedback?: Feedback
 }
 
 const getInitialValues = (candidateId: string) => ({
@@ -26,7 +29,11 @@ const getInitialValues = (candidateId: string) => ({
   ],
 })
 
-export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
+export default function AddFeedback({
+  isOpen,
+  onClose,
+  feedback,
+}: AddFeedbackProps) {
   const { user } = useAuth()
   const [form] = Form.useForm()
   const { jobId = '' } = useParams()
@@ -44,7 +51,7 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
   )
 
   const queryClient = useQueryClient()
-  const { mutate, isLoading } = useMutation(createFeedback, {
+  const { mutate, isLoading: isCreating } = useMutation(createFeedback, {
     onSuccess: () => {
       queryClient.invalidateQueries(['feedbacks', candidateId])
       form.resetFields()
@@ -52,20 +59,43 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
     },
   })
 
+  const { mutate: update, isLoading: isUpdating } = useMutation(
+    updateFeedback,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['feedbacks', candidateId])
+        form.resetFields()
+        onClose()
+      },
+    },
+  )
+
   function handleSubmit() {
     form.validateFields().then((values) => {
-      mutate(values)
+      if (feedback) {
+        update({ ...values, id: feedback.id })
+      } else {
+        mutate(values)
+      }
     })
   }
+
+  useEffect(() => {
+    if (feedback) {
+      form.setFieldsValue(feedback)
+    } else {
+      form.resetFields()
+    }
+  }, [feedback, form])
 
   return (
     <Modal
       open={isOpen}
       onCancel={onClose}
       onOk={handleSubmit}
-      title="Add Feedback"
-      okText="Submit Feedback"
-      okButtonProps={{ loading: isLoading }}
+      title={feedback ? 'Edit Feedback' : 'Add Feedback'}
+      okText={feedback ? 'Update Feedback' : 'Submit Feedback'}
+      okButtonProps={{ loading: isCreating || isUpdating }}
     >
       <Form
         form={form}
