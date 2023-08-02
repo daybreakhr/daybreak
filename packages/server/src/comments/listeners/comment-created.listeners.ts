@@ -93,7 +93,7 @@ export class CommentCreatedListener {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `Hey there 👋 \n${sender} added a comment on a candidate's profile and mentioned you. Here's the comment:`,
+          text: `${sender} added a comment on a ${Candidate.firstName}'s profile and mentioned you.`,
         },
       },
       {
@@ -104,7 +104,7 @@ export class CommentCreatedListener {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `*<${this.APP_URL}/jobs/${Candidate.jobId}?candidateId=${candidateId}|View Candidate Profile>*`,
+          text: `<${this.APP_URL}/jobs/${Candidate.jobId}?candidateId=${candidateId}|View Profile>`,
         },
       },
     ]
