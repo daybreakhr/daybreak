@@ -1,11 +1,16 @@
-import { Checkbox, Form, Input, Select } from 'antd'
+import { Checkbox, Form, Input, Select, Button, Tag } from 'antd'
+import { HiSparkles, HiArrowRight } from 'react-icons/hi'
 
 import Stepper from './components/stepper'
+// import AdditionalDetails from './components/additional-details'
+
 import { jobTypeOptions } from './constants/create-job-values'
+import AdditionalDetails from './components/additional-details'
 
 export default function CreateJob() {
+  const { TextArea } = Input
   return (
-    <div className="flex flex-col h-full py-12 overflow-hidden bg-white">
+    <div className="flex flex-col h-full py-12 overflow-scroll bg-white">
       <Form layout="vertical" className="w-full max-w-4xl mx-auto">
         <Stepper />
         <p className="mb-3 text-xl font-semibold text-center">
@@ -69,6 +74,54 @@ export default function CreateJob() {
               <Select size="large" placeholder="Select Location" />
             </Form.Item>
           </div>
+        </div>
+        <div className="flex-1">
+          <p className="mb-1 font-semibold">Add Skills</p>
+          <Form.Item>
+            <Select size="large" mode="tags" placeholder="Add Skills" />
+
+            <Tag closable className="rounded-full py-1 px-3 mt-3">
+              HTML
+            </Tag>
+            <Tag closable className="rounded-full py-1 px-3 mt-3">
+              CSS
+            </Tag>
+            <Tag closable className="rounded-full py-1 px-3 mt-3">
+              UI/UX
+            </Tag>
+          </Form.Item>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex justify-between">
+            <p className="mb-1 font-semibold">Job Description</p>
+            <Form.Item>
+              <Button
+                size="middle"
+                icon={
+                  <HiSparkles
+                    style={{ marginRight: '5px' }}
+                    className="text-primary-500"
+                  />
+                }
+                className="text-primary-500"
+              >
+                Generate with Al
+              </Button>
+            </Form.Item>
+          </div>
+          <Form.Item>
+            <TextArea placeholder="Enter Job Details" />
+          </Form.Item>
+        </div>
+        <div>
+          <AdditionalDetails />
+        </div>
+
+        <div className="flex items-center justify-center mt-8">
+          <Button className="bg-primary-500 text-white py-6 px-10 center">
+            Setup Interview Rounds <HiArrowRight className="ml-5" />
+          </Button>
         </div>
       </Form>
     </div>
