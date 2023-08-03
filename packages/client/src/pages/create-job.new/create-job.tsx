@@ -2,15 +2,14 @@ import { Checkbox, Form, Input, Select, Button, Tag } from 'antd'
 import { HiSparkles, HiArrowRight } from 'react-icons/hi'
 
 import Stepper from './components/stepper'
-// import AdditionalDetails from './components/additional-details'
+import AdditionalDetails from './components/additional-details'
+import TextEditor from './components/text-editor'
 
 import { jobTypeOptions } from './constants/create-job-values'
-import AdditionalDetails from './components/additional-details'
 
 export default function CreateJob() {
-  const { TextArea } = Input
   return (
-    <div className="flex flex-col h-full py-12 overflow-scroll bg-white">
+    <div className="flex flex-col h-full py-12 overflow-scroll bg-white ">
       <Form layout="vertical" className="w-full max-w-4xl mx-auto">
         <Stepper />
         <p className="mb-3 text-xl font-semibold text-center">
@@ -98,21 +97,14 @@ export default function CreateJob() {
             <Form.Item>
               <Button
                 size="middle"
-                icon={
-                  <HiSparkles
-                    style={{ marginRight: '5px' }}
-                    className="text-primary-500"
-                  />
-                }
+                icon={<HiSparkles className="text-primary-500 mr-1" />}
                 className="text-primary-500"
               >
                 Generate with Al
               </Button>
             </Form.Item>
           </div>
-          <Form.Item>
-            <TextArea placeholder="Enter Job Details" />
-          </Form.Item>
+          <TextEditor />
         </div>
         <div>
           <AdditionalDetails />
