@@ -8,9 +8,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useAuth from 'hooks/use-auth'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
+import { fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'
 import { feedbackList } from '../constants/feedback-list'
-import { createFeedback, fetchFeedbacks, updateFeedback } from '../queries'
 
 const getInitialValues = (candidateId: string) => ({
   interviewId: null,
@@ -24,7 +24,7 @@ type AddFeedbackProps = {
   isOpen: boolean
   onClose: () => void
   initialValues?: Feedback
-  mutationFunc: typeof createFeedback | typeof updateFeedback
+  mutationFunc: (args: any) => Promise<Feedback>
 }
 
 export default function FeedbackModal({
@@ -69,7 +69,7 @@ export default function FeedbackModal({
       if (initialValues) {
         mutate({ id, body: restValues })
       } else {
-        mutate(restValues)
+        mutate({ body: restValues })
       }
     })
   }
