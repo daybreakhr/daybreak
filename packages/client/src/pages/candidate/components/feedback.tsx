@@ -83,22 +83,24 @@ export default function Feedback({ feedback }: FeedbackProps) {
           <span className="font-medium">{Interview.title}</span>
         </p>
 
-        <span className="px-3 py-1.5 border rounded-full bg-white font-medium">
-          {getEvaluation(evaluation)}
-        </span>
+        <p>
+          <p className="inline-flex px-3 py-1.5 border rounded-full bg-white font-medium">
+            {getEvaluation(evaluation)}
+          </p>
+        </p>
 
-        <hr className="my-4" />
+        <hr className="my-3" />
 
         {attributes?.map(({ name, score }, index) => (
-          <div key={index} className="flex items-center mt-2">
-            <p className="flex-1 text-base font-medium">{name}</p>
+          <div key={index} className="flex items-center">
+            <p className="flex-1 font-medium">{name}</p>
             <Rate value={score} disabled />
           </div>
         ))}
 
         <Show when={notes}>
-          <hr className="my-4" />
-          <p className="text-base text-gray-700">{notes}</p>
+          <hr className="my-2" />
+          <p className="text-gray-700 whitespace-pre">{notes}</p>
         </Show>
       </div>
 
