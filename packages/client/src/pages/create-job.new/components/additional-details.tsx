@@ -1,14 +1,15 @@
 import React from 'react'
 import { Form, Select, DatePicker, Input } from 'antd'
 import SalaryInput from './salary-input'
+import { jobPriority } from '../constants/create-job-values'
 
 const AdditionalDetails = () => {
   return (
-    <div className="bg-gray-50 py-5 px-5 my-4 rounded-md">
-      <p className="mb-1 text-base font-semibold">Additional Details</p>
-      <div className="flex space-x-8 mt-8">
+    <div className="bg-[#F9FAFB] py-5 px-5 my-4 rounded-md">
+      <p className="mb-2 text-base font-semibold">Additional Details</p>
+      <div className="flex space-x-8">
         <div className="flex-1">
-          <p className="mb-1 font-semibold">Hire by</p>
+          <p className="mb-1  font-semibold">Hire by</p>
 
           <Form.Item>
             <DatePicker
@@ -23,7 +24,11 @@ const AdditionalDetails = () => {
           <p className="mb-1 font-semibold">Priority</p>
 
           <Form.Item>
-            <Select size="large" placeholder="Medium" />
+            <Select
+              size="large"
+              placeholder="Select Priority"
+              options={jobPriority}
+            />
           </Form.Item>
         </div>
       </div>
@@ -36,7 +41,7 @@ const AdditionalDetails = () => {
         </div>
         <div className="flex space-x-8">
           <Form.Item className="flex-1">
-            <SalaryInput />
+            <SalaryInput value={''} onChange={(e) => e} />
           </Form.Item>
 
           <div className="text-gray-400 text-sm font-normal leading-tight mt-2">
@@ -57,7 +62,7 @@ const AdditionalDetails = () => {
         </div>
         <div className="flex space-x-8">
           <Form.Item className="flex-1">
-            <SalaryInput />
+            <SalaryInput value={''} onChange={(e) => e} />
           </Form.Item>
 
           <div className="text-gray-400 text-sm font-normal leading-tight mt-2">
