@@ -51,47 +51,45 @@ export default function TextEditor() {
   })
 
   return (
-    <>
-      <ThemeProvider>
-        <Remirror
-          autoRender="end"
-          manager={manager}
-          state={state}
-          onChange={onChange}
-          classNames={[
-            'h-56',
-            'prose',
-            'border',
-            'max-w-none',
-            'border-gray-300',
-          ]}
-          placeholder="Enter Job Details"
-        >
-          <div className="flex">
-            <div className="flex-1">
-              <Toolbar>
-                <ToggleBoldButton />
-                <ToggleItalicButton />
-                <ToggleUnderlineButton />
-                <ToggleStrikeButton />
-                <ToggleOrderedListButton />
-                <ToggleBulletListButton />
-                <ToggleBlockquoteButton />
-                <ToggleCodeButton />
-              </Toolbar>
-            </div>
-            <div className="flex-1">
-              <Button
-                size="middle"
-                icon={<HiSparkles className="text-primary-500 mr-1" />}
-                className="text-primary-500 float-right mr-0"
-              >
-                Generate with AI
-              </Button>
-            </div>
+    <ThemeProvider>
+      <Remirror
+        autoRender="end"
+        manager={manager}
+        state={state}
+        onChange={onChange}
+        classNames={[
+          'h-56',
+          'prose',
+          'border',
+          'max-w-none',
+          'border-gray-300',
+        ]}
+        placeholder="Enter Job Details"
+      >
+        <div className="flex">
+          <div className="flex-1">
+            <Toolbar>
+              <ToggleBoldButton />
+              <ToggleItalicButton />
+              <ToggleUnderlineButton />
+              <ToggleStrikeButton />
+              <ToggleOrderedListButton />
+              <ToggleBulletListButton />
+              <ToggleBlockquoteButton />
+              <ToggleCodeButton />
+            </Toolbar>
           </div>
-        </Remirror>
-      </ThemeProvider>
-    </>
+          <div className="flex-1">
+            <Button
+              size="middle"
+              icon={<HiSparkles className="mr-1 text-primary-500" />}
+              className="float-right mr-0 text-primary-500"
+            >
+              Generate with AI
+            </Button>
+          </div>
+        </div>
+      </Remirror>
+    </ThemeProvider>
   )
 }
