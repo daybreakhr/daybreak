@@ -28,13 +28,15 @@ export const candidateListColumns = ({
     header: () => (
       <Checkbox
         checked={isChecked}
-        indeterminate={selectedCandidates.length > 0 && !isChecked}
         onChange={handleSelectAll}
+        onClick={(e) => e.stopPropagation()}
+        indeterminate={selectedCandidates.length > 0 && !isChecked}
       />
     ),
     size: 50,
     cell: ({ row }) => (
       <Checkbox
+        onClick={(e) => e.stopPropagation()}
         checked={selectedCandidates.includes(row.original.id)}
         onChange={() => handleCandidateSelect(row.original.id)}
       />
