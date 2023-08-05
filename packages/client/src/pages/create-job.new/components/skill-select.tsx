@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Select, Tag } from 'antd'
+import { FormInstance, Select, Tag } from 'antd'
 import { skillList } from '../constants/create-job-values'
 
 type ISelectOption = {
@@ -7,31 +7,30 @@ type ISelectOption = {
   label: string
 }
 
-type ISelectOptionsArray = Array<ISelectOption> | []
+type SkillSelectProps = {
+  onChange?: (options: ISelectOption[] | ISelectOption) => void
+  form?: FormInstance
+}
 
-type SkillSelectProps = { onChange?: Function }
-
-export default function SkillSelect({ onChange }: SkillSelectProps) {
-  const [skills, setSkills] = useState<ISelectOptionsArray>([])
+export default function SkillSelect({ onChange, form }: SkillSelectProps) {
   const [skillsFocused, setSkillsFocused] = useState<boolean>(false)
+
   return (
-    <Form.Item>
+    <>
       <Select
         size="large"
         mode="multiple"
         placeholder="Add Skills"
         options={skillList}
-        onChange={(_, option) => {
-          if (option instanceof Array) {
-            setSkills(option)
-          }
-          if (onChange) {
-            onChange(option)
-          }
+        onChange={(value, option) => {
+          if (onChange) onChange(option)
         }}
-        value={skills.map((skill: ISelectOption) => {
-          return skill.value
-        })}
+        value={
+          form?.getFieldValue('skills') &&
+          form
+            ?.getFieldValue('skills')
+            .map((skill: ISelectOption) => skill.value)
+        }
         tagRender={(props) => {
           return (
             <>
@@ -56,25 +55,30 @@ export default function SkillSelect({ onChange }: SkillSelectProps) {
         onFocus={() => setSkillsFocused(true)}
         onBlur={() => setSkillsFocused(false)}
       />
-      {skills.map((skill: ISelectOption, index: number) => {
-        return (
-          <Tag
-            key={`skill-${index}`}
-            closable
-            className="px-3 py-1 mt-3 rounded-full"
-            onClose={(e) => {
-              e.preventDefault()
-              setSkills(
-                skills.filter((sk: ISelectOption) => {
-                  return skill.label !== sk.label
-                }),
-              )
-            }}
-          >
-            {skill.label}
-          </Tag>
-        )
-      })}
-    </Form.Item>
+      {form?.getFieldValue('skills') &&
+        form
+          ?.getFieldValue('skills')
+          .map((skill: ISelectOption, index: number) => {
+            return (
+              <Tag
+                key={`skill-${index}`}
+                closable
+                className="px-3 py-1 mt-3 rounded-full"
+                onClose={(e) => {
+                  e.preventDefault()
+
+                  form.setFieldValue(
+                    'skills',
+                    form.getFieldValue('skills').filter((sk: ISelectOption) => {
+                      return skill.value !== sk.value
+                    }),
+                  )
+                }}
+              >
+                {skill.label}
+              </Tag>
+            )
+          })}
+    </>
   )
 }
