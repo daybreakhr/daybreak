@@ -1,16 +1,19 @@
 import {
   Body,
   Controller,
-  HttpException,
-  HttpStatus,
+  Delete,
+  Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
@@ -55,12 +58,32 @@ export class CalendarController {
       )
       return data
     } else {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: 'Unable to get access_token for google authorization',
-        },
-        HttpStatus.UNAUTHORIZED,
+      throw new UnauthorizedException(
+        'Unable to get access_token for google authorization',
+      )
+    }
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete calendar event' })
+  @ApiOkResponse({
+    description: 'calendar event deleted successfully',
+    type: CalendarDto,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Calendar event not found' })
+  async deleteCalendarEvent(@Param('id') id: string, @Req() req: Request) {
+    const accessToken: string = req.cookies?.access_token
+
+    if (accessToken) {
+      const data = await this.calendarService.deleteCalendarEvent(
+        id,
+        accessToken,
+      )
+      return data
+    } else {
+      throw new UnauthorizedException(
+        'Unable to get access_token for google authorization',
       )
     }
   }

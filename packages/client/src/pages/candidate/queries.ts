@@ -93,6 +93,13 @@ export async function createCalendarEvent(body: Partial<Calendar>) {
   return data
 }
 
+export async function deleteCalendarEvent({ id }: { id: string }) {
+  const { data } = await client.delete<Calendar>(`calendars/${id}`, {
+    withCredentials: true,
+  })
+  return data
+}
+
 export async function fetchEmailEvents(candidateId: string) {
   const { data } = await client.get<Email[]>(
     `candidates/${candidateId}/emails`,

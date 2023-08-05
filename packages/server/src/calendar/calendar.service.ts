@@ -10,15 +10,6 @@ export class CalendarService {
     private gCalService: GCalService,
   ) {}
 
-  async getAll(candidateId: string) {
-    const calendarEvents = await this.prismaService.calendar.findMany({
-      where: { candidateId },
-      orderBy: { createdAt: 'desc' },
-    })
-
-    return calendarEvents
-  }
-
   async createCalendarEvent(
     accessToken: string,
     createdBy: string,
@@ -46,6 +37,20 @@ export class CalendarService {
         Member: { connect: { uid: createdBy } },
       },
     })
+    return calendar
+  }
+
+  async deleteCalendarEvent(id: string, accessToken: string) {
+    // Get eventId of calendar event from database
+    const { eventId } = await this.prismaService.calendar.findUnique({
+      where: { id },
+    })
+
+    // Delete event from google calendar
+    await this.gCalService.deleteCalendarEvent(eventId, accessToken)
+
+    // Delete event from database
+    const calendar = await this.prismaService.calendar.delete({ where: { id } })
     return calendar
   }
 }
