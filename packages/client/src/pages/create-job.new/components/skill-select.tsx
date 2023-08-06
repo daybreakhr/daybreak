@@ -1,84 +1,62 @@
 import { useState } from 'react'
-import { FormInstance, Select, Tag } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { FormInstance, Select, SelectProps } from 'antd'
 import { skillList } from '../constants/create-job-values'
 
-type ISelectOption = {
-  value: string
-  label: string
+type SkillSelectProps = Omit<SelectProps<string>, 'options'> & {
+  form: FormInstance<any>
 }
 
-type SkillSelectProps = {
-  onChange?: (options: ISelectOption[] | ISelectOption) => void
-  form?: FormInstance
-}
+const NEW_ITEM = 'CREATE_NEW_ITEM'
 
-export default function SkillSelect({ onChange, form }: SkillSelectProps) {
-  const [skillsFocused, setSkillsFocused] = useState<boolean>(false)
+export default function SkillSelect({ form }: SkillSelectProps) {
+  const [inputValue, setInputValue] = useState('')
+  const [options, setOptions] = useState(skillList)
+
+  const filteredOptions = options?.filter((o) =>
+    o.label.toLowerCase().includes(inputValue.toLowerCase()),
+  )
+
+  function onChange(value: string[]) {
+    if (value.includes(NEW_ITEM)) {
+      const newSkillLabel = inputValue.trim()
+
+      if (newSkillLabel) {
+        const newOption = { label: newSkillLabel, value: newSkillLabel }
+        setOptions((prev) => [...prev, newOption])
+
+        value = value.filter((v) => v !== NEW_ITEM)
+        value.push(newSkillLabel)
+
+        setInputValue('')
+      }
+    }
+
+    form.setFieldsValue({ skills: value })
+  }
 
   return (
-    <>
-      <Select
-        size="large"
-        mode="multiple"
-        placeholder="Add Skills"
-        options={skillList}
-        onChange={(value, option) => {
-          if (onChange) onChange(option)
-        }}
-        value={
-          form?.getFieldValue('skills') &&
-          form
-            ?.getFieldValue('skills')
-            .map((skill: ISelectOption) => skill.value)
-        }
-        tagRender={(props) => {
-          return (
-            <>
-              {skillsFocused ? (
-                <Tag
-                  onMouseDown={(event) => {
-                    event.preventDefault()
-                    event.stopPropagation()
-                  }}
-                  closable={props?.closable}
-                  onClose={props?.onClose}
-                  style={{ marginRight: 3 }}
-                >
-                  {props?.label}
-                </Tag>
-              ) : (
-                <></>
-              )}
-            </>
-          )
-        }}
-        onFocus={() => setSkillsFocused(true)}
-        onBlur={() => setSkillsFocused(false)}
-      />
-      {form?.getFieldValue('skills') &&
-        form
-          ?.getFieldValue('skills')
-          .map((skill: ISelectOption, index: number) => {
-            return (
-              <Tag
-                key={`skill-${index}`}
-                closable
-                className="px-3 py-1 mt-3 rounded-full"
-                onClose={(e) => {
-                  e.preventDefault()
-
-                  form.setFieldValue(
-                    'skills',
-                    form.getFieldValue('skills').filter((sk: ISelectOption) => {
-                      return skill.value !== sk.value
-                    }),
-                  )
-                }}
-              >
-                {skill.label}
-              </Tag>
-            )
-          })}
-    </>
+    <Select
+      showSearch
+      allowClear
+      onChange={onChange}
+      onSearch={setInputValue}
+      mode="multiple"
+      optionFilterProp="children"
+      placeholder="Select Skill..."
+      value={form.getFieldValue('skills')}
+      size="large"
+    >
+      {inputValue && filteredOptions?.length === 0 && (
+        <Select.Option key={NEW_ITEM} value={NEW_ITEM}>
+          <PlusOutlined /> Create New: {`"${inputValue}"`}
+        </Select.Option>
+      )}
+      {filteredOptions?.map((o) => (
+        <Select.Option key={o.value} value={o.value}>
+          {o.label}
+        </Select.Option>
+      ))}
+    </Select>
   )
 }

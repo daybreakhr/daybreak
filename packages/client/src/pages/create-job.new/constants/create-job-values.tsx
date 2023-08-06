@@ -92,8 +92,8 @@ export const skillList = [
 export const defaultCurrency = 'usd'
 
 export const currency_list = [
-  { label: 'Indian Rupee (₹)', value: 'inr', symbol: '₹' },
-  { label: 'US Dollar ($)', value: 'usd', symbol: '$' },
+  { label: 'Indian Rupee (₹)', value: 'inr' },
+  { label: 'US Dollar ($)', value: 'usd' },
 ]
 // export const currency_list = [
 //   { key: 1, value: 'Afghan Afghani (؋)' },

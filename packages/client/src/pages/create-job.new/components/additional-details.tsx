@@ -1,6 +1,10 @@
 import { Form, Select, DatePicker, Input, Space } from 'antd'
 
-import { defaultCurrency, jobPriority } from '../constants/create-job-values'
+import {
+  currency_list,
+  defaultCurrency,
+  jobPriority,
+} from '../constants/create-job-values'
 
 export default function AdditionalDetails() {
   return (
@@ -10,7 +14,7 @@ export default function AdditionalDetails() {
         <div className="flex-1">
           <p className="mb-1 font-semibold">Hire by</p>
 
-          <Form.Item name="onsite-coding">
+          <Form.Item name="hireBy">
             <DatePicker
               size="large"
               placeholder="Onsite Coding"
@@ -36,29 +40,29 @@ export default function AdditionalDetails() {
         <div className="flex-1">
           <p className="mb-1 font-semibold">Salary</p>
 
-          <div className="grid grid-flow-col grid-rows-1 gap-4">
-            <div>
-              <Form.Item>
+          <div className="flex space-x-4">
+            <div className="w-30">
+              <Form.Item name="currency">
                 <Select
                   size="large"
                   defaultValue={defaultCurrency}
-                  style={{ width: '100%' }}
+                  options={currency_list}
                 />
               </Form.Item>
             </div>
             <div>
-              <Form.Item>
+              <Form.Item name="salaryRange">
                 <Space.Compact size="large">
-                  <Input style={{ width: '40%' }} placeholder="min" />
+                  <Input placeholder="min" />
                   <Input
-                    style={{ width: '20%', textAlign: 'center' }}
+                    className="text-center cursor-default w-[30%]"
                     size="large"
                     placeholder="to"
                     disabled
                   />
 
-                  <Input style={{ width: '40%' }} placeholder="max" />
-                </Space.Compact>{' '}
+                  <Input placeholder="max" />
+                </Space.Compact>
               </Form.Item>
             </div>
           </div>
@@ -67,7 +71,7 @@ export default function AdditionalDetails() {
         <div className="flex-1">
           <p className="mb-1 font-semibold">Referal Bonus</p>
 
-          <Form.Item>
+          <Form.Item name="referalBonus">
             <Input size="large" placeholder="max" />
           </Form.Item>
         </div>
