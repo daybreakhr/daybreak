@@ -7,19 +7,30 @@ import {
   ToggleOrderedListButton,
   ToggleStrikeButton,
   ToggleUnderlineButton,
+  ToggleBlockquoteButton,
+  ToggleCodeButton,
   Toolbar,
 } from '@remirror/react'
+import Show from '../show'
 
-export default function RemirrorToolbar() {
+export default function RemirrorToolbar({
+  hideHeadingLevelButtonGroup,
+}: {
+  hideHeadingLevelButtonGroup?: boolean
+}) {
   return (
     <Toolbar>
-      <HeadingLevelButtonGroup />
+      <Show when={!hideHeadingLevelButtonGroup}>
+        <HeadingLevelButtonGroup />
+      </Show>
       <ToggleBoldButton />
       <ToggleItalicButton />
       <ToggleUnderlineButton />
-      <ToggleBulletListButton />
-      <ToggleOrderedListButton />
       <ToggleStrikeButton />
+      <ToggleOrderedListButton />
+      <ToggleBulletListButton />
+      <ToggleBlockquoteButton />
+      <ToggleCodeButton />
     </Toolbar>
   )
 }
