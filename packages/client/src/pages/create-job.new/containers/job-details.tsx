@@ -13,6 +13,7 @@ import {
   message,
 } from 'antd'
 import { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { HiArrowRight } from 'react-icons/hi'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
@@ -55,6 +56,7 @@ dayjs.extend(localeData)
 export default function JobDetails({ form }: JobDetailsProps) {
   let jobId = ''
   const jobTitle = Form.useWatch('jobTitle', form)
+  const navigate = useNavigate()
 
   const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
     onSuccess: ({ id }) => {
@@ -384,6 +386,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
           onClick={() => {
             form.validateFields().then((values) => {
               handleSubmit(values)
+              navigate('/create-job/v2/2')
             })
           }}
         >
