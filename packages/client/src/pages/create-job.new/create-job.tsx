@@ -1,21 +1,46 @@
-import { Form } from 'antd'
-import { useLocation } from 'react-router-dom'
+import { Button, Form } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Show } from 'ui-kit'
+import { useMutation } from '@tanstack/react-query'
 
 import Stepper from './components/stepper'
 import JobDetails from './containers/job-details'
+import { createJob } from './queries'
 
 export default function CreateJob() {
   const [form] = Form.useForm()
-  const { pathname } = useLocation()
-  const currentStep = parseInt(pathname.split('/')[3])
+  const navigate = useNavigate()
+  const params = useParams()
+  const step = params.step ? +params.step : 0
+
+  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
+    onSuccess: ({ id }) => {
+      navigate(`/create-job/v2/${id}/1`)
+    },
+  })
+
+  const handleCreate = () => {
+    mutate()
+  }
 
   return (
     <div className="flex flex-col h-full py-12 overflow-scroll bg-white">
       <Form layout="vertical" form={form} className="w-full max-w-4xl mx-auto ">
-        <Show when={!Number.isNaN(currentStep)}>
-          <Stepper currentStep={currentStep} />
-          <Show when={currentStep === 1}>
+        <Show
+          when={!!step}
+          fallback={
+            <Button
+              onClick={handleCreate}
+              loading={isCreatingJob}
+              type="primary"
+              size="large"
+            >
+              Create Job
+            </Button>
+          }
+        >
+          <Stepper currentStep={step} />
+          <Show when={step === 1}>
             <JobDetails form={form} />
           </Show>
         </Show>

@@ -48,7 +48,7 @@ export default function RemirrorEditor({
           'h-full',
           'border',
           'max-w-none',
-          ...(rest.classNames as []),
+          ...(rest.classNames || ([] as [])),
         ]}
       >
         <div className="flex items-center justify-between">

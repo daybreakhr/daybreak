@@ -12,8 +12,8 @@ import {
   Spin,
   message,
 } from 'antd'
-import { useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { HiArrowRight } from 'react-icons/hi'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
@@ -26,12 +26,7 @@ import { Job } from 'types/job'
 import { fetchJob } from 'pages/job/queries'
 import { MemberWithUserInfo } from 'types/member'
 import { fetchMembers } from 'pages/members/queries'
-import {
-  fetchDepartments,
-  fetchLocations,
-  updateJobById,
-  createJob,
-} from '../queries'
+import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
 
 import SkillSelect from '../components/skill-select'
 import GenerateDescription from '../components/generate-description'
@@ -54,19 +49,9 @@ dayjs.extend(weekday)
 dayjs.extend(localeData)
 
 export default function JobDetails({ form }: JobDetailsProps) {
-  let jobId = ''
+  const { jobId = '' } = useParams()
   const jobTitle = Form.useWatch('jobTitle', form)
   const navigate = useNavigate()
-
-  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
-    onSuccess: ({ id }) => {
-      jobId = id
-    },
-  })
-
-  useEffect(() => {
-    mutate()
-  }, [mutate])
 
   const [
     { data: locations, isLoading: isLocationsLoading },
@@ -131,8 +116,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
     isDepartmentsLoading ||
     isJobLoading ||
     isLocationsLoading ||
-    isMembersLoading ||
-    isCreatingJob
+    isMembersLoading
   ) {
     return (
       <div className="flex items-center justify-center h-full">
