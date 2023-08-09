@@ -50,7 +50,7 @@ dayjs.extend(localeData)
 
 export default function JobDetails({ form }: JobDetailsProps) {
   const { jobId = '' } = useParams()
-  const jobTitle = Form.useWatch('jobTitle', form)
+  const jobTitle = Form.useWatch('title', form)
   const navigate = useNavigate()
 
   const [
