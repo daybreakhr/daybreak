@@ -10,5 +10,6 @@ import { MembersService } from './members.service'
   imports: [AuthModule, FirebaseModule, AWSModule],
   controllers: [MembersController],
   providers: [MembersService, PrismaService],
+  exports: [MembersService],
 })
 export class MembersModule {}

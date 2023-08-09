@@ -28,6 +28,33 @@ export class MembersService {
     })
   }
 
+  async getMemberByUid(uid: string) {
+    const member = await this.prismaService.member.findUnique({
+      where: { uid },
+    })
+
+    const user = await this.authService.getUser(uid)
+    return { ...user, ...member }
+  }
+
+  async getMembersByUids(uids: string[]) {
+    const members = await this.prismaService.member.findMany({
+      where: { uid: { in: uids } },
+    })
+
+    const memberByUid = members.reduce(
+      (acc, curr) => ({ ...acc, [curr.uid]: curr }),
+      {} as Record<string, MemberDto>,
+    )
+
+    const identifiers = members.map(({ uid }) => ({ uid }))
+    const users = await this.authService.getUsers(identifiers)
+
+    return users.map((user) => {
+      return { ...user, ...memberByUid[user.uid] }
+    })
+  }
+
   async updateMember(memberId: string, updateMemberDto: UpdateMemberDto) {
     const member = await this.prismaService.member.update({
       where: { id: memberId },

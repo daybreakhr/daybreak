@@ -7,12 +7,14 @@ import {
 import * as cookieParser from 'cookie-parser'
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino'
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './http-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true })
 
   app.use(cookieParser())
   app.useLogger(app.get(Logger))
+  app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new LoggerErrorInterceptor())
 
   app.enableCors({

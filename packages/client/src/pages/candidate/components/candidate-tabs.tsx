@@ -7,8 +7,8 @@ import { Candidate } from 'types/candidate'
 import Resume from './resume'
 import Profile from './profile'
 import Comments from './comments'
-import Feedback from './feedback'
 import Engagement from './engagement'
+import FeedbackTab from './feedback-tab'
 
 type CandidateTabsProps = {
   isLoading: boolean
@@ -46,7 +46,7 @@ export default function CandidateTabs({
         </Switch.Match>
 
         <Switch.Match when={activeKey === 'feedback'}>
-          <Feedback status={candidate?.status} />
+          <FeedbackTab status={candidate?.status} />
         </Switch.Match>
 
         <Switch.Match when={activeKey === 'engagement'}>

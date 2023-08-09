@@ -51,7 +51,13 @@ export default function CandidateCard({
         )}
       >
         <div className="relative flex items-center mb-4 space-x-2">
-          <Checkbox checked={isChecked} onChange={onCandidateSelect} />
+          <Checkbox
+            checked={isChecked}
+            onChange={onCandidateSelect}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          />
 
           <Tag className="p-1 border-none" color={color}>
             <Tooltip title={sourceTitle}>{icon}</Tooltip>

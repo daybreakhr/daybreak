@@ -208,10 +208,10 @@ export class SlackService {
     await this.prismaService.referral.delete({ where: { id: referralId } })
 
     // send notification to the user on slack
-    await this.sendMessage(
-      userId,
-      `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate profile at <${process.env.FRONTEND_URL}/jobs/${jobId}?candidateId=${candidate.id}|Daybreak App>. We will keep you posted on the update of this candidate's hiring process.`,
-    )
+    await this.sendMessage({
+      channel: userId,
+      text: `${firstName} ${lastName} has been added to the candidate pool. You can view the candidate profile at <${process.env.FRONTEND_URL}/jobs/${jobId}?candidateId=${candidate.id}|Daybreak App>. We will keep you posted on the update of this candidate's hiring process.`,
+    })
   }
 
   async createReferral(view: any, userId: string) {
@@ -238,10 +238,10 @@ export class SlackService {
       slackUserId: userId,
     })
 
-    await this.sendMessage(
-      userId,
-      `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
-    )
+    await this.sendMessage({
+      channel: userId,
+      text: `You have completed first step to refer *${firstName} ${lastName}* for the job *${title}*. Complete the final step by uploading a resume to slack and tagging the referred candidate.`,
+    })
   }
 
   async handleReferralModal(payload: any) {
@@ -282,9 +282,20 @@ export class SlackService {
     await axios.post(`${slackApi}/views.open`, stringify(args))
   }
 
-  async sendMessage(channel: string, text: string) {
+  async sendMessage({
+    channel,
+    text,
+    blocks,
+  }: {
+    channel: string
+    text?: string
+    blocks?: string
+  }) {
     const { token } = await this.getSlackSecrets(channel)
-    const args = { token, channel, text }
+    const args: any = { token, channel }
+
+    if (text) args.text = text
+    if (blocks) args.blocks = blocks
 
     await axios.post(`${slackApi}/chat.postMessage`, stringify(args))
   }

@@ -62,4 +62,15 @@ export class GCalService {
 
     return data
   }
+
+  async deleteCalendarEvent(eventId: string, accessToken: string) {
+    this.jwtClient.setCredentials({ access_token: accessToken })
+    const calendar = google.calendar({ version: 'v3', auth: this.jwtClient })
+
+    await calendar.events.delete({
+      eventId,
+      sendUpdates: 'all',
+      calendarId: this.GOOGLE_CALENDAR_ID,
+    })
+  }
 }

@@ -1,8 +1,8 @@
 import * as Joi from 'joi'
-import { APP_GUARD } from '@nestjs/core'
 import { LoggerModule } from 'nestjs-pino'
 import { ConfigModule } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
+import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 
@@ -28,6 +28,7 @@ import { SlackModule } from './slack/slack.module'
 import { ReferralsModule } from './referral/referral.module'
 import { EmailTemplatesModule } from './email-templates/email-templates.module'
 import { CommentsModule } from './comments/comments.module'
+import { HttpExceptionFilter } from './http-exception.filter'
 
 @Module({
   imports: [
@@ -83,7 +84,11 @@ import { CommentsModule } from './comments/comments.module'
     WorkspaceModule,
     ReferralsModule,
   ],
-  providers: [PrismaService, { provide: APP_GUARD, useClass: RolesGuard }],
+  providers: [
+    PrismaService,
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

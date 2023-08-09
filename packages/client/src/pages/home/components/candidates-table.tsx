@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom'
-import { Button, Card, Table } from 'antd'
-import { RightOutlined } from '@ant-design/icons'
+import { Card, Table } from 'antd'
 import { Candidate } from 'types/candidate'
 import { candidatesList } from '../constants/candidates-list'
 
@@ -22,15 +20,7 @@ export default function CandidatesTable({
 
   return (
     <Card className="col-span-2">
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-black/[0.45]">Recent Candidates</p>
-        <Link to="/candidates">
-          <Button type="link" size="small">
-            <span>View All</span>
-            <RightOutlined />
-          </Button>
-        </Link>
-      </div>
+      <p className="mb-6 text-gray-500">Recent Candidates</p>
 
       <Table
         pagination={false}
