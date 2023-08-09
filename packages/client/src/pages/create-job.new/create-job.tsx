@@ -5,6 +5,7 @@ import { Show } from 'ui-kit'
 import Stepper from './components/stepper'
 import JobDetails from './containers/job-details'
 import JobPipelines from './containers/job-pipelines'
+import JobPublish from './containers/job-publish'
 
 export default function CreateJob() {
   const [form] = Form.useForm()
@@ -21,6 +22,9 @@ export default function CreateJob() {
           </Show>
           <Show when={currentStep === 2}>
             <JobPipelines />
+          </Show>
+          <Show when={currentStep === 3}>
+            <JobPublish />
           </Show>
         </Show>
       </Form>
