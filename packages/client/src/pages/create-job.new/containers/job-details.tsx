@@ -135,7 +135,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
       </div>
 
       <Form.Item
-        name="jobTitle"
+        name="title"
         rules={[{ required: true, message: 'Job-Title is required!' }]}
       >
         <Input
@@ -258,7 +258,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
           <Form.Item name="hireBy" className="w-full">
             <DatePicker
               size="large"
-              placeholder="Onsite Coding"
+              placeholder="Hire by date"
               format={'DD-MM-YYYY'}
               style={{ width: '100%' }}
               disabledDate={(current) =>
@@ -284,8 +284,15 @@ export default function JobDetails({ form }: JobDetailsProps) {
         <div className="flex-1">
           <p className="mb-1 font-semibold">Referal Bonus</p>
 
-          <Form.Item name="referalBonus">
-            <Input size="large" placeholder="max" />
+          <Form.Item name="referralBonus">
+            <InputNumber
+              size="large"
+              placeholder="100"
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+            />
           </Form.Item>
         </div>
         <div className="flex-1">
@@ -304,35 +311,33 @@ export default function JobDetails({ form }: JobDetailsProps) {
               </Form.Item>
             </div>
             <div>
-              <Form.Item name="salaryRange" noStyle>
-                <Space.Compact size="large">
-                  <Form.Item name="minSalary" noStyle>
-                    <InputNumber
-                      placeholder="min"
-                      parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                      }
-                    />
-                  </Form.Item>
-
-                  <Input
-                    className="text-center cursor-default w-[30%]"
-                    size="large"
-                    placeholder="to"
-                    disabled
+              <Space.Compact size="large">
+                <Form.Item name="minSalary" noStyle>
+                  <InputNumber
+                    placeholder="min"
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    }
                   />
-                  <Form.Item name="maxSalary" noStyle>
-                    <InputNumber
-                      placeholder="max"
-                      parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                      }
-                    />
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
+                </Form.Item>
+
+                <Input
+                  className="text-center cursor-default w-[30%]"
+                  size="large"
+                  placeholder="to"
+                  disabled
+                />
+                <Form.Item name="maxSalary" noStyle>
+                  <InputNumber
+                    placeholder="max"
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    }
+                  />
+                </Form.Item>
+              </Space.Compact>
             </div>
           </div>
         </div>
