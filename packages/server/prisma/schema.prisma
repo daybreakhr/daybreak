@@ -225,6 +225,7 @@ enum CandidateSource {
   referral
   jobBoard
   linkedIn
+  indeed
   instahyre
   iimjobs
   naukri

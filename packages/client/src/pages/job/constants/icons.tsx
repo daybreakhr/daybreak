@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { CandidateSource } from '@prisma/client'
 
 import { AiFillLinkedin } from 'react-icons/ai'
+import { SiIndeed } from 'react-icons/si'
 import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-columns.svg'
 import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
 import { ReactComponent as ReferralIcon } from 'assets/icons/referral.svg'
@@ -20,6 +21,8 @@ export const candidateSources = (
       return { color: 'gold', icon: <ReferralIcon /> }
     case CandidateSource.linkedIn:
       return { color: 'blue', icon: <AiFillLinkedin /> }
+    case CandidateSource.indeed:
+      return { color: 'blue', icon: <SiIndeed /> }
     case CandidateSource.instahyre:
       return { color: 'purple', icon: <GlobeIcon /> }
     case CandidateSource.iimjobs:
