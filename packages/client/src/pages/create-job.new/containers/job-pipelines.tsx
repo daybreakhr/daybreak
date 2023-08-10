@@ -1,3 +1,4 @@
+import { Interview } from '@prisma/client'
 import {
   ArrowRightOutlined,
   CloseOutlined,
@@ -6,81 +7,123 @@ import {
   PlusOutlined,
   SaveOutlined,
 } from '@ant-design/icons'
-import { List, Checkbox, Button, Input } from 'antd'
-import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { List, Checkbox, Button, Input, Spin } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 
 import { AiOutlineHolder } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Show } from 'ui-kit'
-
-const initialData = [
-  {
-    title: 'Source',
-    checked: true,
-    readonly: true,
-    default: true,
-    edit: false,
-  },
-  {
-    title: 'Applied',
-    checked: true,
-    readonly: true,
-    default: true,
-    edit: false,
-  },
-  {
-    title: 'Custom Round 1',
-    checked: true,
-    readonly: false,
-    default: false,
-    edit: false,
-  },
-  {
-    title: 'Custom Round 2',
-    checked: true,
-    readonly: false,
-    default: false,
-    edit: false,
-  },
-  {
-    title: 'Offer',
-    checked: true,
-    readonly: true,
-    default: true,
-    edit: false,
-  },
-  {
-    title: 'Rejected',
-    checked: true,
-    readonly: true,
-    default: true,
-    edit: false,
-  },
-]
+import {
+  createPipelineStep,
+  deletePipelineStep,
+  fetchInterviews,
+  updatePipelineStep,
+} from '../queries'
 
 export default function JobPipelines() {
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState<
+    Omit<Interview, 'createdBy' | 'createdAt' | 'updatedAt'>[]
+  >([])
+  const [editable, setEditable] = useState<null | number>(null)
+  const [deletable, setDeletable] = useState<null | number>(null)
+  const [updatable, setUpdatable] = useState<null | number>(null)
+
+  const { jobId = '' } = useParams()
   const navigate = useNavigate()
 
-  const addRound = () => {
-    const index = data.length - 2
-    const element = {
-      title: `Custom Round ${data.length - 3}`,
-      checked: true,
-      readonly: false,
-      default: false,
-      edit: false,
+  const defaultData = useMemo(
+    () => [
+      {
+        id: 'd0',
+        title: 'Source',
+        isActive: true,
+        order: 0,
+        jobId,
+        isDefault: true,
+      },
+      {
+        id: 'd1',
+        title: 'Applied',
+        isActive: true,
+        order: 1,
+        jobId,
+        isDefault: true,
+      },
+
+      {
+        id: 'd2',
+        title: 'Offer',
+        isActive: true,
+        order: 2,
+        jobId,
+        isDefault: true,
+      },
+      {
+        id: 'd3',
+        title: 'Rejected',
+        isActive: true,
+        order: 3,
+        jobId,
+        isDefault: true,
+      },
+    ],
+    [jobId],
+  )
+
+  const {
+    data: interviews,
+    isLoading,
+    isSuccess,
+  } = useQuery(['interviews', jobId], () => fetchInterviews(jobId))
+
+  useEffect(() => {
+    if (!isLoading && isSuccess) {
+      setData([
+        defaultData[0],
+        defaultData[1],
+        ...(interviews as []),
+        defaultData[2],
+        defaultData[3],
+      ])
     }
-    data.splice(index, 0, element)
-    setData([...data])
+  }, [isLoading, isSuccess, interviews, defaultData])
+
+  const queryClient = useQueryClient()
+
+  const { mutate: createInterview, isLoading: isCreatingInterview } =
+    useMutation(createPipelineStep, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interviews', jobId])
+      },
+    })
+
+  const { mutate: updateInterview, isLoading: isUpdatingInterview } =
+    useMutation(updatePipelineStep, {
+      onSuccess: () => {
+        setEditable(null)
+        setUpdatable(null)
+        queryClient.invalidateQueries(['interviews', jobId])
+      },
+    })
+
+  const { mutate: deleteInterview, isLoading: isDeletingInterview } =
+    useMutation(deletePipelineStep, {
+      onSuccess: () => {
+        setDeletable(null)
+        queryClient.invalidateQueries(['interviews', jobId])
+      },
+    })
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Spin tip="Loading..." />
+      </div>
+    )
   }
 
-  function deleteRound(index: number) {
-    if (index > -1) {
-      data.splice(index, 1)
-      setData([...data])
-    }
-  }
   return (
     <div>
       <div className="my-8">
@@ -103,36 +146,71 @@ export default function JobPipelines() {
             <List.Item
               key={index}
               actions={
-                item.default
+                item.isDefault
                   ? ['Default']
-                  : item.edit
+                  : editable === index
                   ? [
-                      <CloseOutlined
+                      <Button
                         key={index}
-                        onClick={() => {
-                          data[index].title = ' '
-                          setData([...data])
-                        }}
+                        type="link"
+                        className="p-0"
+                        icon={
+                          <CloseOutlined
+                            onClick={() => {
+                              data[index].title = ' '
+                              setData([...data])
+                            }}
+                          />
+                        }
                       />,
-                      <SaveOutlined
+
+                      <Button
                         key={index}
-                        onClick={() => {
-                          data[index].edit = false
-                          setData([...data])
-                        }}
+                        type="link"
+                        className="p-0"
+                        loading={updatable === index && isUpdatingInterview}
+                        icon={
+                          <SaveOutlined
+                            hidden={updatable === index && isUpdatingInterview}
+                            onClick={() => {
+                              setUpdatable(index)
+                              updateInterview({
+                                id: data[index].id,
+                                payload: { title: data[index].title },
+                              })
+                            }}
+                          />
+                        }
                       />,
                     ]
                   : [
-                      <EditOutlined
+                      <Button
                         key={index}
-                        onClick={() => {
-                          data[index].edit = true
-                          setData([...data])
-                        }}
+                        type="link"
+                        className="p-0"
+                        icon={
+                          <EditOutlined
+                            onClick={() => {
+                              setEditable(index)
+                            }}
+                          />
+                        }
                       />,
-                      <DeleteOutlined
+
+                      <Button
                         key={index}
-                        onClick={() => deleteRound(index)}
+                        className="p-0"
+                        type="link"
+                        loading={deletable === index && isDeletingInterview}
+                        icon={
+                          <DeleteOutlined
+                            hidden={deletable === index && isDeletingInterview}
+                            onClick={() => {
+                              setDeletable(index)
+                              deleteInterview({ id: data[index].id })
+                            }}
+                          />
+                        }
                       />,
                     ]
               }
@@ -142,17 +220,21 @@ export default function JobPipelines() {
                   <AiOutlineHolder className="mt-1" />
 
                   <Checkbox
-                    disabled={item.readonly}
-                    checked={item.checked}
+                    disabled={item.isDefault}
+                    checked={item.isActive}
                     onChange={() => {
-                      data[index].checked = !data[index].checked
+                      updateInterview({
+                        id: data[index].id,
+                        payload: { isActive: !data[index].isActive },
+                      })
+                      data[index].isActive = !data[index].isActive
                       setData([...data])
                     }}
                   />
                 </div>
                 <div className="w-full ">
                   <Show
-                    when={item.edit === true}
+                    when={editable === index}
                     fallback={<span> {item.title}</span>}
                   >
                     <Input
@@ -164,8 +246,11 @@ export default function JobPipelines() {
                         setData([...data])
                       }}
                       onPressEnter={() => {
-                        data[index].edit = false
-                        setData([...data])
+                        setUpdatable(index)
+                        updateInterview({
+                          id: data[index].id,
+                          payload: { title: data[index].title },
+                        })
                       }}
                     />
                   </Show>
@@ -177,21 +262,39 @@ export default function JobPipelines() {
       </div>
 
       <div className="flex justify-between ">
-        <Button size="large" className="text-primary-500" onClick={addRound}>
+        <Button
+          size="large"
+          className="text-primary-500"
+          onClick={() => {
+            // const index = data.length - 2
+            const stage = {
+              title: `Custom Round ${data.length - 3}`,
+              // isActive: true,
+              // isDefault: false,
+            }
+            createInterview({ ...stage, order: data?.length ?? 0, jobId })
+          }}
+          loading={isCreatingInterview}
+        >
           <div className="flex items-center space-x-2">
             <span>
-              <PlusOutlined />
+              <PlusOutlined hidden={isCreatingInterview} />
             </span>
             <span>Add New Stage</span>
           </div>
         </Button>
         <div className="space-x-4">
-          <Button size="large">Cancel</Button>
+          <Button
+            size="large"
+            onClick={() => navigate(`/create-job/v2/${jobId}/1`)}
+          >
+            Cancel
+          </Button>
 
           <Button
             size="large"
             type="primary"
-            onClick={() => navigate('/create-job/v2/3')}
+            onClick={() => navigate(`/create-job/v2/${jobId}/3`)}
           >
             <div className="flex items-center space-x-2">
               <span>Save & Publish</span>

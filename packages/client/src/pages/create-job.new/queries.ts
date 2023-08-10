@@ -1,4 +1,4 @@
-import type { Department, Location } from '@prisma/client'
+import type { Department, Location, Interview } from '@prisma/client'
 import { storage } from 'ui-kit'
 import client from 'utils/client'
 import { Job } from 'types/job'
@@ -47,5 +47,39 @@ export async function generateJD({
 export async function createJob() {
   const workspaceId = storage.get(WORKSPACE_ID) ?? ''
   const { data } = await client.post<Job>('jobs', { workspaceId })
+  return data
+}
+
+// job pipeline queries
+
+export type CreateInterviewDto = {
+  title: string
+  order: number
+  jobId: string
+}
+
+export async function fetchInterviews(jobId: string) {
+  const { data } = await client.get<Interview[]>(`jobs/${jobId}/interviews`)
+  return data
+}
+
+export async function createPipelineStep(payload: CreateInterviewDto) {
+  const { data } = await client.post<Interview>('interviews', payload)
+  return data
+}
+
+export async function updatePipelineStep({
+  id,
+  payload,
+}: {
+  id: string
+  payload: Partial<Interview>
+}) {
+  const { data } = await client.patch<Interview>(`interviews/${id}`, payload)
+  return data
+}
+
+export async function deletePipelineStep({ id }: { id: string }) {
+  const { data } = await client.delete<Interview>(`interviews/${id}`)
   return data
 }
