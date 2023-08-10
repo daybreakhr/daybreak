@@ -365,7 +365,15 @@ export default function JobDetails({ form }: JobDetailsProps) {
       </div>
 
       <div className="flex items-center justify-center mt-8 space-x-3">
-        <Button htmlType="submit" size="large">
+        <Button
+          htmlType="submit"
+          size="large"
+          onClick={() => {
+            form.validateFields().then((values) => {
+              handleSubmit(values)
+            })
+          }}
+        >
           Save Draft
         </Button>
 
