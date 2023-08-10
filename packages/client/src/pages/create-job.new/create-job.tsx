@@ -1,4 +1,4 @@
-import { Button, Form } from 'antd'
+import { Button } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Show } from 'ui-kit'
 import { useMutation } from '@tanstack/react-query'
@@ -10,7 +10,6 @@ import JobPublish from './containers/job-publish'
 import { createJob } from './queries'
 
 export default function CreateJob() {
-  const [form] = Form.useForm()
   const navigate = useNavigate()
   const params = useParams()
   const step = params.step ? +params.step : 0
@@ -27,7 +26,7 @@ export default function CreateJob() {
 
   return (
     <div className="flex flex-col h-full py-12 overflow-scroll bg-white">
-      <Form layout="vertical" form={form} className="w-full max-w-4xl mx-auto ">
+      <div className="w-full max-w-4xl mx-auto ">
         <Show
           when={!!step}
           fallback={
@@ -43,7 +42,7 @@ export default function CreateJob() {
         >
           <Stepper currentStep={step} />
           <Show when={step === 1}>
-            <JobDetails form={form} />
+            <JobDetails />
           </Show>
           <Show when={step === 2}>
             <JobPipelines />
@@ -52,7 +51,7 @@ export default function CreateJob() {
             <JobPublish />
           </Show>
         </Show>
-      </Form>
+      </div>
     </div>
   )
 }
