@@ -96,6 +96,7 @@ model Job {
   currency      Currency?
   minSalary     Int?
   maxSalary     Int?
+  referralBonus Int?
   isPublished   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -225,6 +226,7 @@ enum CandidateSource {
   referral
   jobBoard
   linkedIn
+  indeed
   instahyre
   iimjobs
   naukri

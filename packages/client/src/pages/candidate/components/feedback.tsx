@@ -1,37 +1,33 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
+import { Avatar, Button, Modal, Rate } from 'antd'
+import { useSearchParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   DeleteOutlined,
+  EditOutlined,
   ExclamationCircleOutlined,
-  PlusOutlined,
 } from '@ant-design/icons'
-import { CandidateStatus } from '@prisma/client'
-import { useSearchParams } from 'react-router-dom'
-import { Avatar, Button, Modal, Rate, Skeleton } from 'antd'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { Show, Switch } from 'ui-kit'
+import { Show } from 'ui-kit'
 import useAuth from 'hooks/use-auth'
 import getEvaluation from 'utils/evaluation'
+import { Feedback as TFeedback } from 'types/candidate'
 
-import AddFeedback from './add-feedback'
-import { deleteFeedback, fetchFeedbacks } from '../queries'
+import { deleteFeedback, updateFeedback } from '../queries'
+import FeedbackModal from './feedback-modal'
 
 type FeedbackProps = {
-  status: CandidateStatus | undefined
+  feedback: TFeedback
 }
 
-export default function Feedback({ status }: FeedbackProps) {
+export default function Feedback({ feedback }: FeedbackProps) {
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') || ''
-  const [isFeedbackFormVisible, setIsFeedbackFormVisible] = useState(false)
-
-  const { data, isLoading } = useQuery(
-    ['feedbacks', candidateId],
-    () => fetchFeedbacks(candidateId),
-    { enabled: !!candidateId },
-  )
+  const [isFeedbackEditable, setIsFeedbackEditable] = useState(false)
+  const { id, attributes, createdAt, evaluation, notes, Interview, User } =
+    feedback
 
   const queryClient = useQueryClient()
 
@@ -59,96 +55,60 @@ export default function Feedback({ status }: FeedbackProps) {
 
   return (
     <>
-      <div className="flex-1 p-4 overflow-y-auto">
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-base font-semibold">Feedback</p>
-
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setIsFeedbackFormVisible(true)}
-            disabled={status === CandidateStatus.rejected}
-          >
-            Add Feedback
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          <Switch>
-            <Switch.Match when={isLoading}>
-              {<Skeleton avatar active />}
-            </Switch.Match>
-
-            <Switch.Match when={data}>
-              {(data) =>
-                data.map(
-                  ({
-                    id,
-                    User,
-                    createdAt,
-                    notes,
-                    attributes,
-                    evaluation,
-                    Interview,
-                  }) => (
-                    <div key={id}>
-                      <div className="flex items-center mb-4 space-x-2">
-                        <Avatar src={User?.photoURL} />
-                        <p className="font-medium">
-                          {User?.displayName}{' '}
-                          {user?.uid === User?.uid ? '(you)' : ''}
-                        </p>
-                        <p className="text-gray-500">
-                          {dayjs(createdAt).fromNow()}
-                        </p>
-                        <div className="flex-1" />
-                        <Button
-                          danger
-                          size="small"
-                          type="text"
-                          icon={<DeleteOutlined className="text-xs" />}
-                          onClick={() => handleDelete({ id })}
-                        />
-                      </div>
-
-                      <div className="p-4 rounded-md bg-gray-50">
-                        <p className="mb-4">
-                          <span>Round:</span>{' '}
-                          <span className="font-medium">{Interview.title}</span>
-                        </p>
-
-                        <span className="px-3 py-1.5 border rounded-full bg-white font-medium">
-                          {getEvaluation(evaluation)}
-                        </span>
-
-                        <hr className="my-4" />
-
-                        {attributes?.map(({ name, score }, index) => (
-                          <div key={index} className="flex items-center mt-2">
-                            <p className="flex-1 text-base font-medium">
-                              {name}
-                            </p>
-                            <Rate value={score} disabled />
-                          </div>
-                        ))}
-
-                        <Show when={notes}>
-                          <hr className="my-4" />
-                          <p className="text-base text-gray-700">{notes}</p>
-                        </Show>
-                      </div>
-                    </div>
-                  ),
-                )
-              }
-            </Switch.Match>
-          </Switch>
-        </div>
+      <div className="flex items-center mb-4 space-x-2">
+        <Avatar src={User?.photoURL}>{User?.displayName?.charAt(0)}</Avatar>
+        <p className="font-medium">
+          {User?.displayName} {user?.uid === User?.uid ? '(you)' : ''}
+        </p>
+        <p className="text-gray-500">{dayjs(createdAt).fromNow()}</p>
+        <div className="flex-1" />
+        <Button
+          size="small"
+          type="text"
+          onClick={() => setIsFeedbackEditable(true)}
+          icon={<EditOutlined className="text-xs" />}
+        />
+        <Button
+          danger
+          size="small"
+          type="text"
+          icon={<DeleteOutlined className="text-xs" />}
+          onClick={() => handleDelete({ id })}
+        />
       </div>
 
-      <AddFeedback
-        isOpen={isFeedbackFormVisible}
-        onClose={() => setIsFeedbackFormVisible(false)}
+      <div className="p-4 rounded-md bg-gray-50">
+        <p className="mb-4">
+          <span>Round:</span>{' '}
+          <span className="font-medium">{Interview.title}</span>
+        </p>
+
+        <p>
+          <p className="inline-flex px-3 py-1.5 border rounded-full bg-white font-medium">
+            {getEvaluation(evaluation)}
+          </p>
+        </p>
+
+        <hr className="my-3" />
+
+        {attributes?.map(({ name, score }, index) => (
+          <div key={index} className="flex items-center">
+            <p className="flex-1 font-medium">{name}</p>
+            <Rate value={score} disabled />
+          </div>
+        ))}
+
+        <Show when={notes}>
+          <hr className="my-2" />
+          <p className="text-gray-700 whitespace-pre">{notes}</p>
+        </Show>
+      </div>
+
+      <FeedbackModal
+        initialValues={feedback}
+        isOpen={isFeedbackEditable}
+        mutationFunc={updateFeedback}
+        onClose={() => setIsFeedbackEditable(false)}
       />
     </>
   )

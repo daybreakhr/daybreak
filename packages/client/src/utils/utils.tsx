@@ -66,6 +66,9 @@ export function getCandidateSourceTitle(
     case CandidateSource.linkedIn:
       return <p className="text-blue-400">Linkedin</p>
 
+    case CandidateSource.indeed:
+      return <p className="text-purple-400">Indeed</p>
+
     case CandidateSource.instahyre:
       return <p className="text-purple-400">Instahyre</p>
 

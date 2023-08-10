@@ -57,8 +57,19 @@ export async function fetchFeedbacks(candidateId: string) {
   return data
 }
 
-export async function createFeedback(payload: Partial<Feedback>) {
-  const { data } = await client.post<Feedback>('/feedbacks', payload)
+export async function createFeedback({ body }: { body: Partial<Feedback> }) {
+  const { data } = await client.post<Feedback>('/feedbacks', body)
+  return data
+}
+
+export async function updateFeedback({
+  id,
+  body,
+}: {
+  id: string
+  body: Partial<Feedback>
+}) {
+  const { data } = await client.patch<Feedback>(`/feedbacks/${id}`, body)
   return data
 }
 
@@ -77,6 +88,13 @@ export async function fetchCalendarEvents(candidateId: string) {
 
 export async function createCalendarEvent(body: Partial<Calendar>) {
   const { data } = await client.post<Calendar>('calendars', body, {
+    withCredentials: true,
+  })
+  return data
+}
+
+export async function deleteCalendarEvent({ id }: { id: string }) {
+  const { data } = await client.delete<Calendar>(`calendars/${id}`, {
     withCredentials: true,
   })
   return data

@@ -1,9 +1,9 @@
+import type { Dispatch, SetStateAction } from 'react'
 import { Checkbox } from 'antd'
 import { orderBy } from 'lodash'
 import type { Candidate } from '@prisma/client'
-import type { Dispatch, SetStateAction } from 'react'
-import { Show } from 'ui-kit'
 
+import { Show } from 'ui-kit'
 import CandidateCard from './candidate-card'
 
 type StatusListProps = {

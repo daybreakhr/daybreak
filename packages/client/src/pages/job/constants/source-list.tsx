@@ -1,5 +1,6 @@
 import { CandidateSource } from '@prisma/client'
 import { AiFillLinkedin } from 'react-icons/ai'
+import { SiIndeed } from 'react-icons/si'
 
 import { ReactComponent as GlobeIcon } from 'assets/icons/globe.svg'
 import { ReactComponent as BuildingColumnsIcon } from 'assets/icons/building-columns.svg'
@@ -12,6 +13,14 @@ export const candidateSources = [
       </div>
     ),
     value: CandidateSource.linkedIn,
+  },
+  {
+    label: (
+      <div className="flex items-center space-x-2">
+        <SiIndeed className="text-primary-500" /> <span>Indeed</span>
+      </div>
+    ),
+    value: CandidateSource.indeed,
   },
   {
     label: (

@@ -14,9 +14,9 @@ import { getPipelineStages } from 'utils/utils'
 import RejectModal from 'components/reject-modal'
 
 import MailModal from './mail-modal'
-import AddFeedback from './add-feedback'
+import FeedbackModal from './feedback-modal'
 import ScheduleModal from './schedule-modal'
-import { updateCandidate } from '../queries'
+import { createFeedback, updateCandidate } from '../queries'
 import ReEnrollConfirmation from './re-enroll-confirmation'
 
 type ActionsProps = {
@@ -179,7 +179,8 @@ export default function Actions({ candidate, isLoading }: ActionsProps) {
         onClose={() => setCandidateRejectForm(false)}
       />
 
-      <AddFeedback
+      <FeedbackModal
+        mutationFunc={createFeedback}
         isOpen={isFeedbackFormVisible}
         onClose={() => setIsFeedbackFormVisible(false)}
       />

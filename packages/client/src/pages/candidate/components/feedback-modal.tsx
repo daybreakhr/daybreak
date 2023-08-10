@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import type { Feedback } from '@prisma/client'
 import { DeleteOutlined } from '@ant-design/icons'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Avatar, Button, Form, Input, Modal, Rate, Select } from 'antd'
@@ -6,32 +8,42 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useAuth from 'hooks/use-auth'
 import { fetchInterviews } from 'pages/create-pipeline/queries'
 
-import { createFeedback, fetchFeedbacks } from '../queries'
+import { fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'
 import { feedbackList } from '../constants/feedback-list'
+
+const getInitialValues = (candidateId: string) => ({
+  interviewId: null,
+  candidateId,
+  evaluation: undefined,
+  notes: undefined,
+  attributes: [],
+})
 
 type AddFeedbackProps = {
   isOpen: boolean
   onClose: () => void
+  initialValues?: Feedback
+  mutationFunc: (args: any) => Promise<Feedback>
 }
 
-const getInitialValues = (candidateId: string) => ({
-  interviewId: undefined,
-  candidateId,
-  evaluation: undefined,
-  notes: undefined,
-  attributes: [
-    { name: feedbackList[0], score: undefined },
-    { name: feedbackList[1], score: undefined },
-  ],
-})
-
-export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
+export default function FeedbackModal({
+  isOpen,
+  onClose,
+  mutationFunc,
+  initialValues,
+}: AddFeedbackProps) {
   const { user } = useAuth()
   const [form] = Form.useForm()
   const { jobId = '' } = useParams()
   const [searchParams] = useSearchParams()
   const candidateId = searchParams.get('candidateId') || ''
+
+  useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues)
+    }
+  }, [initialValues, form])
 
   const { data: interviews } = useQuery(['interviews', jobId], () =>
     fetchInterviews(jobId),
@@ -44,7 +56,7 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
   )
 
   const queryClient = useQueryClient()
-  const { mutate, isLoading } = useMutation(createFeedback, {
+  const { mutate, isLoading } = useMutation(mutationFunc, {
     onSuccess: () => {
       queryClient.invalidateQueries(['feedbacks', candidateId])
       form.resetFields()
@@ -53,8 +65,12 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
   })
 
   function handleSubmit() {
-    form.validateFields().then((values) => {
-      mutate(values)
+    form.validateFields().then(({ id, ...restValues }) => {
+      if (initialValues) {
+        mutate({ id, body: restValues })
+      } else {
+        mutate({ body: restValues })
+      }
     })
   }
 
@@ -63,16 +79,17 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
       open={isOpen}
       onCancel={onClose}
       onOk={handleSubmit}
-      title="Add Feedback"
       okText="Submit Feedback"
       okButtonProps={{ loading: isLoading }}
+      title={initialValues ? 'Edit Feedback' : 'Add Feedback'}
     >
       <Form
         form={form}
         className="pt-4"
         layout="vertical"
-        initialValues={getInitialValues(candidateId)}
+        initialValues={initialValues ?? getInitialValues(candidateId)}
       >
+        <Form.Item name="id" noStyle />
         <Form.Item name="candidateId" noStyle />
 
         <Form.Item
@@ -83,9 +100,12 @@ export default function AddFeedback({ isOpen, onClose }: AddFeedbackProps) {
             className="w-full"
             placeholder="Select an interview round..."
             options={interviews
-              ?.filter(({ id }) =>
-                feedbacks?.every(({ Interview }) => id !== Interview.id),
-              )
+              ?.filter(({ id }) => {
+                // If we are editing feedback, we should allow the user to select the same interview
+                if (initialValues) return true
+
+                return feedbacks?.every(({ Interview }) => id !== Interview.id)
+              })
               ?.map(({ id, title }) => {
                 return { value: id, label: title }
               })}

@@ -12,8 +12,8 @@ import {
   Spin,
   message,
 } from 'antd'
-import { useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { HiArrowRight } from 'react-icons/hi'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
@@ -26,12 +26,7 @@ import { Job } from 'types/job'
 import { fetchJob } from 'pages/job/queries'
 import { MemberWithUserInfo } from 'types/member'
 import { fetchMembers } from 'pages/members/queries'
-import {
-  fetchDepartments,
-  fetchLocations,
-  updateJobById,
-  createJob,
-} from '../queries'
+import { fetchDepartments, fetchLocations, updateJobById } from '../queries'
 
 import SkillSelect from '../components/skill-select'
 import GenerateDescription from '../components/generate-description'
@@ -43,7 +38,6 @@ import {
   experienceOptions,
   jobPriority,
   currency_list,
-  defaultCurrency,
 } from '../constants/create-job-values'
 
 type JobDetailsProps = {
@@ -54,19 +48,9 @@ dayjs.extend(weekday)
 dayjs.extend(localeData)
 
 export default function JobDetails({ form }: JobDetailsProps) {
-  let jobId = ''
-  const jobTitle = Form.useWatch('jobTitle', form)
+  const { jobId = '' } = useParams()
+  const jobTitle = Form.useWatch('title', form)
   const navigate = useNavigate()
-
-  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
-    onSuccess: ({ id }) => {
-      jobId = id
-    },
-  })
-
-  useEffect(() => {
-    mutate()
-  }, [mutate])
 
   const [
     { data: locations, isLoading: isLocationsLoading },
@@ -131,8 +115,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
     isDepartmentsLoading ||
     isJobLoading ||
     isLocationsLoading ||
-    isMembersLoading ||
-    isCreatingJob
+    isMembersLoading
   ) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -151,7 +134,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
       </div>
 
       <Form.Item
-        name="jobTitle"
+        name="title"
         rules={[{ required: true, message: 'Job-Title is required!' }]}
       >
         <Input
@@ -163,7 +146,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
               noStyle
               rules={[{ required: true, message: 'Job-Type is required!' }]}
             >
-              <Select options={jobTypeOptions} defaultValue="fullTime" />
+              <Select options={jobTypeOptions} placeholder="Select Job Type" />
             </Form.Item>
           }
         />
@@ -274,7 +257,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
           <Form.Item name="hireBy" className="w-full">
             <DatePicker
               size="large"
-              placeholder="Onsite Coding"
+              placeholder="Hire by date"
               format={'DD-MM-YYYY'}
               style={{ width: '100%' }}
               disabledDate={(current) =>
@@ -300,8 +283,16 @@ export default function JobDetails({ form }: JobDetailsProps) {
         <div className="flex-1">
           <p className="mb-1 font-semibold">Referal Bonus</p>
 
-          <Form.Item name="referalBonus">
-            <Input size="large" placeholder="max" />
+          <Form.Item name="referralBonus">
+            <InputNumber
+              size="large"
+              placeholder="100"
+              className="w-full"
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+            />
           </Form.Item>
         </div>
         <div className="flex-1">
@@ -312,43 +303,41 @@ export default function JobDetails({ form }: JobDetailsProps) {
               <Form.Item name="currency">
                 <Select
                   size="large"
-                  defaultValue={defaultCurrency}
                   options={currency_list}
+                  placeholder="Select currency"
                   value={form.getFieldValue('currency')}
                   onChange={(value) => form.setFieldValue('currency', value)}
                 />
               </Form.Item>
             </div>
             <div>
-              <Form.Item name="salaryRange" noStyle>
-                <Space.Compact size="large">
-                  <Form.Item name="minSalary" noStyle>
-                    <InputNumber
-                      placeholder="min"
-                      parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                      }
-                    />
-                  </Form.Item>
-
-                  <Input
-                    className="text-center cursor-default w-[30%]"
-                    size="large"
-                    placeholder="to"
-                    disabled
+              <Space.Compact size="large">
+                <Form.Item name="minSalary" noStyle>
+                  <InputNumber
+                    placeholder="min"
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    }
                   />
-                  <Form.Item name="maxSalary" noStyle>
-                    <InputNumber
-                      placeholder="max"
-                      parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                      }
-                    />
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
+                </Form.Item>
+
+                <Input
+                  className="text-center cursor-default w-[30%]"
+                  size="large"
+                  placeholder="to"
+                  disabled
+                />
+                <Form.Item name="maxSalary" noStyle>
+                  <InputNumber
+                    placeholder="max"
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    }
+                  />
+                </Form.Item>
+              </Space.Compact>
             </div>
           </div>
         </div>

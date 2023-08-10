@@ -60,7 +60,6 @@ export default function JobForm() {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
         onSuccess: (data: Job) => {
           const { hireBy, ...restData } = data
           form.setFieldsValue(restData)
@@ -138,7 +137,7 @@ export default function JobForm() {
 
         <Form.Item
           name="hiringManager"
-          className="w-64"
+          className="w-56"
           label="Hiring Manager"
           rules={[{ required: true, message: 'Please select Hiring Manager' }]}
         >
@@ -161,7 +160,7 @@ export default function JobForm() {
           />
         </Form.Item>
 
-        <Form.Item name="priority" label="Priority" className="w-48">
+        <Form.Item name="priority" label="Priority" className="w-32">
           <Select placeholder="Select Job Priority" options={jobPriority} />
         </Form.Item>
       </div>

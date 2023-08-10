@@ -1,17 +1,21 @@
 import dayjs from 'dayjs'
-import { Avatar } from 'antd'
-import { Calendar } from '@prisma/client'
-
+import type { Calendar } from '@prisma/client'
+import { useSearchParams } from 'react-router-dom'
 import { HiOutlineCalendar } from 'react-icons/hi'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Avatar, Button, Modal, message } from 'antd'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import useAuth from 'hooks/use-auth'
 import { MemberWithUserInfo } from 'types/member'
+import { deleteCalendarEvent } from '../queries'
 
 type CalendarEventProps = Calendar & {
   members: MemberWithUserInfo[] | undefined
 }
 
 export default function CalendarEvent({
+  id,
   title,
   startTime,
   endTime,
@@ -21,12 +25,33 @@ export default function CalendarEvent({
   members,
 }: CalendarEventProps) {
   const { user } = useAuth()
+  const [searchParams] = useSearchParams()
+  const candidateId = searchParams.get('candidateId') ?? ''
 
   function getInterviewers(emails: string[]) {
     return members?.filter(({ email }) => email && emails.includes(email))
   }
 
   const eventCreater = members?.find(({ uid }) => uid === createdBy)
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(deleteCalendarEvent, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['calendars', candidateId])
+      message.success('Successfully deleted calendar event')
+    },
+  })
+
+  function handleDelete() {
+    Modal.confirm({
+      title: 'Delete this calendar event?',
+      content: 'This action cannot be undone',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => mutate({ id }),
+      okButtonProps: { danger: true },
+    })
+  }
 
   return (
     <div>
@@ -36,8 +61,15 @@ export default function CalendarEvent({
           {eventCreater?.displayName}{' '}
           {eventCreater?.uid === user?.uid ? '(you)' : ''}
         </p>
-        <div className="flex-1" />
         <p className="text-xs text-gray-500">{dayjs(createdAt).fromNow()}</p>
+        <div className="flex-1" />
+        <Button
+          danger
+          type="text"
+          size="small"
+          onClick={handleDelete}
+          icon={<DeleteOutlined className="text-xs" />}
+        />
       </div>
       <div className="p-4 rounded bg-gray-50">
         <div className="flex space-x-2">
