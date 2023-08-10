@@ -38,7 +38,6 @@ import {
   experienceOptions,
   jobPriority,
   currency_list,
-  defaultCurrency,
 } from '../constants/create-job-values'
 
 type JobDetailsProps = {
@@ -147,7 +146,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
               noStyle
               rules={[{ required: true, message: 'Job-Type is required!' }]}
             >
-              <Select options={jobTypeOptions} defaultValue="fullTime" />
+              <Select options={jobTypeOptions} placeholder="Select Job Type" />
             </Form.Item>
           }
         />
@@ -288,6 +287,7 @@ export default function JobDetails({ form }: JobDetailsProps) {
             <InputNumber
               size="large"
               placeholder="100"
+              className="w-full"
               parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -303,8 +303,8 @@ export default function JobDetails({ form }: JobDetailsProps) {
               <Form.Item name="currency">
                 <Select
                   size="large"
-                  defaultValue={defaultCurrency}
                   options={currency_list}
+                  placeholder="Select currency"
                   value={form.getFieldValue('currency')}
                   onChange={(value) => form.setFieldValue('currency', value)}
                 />
