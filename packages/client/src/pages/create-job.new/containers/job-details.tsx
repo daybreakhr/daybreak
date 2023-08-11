@@ -10,6 +10,7 @@ import {
   Avatar,
   Spin,
   message,
+  Typography,
 } from 'antd'
 import { useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -57,8 +58,16 @@ export default function JobDetails() {
     { data: members, isLoading: isMembersLoading },
   ] = useQueries({
     queries: [
-      { queryKey: ['locations'], queryFn: fetchLocations },
-      { queryKey: ['departments'], queryFn: fetchDepartments },
+      {
+        queryKey: ['locations'],
+        queryFn: fetchLocations,
+        refetchOnWindowFocus: false,
+      },
+      {
+        queryKey: ['departments'],
+        queryFn: fetchDepartments,
+        refetchOnWindowFocus: false,
+      },
       {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
@@ -72,7 +81,11 @@ export default function JobDetails() {
           }
         },
       },
-      { queryKey: ['members'], queryFn: fetchMembers },
+      {
+        queryKey: ['members'],
+        queryFn: fetchMembers,
+        refetchOnWindowFocus: false,
+      },
     ],
   })
 
@@ -96,13 +109,6 @@ export default function JobDetails() {
       })) ?? [],
     [members],
   )
-
-  form.setFieldsValue({
-    jobType: 'fullTime',
-    currency: defaultCurrency,
-    isRemote: false,
-    ...job,
-  })
 
   const handleSubmit = (values: any) => {
     updateJob(
@@ -137,10 +143,18 @@ export default function JobDetails() {
         <p className="font-semibold">Job Title</p>
         <p className="text-gray-500">Required</p>
       </div>
-      <Form layout="vertical" form={form}>
+      <Form
+        layout="vertical"
+        form={form}
+        initialValues={{
+          jobType: 'fullTime',
+          currency: defaultCurrency,
+          isRemote: false,
+        }}
+      >
         <Form.Item
           name="title"
-          rules={[{ required: true, message: 'Job-Title is required!' }]}
+          rules={[{ required: true, message: 'Please select a job title' }]}
         >
           <Input
             size="large"
@@ -149,7 +163,9 @@ export default function JobDetails() {
               <Form.Item
                 name="jobType"
                 noStyle
-                rules={[{ required: true, message: 'Job-Type is required!' }]}
+                rules={[
+                  { required: true, message: 'Please select a job type' },
+                ]}
               >
                 <Select
                   options={jobTypeOptions}
@@ -312,12 +328,12 @@ export default function JobDetails() {
             <p className="mb-1 font-semibold">Salary</p>
 
             <div className="flex space-x-4">
-              <div className="w-30">
+              <div className="w-36">
                 <Form.Item name="currency">
                   <Select
                     size="large"
                     options={currency_list}
-                    placeholder="Select currency"
+                    placeholder="USD"
                   />
                 </Form.Item>
               </div>
@@ -333,12 +349,10 @@ export default function JobDetails() {
                     />
                   </Form.Item>
 
-                  <Input
-                    className="text-center cursor-default w-[30%]"
-                    size="large"
-                    placeholder="to"
-                    disabled
-                  />
+                  <Typography className="w-12 text-center cursor-default">
+                    to
+                  </Typography>
+
                   <Form.Item name="maxSalary" noStyle>
                     <InputNumber
                       placeholder="max"

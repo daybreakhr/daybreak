@@ -36,7 +36,7 @@ export default function GenerateDescription({
       icon={<HiOutlineSparkles className="anticon" />}
       className=" text-primary-500"
     >
-      Generate AI
+      Generate with AI
     </Button>
   )
 }
