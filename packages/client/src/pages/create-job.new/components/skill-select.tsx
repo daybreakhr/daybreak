@@ -43,7 +43,7 @@ export default function SkillSelect({ form }: SkillSelectProps) {
       onSearch={setInputValue}
       mode="multiple"
       optionFilterProp="children"
-      placeholder="Select Skill..."
+      placeholder="Select Skill"
       value={form.getFieldValue('skills')}
       size="large"
     >

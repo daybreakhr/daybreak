@@ -57,7 +57,7 @@ export default function LocationSelect({
       disabled={isLoading}
       onSearch={setInputValue}
       optionFilterProp="children"
-      placeholder="Select location..."
+      placeholder="Select location"
       value={form.getFieldValue('locationId')}
     >
       {inputValue && filteredOptions?.length === 0 && (

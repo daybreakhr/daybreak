@@ -50,6 +50,13 @@ export default function JobDetails() {
 
   const [form] = Form.useForm()
   const jobTitle = Form.useWatch('title', form)
+  const selectedCurrency = Form.useWatch('currency', form)
+
+  const symbol = useMemo(() => {
+    return currency_list.filter((item) => {
+      return item.value === selectedCurrency
+    })[0]?.symbol
+  }, [selectedCurrency])
 
   const [
     { data: locations, isLoading: isLocationsLoading },
@@ -170,6 +177,7 @@ export default function JobDetails() {
                 <Select
                   options={jobTypeOptions}
                   placeholder="Select Job Type"
+                  bordered={false}
                 />
               </Form.Item>
             }
@@ -321,6 +329,7 @@ export default function JobDetails() {
                 formatter={(value) =>
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
+                prefix={symbol}
               />
             </Form.Item>
           </div>
@@ -349,7 +358,7 @@ export default function JobDetails() {
                     />
                   </Form.Item>
 
-                  <Typography className="w-12 text-center cursor-default">
+                  <Typography className="w-12 p-2 text-center border-gray-500 cursor-default bg-gray-3">
                     to
                   </Typography>
 

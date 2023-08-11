@@ -57,7 +57,7 @@ export default function DepartmentSelect({
       disabled={isLoading}
       onSearch={setInputValue}
       optionFilterProp="children"
-      placeholder="Select Department..."
+      placeholder="Select Department"
       value={form.getFieldValue('departmentId')}
     >
       {inputValue && filteredOptions?.length === 0 && (
