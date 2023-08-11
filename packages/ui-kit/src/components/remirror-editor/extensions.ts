@@ -8,6 +8,7 @@ import {
   UnderlineExtension,
   BulletListExtension,
   OrderedListExtension,
+  BlockquoteExtension,
 } from 'remirror/extensions'
 
 const extensions = () => [
@@ -20,6 +21,7 @@ const extensions = () => [
   new UnderlineExtension(),
   new BulletListExtension(),
   new OrderedListExtension(),
+  new BlockquoteExtension(),
 ]
 
 export default extensions

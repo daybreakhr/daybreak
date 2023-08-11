@@ -54,6 +54,8 @@ module.exports = {
           100: '#E4E6E8',
           50: '#F2F3F3',
           10: '#F7F8F8',
+          5: '#F9FAFB',
+          3: '#F8FAFC',
         },
         secondary: {
           main: '#EBD966',

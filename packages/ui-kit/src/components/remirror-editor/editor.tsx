@@ -43,10 +43,16 @@ export default function RemirrorEditor({
             handleChange(html)
           }
         }}
-        classNames={['prose', 'h-full', 'border', 'max-w-none']}
+        classNames={[
+          'prose',
+          'h-full',
+          'border',
+          'max-w-none',
+          ...(rest.classNames || ([] as [])),
+        ]}
       >
         <div className="flex items-center justify-between">
-          <RemirrorToolbar />
+          <RemirrorToolbar hideHeadingLevelButtonGroup />
           {toolbarExtra}
         </div>
         <FloatingToolbar />

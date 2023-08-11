@@ -1,76 +1,49 @@
-import { Checkbox, Form, Input, Select } from 'antd'
+import { Button } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Show } from 'ui-kit'
+import { useMutation } from '@tanstack/react-query'
 
 import Stepper from './components/stepper'
-import { jobTypeOptions } from './constants/create-job-values'
+import JobDetails from './containers/job-details'
+import { createJob } from './queries'
 
 export default function CreateJob() {
+  const navigate = useNavigate()
+  const params = useParams()
+  const step = params.step ? +params.step : 0
+
+  const { mutate, isLoading: isCreatingJob } = useMutation(createJob, {
+    onSuccess: ({ id }) => {
+      navigate(`/create-job/v2/${id}/1`)
+    },
+  })
+
+  const handleCreate = () => {
+    mutate()
+  }
+
   return (
-    <div className="flex flex-col h-full py-12 overflow-hidden bg-white">
-      <Form layout="vertical" className="w-full max-w-4xl mx-auto">
-        <Stepper />
-        <p className="mb-3 text-xl font-semibold text-center">
-          Job Details Page
-        </p>
-
-        <div className="flex items-center justify-between mb-1">
-          <p className="font-semibold">Job Title</p>
-          <p className="text-gray-500">Required</p>
-        </div>
-        <Form.Item>
-          <Input
-            size="large"
-            addonBefore={
-              <Select
-                size="large"
-                className="w-32"
-                defaultValue="fullTime"
-                options={jobTypeOptions}
-              />
-            }
-            placeholder="Enter Job Title"
-          />
-        </Form.Item>
-
-        <div className="flex mb-4 space-x-8">
-          <div className="flex-1">
-            <p className="mb-1 font-semibold">Hiring Manager</p>
-
-            <Form.Item style={{ marginBottom: 0 }}>
-              <Select size="large" placeholder="Assign Hiring Manager" />
-            </Form.Item>
-          </div>
-
-          <div className="flex-1">
-            <p className="mb-1 font-semibold">Location</p>
-
-            <Form.Item style={{ marginBottom: '6px' }}>
-              <Select size="large" placeholder="Select Location" />
-            </Form.Item>
-
-            <Form.Item noStyle name="isRemote" valuePropName="checked">
-              <Checkbox>Mark as Remote Job</Checkbox>
-            </Form.Item>
-          </div>
-        </div>
-
-        <div className="flex space-x-8">
-          <div className="flex-1">
-            <p className="mb-1 font-semibold">Experience</p>
-
-            <Form.Item>
-              <Select size="large" placeholder="Assign Hiring Manager" />
-            </Form.Item>
-          </div>
-
-          <div className="flex-1">
-            <p className="mb-1 font-semibold">Department</p>
-
-            <Form.Item>
-              <Select size="large" placeholder="Select Location" />
-            </Form.Item>
-          </div>
-        </div>
-      </Form>
+    <div className="flex flex-col h-full py-12 overflow-scroll bg-white">
+      <div className="w-full max-w-4xl mx-auto ">
+        <Show
+          when={!!step}
+          fallback={
+            <Button
+              onClick={handleCreate}
+              loading={isCreatingJob}
+              type="primary"
+              size="large"
+            >
+              Create Job
+            </Button>
+          }
+        >
+          <Stepper currentStep={step} />
+          <Show when={step === 1}>
+            <JobDetails />
+          </Show>
+        </Show>
+      </div>
     </div>
   )
 }
