@@ -3,6 +3,9 @@ import LinkedInIcon from 'assets/icons/linkedin.svg'
 import InternshalaIcon from 'assets/icons/internshala.svg'
 import CareerPortalIcon from 'assets/icons/career-portal.svg'
 import NaukriIcon from 'assets/icons/naukri.svg'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { parseJob, updateJobById } from '../queries'
 
 const data = [
   {
@@ -32,6 +35,19 @@ const data = [
 ]
 
 export default function JobPublish() {
+  const navigate = useNavigate()
+  const { jobId = '' } = useParams()
+
+  const queryClient = useQueryClient()
+  const { mutate: triggerJobParsing } = useMutation(parseJob)
+
+  const { mutate, isLoading } = useMutation(updateJobById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['jobs'])
+      navigate('/create-job/v2')
+      triggerJobParsing({ jobId })
+    },
+  })
   return (
     <div>
       <div className="my-8">
@@ -56,7 +72,7 @@ export default function JobPublish() {
                         COMING SOON
                       </p>,
                     ]
-                  : [<Switch key={key} size="small" />]
+                  : [<Switch key={key} size="small" defaultChecked />]
               }
             >
               <List.Item.Meta
@@ -70,7 +86,13 @@ export default function JobPublish() {
         />
       </div>
       <div className="mt-3">
-        <Button size="large" type="primary" className="w-full">
+        <Button
+          size="large"
+          type="primary"
+          className="w-full"
+          loading={isLoading}
+          onClick={() => mutate({ jobId, updateJobDto: { isPublished: true } })}
+        >
           Publish Job
         </Button>
       </div>

@@ -83,3 +83,9 @@ export async function deletePipelineStep({ id }: { id: string }) {
   const { data } = await client.delete<Interview>(`interviews/${id}`)
   return data
 }
+
+// publish job
+export async function parseJob({ jobId }: { jobId: string }) {
+  const { data } = await client.post<Job>(`jobs/${jobId}/parse`)
+  return data
+}
