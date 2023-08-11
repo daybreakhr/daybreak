@@ -337,7 +337,7 @@ export default function JobDetails() {
             <p className="mb-1 font-semibold">Salary</p>
 
             <div className="flex space-x-4">
-              <div className="w-36">
+              <div className="w-32">
                 <Form.Item name="currency">
                   <Select
                     size="large"
@@ -358,7 +358,7 @@ export default function JobDetails() {
                     />
                   </Form.Item>
 
-                  <Typography className="w-12 p-2 text-center border-gray-500 cursor-default bg-gray-3">
+                  <Typography className="w-12 p-2 text-center border border-gray-200 cursor-default border-x-0 bg-gray-3">
                     to
                   </Typography>
 
