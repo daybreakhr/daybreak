@@ -5,16 +5,15 @@ import {
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
-  SaveOutlined,
 } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { List, Checkbox, Button, Input, Spin } from 'antd'
+import { List, Checkbox, Button, Input, Spin, Tooltip } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 
 import { AiOutlineHolder } from 'react-icons/ai'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Show } from 'ui-kit'
+
 import {
   createPipelineStep,
   deletePipelineStep,
@@ -32,6 +31,13 @@ export default function JobPipelines() {
 
   const { jobId = '' } = useParams()
   const navigate = useNavigate()
+
+  const text = (
+    <p className="text-sm font-normal break-words">
+      Daybreak Defaults <br /> This is a mandatory Round. You do not have
+      permissions to make changes.
+    </p>
+  )
 
   const defaultData = useMemo(
     () => [
@@ -134,112 +140,96 @@ export default function JobPipelines() {
           pipeline to your specific requirements.
         </p>
       </div>
+      <div className="w-[767px]">
+        <p className="text-base font-semibold">Total Rounds - {data.length}</p>
 
-      <p className="text-base font-semibold">Total Rounds - {data.length}</p>
+        <div className="my-5">
+          <List
+            size="large"
+            className=" border-gray-50"
+            dataSource={data}
+            renderItem={(item, index) => (
+              <List.Item
+                key={index}
+                className="py-0 mt-4 rounded-md bg-gray-50"
+                actions={
+                  item.isDefault
+                    ? ['Default']
+                    : editable === index
+                    ? [
+                        <CloseOutlined
+                          key={index}
+                          onClick={() => {
+                            data[index].title = ' '
+                            setData([...data])
+                          }}
+                          style={{ color: 'gray', fontSize: '12px' }}
+                        />,
 
-      <div className="my-5">
-        <List
-          size="large"
-          bordered
-          dataSource={data}
-          renderItem={(item, index) => (
-            <List.Item
-              key={index}
-              actions={
-                item.isDefault
-                  ? ['Default']
-                  : editable === index
-                  ? [
-                      <Button
-                        key={index}
-                        type="link"
-                        className="p-0"
-                        icon={
-                          <CloseOutlined
-                            onClick={() => {
-                              data[index].title = ' '
-                              setData([...data])
-                            }}
-                          />
-                        }
-                      />,
+                        <Button
+                          key={index}
+                          type="link"
+                          className="w-3 h-3 p-0 text-xs text-gray-500 "
+                          loading={updatable === index && isUpdatingInterview}
+                          hidden={updatable === index && isUpdatingInterview}
+                          onClick={() => {
+                            setUpdatable(index)
+                            updateInterview({
+                              id: data[index].id,
+                              payload: { title: data[index].title },
+                            })
+                          }}
+                        >
+                          Save
+                        </Button>,
+                      ]
+                    : [
+                        <EditOutlined
+                          key={index}
+                          onClick={() => {
+                            setEditable(index)
+                          }}
+                          style={{
+                            color: '#6B7280',
+                            fontSize: '12px',
+                          }}
+                        />,
+                        <DeleteOutlined
+                          key={index}
+                          hidden={deletable === index && isDeletingInterview}
+                          style={{ color: 'red', fontSize: '12px' }}
+                          onClick={() => {
+                            setDeletable(index)
+                            deleteInterview({ id: data[index].id })
+                          }}
+                        />,
+                      ]
+                }
+              >
+                <div className="flex w-full space-x-6">
+                  <div className="flex space-x-6">
+                    <AiOutlineHolder className="mt-1" />
 
-                      <Button
-                        key={index}
-                        type="link"
-                        className="p-0"
-                        loading={updatable === index && isUpdatingInterview}
-                        icon={
-                          <SaveOutlined
-                            hidden={updatable === index && isUpdatingInterview}
-                            onClick={() => {
-                              setUpdatable(index)
-                              updateInterview({
-                                id: data[index].id,
-                                payload: { title: data[index].title },
-                              })
-                            }}
-                          />
-                        }
-                      />,
-                    ]
-                  : [
-                      <Button
-                        key={index}
-                        type="link"
-                        className="p-0"
-                        icon={
-                          <EditOutlined
-                            onClick={() => {
-                              setEditable(index)
-                            }}
-                          />
-                        }
-                      />,
-
-                      <Button
-                        key={index}
-                        className="p-0"
-                        type="link"
-                        loading={deletable === index && isDeletingInterview}
-                        icon={
-                          <DeleteOutlined
-                            hidden={deletable === index && isDeletingInterview}
-                            onClick={() => {
-                              setDeletable(index)
-                              deleteInterview({ id: data[index].id })
-                            }}
-                          />
-                        }
-                      />,
-                    ]
-              }
-            >
-              <div className="flex w-full space-x-4">
-                <div className="flex space-x-2">
-                  <AiOutlineHolder className="mt-1" />
-
-                  <Checkbox
-                    disabled={item.isDefault}
-                    checked={item.isActive}
-                    onChange={() => {
-                      updateInterview({
-                        id: data[index].id,
-                        payload: { isActive: !data[index].isActive },
-                      })
-                      data[index].isActive = !data[index].isActive
-                      setData([...data])
-                    }}
-                  />
-                </div>
-                <div className="w-full ">
-                  <Show
-                    when={editable === index}
-                    fallback={<span> {item.title}</span>}
-                  >
+                    <Tooltip placement="top" title={item.isDefault ? text : ''}>
+                      <Checkbox
+                        disabled={item.isDefault}
+                        checked={item.isActive}
+                        onChange={() => {
+                          updateInterview({
+                            id: data[index].id,
+                            payload: { isActive: !data[index].isActive },
+                          })
+                          data[index].isActive = !data[index].isActive
+                          setData([...data])
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                  <div className="w-full">
                     <Input
                       bordered={false}
                       size="small"
+                      className="text-sm font-normal"
                       value={item.title}
                       onChange={(e) => {
                         data[index].title = e.target.value
@@ -252,57 +242,60 @@ export default function JobPipelines() {
                           payload: { title: data[index].title },
                         })
                       }}
+                      onClick={() => {
+                        setEditable(index)
+                      }}
                     />
-                  </Show>
+                  </div>
                 </div>
-              </div>
-            </List.Item>
-          )}
-        />
-      </div>
+              </List.Item>
+            )}
+          />
+        </div>
 
-      <div className="flex justify-between ">
-        <Button
-          size="large"
-          className="text-primary-500"
-          onClick={() => {
-            // const index = data.length - 2
-            const stage = {
-              title: `Custom Round ${data.length - 3}`,
-              // isActive: true,
-              // isDefault: false,
-            }
-            createInterview({ ...stage, order: data?.length ?? 0, jobId })
-          }}
-          loading={isCreatingInterview}
-        >
-          <div className="flex items-center space-x-2">
-            <span>
-              <PlusOutlined hidden={isCreatingInterview} />
-            </span>
-            <span>Add New Stage</span>
-          </div>
-        </Button>
-        <div className="space-x-4">
+        <div className="flex justify-between ">
           <Button
             size="large"
-            onClick={() => navigate(`/create-job/v2/${jobId}/1`)}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            size="large"
-            type="primary"
-            onClick={() => navigate(`/create-job/v2/${jobId}/3`)}
+            className="text-primary-500"
+            onClick={() => {
+              // const index = data.length - 2
+              const stage = {
+                title: `Custom Round ${data.length - 3}`,
+                // isActive: true,
+                // isDefault: false,
+              }
+              createInterview({ ...stage, order: data?.length ?? 0, jobId })
+            }}
+            loading={isCreatingInterview}
           >
             <div className="flex items-center space-x-2">
-              <span>Save & Publish</span>
               <span>
-                <ArrowRightOutlined />
+                <PlusOutlined hidden={isCreatingInterview} />
               </span>
+              <span>Add New Stage</span>
             </div>
           </Button>
+          <div className="space-x-4">
+            <Button
+              size="large"
+              onClick={() => navigate(`/create-job/v2/${jobId}/1`)}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => navigate(`/create-job/v2/${jobId}/3`)}
+            >
+              <div className="flex items-center space-x-2">
+                <span>Save & Publish</span>
+                <span>
+                  <ArrowRightOutlined />
+                </span>
+              </div>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

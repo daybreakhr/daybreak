@@ -61,7 +61,7 @@ export default function JobPublish() {
       <div className="my-3">
         <List
           size="large"
-          bordered
+          bordered={false}
           dataSource={data}
           renderItem={(item, key) => (
             <List.Item
@@ -72,7 +72,14 @@ export default function JobPublish() {
                         COMING SOON
                       </p>,
                     ]
-                  : [<Switch key={key} size="small" defaultChecked />]
+                  : [
+                      <Switch
+                        key={key}
+                        size="small"
+                        defaultChecked
+                        style={{ background: 'green' }}
+                      />,
+                    ]
               }
             >
               <List.Item.Meta
