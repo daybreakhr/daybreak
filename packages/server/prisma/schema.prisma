@@ -281,6 +281,8 @@ model Interview {
   Job       Job         @relation(fields: [jobId], references: [id])
   jobId     String      @db.ObjectId
   Feedback  Feedback?
+  isActive  Boolean     @default(true)
+  isDefault Boolean     @default(false)
 }
 
 model Calendar {

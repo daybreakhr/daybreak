@@ -5,6 +5,8 @@ import { useMutation } from '@tanstack/react-query'
 
 import Stepper from './components/stepper'
 import JobDetails from './containers/job-details'
+import JobPipelines from './containers/job-pipelines'
+import JobPublish from './containers/job-publish'
 import { createJob } from './queries'
 
 export default function CreateJob() {
@@ -41,6 +43,12 @@ export default function CreateJob() {
           <Stepper currentStep={step} />
           <Show when={step === 1}>
             <JobDetails />
+          </Show>
+          <Show when={step === 2}>
+            <JobPipelines />
+          </Show>
+          <Show when={step === 3}>
+            <JobPublish />
           </Show>
         </Show>
       </div>
