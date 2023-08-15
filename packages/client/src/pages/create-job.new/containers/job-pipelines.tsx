@@ -151,7 +151,7 @@ export default function JobPipelines() {
               <div>
                 <List.Item
                   key={index}
-                  className="py-0 mt-4 border border-transparent rounded-md bg-gray-5 hover:bg-white"
+                  className="py-0 mt-4 border border-transparent rounded-md bg-gray-5 hover:bg-gray-50"
                   actions={
                     item.isDefault
                       ? ['Default']

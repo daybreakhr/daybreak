@@ -49,7 +49,7 @@ export default function JobPublish() {
     },
   })
   return (
-    <div className="max-w-xl">
+    <div className="max-w-xl m-auto">
       <div className="my-8">
         <p className="text-xl font-semibold">Publish Your Job</p>
         <p className="text-sm text-gray-500">
