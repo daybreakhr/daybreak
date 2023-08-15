@@ -49,59 +49,63 @@ export default function JobPublish() {
     },
   })
   return (
-    <div>
-      <div className="my-8">
-        <p className="text-xl font-semibold">Publish Your Job</p>
-        <p className="text-sm text-gray-500">
-          You are ready to start hiring process.
-        </p>
-      </div>
+    <div className="w-full">
+      <div className="w-[626px] m-auto">
+        <div className="my-8">
+          <p className="text-xl font-semibold">Publish Your Job</p>
+          <p className="text-sm text-gray-500">
+            You are ready to start hiring process.
+          </p>
+        </div>
 
-      <p className="text-xs">Publish on</p>
-      <div className="my-3">
-        <List
-          size="large"
-          bordered={false}
-          dataSource={data}
-          renderItem={(item, key) => (
-            <List.Item
-              actions={
-                item.isComingSoon
-                  ? [
-                      <p className="text-xs" key={key}>
-                        COMING SOON
-                      </p>,
-                    ]
-                  : [
-                      <Switch
-                        key={key}
-                        size="small"
-                        defaultChecked
-                        style={{ background: 'green' }}
-                      />,
-                    ]
-              }
-            >
-              <List.Item.Meta
-                avatar={<Avatar shape="square" src={item.icon} />}
-                title={
-                  <p className="mt-1 text-sm font-semibold">{item.title}</p>
+        <p className="text-xs">Publish on</p>
+        <div className="my-3 ">
+          <List
+            size="large"
+            bordered={false}
+            dataSource={data}
+            renderItem={(item, key) => (
+              <List.Item
+                actions={
+                  item.isComingSoon
+                    ? [
+                        <p className="text-xs" key={key}>
+                          COMING SOON
+                        </p>,
+                      ]
+                    : [
+                        <Switch
+                          key={key}
+                          size="small"
+                          defaultChecked
+                          style={{ background: 'green' }}
+                        />,
+                      ]
                 }
-              />
-            </List.Item>
-          )}
-        />
-      </div>
-      <div className="mt-3">
-        <Button
-          size="large"
-          type="primary"
-          className="w-full"
-          loading={isLoading}
-          onClick={() => mutate({ jobId, updateJobDto: { isPublished: true } })}
-        >
-          Publish Job
-        </Button>
+              >
+                <List.Item.Meta
+                  avatar={<Avatar shape="square" src={item.icon} />}
+                  title={
+                    <p className="mt-1 text-sm font-semibold">{item.title}</p>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        </div>
+        <div className="mt-3 ">
+          <Button
+            size="large"
+            type="primary"
+            className="w-full"
+            loading={isLoading}
+            onClick={() =>
+              mutate({ jobId, updateJobDto: { isPublished: true } })
+            }
+          >
+            Publish Job
+          </Button>
+        </div>
       </div>
     </div>
   )
