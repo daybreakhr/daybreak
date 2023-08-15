@@ -49,7 +49,7 @@ export default function JobPublish() {
     },
   })
   return (
-    <div>
+    <div className="max-w-xl">
       <div className="my-8">
         <p className="text-xl font-semibold">Publish Your Job</p>
         <p className="text-sm text-gray-500">
@@ -58,7 +58,7 @@ export default function JobPublish() {
       </div>
 
       <p className="text-xs">Publish on</p>
-      <div className="my-3">
+      <div className="my-3 ">
         <List
           size="large"
           bordered={false}
@@ -92,7 +92,7 @@ export default function JobPublish() {
           )}
         />
       </div>
-      <div className="mt-3">
+      <div className="mt-3 ">
         <Button
           size="large"
           type="primary"
