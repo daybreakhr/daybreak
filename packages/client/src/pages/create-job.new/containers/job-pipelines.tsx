@@ -148,10 +148,10 @@ export default function JobPipelines() {
             size="large"
             dataSource={data}
             renderItem={(item, index) => (
-              <div className="mt-4 border border-transparent rounded-md hover:border-purple-500">
+              <div className="mt-4 border border-transparent rounded-md focus:border-purple-500 focus:bg-white focus:outline-none">
                 <List.Item
                   key={index}
-                  className="py-0 border border-transparent rounded-md bg-gray-5 hover:bg-white"
+                  className="py-0 border border-transparent rounded-md bg-gray-5 hover:bg-gray-50"
                   actions={
                     item.isDefault
                       ? ['Default']
@@ -174,6 +174,7 @@ export default function JobPipelines() {
                               type="link"
                               key={index}
                               className="w-3 h-3 text-xs text-gray-500"
+                              disabled={item.title === ''}
                               loading={
                                 updatable === index && isUpdatingInterview
                               }
@@ -228,6 +229,10 @@ export default function JobPipelines() {
                           disabled={item.isDefault}
                           checked={item.isActive}
                           onChange={() => {
+                            updateInterview({
+                              id: data[index].id,
+                              payload: { isActive: !data[index].isActive },
+                            })
                             data[index].isActive = !data[index].isActive
                             setData([...data])
                           }}
