@@ -3,7 +3,7 @@ import { HiOutlineSparkles } from 'react-icons/hi'
 import { useMutation } from '@tanstack/react-query'
 import { useRemirrorContext } from '@remirror/react'
 import { getRemirrorJSON, htmlToProsemirrorNode } from 'remirror'
-import { generateJD } from '../queries'
+import { generateJD, updateJobById } from '../queries'
 
 type GenerateDescriptionProps = {
   jobTitle: string
@@ -15,6 +15,7 @@ export default function GenerateDescription({
   jobId,
 }: GenerateDescriptionProps) {
   const { setContent, schema } = useRemirrorContext()
+  const { mutate: updateJob } = useMutation(updateJobById)
 
   const { mutate, isLoading } = useMutation(generateJD, {
     onSuccess: (data) => {
@@ -24,6 +25,7 @@ export default function GenerateDescription({
       )
 
       // Update content of editor while preserving history
+      updateJob({ jobId, updateJobDto: { description: data } })
       setContent(doc)
     },
   })

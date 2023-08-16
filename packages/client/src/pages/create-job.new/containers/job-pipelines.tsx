@@ -148,10 +148,10 @@ export default function JobPipelines() {
             size="large"
             dataSource={data}
             renderItem={(item, index) => (
-              <div>
+              <div className="mt-4 border border-transparent rounded-md hover:border-purple-500">
                 <List.Item
                   key={index}
-                  className="py-0 mt-4 border border-transparent rounded-md bg-gray-5 hover:bg-gray-50"
+                  className="py-0 border border-transparent rounded-md bg-gray-5 hover:bg-white"
                   actions={
                     item.isDefault
                       ? ['Default']
