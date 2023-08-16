@@ -27,6 +27,7 @@ import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import OnBoarding from 'pages/onboarding-new'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,11 @@ export default function App() {
                   <Route path="setup" element={<SetupWorkspace />} />
                   <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
+
+                <Route path="/onboarding/v2" element={<OnBoarding />}>
+                  <Route path="" element={<Navigate to="create" />} />
+                </Route>
+
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
                 <Route
                   path="/slack/connect"
