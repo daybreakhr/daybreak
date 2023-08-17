@@ -27,6 +27,7 @@ import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import InviteCoworkers from 'pages/invite-coworkers'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,6 +91,10 @@ export default function App() {
                   <Route
                     path="settings/email-templates"
                     element={<EmailTemplates />}
+                  />
+                  <Route
+                    path="/invite-coworkers"
+                    element={<InviteCoworkers />}
                   />
                 </Route>
               </Routes>
