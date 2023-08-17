@@ -35,11 +35,11 @@ export default function CreateWorkspace() {
   })
 
   return (
-    <div className="flex-1 py-20">
+    <div className="flex-1 py-10">
       <div className="w-[512px] mx-auto">
         <div className="text-center">
-          <p className="text-2xl font-semibold">Setup your workspace</p>
-          <p className="text-gray-500">
+          <p className="mb-2 text-2xl font-semibold">Setup your workspace</p>
+          <p className="text-base text-gray-500">
             Create a workspace for your hiring team to collaborate throughout
             the hiring process
           </p>
@@ -52,7 +52,9 @@ export default function CreateWorkspace() {
         >
           <div className="py-12">
             <Card className="px-10 py-10">
-              <p className="mb-1 font-semibold">Workspace Name</p>
+              <p className="mb-1 font-semibold">
+                Workspace Name<sup className="text-sm text-red-500">*</sup>
+              </p>
               <Form.Item
                 name="name"
                 rules={[
@@ -62,7 +64,9 @@ export default function CreateWorkspace() {
                 <Input size="large" placeholder="Name your workspace" />
               </Form.Item>
 
-              <p className="mb-1 font-semibold">Slug</p>
+              <p className="mb-1 font-semibold">
+                Slug<sup className="text-sm text-red-500">*</sup>
+              </p>
               <Form.Item
                 name="slug"
                 rules={[
