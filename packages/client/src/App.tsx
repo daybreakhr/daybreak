@@ -28,6 +28,7 @@ import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
 import InviteCoworkers from 'pages/invite-coworkers'
+import Slack from 'pages/slack'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -96,6 +97,8 @@ export default function App() {
                     path="/invite-coworkers"
                     element={<InviteCoworkers />}
                   />
+
+                  <Route path="connect-slack" element={<Slack />} />
                 </Route>
               </Routes>
               {import.meta.env.PROD && <Logrocket />}

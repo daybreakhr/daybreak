@@ -6,8 +6,9 @@ import { Card } from 'ui-kit'
 export default function InviteCoworkers() {
   const [addInput, setAddInput] = useState([0])
   const { Option } = Select
+
   return (
-    <div className="flex-1 py-10">
+    <div className="flex-1 py-32 overflow-hidden">
       <div className="w-[690px] mx-auto">
         <div className="text-center">
           <p className="mb-2 text-2xl font-semibold">
@@ -74,9 +75,8 @@ export default function InviteCoworkers() {
               className="m-auto bg-purple-500 w-80"
             >
               <span>Proceed</span>
-              <span>
-                <ArrowRightOutlined />
-              </span>
+
+              <ArrowRightOutlined />
             </Button>
           </div>
           <p className="mt-8 text-sm text-center text-gray-500 text-normal">
