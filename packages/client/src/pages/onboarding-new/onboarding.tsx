@@ -28,7 +28,10 @@ export default function OnBoarding() {
                 <p className="mb-1 font-semibold">Workspace Name</p>
                 <Input size="large" placeholder="Name your workspace" />
               </Form.Item>
-              <Form.Item>
+              <Form.Item
+                name="slug"
+                rules={[{ required: true, message: 'Please select a slug' }]}
+              >
                 <p className="mb-1 font-semibold">Slug</p>
                 <Input
                   prefix={'http://'}
