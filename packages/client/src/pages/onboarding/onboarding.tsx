@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import Header from 'components/header'
+// import Header from 'components/header'
 import useAuth from 'hooks/use-auth'
 
 export default function Onboarding() {
@@ -10,10 +10,11 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="flex flex-col w-screen h-screen overflow-hidden">
-      <Header />
+    <div className="flex flex-col w-screen h-screen">
+      {/* TODO: Replace with onboarding header */}
+      {/* <Header /> */}
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         <Outlet />
       </div>
     </div>
