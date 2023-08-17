@@ -27,6 +27,8 @@ import CreatePipeline from 'pages/create-pipeline'
 import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import CreateDepartment from 'pages/create-department'
+import AddLocation from 'pages/add-location'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +56,12 @@ export default function App() {
                   <Route path="setup" element={<SetupWorkspace />} />
                   <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
+                {/* for create department and location */}
+                <Route
+                  path="create-department"
+                  element={<CreateDepartment />}
+                />
+                <Route path="add-locations" element={<AddLocation />} />
 
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
                 <Route
@@ -82,6 +90,7 @@ export default function App() {
                     path="settings"
                     element={<Navigate to="organisation" replace />}
                   />
+
                   <Route
                     path="settings/organisation"
                     element={<Organisation />}
