@@ -5,6 +5,9 @@ module.exports = {
   content: ['./index.html', './src/**/*.{tsx,ts}'],
   theme: {
     extend: {
+      boxShadow: {
+        md: '0px 4px 12px 0px rgba(0, 0, 0, 0.12)',
+      },
       fontSize: {
         xxs: '.625rem',
       },

@@ -54,6 +54,7 @@ export default function App() {
                   <Route path="setup" element={<SetupWorkspace />} />
                   <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
+
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
                 <Route
                   path="/slack/connect"
