@@ -1,19 +1,17 @@
-import {
-  ArrowRightOutlined,
-  CloseOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
-import { Button, Divider, Form, Input, Select } from 'antd'
+import { ArrowRightOutlined, CloseOutlined } from '@ant-design/icons'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Form, Input, message } from 'antd'
+import { addDepartment } from 'pages/organisation/queries'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card } from 'ui-kit'
 
 export default function CreateDepartment() {
   const [form] = Form.useForm()
   const [selectedValue, setSelectedValue] = useState<string[]>([])
 
-  const { Option } = Select
-
-  const [items, setItems] = useState(['HR', 'Finance'])
+  // const { Option } = Select
+  // const [items, setItems] = useState<string[]>([])
   const [name, setName] = useState('')
 
   const onNameChange = (event: any) => {
@@ -21,9 +19,30 @@ export default function CreateDepartment() {
   }
 
   const addItem = () => {
-    setItems([...items, name])
+    setSelectedValue([...selectedValue, name])
+    // setItems([...items, name])
     setName('')
   }
+
+  const { mutateAsync: createDepartment } = useMutation(addDepartment)
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+
+  function handleSubmit() {
+    setIsLoading(true)
+    Promise.all(
+      selectedValue.map((department) => createDepartment({ name: department })),
+    )
+      .then(() => {
+        setIsLoading(false)
+        navigate('/onboarding/add-location')
+      })
+      .catch(() => {
+        message.error('Something went wrong!')
+        setIsLoading(false)
+      })
+  }
+
   return (
     <div className="flex-1 py-10">
       <div className="w-[512px] mx-auto">
@@ -43,8 +62,26 @@ export default function CreateDepartment() {
               <Form.Item
                 name="departmentName"
                 rules={[{ required: true, message: 'Select deparment name' }]}
+                noStyle
               >
-                <Select
+                <Input
+                  value={name}
+                  size="large"
+                  onChange={onNameChange}
+                  suffix={
+                    <Button
+                      type="text"
+                      block
+                      onClick={() => {
+                        if (name === '') return
+                        addItem()
+                      }}
+                    >
+                      Add
+                    </Button>
+                  }
+                />
+                {/* <Select
                   size="large"
                   placeholder="Search or create new"
                   onChange={(value) =>
@@ -86,8 +123,9 @@ export default function CreateDepartment() {
                   {items.map((item) => (
                     <Option key={item}>{item}</Option>
                   ))}
-                </Select>
+                </Select> */}
               </Form.Item>
+
               <p className="mt-8 text-sm font-medium text-gray-500">
                 Added by Daybreak
               </p>
@@ -121,8 +159,9 @@ export default function CreateDepartment() {
             <Button
               type="primary"
               size="large"
-              htmlType="submit"
               className="m-auto w-80"
+              onClick={handleSubmit}
+              loading={isLoading}
             >
               <span>Proceed</span>
 

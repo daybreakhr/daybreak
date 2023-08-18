@@ -16,9 +16,7 @@ import Organisation from 'pages/organisation'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
-import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
-import InviteToWorkspace from 'pages/invite-to-workspace'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import ConnectSlack from 'pages/connect-slack'
@@ -49,15 +47,15 @@ export default function App() {
                 <Route path="/onboarding" element={<Onboarding />}>
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
-                  <Route path="setup" element={<SetupWorkspace />} />
-                  <Route path="invite" element={<InviteToWorkspace />} />
+                  <Route path="add-department" element={<CreateDepartment />} />
+                  <Route path="add-location" element={<AddLocation />} />
                 </Route>
                 {/* for create department and location */}
-                <Route
+                {/* <Route
                   path="create-department"
                   element={<CreateDepartment />}
                 />
-                <Route path="add-locations" element={<AddLocation />} />
+                <Route path="add-locations" element={<AddLocation />} /> */}
 
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
                 <Route

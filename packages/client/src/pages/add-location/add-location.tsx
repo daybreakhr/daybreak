@@ -3,13 +3,44 @@ import {
   CloseOutlined,
   EnvironmentFilled,
 } from '@ant-design/icons'
-import { Button, Form, Select } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { addLocation } from 'pages/organisation/queries'
+import { Button, Form, Input, message } from 'antd'
 import { useState } from 'react'
 import { Card } from 'ui-kit'
 
 export default function AddLocation() {
   const [form] = Form.useForm()
   const [selectedValue, setSelectedValue] = useState<string[]>([])
+
+  const { mutateAsync: createLocation } = useMutation(addLocation)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [name, setName] = useState('')
+
+  const onNameChange = (event: any) => {
+    setName(event.target.value)
+  }
+
+  const addItem = () => {
+    setSelectedValue([...selectedValue, name])
+    setName('')
+  }
+
+  function handleSubmit() {
+    setIsLoading(true)
+    Promise.all(
+      selectedValue.map((location) => createLocation({ name: location })),
+    )
+      .then(() => {
+        setIsLoading(false)
+        // navigate('/onboarding/invite')
+      })
+      .catch(() => {
+        message.error('Something went wrong!')
+        setIsLoading(false)
+      })
+  }
   return (
     <div className="flex-1 py-10">
       <div className="w-[512px] mx-auto">
@@ -20,11 +51,7 @@ export default function AddLocation() {
             hiring for. You can always edit or add more locations later.
           </p>
         </div>
-        <Form
-          layout="vertical"
-          form={form}
-          //   onFinish={(createWorkspaceDto) => mutate({ createWorkspaceDto })}
-        >
+        <Form layout="vertical" form={form}>
           <div className="py-12">
             <Card className="px-10 py-10">
               <p className="mb-1 font-semibold">
@@ -34,18 +61,25 @@ export default function AddLocation() {
                 name="location"
                 rules={[{ required: true, message: 'Search Location' }]}
               >
-                <Select
+                <Input
+                  value={name}
                   size="large"
-                  onChange={(value) =>
-                    setSelectedValue([...selectedValue, value])
+                  onChange={onNameChange}
+                  suffix={
+                    <Button
+                      type="text"
+                      block
+                      onClick={() => {
+                        if (name === '') return
+                        addItem()
+                      }}
+                    >
+                      Add
+                    </Button>
                   }
-                  options={[
-                    { value: 'Mumbai', label: 'Mumbai' },
-                    { value: 'Nagpur', label: 'Nagpur' },
-                  ]}
-                  placeholder="Add Locations"
                 />
               </Form.Item>
+
               <p className="mt-8 text-sm font-medium text-gray-500">
                 Added Locations
               </p>
@@ -88,6 +122,8 @@ export default function AddLocation() {
               size="large"
               htmlType="submit"
               className="m-auto w-80"
+              onClick={handleSubmit}
+              loading={isLoading}
             >
               <span>Proceed</span>
 
