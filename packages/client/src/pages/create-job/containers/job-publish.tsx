@@ -44,7 +44,7 @@ export default function JobPublish() {
   const { mutate, isLoading } = useMutation(updateJobById, {
     onSuccess: () => {
       queryClient.invalidateQueries(['jobs'])
-      navigate('/create-job/v2')
+      navigate('/jobs')
       triggerJobParsing({ jobId })
     },
   })

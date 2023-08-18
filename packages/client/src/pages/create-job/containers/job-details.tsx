@@ -44,8 +44,14 @@ import {
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
+const defaultValues = {
+  jobType: 'fullTime',
+  currency: defaultCurrency,
+  isRemote: false,
+}
+
 export default function JobDetails() {
-  const { jobId = '' } = useParams()
+  const { jobId = '', mode = 'edit' } = useParams()
   const navigate = useNavigate()
 
   const [form] = Form.useForm()
@@ -79,10 +85,9 @@ export default function JobDetails() {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
         onSuccess: (data: Job) => {
           const { hireBy, ...restData } = data
-          form.setFieldsValue(restData)
+          form.setFieldsValue({ ...restData, ...defaultValues })
           if (hireBy) {
             form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
           }
@@ -150,15 +155,7 @@ export default function JobDetails() {
         <p className="font-semibold">Job Title</p>
         <p className="text-gray-500">Required</p>
       </div>
-      <Form
-        layout="vertical"
-        form={form}
-        initialValues={{
-          jobType: 'fullTime',
-          currency: defaultCurrency,
-          isRemote: false,
-        }}
-      >
+      <Form layout="vertical" form={form} initialValues={defaultValues}>
         <Form.Item
           name="title"
           rules={[{ required: true, message: 'Please select a job title' }]}
@@ -343,6 +340,7 @@ export default function JobDetails() {
                     size="large"
                     options={currency_list}
                     placeholder="USD"
+                    defaultValue={defaultCurrency}
                   />
                 </Form.Item>
               </div>
@@ -416,7 +414,7 @@ export default function JobDetails() {
             onClick={() => {
               form.validateFields().then((values) => {
                 handleSubmit(values)
-                navigate(`/create-job/v2/${jobId}/2`)
+                navigate(`/jobs/${jobId}/${mode}/2`)
               })
             }}
           >
