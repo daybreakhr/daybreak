@@ -13,18 +13,14 @@ import Members from 'pages/members'
 import AllJobs from 'pages/all-jobs'
 import CreateJob from 'pages/create-job'
 import Organisation from 'pages/organisation'
-import PublishJob from 'pages/publish-job'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
-import CreateJobV2 from 'pages/create-job.new'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
 import InviteToWorkspace from 'pages/invite-to-workspace'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
-import CreatePipeline from 'pages/create-pipeline'
-import JobLayout from 'components/job-layout'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
 import CreateDepartment from 'pages/create-department'
@@ -70,22 +66,13 @@ export default function App() {
                 />
                 <Route path="/" element={<AuthLayout component={AppShell} />}>
                   {/* new routes for create job V2 */}
-                  <Route path="create-job/v2" element={<CreateJobV2 />}>
-                    <Route path=":jobId/:step" element={<CreateJobV2 />} />
-                  </Route>
                   <Route path="dashboard" element={<Home />} />
                   <Route path="jobs" element={<AllJobs />} />
                   <Route path="jobs/:jobId" element={<Job />} />
-                  <Route path="jobs/:jobId/create" element={<JobLayout />}>
-                    <Route path="1" element={<CreateJob />} />
-                    <Route path="2" element={<CreatePipeline />} />
-                    <Route path="3" element={<PublishJob />} />
-                  </Route>
-                  <Route path="jobs/:jobId/edit" element={<JobLayout />}>
-                    <Route path="1" element={<CreateJob />} />
-                    <Route path="2" element={<CreatePipeline />} />
-                    <Route path="3" element={<PublishJob />} />
-                  </Route>
+                  <Route
+                    path="jobs/:jobId/:mode/:step"
+                    element={<CreateJob />}
+                  />
                   <Route
                     path="settings"
                     element={<Navigate to="organisation" replace />}

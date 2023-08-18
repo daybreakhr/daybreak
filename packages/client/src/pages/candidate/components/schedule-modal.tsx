@@ -5,7 +5,7 @@ import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { Avatar, DatePicker, Form, Modal, Select, TimePicker } from 'antd'
 
 import { fetchMembers } from 'pages/members/queries'
-import { fetchInterviews } from 'pages/create-pipeline/queries'
+import { fetchInterviews } from 'pages/create-job/queries'
 
 import { createCalendarEvent, fetchCandidate } from '../queries'
 

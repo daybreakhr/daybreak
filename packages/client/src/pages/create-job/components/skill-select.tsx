@@ -43,8 +43,9 @@ export default function SkillSelect({ form }: SkillSelectProps) {
       onSearch={setInputValue}
       mode="multiple"
       optionFilterProp="children"
-      placeholder="Select Skill..."
+      placeholder="Select Skill"
       value={form.getFieldValue('skills')}
+      size="large"
     >
       {inputValue && filteredOptions?.length === 0 && (
         <Select.Option key={NEW_ITEM} value={NEW_ITEM}>
