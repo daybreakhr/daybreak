@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { Interview } from '@prisma/client'
 import {
   ArrowRightOutlined,
@@ -147,130 +148,145 @@ export default function JobPipelines() {
           <List
             size="large"
             dataSource={data}
-            renderItem={(item, index) => (
-              <div className="mt-4 border border-transparent rounded-md focus:border-purple-500 focus:bg-white focus:outline-none">
-                <List.Item
-                  key={index}
-                  className="py-0 border border-transparent rounded-md bg-gray-5 hover:bg-gray-50"
-                  actions={
-                    item.isDefault
-                      ? ['Default']
-                      : editable === index
-                      ? [
-                          <div className="flex ml-10 space-x-3" key={index}>
-                            <CloseOutlined
-                              key={index}
-                              onClick={() => {
-                                data[index].title = ' '
-                                setData([...data])
-                              }}
-                              style={{
-                                color: 'gray',
-                                fontSize: '12px',
-                              }}
-                            />
-
-                            <Button
-                              type="link"
-                              key={index}
-                              className="w-3 h-3 text-xs text-gray-500"
-                              disabled={item.title === ''}
-                              loading={
-                                updatable === index && isUpdatingInterview
-                              }
-                              hidden={
-                                updatable === index && isUpdatingInterview
-                              }
-                              onClick={() => {
-                                setUpdatable(index)
-                                updateInterview({
-                                  id: data[index].id,
-                                  payload: { title: data[index].title },
-                                })
-                              }}
-                            >
-                              Save
-                            </Button>
-                          </div>,
-                        ]
-                      : [
-                          <div className="flex space-x-4" key={index}>
-                            <EditOutlined
-                              key={index}
-                              onClick={() => {
-                                setEditable(index)
-                              }}
-                            />
-
-                            <DeleteOutlined
-                              key={index}
-                              hidden={
-                                deletable === index && isDeletingInterview
-                              }
-                              style={{ color: 'red', fontSize: '12px' }}
-                              onClick={() => {
-                                setDeletable(index)
-                                deleteInterview({ id: data[index].id })
-                              }}
-                            />
-                          </div>,
-                        ]
-                  }
+            renderItem={(item, index) => {
+              return (
+                <div
+                  className={clsx(
+                    'mt-4 border border-transparent rounded-md focus:outline-none',
+                    {
+                      'border-purple-500': editable === index,
+                    },
+                  )}
                 >
-                  <div className="flex w-full space-x-6">
-                    <div className="flex space-x-6">
-                      <AiOutlineHolder className="mt-1" />
+                  <List.Item
+                    key={index}
+                    className={clsx(
+                      'py-0 border border-transparent rounded-md',
+                      {
+                        'bg-white': editable === index,
+                        'bg-gray-5 hover:bg-gray-50': editable !== index,
+                      },
+                    )}
+                    actions={
+                      item.isDefault
+                        ? ['Default']
+                        : editable === index
+                        ? [
+                            <div className="flex ml-10 space-x-3" key={index}>
+                              <CloseOutlined
+                                key={index}
+                                onClick={() => {
+                                  data[index].title = ' '
+                                  setData([...data])
+                                }}
+                                style={{
+                                  color: 'gray',
+                                  fontSize: '12px',
+                                }}
+                              />
 
-                      <Tooltip
-                        placement="top"
-                        title={item.isDefault ? text : ''}
-                      >
-                        <Checkbox
-                          disabled={item.isDefault}
-                          checked={item.isActive}
-                          onChange={() => {
-                            updateInterview({
-                              id: data[index].id,
-                              payload: { isActive: !data[index].isActive },
-                            })
-                            data[index].isActive = !data[index].isActive
+                              <Button
+                                type="link"
+                                key={index}
+                                className="w-3 h-3 text-xs text-gray-500"
+                                disabled={!item.title?.trim()}
+                                loading={
+                                  updatable === index && isUpdatingInterview
+                                }
+                                hidden={
+                                  updatable === index && isUpdatingInterview
+                                }
+                                onClick={() => {
+                                  setUpdatable(index)
+                                  updateInterview({
+                                    id: data[index].id,
+                                    payload: { title: data[index].title },
+                                  })
+                                }}
+                              >
+                                Save
+                              </Button>
+                            </div>,
+                          ]
+                        : [
+                            <div className="flex space-x-4" key={index}>
+                              <EditOutlined
+                                key={index}
+                                onClick={() => {
+                                  setEditable(index)
+                                }}
+                              />
+
+                              <DeleteOutlined
+                                key={index}
+                                hidden={
+                                  deletable === index && isDeletingInterview
+                                }
+                                style={{ color: 'red', fontSize: '12px' }}
+                                onClick={() => {
+                                  setDeletable(index)
+                                  deleteInterview({ id: data[index].id })
+                                }}
+                              />
+                            </div>,
+                          ]
+                    }
+                  >
+                    <div className="flex w-full space-x-6">
+                      <div className="flex space-x-6">
+                        <AiOutlineHolder className="mt-1" />
+
+                        <Tooltip
+                          placement="top"
+                          title={item.isDefault ? text : ''}
+                        >
+                          <Checkbox
+                            disabled={item.isDefault}
+                            checked={item.isActive}
+                            onChange={() => {
+                              updateInterview({
+                                id: data[index].id,
+                                payload: { isActive: !data[index].isActive },
+                              })
+                              data[index].isActive = !data[index].isActive
+                              setData([...data])
+                            }}
+                          />
+                        </Tooltip>
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          bordered={false}
+                          size="small"
+                          readOnly={
+                            item.id === defaultData[0].id ||
+                            item.id === defaultData[1].id ||
+                            item.id === defaultData[2].id ||
+                            item.id === defaultData[3].id
+                          }
+                          className="text-sm font-normal"
+                          value={item.title}
+                          onChange={(e) => {
+                            data[index].title = e.target.value
                             setData([...data])
                           }}
+                          onPressEnter={() => {
+                            setUpdatable(index)
+                            updateInterview({
+                              id: data[index].id,
+                              payload: { title: data[index].title },
+                            })
+                          }}
+                          onClick={() => {
+                            setEditable(index)
+                          }}
                         />
-                      </Tooltip>
+                      </div>
                     </div>
-                    <div className="w-full">
-                      <Input
-                        bordered={false}
-                        size="small"
-                        readOnly={
-                          item.id === defaultData[0].id ||
-                          item.id === defaultData[1].id ||
-                          item.id === defaultData[2].id ||
-                          item.id === defaultData[3].id
-                        }
-                        className="text-sm font-normal"
-                        value={item.title}
-                        onChange={(e) => {
-                          data[index].title = e.target.value
-                          setData([...data])
-                        }}
-                        onPressEnter={() => {
-                          setUpdatable(index)
-                          updateInterview({
-                            id: data[index].id,
-                            payload: { title: data[index].title },
-                          })
-                        }}
-                        onClick={() => {
-                          setEditable(index)
-                        }}
-                      />
-                    </div>
-                  </div>
-                </List.Item>
-              </div>
-            )}
+                  </List.Item>
+                </div>
+              )
+            }}
           />
         </div>
 
@@ -279,13 +295,11 @@ export default function JobPipelines() {
             size="large"
             className="text-primary-500"
             onClick={() => {
-              // const index = data.length - 2
-              const stage = {
+              createInterview({
                 title: `Custom Round ${data.length - 3}`,
-                // isActive: true,
-                // isDefault: false,
-              }
-              createInterview({ ...stage, order: data?.length ?? 0, jobId })
+                order: data?.length ?? 0,
+                jobId,
+              })
             }}
             loading={isCreatingInterview}
           >

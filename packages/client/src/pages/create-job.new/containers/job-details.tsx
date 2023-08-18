@@ -44,6 +44,12 @@ import {
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
+const defaultValues = {
+  jobType: 'fullTime',
+  currency: defaultCurrency,
+  isRemote: false,
+}
+
 export default function JobDetails() {
   const { jobId = '' } = useParams()
   const navigate = useNavigate()
@@ -82,7 +88,7 @@ export default function JobDetails() {
         refetchOnMount: false,
         onSuccess: (data: Job) => {
           const { hireBy, ...restData } = data
-          form.setFieldsValue(restData)
+          form.setFieldsValue({ ...restData, ...defaultValues })
           if (hireBy) {
             form.setFieldValue('hireBy', dayjs(hireBy, 'DD-MM-YYYY'))
           }
@@ -150,15 +156,7 @@ export default function JobDetails() {
         <p className="font-semibold">Job Title</p>
         <p className="text-gray-500">Required</p>
       </div>
-      <Form
-        layout="vertical"
-        form={form}
-        initialValues={{
-          jobType: 'fullTime',
-          currency: defaultCurrency,
-          isRemote: false,
-        }}
-      >
+      <Form layout="vertical" form={form} initialValues={defaultValues}>
         <Form.Item
           name="title"
           rules={[{ required: true, message: 'Please select a job title' }]}
@@ -343,6 +341,7 @@ export default function JobDetails() {
                     size="large"
                     options={currency_list}
                     placeholder="USD"
+                    defaultValue={defaultCurrency}
                   />
                 </Form.Item>
               </div>
