@@ -51,7 +51,7 @@ const defaultValues = {
 }
 
 export default function JobDetails() {
-  const { jobId = '' } = useParams()
+  const { jobId = '', mode = 'edit' } = useParams()
   const navigate = useNavigate()
 
   const [form] = Form.useForm()
@@ -85,7 +85,6 @@ export default function JobDetails() {
         queryKey: ['job', jobId],
         queryFn: () => fetchJob(jobId),
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
         onSuccess: (data: Job) => {
           const { hireBy, ...restData } = data
           form.setFieldsValue({ ...restData, ...defaultValues })
@@ -415,7 +414,7 @@ export default function JobDetails() {
             onClick={() => {
               form.validateFields().then((values) => {
                 handleSubmit(values)
-                navigate(`/create-job/v2/${jobId}/2`)
+                navigate(`/jobs/${jobId}/${mode}/2`)
               })
             }}
           >

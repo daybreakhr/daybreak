@@ -6,7 +6,7 @@ import { Avatar, Button, Form, Input, Modal, Rate, Select } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useAuth from 'hooks/use-auth'
-import { fetchInterviews } from 'pages/create-pipeline/queries'
+import { fetchInterviews } from 'pages/create-job/queries'
 
 import { fetchFeedbacks } from '../queries'
 import FeedbackRadio from './feedback-radio'

@@ -30,7 +30,7 @@ export default function JobPipelines() {
   const [deletable, setDeletable] = useState<null | number>(null)
   const [updatable, setUpdatable] = useState<null | number>(null)
 
-  const { jobId = '' } = useParams()
+  const { jobId = '', mode = 'edit' } = useParams()
   const navigate = useNavigate()
 
   const text = (
@@ -313,7 +313,7 @@ export default function JobPipelines() {
           <div className="space-x-4">
             <Button
               size="large"
-              onClick={() => navigate(`/create-job/v2/${jobId}/1`)}
+              onClick={() => navigate(`/jobs/${jobId}/${mode}/1`)}
             >
               Cancel
             </Button>
@@ -321,7 +321,7 @@ export default function JobPipelines() {
             <Button
               size="large"
               type="primary"
-              onClick={() => navigate(`/create-job/v2/${jobId}/3`)}
+              onClick={() => navigate(`/jobs/${jobId}/${mode}/3`)}
             >
               <div className="flex items-center space-x-2">
                 <span>Save & Publish</span>

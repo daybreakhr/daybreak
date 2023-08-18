@@ -50,13 +50,14 @@ export default function DepartmentSelect({
 
   return (
     <Select
+      size="large"
       showSearch
       loading={isLoading}
       onChange={onChange}
       disabled={isLoading}
       onSearch={setInputValue}
       optionFilterProp="children"
-      placeholder="Select Department..."
+      placeholder="Select Department"
       value={form.getFieldValue('departmentId')}
     >
       {inputValue && filteredOptions?.length === 0 && (
