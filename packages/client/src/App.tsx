@@ -20,7 +20,6 @@ import CreateJobV2 from 'pages/create-job.new'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
-import InviteToWorkspace from 'pages/invite-to-workspace'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import CreatePipeline from 'pages/create-pipeline'
@@ -54,7 +53,8 @@ export default function App() {
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
                   <Route path="setup" element={<SetupWorkspace />} />
-                  <Route path="invite" element={<InviteToWorkspace />} />
+                  <Route path="invite" element={<InviteCoworkers />} />
+                  <Route path="slack" element={<Slack />} />
                 </Route>
 
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
@@ -93,12 +93,6 @@ export default function App() {
                     path="settings/email-templates"
                     element={<EmailTemplates />}
                   />
-                  <Route
-                    path="/invite-coworkers"
-                    element={<InviteCoworkers />}
-                  />
-
-                  <Route path="connect-slack" element={<Slack />} />
                 </Route>
               </Routes>
               {import.meta.env.PROD && <Logrocket />}

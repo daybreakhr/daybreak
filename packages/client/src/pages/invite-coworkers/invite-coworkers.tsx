@@ -1,11 +1,43 @@
 import { ArrowRightOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Select } from 'antd'
+import { Invitees } from '@prisma/client'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { Button, Divider, Form, Input, Select, message } from 'antd'
+import { fetchMe } from 'components/auth/queries'
+import useAuth from 'hooks/use-auth'
+import { inviteUser } from 'pages/members/queries'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card } from 'ui-kit'
 
 export default function InviteCoworkers() {
-  const [addInput, setAddInput] = useState([0])
   const { Option } = Select
+  const navigate = useNavigate()
+  const { setMember } = useAuth()
+  const [enableMe, setEnableMe] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useQuery(['me'], fetchMe, {
+    enabled: enableMe,
+    onSuccess: (member) => {
+      setMember(member)
+      navigate('/onboarding/slack')
+    },
+  })
+
+  const { mutateAsync: addUser } = useMutation(inviteUser)
+
+  function handleSubmit({ invitees }: { invitees: Invitees[] }) {
+    setIsLoading(true)
+    Promise.all(invitees.map(({ email, role }) => addUser({ email, role })))
+      .then(() => {
+        setIsLoading(false)
+        setEnableMe(true)
+      })
+      .catch(() => {
+        message.error('Something went wrong!')
+        setIsLoading(false)
+      })
+  }
 
   return (
     <div className="flex-1 py-32 overflow-hidden">
@@ -23,47 +55,98 @@ export default function InviteCoworkers() {
 
         <Form
           layout="vertical"
-          // form={form}
-          // onFinish={(createWorkspaceDto) => mutate({ createWorkspaceDto })}
+          initialValues={{ invitees: [''] }}
+          onFinish={handleSubmit}
         >
           <div className="py-12">
             <Card className="px-8 py-8 w-[698px]">
               <p className="mb-1 font-semibold">Email</p>
 
-              {addInput.map((index) => {
-                return (
-                  <Form.Item name="email" key={index}>
-                    <Input
-                      size="large"
-                      placeholder="email@example.com"
-                      addonAfter={
-                        <Form.Item name="email" noStyle>
-                          <Select placeholder="Role" bordered={false}>
-                            <Option value="admin">Admin</Option>
-                            <Option value="member">Member</Option>
-                          </Select>
-                        </Form.Item>
-                      }
-                    />
-                  </Form.Item>
-                )
-              })}
+              <Form.List name="invitees">
+                {(fields, { add, remove }) => {
+                  return (
+                    <>
+                      {fields.map(({ key, name, ...restField }) => {
+                        return (
+                          <Form.Item
+                            name={[name, 'email']}
+                            key={key}
+                            {...restField}
+                            rules={[
+                              {
+                                required: true,
+                                type: 'email',
+                                message:
+                                  'Enter a valid email address to invite',
+                              },
+                            ]}
+                            className="mb-4"
+                          >
+                            <Input
+                              size="large"
+                              placeholder="email@example.com"
+                              addonAfter={
+                                <Form.Item
+                                  noStyle
+                                  name={[name, 'role']}
+                                  rules={[
+                                    { required: true, message: 'Select role' },
+                                  ]}
+                                >
+                                  <Select
+                                    className="w-32 bg-white"
+                                    placeholder="Role"
+                                    bordered={false}
+                                    dropdownRender={(menu) => {
+                                      return (
+                                        <>
+                                          {menu}
+                                          <Divider className="my-1" />
+                                          <Button
+                                            block
+                                            type="text"
+                                            onClick={() => remove(name)}
+                                            disabled={fields.length === 1}
+                                          >
+                                            <div className="ml-[-45px]">
+                                              Remove
+                                            </div>
+                                          </Button>
+                                        </>
+                                      )
+                                    }}
+                                  >
+                                    <Option value="admin">Admin</Option>
+                                    <Option value="member">Member</Option>
+                                  </Select>
+                                </Form.Item>
+                              }
+                            />
+                          </Form.Item>
+                        )
+                      })}
 
-              <div className="flex justify-between">
-                <Button
-                  size="large"
-                  icon={<PlusOutlined />}
-                  onClick={() => {
-                    addInput.push(addInput.length)
-                    setAddInput([...addInput])
-                  }}
-                >
-                  Add More
-                </Button>
-                <Button type="primary" size="large" className="bg-purple-500">
-                  Send Invites
-                </Button>
-              </div>
+                      <div className="flex justify-between">
+                        <Button
+                          size="large"
+                          icon={<PlusOutlined />}
+                          onClick={add}
+                        >
+                          Add More
+                        </Button>
+                        <Button
+                          type="primary"
+                          size="large"
+                          className="bg-purple-500"
+                          loading={isLoading}
+                        >
+                          Send Invites
+                        </Button>
+                      </div>
+                    </>
+                  )
+                }}
+              </Form.List>
             </Card>
           </div>
 

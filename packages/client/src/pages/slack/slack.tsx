@@ -1,6 +1,7 @@
 import { ArrowRightOutlined, CheckOutlined } from '@ant-design/icons'
-import { Button, Card, Divider } from 'antd'
+import { Button, Divider } from 'antd'
 import { ReactComponent as SlackIcon } from 'assets/icons/slack.svg'
+import { Card } from 'ui-kit'
 
 export default function Slack() {
   return (
@@ -18,18 +19,18 @@ export default function Slack() {
           </p>
         </div>
 
-        <div className="my-12">
+        <div className="py-12">
           <Card className="px-8 py-8 ">
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 w-[448px]">
               <div>
-                <CheckOutlined className="text-purple-500" />
+                <CheckOutlined className="text-purple-500 " />
               </div>
               <div className="text-base font-normal">
                 Schedule and manage interviews directly within Slack.
               </div>
             </div>
-            <Divider className="my-3" />
-            <div className="flex space-x-6">
+            <Divider className="my-5" />
+            <div className="flex space-x-3  w-[448px] ">
               <div>
                 <CheckOutlined className="text-purple-500" />
               </div>
@@ -37,8 +38,8 @@ export default function Slack() {
                 Add feedback for candidates.
               </div>
             </div>
-            <Divider className="my-3" />
-            <div className="flex space-x-3">
+            <Divider className="my-5" />
+            <div className="flex space-x-3  w-[448px] ">
               <div>
                 <CheckOutlined className="text-purple-500" />
               </div>
