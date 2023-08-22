@@ -1,27 +1,20 @@
-import { ArrowRightOutlined, CloseOutlined } from '@ant-design/icons'
+import { ArrowRightOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, message } from 'antd'
 import { addDepartment } from 'pages/organisation/queries'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card } from 'ui-kit'
+import { Card, Show } from 'ui-kit'
+import { ReactComponent as TimesIcon } from '../../assets/icons/Times.svg'
 
 export default function CreateDepartment() {
   const [form] = Form.useForm()
   const [selectedValue, setSelectedValue] = useState<string[]>([])
-
-  // const { Option } = Select
-  // const [items, setItems] = useState<string[]>([])
-  const [name, setName] = useState('')
-
-  const onNameChange = (event: any) => {
-    setName(event.target.value)
-  }
+  const departmentNameValue = Form.useWatch('departmentName', form)
 
   const addItem = () => {
-    setSelectedValue([...selectedValue, name])
-    // setItems([...items, name])
-    setName('')
+    setSelectedValue([...selectedValue, departmentNameValue])
+    form.resetFields(['departmentName'])
   }
 
   const { mutateAsync: createDepartment } = useMutation(addDepartment)
@@ -35,7 +28,7 @@ export default function CreateDepartment() {
     )
       .then(() => {
         setIsLoading(false)
-        navigate('/onboarding/add-location')
+        navigate('/onboarding/locations')
       })
       .catch(() => {
         message.error('Something went wrong!')
@@ -65,15 +58,13 @@ export default function CreateDepartment() {
                 noStyle
               >
                 <Input
-                  value={name}
                   size="large"
-                  onChange={onNameChange}
                   suffix={
                     <Button
                       type="text"
                       block
                       onClick={() => {
-                        if (name === '') return
+                        if (departmentNameValue === undefined) return
                         addItem()
                       }}
                     >
@@ -81,54 +72,13 @@ export default function CreateDepartment() {
                     </Button>
                   }
                 />
-                {/* <Select
-                  size="large"
-                  placeholder="Search or create new"
-                  onChange={(value) =>
-                    setSelectedValue([...selectedValue, value])
-                  }
-                  dropdownRender={(menu) => (
-                    <div>
-                      {menu}
-                      <Divider style={{ margin: '4px 0' }} />
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'nowrap',
-                          padding: 8,
-                        }}
-                      >
-                        <Input
-                          style={{ flex: 'auto' }}
-                          value={name}
-                          onChange={onNameChange}
-                          placeholder="Enter Department Name"
-                        />
-                        <a
-                          style={{
-                            flex: 'none',
-                            padding: '8px',
-                            display: 'block',
-                            cursor: 'pointer',
-                          }}
-                          className="flex-none block pt-2 cursor-pointer"
-                          onClick={addItem}
-                        >
-                          <PlusOutlined /> Add Department
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                >
-                  {items.map((item) => (
-                    <Option key={item}>{item}</Option>
-                  ))}
-                </Select> */}
               </Form.Item>
 
-              <p className="mt-8 text-sm font-medium text-gray-500">
-                Added by Daybreak
-              </p>
+              <Show when={selectedValue.length > 0}>
+                <p className="mt-8 text-sm font-medium text-gray-500">
+                  Added Departments ({selectedValue.length})
+                </p>
+              </Show>
 
               <div className="mt-4">
                 {selectedValue.map((value: any, index: any) => {
@@ -138,16 +88,17 @@ export default function CreateDepartment() {
                       key={index}
                     >
                       <div>{value}</div>
-                      <CloseOutlined
-                        style={{ fontSize: '14px' }}
-                        onClick={() => {
-                          const index = selectedValue.indexOf(value)
-                          if (index > -1) {
-                            selectedValue.splice(index, 1)
-                          }
-                          setSelectedValue([...selectedValue])
-                        }}
-                      />
+                      <div className="pt-1 cursor-pointer">
+                        <TimesIcon
+                          onClick={() => {
+                            const index = selectedValue.indexOf(value)
+                            if (index > -1) {
+                              selectedValue.splice(index, 1)
+                            }
+                            setSelectedValue([...selectedValue])
+                          }}
+                        />
+                      </div>
                     </div>
                   )
                 })}

@@ -1,30 +1,23 @@
-import {
-  ArrowRightOutlined,
-  CloseOutlined,
-  EnvironmentFilled,
-} from '@ant-design/icons'
+import { ArrowRightOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { addLocation } from 'pages/organisation/queries'
 import { Button, Form, Input, message } from 'antd'
 import { useState } from 'react'
-import { Card } from 'ui-kit'
+import { Card, Show } from 'ui-kit'
+import { ReactComponent as LocationIcon } from '../../assets/icons/location-dot.svg'
+import { ReactComponent as TimesIcon } from '../../assets/icons/Times.svg'
 
 export default function AddLocation() {
   const [form] = Form.useForm()
   const [selectedValue, setSelectedValue] = useState<string[]>([])
+  const locationValue = Form.useWatch('location', form)
 
   const { mutateAsync: createLocation } = useMutation(addLocation)
   const [isLoading, setIsLoading] = useState(false)
 
-  const [name, setName] = useState('')
-
-  const onNameChange = (event: any) => {
-    setName(event.target.value)
-  }
-
   const addItem = () => {
-    setSelectedValue([...selectedValue, name])
-    setName('')
+    setSelectedValue([...selectedValue, locationValue])
+    form.resetFields(['location'])
   }
 
   function handleSubmit() {
@@ -62,15 +55,13 @@ export default function AddLocation() {
                 rules={[{ required: true, message: 'Search Location' }]}
               >
                 <Input
-                  value={name}
                   size="large"
-                  onChange={onNameChange}
                   suffix={
                     <Button
                       type="text"
                       block
                       onClick={() => {
-                        if (name === '') return
+                        if (locationValue === undefined) return
                         addItem()
                       }}
                     >
@@ -80,35 +71,37 @@ export default function AddLocation() {
                 />
               </Form.Item>
 
-              <p className="mt-8 text-sm font-medium text-gray-500">
-                Added Locations
-              </p>
+              <Show when={selectedValue.length > 0}>
+                <p className="mt-8 text-sm font-medium text-gray-500">
+                  Added Locations ({selectedValue.length})
+                </p>
+              </Show>
 
               <div className="mt-4">
                 {selectedValue.map((value: any, index: any) => {
                   return (
                     <div
-                      className="flex justify-between px-3 py-2 mt-3 border rounded-md border-gray-50 bg-gray-5 "
+                      className="px-3 py-2 mt-3 border rounded-md border-gray-50 bg-gray-5 hover:bg-gray-50"
                       key={index}
                     >
-                      <div>
-                        <EnvironmentFilled
-                          style={{ fontSize: '14px' }}
-                          className="text-gray-400"
-                        />
-                        <span className="ml-4">{value}</span>
-                      </div>
+                      <div className="flex justify-between">
+                        <div className="flex space-x-3">
+                          <LocationIcon className="pt-1" />
 
-                      <CloseOutlined
-                        style={{ fontSize: '14px' }}
-                        onClick={() => {
-                          const index = selectedValue.indexOf(value)
-                          if (index > -1) {
-                            selectedValue.splice(index, 1)
-                          }
-                          setSelectedValue([...selectedValue])
-                        }}
-                      />
+                          <p className="text-sm">{value}</p>
+                        </div>
+                        <div className="pt-1 cursor-pointer">
+                          <TimesIcon
+                            onClick={() => {
+                              const index = selectedValue.indexOf(value)
+                              if (index > -1) {
+                                selectedValue.splice(index, 1)
+                              }
+                              setSelectedValue([...selectedValue])
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   )
                 })}

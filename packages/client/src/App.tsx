@@ -23,6 +23,7 @@ import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
 import CreateDepartment from 'pages/create-department'
 import AddLocation from 'pages/add-location'
+import InviteToWorkspace from 'pages/invite-to-workspace'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,15 +48,10 @@ export default function App() {
                 <Route path="/onboarding" element={<Onboarding />}>
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
-                  <Route path="add-department" element={<CreateDepartment />} />
-                  <Route path="add-location" element={<AddLocation />} />
+                  <Route path="departments" element={<CreateDepartment />} />
+                  <Route path="locations" element={<AddLocation />} />
+                  <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
-                {/* for create department and location */}
-                {/* <Route
-                  path="create-department"
-                  element={<CreateDepartment />}
-                />
-                <Route path="add-locations" element={<AddLocation />} /> */}
 
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
                 <Route
