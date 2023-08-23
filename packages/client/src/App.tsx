@@ -16,13 +16,14 @@ import Organisation from 'pages/organisation'
 import Job from 'pages/job'
 import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
-import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
-import InviteToWorkspace from 'pages/invite-to-workspace'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import CreateDepartment from 'pages/create-department'
+import AddLocation from 'pages/add-location'
+import InviteToWorkspace from 'pages/invite-to-workspace'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,7 +48,8 @@ export default function App() {
                 <Route path="/onboarding" element={<Onboarding />}>
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
-                  <Route path="setup" element={<SetupWorkspace />} />
+                  <Route path="departments" element={<CreateDepartment />} />
+                  <Route path="locations" element={<AddLocation />} />
                   <Route path="invite" element={<InviteToWorkspace />} />
                 </Route>
 
@@ -69,6 +71,7 @@ export default function App() {
                     path="settings"
                     element={<Navigate to="organisation" replace />}
                   />
+
                   <Route
                     path="settings/organisation"
                     element={<Organisation />}
