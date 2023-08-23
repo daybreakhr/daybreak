@@ -117,7 +117,7 @@ export default function AddLocation() {
             <Button
               type="primary"
               size="large"
-              className="m-auto w-[336px]"
+              className="m-auto w-[336px] bg-primary-500"
               onClick={handleSubmit}
               loading={isLoading}
             >
