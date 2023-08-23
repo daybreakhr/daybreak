@@ -1,10 +1,10 @@
-import { ArrowRightOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, message } from 'antd'
 import { addDepartment } from 'pages/organisation/queries'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, Show } from 'ui-kit'
+import { FaArrowRight } from 'react-icons/fa'
 import { ReactComponent as TimesIcon } from '../../assets/icons/Times.svg'
 
 export default function CreateDepartment() {
@@ -80,24 +80,28 @@ export default function CreateDepartment() {
                 </p>
               </Show>
 
-              <div className="mt-4">
+              <div>
                 {selectedValue.map((value: any, index: any) => {
                   return (
                     <div
-                      className="flex justify-between px-3 py-2 mt-3 border rounded-md border-gray-50 bg-gray-5 "
+                      className="w-[430px] h-[38px] px-3 py-2 mt-3 bg-gray-5 rounded-md border border-gray-200 justify-start items-center gap-4 inline-flex"
                       key={index}
                     >
-                      <div>{value}</div>
-                      <div className="pt-1 cursor-pointer">
-                        <TimesIcon
-                          onClick={() => {
-                            const index = selectedValue.indexOf(value)
-                            if (index > -1) {
-                              selectedValue.splice(index, 1)
-                            }
-                            setSelectedValue([...selectedValue])
-                          }}
-                        />
+                      <div className="text-sm font-normal leading-snug grow shrink basis-0 ">
+                        {value}
+                      </div>
+                      <div className="self-stretch p-2.5 rounded-md flex-col justify-center items-center gap-2.5 inline-flex">
+                        <div className="self-stretch text-sm font-black leading-tight tracking-tight text-center text-gray-400 cursor-pointer">
+                          <TimesIcon
+                            onClick={() => {
+                              const index = selectedValue.indexOf(value)
+                              if (index > -1) {
+                                selectedValue.splice(index, 1)
+                              }
+                              setSelectedValue([...selectedValue])
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   )
@@ -106,18 +110,30 @@ export default function CreateDepartment() {
             </Card>
           </div>
 
-          <div className="flex justify-center ">
+          <div className="flex justify-center px-5 py-3 ">
             <Button
               type="primary"
               size="large"
-              className="m-auto w-80"
+              className="m-auto w-[336px]"
               onClick={handleSubmit}
               loading={isLoading}
             >
-              <span>Proceed</span>
-
-              <ArrowRightOutlined />
+              <div className="text-sm font-medium leading-snug text-center text-white">
+                Proceed
+              </div>
+              <div className="ml-4 text-base leading-snug tracking-tight text-center text-white">
+                <FaArrowRight />
+              </div>
             </Button>
+          </div>
+
+          <div
+            onClick={() => navigate('/onboarding/locations')}
+            className="cursor-pointer"
+          >
+            <p className="flex justify-center mt-8 text-sm font-medium text-gray-500">
+              I&apos;ll do this later
+            </p>
           </div>
         </Form>
       </div>

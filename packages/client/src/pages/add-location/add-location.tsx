@@ -1,9 +1,10 @@
-import { ArrowRightOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { addLocation } from 'pages/organisation/queries'
 import { Button, Form, Input, message } from 'antd'
 import { useState } from 'react'
 import { Card, Show } from 'ui-kit'
+import { useNavigate } from 'react-router-dom'
+import { FaArrowRight } from 'react-icons/fa'
 import { ReactComponent as LocationIcon } from '../../assets/icons/location-dot.svg'
 import { ReactComponent as TimesIcon } from '../../assets/icons/Times.svg'
 
@@ -14,6 +15,7 @@ export default function AddLocation() {
 
   const { mutateAsync: createLocation } = useMutation(addLocation)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const addItem = () => {
     setSelectedValue([...selectedValue, locationValue])
@@ -27,7 +29,7 @@ export default function AddLocation() {
     )
       .then(() => {
         setIsLoading(false)
-        // navigate('/onboarding/invite')
+        navigate('/onboarding/invite')
       })
       .catch(() => {
         message.error('Something went wrong!')
@@ -46,7 +48,7 @@ export default function AddLocation() {
         </div>
         <Form layout="vertical" form={form}>
           <div className="py-12">
-            <Card className="px-10 py-10">
+            <Card className="px-10 py-10 ">
               <p className="mb-1 font-semibold">
                 Location<sup className="text-sm text-red-500 ">*</sup>
               </p>
@@ -77,20 +79,23 @@ export default function AddLocation() {
                 </p>
               </Show>
 
-              <div className="mt-4">
+              <div>
                 {selectedValue.map((value: any, index: any) => {
                   return (
                     <div
-                      className="px-3 py-2 mt-3 border rounded-md border-gray-50 bg-gray-5 hover:bg-gray-50"
+                      className="w-[430px] h-[38px] px-3 py-2 mt-3 bg-gray-5 rounded-md border border-gray-200 justify-start items-center gap-4 inline-flex"
                       key={index}
                     >
-                      <div className="flex justify-between">
-                        <div className="flex space-x-3">
-                          <LocationIcon className="pt-1" />
-
-                          <p className="text-sm">{value}</p>
+                      <div className="self-stretch rounded-md flex-col justify-center items-center gap-2.5 inline-flex">
+                        <div className="self-stretch text-sm font-black leading-tight tracking-tight text-center text-gray-400">
+                          <LocationIcon />
                         </div>
-                        <div className="pt-1 cursor-pointer">
+                      </div>
+                      <div className="text-sm font-normal leading-snug grow shrink basis-0 ">
+                        {value}
+                      </div>
+                      <div className="self-stretchp-2.5 rounded-md flex-col justify-center items-center gap-2.5 inline-flex">
+                        <div className="self-stretch text-sm font-black leading-tight tracking-tight text-center text-gray-400 cursor-pointer">
                           <TimesIcon
                             onClick={() => {
                               const index = selectedValue.indexOf(value)
@@ -108,24 +113,30 @@ export default function AddLocation() {
               </div>
             </Card>
           </div>
-
-          <div className="flex justify-center ">
+          <div className="flex justify-center px-5 py-3 ">
             <Button
               type="primary"
               size="large"
-              htmlType="submit"
-              className="m-auto w-80"
+              className="m-auto w-[336px]"
               onClick={handleSubmit}
               loading={isLoading}
             >
-              <span>Proceed</span>
-
-              <ArrowRightOutlined />
+              <div className="text-sm font-medium leading-snug text-center text-white">
+                Proceed
+              </div>
+              <div className="ml-4 text-base leading-snug tracking-tight text-center text-white">
+                <FaArrowRight />
+              </div>
             </Button>
           </div>
-          <p className="flex justify-center mt-8 text-sm font-medium text-gray-500">
-            I&apos;ll do this later
-          </p>
+          <div
+            onClick={() => navigate('/onboarding/invite')}
+            className="cursor-pointer"
+          >
+            <p className="flex justify-center mt-8 text-sm font-medium text-gray-500">
+              I&apos;ll do this later
+            </p>
+          </div>
         </Form>
       </div>
     </div>
