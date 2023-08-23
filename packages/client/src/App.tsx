@@ -18,11 +18,12 @@ import Onboarding from 'pages/onboarding'
 import CreateWorkspace from 'pages/create-workspace'
 import SetupWorkspace from 'pages/setup-workspace'
 import ValidateInvite from 'pages/validate-invite'
-import InviteToWorkspace from 'pages/invite-to-workspace'
 import Logrocket from 'components/logrocket'
 import PrivacyPolicy from 'pages/privacy-policy'
 import ConnectSlack from 'pages/connect-slack'
 import EmailTemplates from 'pages/email-templates'
+import InviteCoworkers from 'pages/invite-coworkers'
+import Slack from 'pages/slack'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,7 +49,8 @@ export default function App() {
                   <Route path="" element={<Navigate to="create" />} />
                   <Route path="create" element={<CreateWorkspace />} />
                   <Route path="setup" element={<SetupWorkspace />} />
-                  <Route path="invite" element={<InviteToWorkspace />} />
+                  <Route path="invite" element={<InviteCoworkers />} />
+                  <Route path="slack" element={<Slack />} />
                 </Route>
 
                 <Route path="/invite/:inviteId" element={<ValidateInvite />} />
