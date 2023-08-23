@@ -20,7 +20,7 @@ export default function Slack() {
 
   return (
     <div className="flex-1">
-      <div className="w-[512px] mx-auto py-[126px]">
+      <div className="w-[512px] mx-auto py-6">
         <div className="text-center">
           <div className="flex items-center justify-center ">
             <SlackIcon />

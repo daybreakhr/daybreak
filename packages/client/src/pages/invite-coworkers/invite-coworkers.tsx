@@ -48,7 +48,7 @@ export default function InviteCoworkers() {
   }, [invitees])
 
   return (
-    <div className="flex-1 py-32 overflow-hidden">
+    <div className="flex-1 py-6 overflow-hidden">
       <div className="w-[690px] mx-auto">
         <div className="justify-center text-center w-[512px] mx-auto">
           <p className="mb-2 text-2xl font-semibold">
