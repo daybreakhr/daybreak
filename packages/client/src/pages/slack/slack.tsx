@@ -1,9 +1,23 @@
-import { ArrowRightOutlined, CheckOutlined } from '@ant-design/icons'
+import { v4 as uuidv4 } from 'uuid'
 import { Button, Divider } from 'antd'
 import { ReactComponent as SlackIcon } from 'assets/icons/slack.svg'
-import { Card } from 'ui-kit'
+import { ReactComponent as Check } from 'assets/icons/Check.svg'
+import { Card, storage } from 'ui-kit'
+import { FaArrowRight } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 export default function Slack() {
+  const navigate = useNavigate()
+  function handleSlackConnect() {
+    const state = uuidv4()
+    storage.set('state', state)
+
+    window.open(
+      `https://slack.com/oauth/v2/authorize?client_id=4045216441856.5071419400464&scope=chat:write,commands,im:write,users:read,files:read&state=${state}`,
+      '_blank',
+    )
+  }
+
   return (
     <div className="flex-1">
       <div className="w-[512px] mx-auto py-[126px]">
@@ -23,7 +37,7 @@ export default function Slack() {
           <Card className="px-8 py-8 ">
             <div className="flex space-x-3 w-[448px]">
               <div>
-                <CheckOutlined className="text-purple-500 " />
+                <Check className="mt-2" />
               </div>
               <div className="text-base font-normal">
                 Schedule and manage interviews directly within Slack.
@@ -32,7 +46,7 @@ export default function Slack() {
             <Divider className="my-5" />
             <div className="flex space-x-3  w-[448px] ">
               <div>
-                <CheckOutlined className="text-purple-500" />
+                <Check className="mt-2" />
               </div>
               <div className="text-base font-normal">
                 Add feedback for candidates.
@@ -41,7 +55,7 @@ export default function Slack() {
             <Divider className="my-5" />
             <div className="flex space-x-3  w-[448px] ">
               <div>
-                <CheckOutlined className="text-purple-500" />
+                <Check className="mt-2" />
               </div>
               <div className="text-base font-normal">
                 Let your team know when a new job is posted.
@@ -50,20 +64,26 @@ export default function Slack() {
           </Card>
         </div>
 
-        <div className="flex justify-center ">
+        <div className="flex justify-center px-5 py-3 ">
           <Button
             type="primary"
             size="large"
-            htmlType="submit"
-            className="m-auto bg-purple-500 w-80"
+            className="m-auto w-[336px] bg-primary-500"
+            onClick={handleSlackConnect}
           >
-            <span>Connect to slack</span>
-            <ArrowRightOutlined />
+            <div className="text-sm font-medium leading-snug text-center text-white">
+              Connect to Slack
+            </div>
+            <div className="ml-4 text-base leading-snug tracking-tight text-center text-white">
+              <FaArrowRight />
+            </div>
           </Button>
         </div>
-        <p className="mt-8 text-sm text-center text-gray-500 text-normal">
-          I&apos;ll do it later
-        </p>
+        <div onClick={() => navigate('/dashboard')}>
+          <p className="mt-8 text-sm text-center text-gray-500 cursor-pointer text-normal">
+            I&apos;ll do it later
+          </p>
+        </div>
       </div>
     </div>
   )

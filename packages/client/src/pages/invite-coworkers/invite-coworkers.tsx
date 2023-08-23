@@ -1,26 +1,28 @@
-import { ArrowRightOutlined, PlusOutlined } from '@ant-design/icons'
 import { Invitees } from '@prisma/client'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Divider, Form, Input, Select, message } from 'antd'
 import { fetchMe } from 'components/auth/queries'
 import useAuth from 'hooks/use-auth'
 import { inviteUser } from 'pages/members/queries'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { Card } from 'ui-kit'
 
 export default function InviteCoworkers() {
+  const [form] = Form.useForm()
+  const invitees = Form.useWatch('invitees', form)
   const { Option } = Select
   const navigate = useNavigate()
   const { setMember } = useAuth()
   const [enableMe, setEnableMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isSent, setIsSent] = useState(false)
 
   useQuery(['me'], fetchMe, {
     enabled: enableMe,
     onSuccess: (member) => {
       setMember(member)
-      navigate('/onboarding/slack')
     },
   })
 
@@ -28,10 +30,12 @@ export default function InviteCoworkers() {
 
   function handleSubmit({ invitees }: { invitees: Invitees[] }) {
     setIsLoading(true)
+
     Promise.all(invitees.map(({ email, role }) => addUser({ email, role })))
       .then(() => {
         setIsLoading(false)
         setEnableMe(true)
+        setIsSent(true)
       })
       .catch(() => {
         message.error('Something went wrong!')
@@ -39,14 +43,18 @@ export default function InviteCoworkers() {
       })
   }
 
+  useEffect(() => {
+    setIsSent(false)
+  }, [invitees])
+
   return (
     <div className="flex-1 py-32 overflow-hidden">
       <div className="w-[690px] mx-auto">
-        <div className="text-center">
+        <div className="justify-center text-center w-[512px] mx-auto">
           <p className="mb-2 text-2xl font-semibold">
             Invite Co-workers to your hiring team
           </p>
-          <p className="text-base text-gray-500">
+          <p className="text-base text-gray-500 ">
             Build a unified hiring process by inviting your team members to join
             Daybreak. Collaborate on candidate evaluations, feedbacks and
             interviews effortlessly
@@ -54,12 +62,13 @@ export default function InviteCoworkers() {
         </div>
 
         <Form
+          form={form}
           layout="vertical"
-          initialValues={{ invitees: [''] }}
+          initialValues={{ invitees: ['', '', ''] }}
           onFinish={handleSubmit}
         >
           <div className="py-12">
-            <Card className="px-8 py-8 w-[698px]">
+            <Card className="px-8 py-8 ">
               <p className="mb-1 font-semibold">Email</p>
 
               <Form.List name="invitees">
@@ -84,6 +93,7 @@ export default function InviteCoworkers() {
                           >
                             <Input
                               size="large"
+                              className="rounded-md"
                               placeholder="email@example.com"
                               addonAfter={
                                 <Form.Item
@@ -94,7 +104,7 @@ export default function InviteCoworkers() {
                                   ]}
                                 >
                                   <Select
-                                    className="w-32 bg-white"
+                                    className="w-32"
                                     placeholder="Role"
                                     bordered={false}
                                     dropdownRender={(menu) => {
@@ -126,19 +136,16 @@ export default function InviteCoworkers() {
                         )
                       })}
 
-                      <div className="flex justify-between">
-                        <Button
-                          size="large"
-                          icon={<PlusOutlined />}
-                          onClick={add}
-                        >
+                      <div className="flex justify-between mt-8">
+                        <Button size="large" onClick={add}>
                           Add More
                         </Button>
                         <Button
                           type="primary"
                           size="large"
-                          className="bg-purple-500"
                           loading={isLoading}
+                          htmlType="submit"
+                          className="px-4 py-2 bg-primary-500"
                         >
                           Send Invites
                         </Button>
@@ -150,21 +157,32 @@ export default function InviteCoworkers() {
             </Card>
           </div>
 
-          <div className="flex justify-center ">
+          <div className="flex justify-center px-5 py-3 ">
             <Button
               type="primary"
               size="large"
-              htmlType="submit"
-              className="m-auto bg-purple-500 w-80"
+              className="m-auto w-[336px] bg-primary-500 disabled:bg-primary-300"
+              disabled={!isSent}
+              onClick={() => {
+                navigate('/onboarding/slack')
+              }}
             >
-              <span>Proceed</span>
-
-              <ArrowRightOutlined />
+              <div className="text-sm font-medium leading-snug text-center text-white">
+                Proceed
+              </div>
+              <div className="ml-4 text-base leading-snug tracking-tight text-center text-white">
+                <FaArrowRight />
+              </div>
             </Button>
           </div>
-          <p className="mt-8 text-sm text-center text-gray-500 text-normal">
-            I&apos;ll do it later
-          </p>
+          <div
+            onClick={() => navigate('/onboarding/slack')}
+            className="cursor-pointer"
+          >
+            <p className="flex justify-center mt-8 text-sm font-medium text-gray-500">
+              I&apos;ll do this later
+            </p>
+          </div>
         </Form>
       </div>
     </div>
